@@ -32,4 +32,9 @@ public class Deck{
         Collections.shuffle(tiles);
    }
 
+   public Tile draw()
+   {
+       return tiles.pop();
+   }
+
 }
