@@ -20,11 +20,16 @@ public class Player{
     public GoalCard getGoalCard(GoalCard card){
         return card;
     }
+
     public Shelf getMyShelf(){
         return shelf;
     }
 
     public Shelf getOtherShelf(){
+    }
+
+    public int getMyScore (){
+
     }
 
     public int getOtherScore(){
