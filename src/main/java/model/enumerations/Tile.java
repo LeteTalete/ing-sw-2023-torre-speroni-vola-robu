@@ -7,6 +7,5 @@ public enum Tile {
     FRAME,
     TROPHY,
     BOOK,
-    GAMES,
-    EMPTY,
-    INVALID}
+    GAMES
+}
