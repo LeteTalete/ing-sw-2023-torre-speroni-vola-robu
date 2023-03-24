@@ -5,13 +5,19 @@ public class Couple {
 
     private State state;
 
-    public void getTile() {
-
+    public Tile getTile() {
+        return this.tileType;
     }
 
-    public void setTile() {}
+    public void setTile(Tile tile) {
+        this.tileType = tile;
+    }
 
-    public void getState() {}
+    public State getState() {
+        return this.state;
+    }
 
-    public void setState() {}
+    public void setState(State newState) {
+        this.state = newState;
+    }
 }
