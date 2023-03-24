@@ -1,7 +1,5 @@
 package model.cards;
 
-import model.board.Space;
-
 import java.util.ArrayList;
 
 public class PersonalGoalCard extends GoalCard {
