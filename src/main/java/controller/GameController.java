@@ -2,67 +2,58 @@ package controller;
 
 import model.Player;
 import model.Game;
+import model.board.LivingRoom;
+import model.enumerations.Couple;
+
+import java.sql.Array;
 
 public class GameController {
 
-    private String ViewInterface;
-    private Game game;
-    private Player player;
+    private static String ViewInterface;
+    private static Game game;
+    private static Player player;
 
-    public GameController() {
-        game = new Game();
+    public static void main() {
 
-        // ask player GUI or CLI
-        // I suppose in the end the player will be presented with 2 buttons to choose from
-        // I don't know if the ViewInterface (string variable) is needed but for now if
-        // the player is going to choose (e.g. by writing CLI) then I believe passing this information
-        // through a variable might be a start
-        game.startView(game.askGUIorTUI(ViewInterface));
+            game = new Game();
 
-        // initialize game
-        // Question: Since startGame should initialize the board shouldn't the number of players be known beforehand?
-        //           The number of tiles on the board depends on the number of players playing, we can't setup the board
-        // I suppose in the end the game will be started AFTER all the players have been connected
-        //
-        // Two scenarios?
-        // 1. After the player connects he is presented a screen saying waiting for players to connect
-        // 2. After the player connects he is presented the board and his shelfie (all empty)
-        //    and is asked to wait for players
-        // In the 2. it might be better to initialize the board, render it through view but without the setup
-        //
-        // Note: Perhaps a second method is needed for less confusion
-        //       One method should be about the SETUP and another for the START itself of the game
-        // SETUP: game.setupGAME(); or even game.initializeGame();
-        // START: game.startGame();
-        game.startGame();
+            // ask player GUI or CLI
+            // This should not be here?
+            // The player class does not have an attribute related to view
+            // The view that the player chooses is something the client stores
+            // In other words there is no need to keep an array or an attribute within game or player about the view choices
+            // game.startView(game.askGUIorTUI(ViewInterface));
+
+            // For simplicity for now we have decided the first player will be using CLI
 
 
-        // initialize player
-        player = new Player();
 
-        // ask player name and add player
-        game.addPlayers(player.askNickname());
+            // initialize game
+            // create board
+            // setup board
+            int numberofplayers = game.askHowManyPlayers();
 
-        // create board
-        // setup board
-        // create shelfie
-        // assign shelfie
-        // start game
-        // For those see "initialize game"
+            LivingRoom board = new LivingRoom();
+
+
+           // initialize player
+            // ask player name and add player
+           // After a player connects the method game.addPlayer is called
+           // It takes the array of players and asks the player his nickname
+            // then it adds the nickname to the corresponding player object
+             Player[] Array = new Player[numberofplayers];
+            game.addPlayers( Array, player.askNickname());
+
+            // After all players have connected and have chosen a nickname the game can start
+            // startgame is given the array of player objects as a parameter
+            // This allows game to iter through each player instance
+            game.startGame(Board, Array);
 
 
 
 
-    }
+        }
 
-    // while(!endgame)
-    // ask player which tile | ( up to
-    // check tile            |         3 times )
-    // ask player tile order
-    // check tile
-    // ask if player is sure
-    // insert tiles inside shelfie
-    // if shelfie is full endgame = 1
-    // else new turn
+
+
 }
-
