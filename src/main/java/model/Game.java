@@ -57,10 +57,6 @@ public class Game{
     public LivingRoom showLivingRoom(){
     }
 
-    public String askGUIorTUI(String string){
-
-        return string;
-    }
 
     public void matchSPacesPGoal(){
     }
@@ -68,9 +64,6 @@ public class Game{
     public void refillLivingRoom(){
     }
 
-    public String startView(String string){
 
-        return string;
-    }
 
 }
