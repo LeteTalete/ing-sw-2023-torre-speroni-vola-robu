@@ -14,17 +14,17 @@ public class Player{
     private String nickname;
     private boolean isPlaying;
     private Shelf shelf;
-    private PersonalGoalCard personalGoalCard;
+    private int personalGoalCard;
     public int score;
     private boolean endGame;
 
     private ArrayList<Tile> tilesChoosen;
 
-    public GoalCard getGoalCard(){
+    public int getGoalCard(){
         return this.personalGoalCard;
     }
 
-    public void setGoalCard(PersonalGoalCard pGCard) {
+    public void setGoalCard(int pGCard) {
         this.personalGoalCard = pGCard;
         return;
     }
