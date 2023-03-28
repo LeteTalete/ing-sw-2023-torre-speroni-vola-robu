@@ -40,7 +40,7 @@ public class Player{
 
 
     public int getMyScore (){
-        return score;
+        return this.score;
     }
 
     public void setMyScore (int myScore){
@@ -58,10 +58,6 @@ public class Player{
     }
 
     public void chooseColumn(int col){
-
-    }
-
-    public void placeTilesOnShelf(Shelf shelf, ArrayList<Tile> tile) {
 
     }
 
