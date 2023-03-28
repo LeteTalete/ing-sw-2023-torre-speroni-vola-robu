@@ -15,11 +15,11 @@ public class Game{
 
     }
 
-    // addplayers should initialize every players attribute to 0
+    // addplayers should initialize every player attribute to 0
     public void addPlayers(Player[] Array, String nickname){
     }
 
-    public void startGame(Player[] array){
+    public void startGame(LivingRoom board, Player[] array){
         // while(!endgame)
         // ask player which tile | ( up to
         // check tile            |         3 times )
@@ -34,7 +34,6 @@ public class Game{
 
 
     // TO DO:
-    // - Given numberofplayers it should setup the board following the ruleset
     // - Generate 2 random numbers from 1 to 12
     // - Read a .txt ( or a .json file ) and instantiate the cards written on the file corresponding to the 2 random numbers
     //   Those will be the common goal cards
