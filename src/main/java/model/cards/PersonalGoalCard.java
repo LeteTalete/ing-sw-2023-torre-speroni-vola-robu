@@ -40,12 +40,6 @@ public class PersonalGoalCard extends GoalCard {
         return returnValue;
     }
 
-    public int checkConditions(JsonNode position){
-
-
-
-    }
-
 
 
 
