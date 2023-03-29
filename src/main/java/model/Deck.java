@@ -1,5 +1,6 @@
 package model;
 
+import model.enumerations.T_Type;
 import model.enumerations.Tile;
 
 import java.util.Collections;
@@ -17,12 +18,16 @@ public class Deck{
 
     public Deck()
     {
+        int count = 1;
         for(int i=0; i<size/tileKind;i++)
         {
-            for(Tile t : Tile.values())
+            for(T_Type t_type : T_Type.values())
             {
+                Tile t = new Tile(t_type,count);
                 tiles.push(t);
             }
+            count++;
+            if(count > 3) count = 1;
         }
         this.shuffle();
     }
