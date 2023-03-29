@@ -8,6 +8,8 @@ import java.util.ArrayList;
 public class Game{
     private ArrayList<Player> players;
 
+    private Player currentPlayer;
+
     public void nextTurn(){
     }
 
@@ -54,16 +56,18 @@ public class Game{
     public void chooseFirstPlayer(){
     }
 
-    public LivingRoom showLivingRoom(){
-    }
-
-
-    public void matchSPacesPGoal(){
-    }
-
     public void refillLivingRoom(){
     }
 
+    public void scoreBoard(){
 
+    }
 
+    public Player getCurrentPlayer(){
+
+    }
+
+    public void setCurrentPlayer(Player currentPlayer) {
+        this.currentPlayer = currentPlayer;
+    }
 }

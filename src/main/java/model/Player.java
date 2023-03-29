@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Player{
+//attributes
     private boolean chair;
     private String nickname;
     private boolean isPlaying;
@@ -19,6 +20,32 @@ public class Player{
     private boolean endGame;
 
     private ArrayList<Tile> tilesChoosen;
+
+//methods
+    public ArrayList<Tile> chooseTiles(Tile tile){
+    }
+
+    public ArrayList<Tile> chooseOrder(ArrayList<Tile> tilesChosen){
+
+    }
+
+    public void chooseColumn(int col){
+
+    }
+
+    public String askNickname(){
+
+        return nickname;
+    }
+
+    public String getNickname(){
+        return this.nickname;
+    }
+
+    public void setNickname(String nm){
+        //not sure send help I can't remember
+        this.nickname = new String(nm);
+    }
 
     public int getGoalCard(){
         return this.personalGoalCard;
@@ -49,22 +76,9 @@ public class Player{
     }
 
 
-    public ArrayList<Tile> chooseTiles(Tile tile){
-    }
-
-    public ArrayList<Tile> chooseOrder(ArrayList<Tile> tilesChosen){
 
 
-    }
 
-    public void chooseColumn(int col){
-
-    }
-
-    public String askNickname(){
-
-        return nickname;
-    }
 
 
 }
