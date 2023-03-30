@@ -27,7 +27,7 @@ public class GameController {
 
             // create board
             // setup board
-            LivingRoom board = new LivingRoom("board.txt", numberofplayers);
+            LivingRoom board = new LivingRoom(numberofplayers);
 
             // initialize player
             // ask player name and add player
