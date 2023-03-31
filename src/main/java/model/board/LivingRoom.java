@@ -1,11 +1,14 @@
 package model.board;
 
 import model.Deck;
+import model.Position;
 import model.enumerations.Couple;
 
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import model.enumerations.State;
+import model.enumerations.Tile;
 
 
 import java.io.File;
@@ -15,12 +18,12 @@ import java.io.IOException;
 public class LivingRoom {
     private Couple[][] board;
 
-    public Couple getCouple(int x, int y) {
+    public Couple getCouple(Position p) {
 
         return null;
     }
 
-    public void setCouple(int x, int y) {
+    public void setCouple(Position p, Tile t, State s) {
 
     }
 

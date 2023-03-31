@@ -2,7 +2,8 @@ package model.enumerations;
 
 public enum State {
     EMPTY,
-    EMPTY_AND_UNUSABLE,
+    EMPTY_AND_UNUSABLE, //abbiamo deciso di toglierlo
     INVALID,
-    PICKABLE
+    PICKABLE,
+    PICKED
 }

@@ -19,10 +19,10 @@ public class Player{
     public int score;
     private boolean endGame;
 
-    private ArrayList<Tile> tilesChoosen;
+    private ArrayList<Position> tilesChoosen;
 
 //methods
-    public ArrayList<Tile> chooseTiles(Tile tile){
+    public ArrayList<Position> chooseTiles(Position p){
     }
 
     public ArrayList<Tile> chooseOrder(ArrayList<Tile> tilesChosen){

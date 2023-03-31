@@ -10,9 +10,8 @@ import java.util.Stack;
 
 public class Deck{
 
-    // attribute size and attribute tileKind are set with a JSON file
-    private int size;
-    private int tileKind;
+    private int size = 132;
+    private int tileKind = 6;
 
     private Stack<Tile> tiles = new Stack<Tile>();
 
