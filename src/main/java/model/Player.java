@@ -114,7 +114,7 @@ public class Player{
     }
 
     public ArrayList<Tile> chooseOrder(ArrayList<Tile> tilesChosen){
-
+        return null;
     }
 
     public void chooseColumn(int col){
