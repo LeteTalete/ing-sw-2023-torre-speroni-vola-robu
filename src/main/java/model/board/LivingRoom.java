@@ -13,6 +13,7 @@ import model.enumerations.Tile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 
 public class LivingRoom {
@@ -25,6 +26,18 @@ public class LivingRoom {
 
     public void setCouple(Position p, Tile t, State s) {
 
+    }
+
+    public boolean checkPlayerChoice(ArrayList<Position> choice)
+    {
+        //this method should check if the choice made by player is a valid choice or not
+
+        return true;
+    }
+
+    public void setPickedCouples(ArrayList<Position> choice)
+    {
+        //this method should set as PICKED the couple choosed by the player
     }
 
     public LivingRoom(int numberofplayers) {
