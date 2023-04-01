@@ -14,7 +14,7 @@ public class Game{
     }
 
     public int calculateScore(){
-
+        return 0;
     }
 
     // addplayers should initialize every player attribute to 0
@@ -45,7 +45,7 @@ public class Game{
 
 
     public int askHowManyPlayers(){
-        int numberofplayers;
+        int numberofplayers = 0;
         return numberofplayers;
     }
 
@@ -64,7 +64,7 @@ public class Game{
     }
 
     public Player getCurrentPlayer(){
-
+        return null;
     }
 
     public void setCurrentPlayer(Player currentPlayer) {
