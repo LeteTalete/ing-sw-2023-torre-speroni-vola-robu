@@ -47,7 +47,7 @@ public class Player{
             {
                if(!checkUserInput(user_input)) throw new InvalidChoiceFormatException();
                // here i am sure that the user_input is in a correct format
-                // now i can add the positions choosen
+                // now i can add chosen positions
                for(int i=0;i<user_input.length();i++)
                {
                    if(i%3 == 0)
@@ -67,12 +67,12 @@ public class Player{
                        System.out.print("confirm? ");
                        confirm = sc.next().charAt(0);              //reads string
                        sc.close();
-                       if(confirm != 'y' || confirm != 'n')
+                       if(confirm != 'y' && confirm != 'n')
                        {
                            System.out.println("please insert y or n");
                        }
                       }
-                   while (confirm != 'y' || confirm != 'n');
+                   while (confirm != 'y' && confirm != 'n');
                    if(confirm == 'y') flag = true;
                }
                else System.out.println("This choice is not valid, please make another choice");
@@ -95,7 +95,7 @@ public class Player{
         //note: 'space' = 32
         int l = s.length();
 
-        if(l!=2 || l!=5 || l!=8) return false;
+        if(l!=2 && l!=5 && l!=8) return false;
         if(l > 5)
         {
             if(s.charAt(5) != 32) return false;
