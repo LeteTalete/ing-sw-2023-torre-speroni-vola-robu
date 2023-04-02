@@ -2,8 +2,12 @@ package model;
 
 import model.Player;
 import model.board.LivingRoom;
+import model.cards.CommonGoalCard;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class Game{
     private ArrayList<Player> players;
@@ -65,6 +69,25 @@ public class Game{
 
     public Player getCurrentPlayer(){
         return null;
+    }
+
+
+    // Method generateCGC generates and returns an ArrayList containing CommonGoalCard objects
+    // Those will be the cards that will be used in the game
+    // First it generates 2 different random numbers from 1 to 12
+    // (inside the code it's from 1 to 13 because the upper bound is exclusive)
+    // Then it iterates for how many cards are needed and adds the cards to the ArrayList
+    public List<CommonGoalCard> generateCGC(){
+        List<CommonGoalCard> commonGoalCards = new ArrayList<>();
+        int numberOfCommonGoalCards = 2; // Change this number if you want to use more cards
+        int[] idsOfTheCards = new Random().ints(1, 13).distinct().limit(numberOfCommonGoalCards).toArray();
+
+        for ( int i = 0; i < numberOfCommonGoalCards; i++){
+            CommonGoalCard dummy = new CommonGoalCard(idsOfTheCards[i]);
+            commonGoalCards.add(dummy.typeGroupOrShape());
+        }
+
+        return commonGoalCards;
     }
 
     public void setCurrentPlayer(Player currentPlayer) {
