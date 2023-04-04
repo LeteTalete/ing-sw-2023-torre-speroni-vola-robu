@@ -46,27 +46,29 @@ public class GameTest {
         List<CommonGoalCard> commonGoalCards = game.generateCGC();
 
         for (CommonGoalCard card : commonGoalCards) {
-            if (card instanceof CG_Shape) {
-                if ( (((CG_Shape) card).getRandomTiles() == 0 ) && (((CG_Shape) card).getStairs() == 0) ){
-                    System.out.println( ((CG_Shape) card).getID() );
-                    System.out.println( ((CG_Shape) card).getType() );
-                    System.out.println( ((CG_Shape) card).getMirror() );
-                    System.out.println( ((CG_Shape) card).getSameType() );
-                    System.out.println( ((CG_Shape) card).getRandomTiles() );
-                    System.out.println( ((CG_Shape) card).getStairs() );
-                    for (Position position : ( (CG_Shape) card).getPositions() ) {
+            if ( card.getType().equals("Shape") ) {
+                if ( ( card.getRandomTiles() == 0 ) && ( card.getStairs() == 0) ){
+
+                    System.out.println( card.getID() );
+                    System.out.println( card.getType() );
+                    System.out.println( card.getMirror() );
+                    System.out.println( card.getSameType() );
+                    System.out.println( card.getRandomTiles() );
+                    System.out.println( card.getStairs() );
+
+                    for (Position position : card.getPositions() ) {
                         System.out.println("x: " + position.getX() + ", y: " + position.getY());
                     }
                 } else {
-                    System.out.println( ((CG_Shape) card).getID() );
-                    System.out.println( ((CG_Shape) card).getType() );
-                    System.out.println( ((CG_Shape) card).getMirror() );
-                    System.out.println( ((CG_Shape) card).getSameType() );
-                    System.out.println( ((CG_Shape) card).getRandomTiles() );
-                    System.out.println( ((CG_Shape) card).getStairs() );
+                    System.out.println( card.getID() );
+                    System.out.println( card.getType() );
+                    System.out.println( card.getMirror() );
+                    System.out.println( card.getSameType() );
+                    System.out.println( card.getRandomTiles() );
+                    System.out.println( card.getStairs() );
                 }
-            } else if ( card instanceof CG_Group ) {
-                System.out.println( ((CG_Group) card).getID() );
+            } else if ( card.getType().equals("Group") ) {
+                System.out.println( card.getID() );
             }
         }
 

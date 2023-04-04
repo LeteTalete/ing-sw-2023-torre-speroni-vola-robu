@@ -2,9 +2,12 @@ package model.cards;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import model.Position;
+import model.board.Shelf;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 public class CommonGoalCard extends GoalCard {
     private int ID;
@@ -52,8 +55,31 @@ public class CommonGoalCard extends GoalCard {
         return dummy;
     }
 
-
-    public void checkConditions(){
+    public int getID() {
+        return 0;
     }
+
+    public int getMirror() {
+        return 0;
+    }
+
+    public int getSameType() {
+        return 0;
+    }
+
+    public int getStairs() {
+        return 0;
+    }
+
+    public int getRandomTiles() {
+        return 0;
+    }
+
+    public String getType() {
+        return null;
+    }
+    public List<Position> getPositions() { return null; }
+
+    public int checkConditions(Shelf shelf){ return 0; }
 
 }
