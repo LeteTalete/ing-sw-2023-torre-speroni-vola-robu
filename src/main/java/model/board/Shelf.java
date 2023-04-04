@@ -47,4 +47,15 @@ public class Shelf {
         this.shelfsMatrix[column][row].setState(State.EMPTY);
     }
 
+    public void setCoordinate(int column, int row, Couple chosen)
+    {
+        this.shelfsMatrix[column][row].setState(chosen.getState());
+        this.shelfsMatrix[column][row].setTile(chosen.getTile());
+    }
+
+    public Couple getCoordinate(int column, int row)
+    {
+        return this.shelfsMatrix[column][row];
+    }
+
 }
