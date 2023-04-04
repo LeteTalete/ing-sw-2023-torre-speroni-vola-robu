@@ -6,6 +6,7 @@ import model.board.LivingRoom;
 import model.enumerations.Couple;
 
 import java.sql.Array;
+import java.util.ArrayList;
 
 public class GameController {
 
@@ -32,15 +33,12 @@ public class GameController {
             // initialize player
             // ask player name and add player
             // After a player connects the method game.addPlayer is called
-            // It takes the array of players and asks the player his nickname
-            // then it adds the nickname to the corresponding player object
-            Player[] Array = new Player[numberofplayers];
-            game.addPlayers( Array, player.askNickname());
+            // for each player connecting, they are added to the game along with their nickname
+            Player a = new Player();
+            game.addPlayers(a, player.askNickname());
 
             // After all players have connected and have chosen a nickname the game can start
-            // startgame is given the array of player objects as a parameter
-            // This allows game to iter through each player instance
-            game.startGame(board, Array);
+            game.startGame(board);
 
 
 

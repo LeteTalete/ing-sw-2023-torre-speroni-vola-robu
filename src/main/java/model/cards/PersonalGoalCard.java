@@ -2,6 +2,7 @@ package model.cards;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import model.board.Shelf;
 import model.enumerations.Couple;
 import model.enumerations.State;
 import model.enumerations.T_Type;
@@ -12,7 +13,8 @@ import java.util.ArrayList;
 
 public class PersonalGoalCard extends GoalCard {
     //This Method calculates each player's score of his Personal Card
-    public int scorePersonalGoalCard(Couple[][] myShelf, int numPersonalCard){
+    public int scorePersonalGoalCard(Shelf shelf, int numPersonalCard){
+        Couple[][] myShelf = shelf.getShelfsMatrix();
         String[] positionTileColummn; // the Array of String containing the position and the type of Tile to search for in a given column
         int[] scorePersCard = {0, 1, 2, 3, 6, 9, 12}; // the Score Table
         int tilesCorrect = 0; //Number of correct Tiles found

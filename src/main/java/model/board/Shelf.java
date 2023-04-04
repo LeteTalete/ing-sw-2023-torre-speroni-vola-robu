@@ -6,8 +6,9 @@ import model.enumerations.State;
 public class Shelf {
     public static final int ROWS = 6;
     public static final int COLUMNS = 5;
-    private Couple shelfsMatrix[][];
+    private Couple[][] shelfsMatrix;
     private int freeSlots[];
+    private int countOccurrences[] = new int[12]; // Questo deve andare dentro la couple
 
     //getMaxFree takes as an argument the number of column in which we want to count the empty spaces
     //if numberColumn > 4 it means we're about to check all the columns and find the max of empty
@@ -42,20 +43,39 @@ public class Shelf {
         return false;
     }
 
-    public void setFreeSlots(int column, int row)
+    public void setFreeSlots(int row, int column)
     {
-        this.shelfsMatrix[column][row].setState(State.EMPTY);
+        this.shelfsMatrix[row][column].setState(State.EMPTY);
     }
 
-    public void setCoordinate(int column, int row, Couple chosen)
+    public void setCoordinate(int row, int column, Couple chosen)
     {
-        this.shelfsMatrix[column][row].setState(chosen.getState());
-        this.shelfsMatrix[column][row].setTile(chosen.getTile());
+        Couple insert = new Couple();
+        insert.setTile(chosen.getTile());
+        insert.setState(chosen.getState());
+        this.shelfsMatrix[row][column] = insert;
     }
 
     public Couple getCoordinate(int column, int row)
     {
         return this.shelfsMatrix[column][row];
+    }
+
+    public int additionalPoints(){
+        int scoring = 0;
+        return scoring;
+    }
+
+    public Couple[][] getShelfsMatrix() {
+        return this.shelfsMatrix;
+    }
+
+    public int[] getCountOccurrences() {
+        return this.countOccurrences;
+    }
+
+    public Shelf(){
+        this.shelfsMatrix = new Couple[ROWS][COLUMNS];
     }
 
 }
