@@ -2,6 +2,8 @@ package model.cards;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import model.Position;
+import model.board.Shelf;
+import model.enumerations.Couple;
 import model.enumerations.State;
 import model.enumerations.Tile;
 
@@ -70,6 +72,49 @@ public class CG_Shape extends CommonGoalCard {
             e.printStackTrace();
 
         }
+    }
+    @Override
+    public int checkConditions(Shelf shelf){
+        int numOfOccurrences = 0;
+        int flag1 = 0;
+        int flag2 = 0;
+        // Deep copy is not necessary as checkCondition needs to modify array checkOccurrence inside player's shelf
+        Couple[][] shelfsMatrix = shelf.getShelfsMatrix();
+
+        while ( flag1 == 0 ) {
+
+            if ( ( this.mirror == 0 ) && ( this.randomTiles == 0 ) &&  ( this.stairs == 0 ) ) {
+                flag1 = 1;
+            }
+
+            for (int i = 0; i < shelf.ROWS; i++) {
+                for (int j = 0; j < shelf.COLUMNS; j++) {
+
+                    for ( Position position : this.positions ) {
+                        int rowCheck = i + position.getX();
+                        int columnChecK = j + position.getY();
+                        if ( rowCheck < shelf.ROWS && columnChecK < shelf.COLUMNS ) {
+                            if (!shelfsMatrix[i][j].getTile().getTileType().equals(shelfsMatrix[rowCheck][columnChecK].getTile().getTileType())) {
+                                flag2 = 1;
+                                break;
+                            }
+                        }
+                    }
+                    if ( flag2 == 1 ){
+                        break;
+                    } else {
+                        numOfOccurrences++;
+                    }
+                }
+
+            }
+
+            if ( flag2 == 1 ){
+                break;
+            }
+        }
+
+        return numOfOccurrences;
     }
 
     public int getID() {
