@@ -6,7 +6,7 @@ import model.enumerations.State;
 public class Shelf {
     public static final int ROWS = 6;
     public static final int COLUMNS = 5;
-    private Couple[][] shelfsMatrix = new Couple[ROWS][COLUMNS];
+    private Couple[][] shelfsMatrix;
     private int freeSlots[];
     private int countOccurrences[] = new int[12]; // Questo deve andare dentro la couple
 
@@ -50,8 +50,10 @@ public class Shelf {
 
     public void setCoordinate(int row, int column, Couple chosen)
     {
-        this.shelfsMatrix[row][column].setState(chosen.getState());
-        this.shelfsMatrix[row][column].setTile(chosen.getTile());
+        Couple insert = new Couple();
+        insert.setTile(chosen.getTile());
+        insert.setState(chosen.getState());
+        this.shelfsMatrix[row][column] = insert;
     }
 
     public Couple getCoordinate(int column, int row)
@@ -73,6 +75,7 @@ public class Shelf {
     }
 
     public Shelf(){
+        this.shelfsMatrix = new Couple[ROWS][COLUMNS];
     }
 
 }
