@@ -22,6 +22,10 @@ public class Couple {
     }
 
 
+    public Couple(){
+
+    }
+
     // Constructor for a tile that can be either placed or picked
     public Couple( Tile tile ){
         this.state = State.PICKABLE;
