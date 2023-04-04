@@ -9,6 +9,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 public class Game{
     private ArrayList<Player> players;
@@ -89,7 +90,9 @@ public class Game{
 
 
     public void endGame(){
+        //make one last round with the remaining players and then calculates score and shows the scoreboard
         calculateScore();
+        scoreBoard(players);
     }
 
     // choose randomly a player and set is as the first one to play
@@ -101,8 +104,9 @@ public class Game{
     public void refillLivingRoom(){
     }
 
-    public void scoreBoard(){
-
+    public void scoreBoard(ArrayList<Player> ps){
+        List<Player> ranking = new ArrayList<Player>();
+        return ranking = ps.stream().sorted((o1, o2)->o1.score.compareTo(o2.score)).collect(Collectors.toList());
     }
 
     public Player getCurrentPlayer(){
