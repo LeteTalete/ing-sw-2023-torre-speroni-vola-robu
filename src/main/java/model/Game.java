@@ -3,6 +3,7 @@ package model;
 import model.Player;
 import model.board.LivingRoom;
 import model.cards.CommonGoalCard;
+import model.cards.PersonalGoalCard;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -12,20 +13,55 @@ import java.util.Random;
 public class Game{
     private ArrayList<Player> players;
 
+    private LivingRoom gameBoard;
+
+    private int numOfPlayers;
+
     private Player currentPlayer;
 
     public void nextTurn(){
+        int next = 0;
+        for(int i = 0; i < numOfPlayers + 1; i++)
+        {
+            if(players.get(i).equals(getCurrentPlayer()))
+            {
+                next = i + 1;
+            }
+        }
+        if(next > numOfPlayers)
+        {
+            next = 0;
+        }
+        setCurrentPlayer(players.get(next));
     }
 
     public int calculateScore(){
+
+        for(int i=0; i<numOfPlayers; i++)
+        {
+            Player calcNow = players.get(i);
+            int PGC = calcNow.getGoalCard();
+            int add = PGC.scorePersonalGoalCard(calcNow.getMyShelf(), PGC);
+            calcNow.score =+ add + additionalPoints();
+        }
+        return 0;
+    }
+
+    // add to each player's score the additional points given by the positions of different tiles
+    // on their shelves (see rules for reference)
+    public int additionalPoints(){
         return 0;
     }
 
     // addplayers should initialize every player attribute to 0
-    public void addPlayers(Player[] Array, String nickname){
+    public void addPlayers(Player newOne, String nickname){
+        newOne.setNickname(nickname);
+        this.players.add(newOne);
     }
 
-    public void startGame(LivingRoom board, Player[] array){
+    public void startGame(LivingRoom board){
+        chooseFirstPlayer();
+        this.gameBoard = board;
         // while(!endgame)
         // ask player which tile | ( up to
         // check tile            |         3 times )
@@ -49,15 +85,19 @@ public class Game{
 
 
     public int askHowManyPlayers(){
-        int numberofplayers = 0;
-        return numberofplayers;
+        int numberOfPlayers = 0;
+        this.numOfPlayers= numberOfPlayers;
+        return numberOfPlayers;
     }
 
 
     public void endGame(){
     }
 
+    // choose randomly a player and set is as the first one to play
     public void chooseFirstPlayer(){
+        int curr = new Random().nextInt(numOfPlayers+1);
+        this.currentPlayer = players.get(curr);
     }
 
     public void refillLivingRoom(){
@@ -68,7 +108,7 @@ public class Game{
     }
 
     public Player getCurrentPlayer(){
-        return null;
+        return this.currentPlayer;
     }
 
 
@@ -89,6 +129,7 @@ public class Game{
 
         return commonGoalCards;
     }
+
 
     public void setCurrentPlayer(Player currentPlayer) {
         this.currentPlayer = currentPlayer;
