@@ -2,11 +2,12 @@ package org.example;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import model.cards.GoalCard;
 import model.enumerations.Couple;
 import model.enumerations.State;
 import model.enumerations.T_Type;
-import org.junit.Test;
 import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,11 +15,13 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class PersonalGoalCardTest {
+
+class PersonalGoalCardTest extends GoalCard{
+
     @Test
     public int scorePersonalGoalCard(Couple[][] myShelf, int numPersonalCard) {
         assertTrue(numPersonalCard > 0 && numPersonalCard <= 12);
-
+        assertNotNull(myShelf);
         String[] positionTileColummn; // the Array of String containing the position and the type of Tile to search for in a given column
         int[] scorePersCard = {0, 1, 2, 3, 6, 9, 12}; // the Score Table
         int tilesCorrect = 0; //Number of correct Tiles found
@@ -71,6 +74,5 @@ class PersonalGoalCardTest {
             e.printStackTrace();
         }
         return scorePersCard[tilesCorrect];
-    }
     }
 }
