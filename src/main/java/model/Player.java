@@ -113,8 +113,88 @@ public class Player{
         return true;
     }
 
-    public ArrayList<Tile> chooseOrder(ArrayList<Tile> tilesChosen){
-        return null;
+    public ArrayList<Position> chooseOrder(ArrayList<Position> tilesChosen){
+        //this method asks the player to select in wich order insert tiles choosen in the shelf
+
+        ArrayList<Position> tiles = (ArrayList<Position>) tilesChosen.clone(); //making a deep copy for safety
+        Tile t;
+        String order_input = null;
+        boolean flag = false;
+        char confirm;
+
+        if(tiles.size()>1)
+        {
+            System.out.print("tiles: ");
+            for(int i=1;i<=tiles.size();i++)
+            {
+                t = livingRoom.getCouple(tiles.get(i-1)).getTile();
+                System.out.print("(" + i + ") " + t.getTileType() + "_" + t.getFigure() + "  ");
+                //example: "tiles: (1) CAT_1  (2) BOOK_1  (3) CAT_3"
+            }
+            System.out.println();
+            while(!flag)
+            {
+                Scanner sc= new Scanner(System.in); //System.in is a standard input stream
+                System.out.print("choose order: ");
+                order_input = sc.nextLine();              //reads string
+                sc.close();
+                try
+                {
+                    if(!checkOrderInput(order_input)) throw new InvalidChoiceFormatException();
+                    else
+                    {
+                        do{
+                            sc= new Scanner(System.in); //System.in is a standard input stream
+                            System.out.print("confirm? ");
+                            confirm = sc.next().charAt(0);              //reads string
+                            sc.close();
+                            if(confirm != 'y' && confirm != 'n')
+                            {
+                                System.out.println("please insert y or n");
+                            }
+                        }
+                        while (confirm != 'y' && confirm != 'n');
+                        if(confirm == 'y') flag = true;
+                    }
+                }
+                catch (InvalidChoiceFormatException exc)
+                {
+                    System.out.println(exc.toString());
+                }
+            }
+            //here i am sure that the input is valid and the player confirmed his choice
+            //now i have to order the positions array as the player chosed
+            int index = 0;
+            for(int i=0; i<order_input.length(); i++)
+            {
+                if(order_input.charAt(i) != 32)
+                {
+                    tiles.set(index,tilesChosen.get(order_input.charAt(i)-48-1));
+                    index++;
+                }
+            }
+
+            return tiles;
+        }
+        else return tiles; //if player selected only one tile, order is implicit
+    }
+
+    public boolean checkOrderInput(String s)
+    {
+        //input should be like this: "1 2 3" or "2 1 3" or "3 1 2"
+        //three different integers from 1 to 3 separated by a space
+        //note: ASCII: '0' = 48 ... '9' = 57
+        //note: 'space' = 32
+
+        if(s.length()!=5) return false;
+        if(s.charAt(0) < 49 || s.charAt(0) > 51) return false;
+        if(s.charAt(1) != 32) return false;
+        if(s.charAt(2) < 49 || s.charAt(2) > 51) return false;
+        if(s.charAt(3) != 32) return false;
+        if(s.charAt(4) < 49 || s.charAt(4) > 51) return false;
+        if(s.charAt(0) == s.charAt(2) || s.charAt(0) == s.charAt(4) || s.charAt(2) == s.charAt(4)) return false;
+
+        return true;
     }
 
     public void chooseColumn(int col){
