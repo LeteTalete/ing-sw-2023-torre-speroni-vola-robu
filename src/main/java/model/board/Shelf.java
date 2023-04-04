@@ -59,6 +59,11 @@ public class Shelf {
         return this.shelfsMatrix[column][row];
     }
 
+    public int additionalPoints(){
+        int scoring = 0;
+        return scoring;
+    }
+
     public Couple[][] getShelfsMatrix() {
         return this.shelfsMatrix;
     }

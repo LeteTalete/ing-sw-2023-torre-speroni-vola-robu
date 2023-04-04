@@ -41,17 +41,14 @@ public class Game{
         {
             Player calcNow = players.get(i);
             int PGC = calcNow.getGoalCard();
-            int add = PGC.scorePersonalGoalCard(calcNow.getMyShelf(), PGC);
-            calcNow.score =+ add + additionalPoints();
+            PersonalGoalCard card = new PersonalGoalCard();
+            int add = card.scorePersonalGoalCard(calcNow.getMyShelf(), PGC);
+            calcNow.score =+ add + calcNow.getMyShelf().additionalPoints();
         }
         return 0;
     }
 
-    // add to each player's score the additional points given by the positions of different tiles
-    // on their shelves (see rules for reference)
-    public int additionalPoints(){
-        return 0;
-    }
+
 
     // addplayers should initialize every player attribute to 0
     public void addPlayers(Player newOne, String nickname){
@@ -92,6 +89,7 @@ public class Game{
 
 
     public void endGame(){
+        calculateScore();
     }
 
     // choose randomly a player and set is as the first one to play
