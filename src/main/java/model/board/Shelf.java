@@ -8,7 +8,8 @@ public class Shelf {
     public static final int COLUMNS = 5;
     private Couple[][] shelfsMatrix;
     private int freeSlots[];
-    private int countOccurrences[] = new int[12]; // Questo deve andare dentro la couple
+    private int[] cardsAlreadyChecked;
+
 
     //getMaxFree takes as an argument the number of column in which we want to count the empty spaces
     //if numberColumn > 4 it means we're about to check all the columns and find the max of empty
@@ -70,12 +71,14 @@ public class Shelf {
         return this.shelfsMatrix;
     }
 
-    public int[] getCountOccurrences() {
-        return this.countOccurrences;
+    public int[] getCardsAlreadyChecked(){
+        return this.cardsAlreadyChecked;
     }
+
 
     public Shelf(){
         this.shelfsMatrix = new Couple[ROWS][COLUMNS];
+        this.cardsAlreadyChecked = new int[12];
     }
 
 }
