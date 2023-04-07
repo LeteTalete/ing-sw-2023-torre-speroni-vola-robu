@@ -47,7 +47,7 @@ class PersonalGoalCardTest extends GoalCard{
             for (int col = 0; col < myShelf.COLUMNS; col++) {
                 if (row == 0) {
                     /*
-                    is the number of boxes in a column of the shelf that must be left empty
+                    Is the number of boxes in a column of the shelf that must be left empty
                     The random number of rows to leave empty has a range that must be from 0 to a maximum of 6,
                     to ensure that the shelf does not risk being too empty, I have chosen a value from 0 to 3
                     */
