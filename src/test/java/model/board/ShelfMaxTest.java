@@ -2,7 +2,6 @@ package model.board;
 
 import model.enumerations.Couple;
 import model.enumerations.State;
-import model.enumerations.Tile;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -11,30 +10,30 @@ class ShelfMaxTest {
 
     private Shelf s;
 
-    private Couple[][] shelfsMatrix;
     private Couple dummy;
+
 
     @Test
     void testMaxFree() {
+        s = new Shelf();
+        dummy = new Couple();
         dummy.setState(State.PICKED);
-        for(int i=0; i<5; i++)
+        for(int i=0; i<Shelf.COLUMNS; i++)
         {
-            this.shelfsMatrix[i][0]=dummy;
+            s.getShelfsMatrix()[0][i]=dummy;
         }
-        assertEquals(4,s.getMaxFree(5));
+        assertEquals(5,s.getMaxFree(5));
     }
 
     @Test
     void testShelfFull() {
+        s = new Shelf();
+        dummy = new Couple();
         dummy.setState(State.PICKED);
-        for(int i=0; i<5; i++)
-        {
-            this.shelfsMatrix[i][0]=dummy;
-            this.shelfsMatrix[i][1]=dummy;
-            this.shelfsMatrix[i][2]=dummy;
-            this.shelfsMatrix[i][3]=dummy;
-            this.shelfsMatrix[i][4]=dummy;
-
+        for(int i=0; i<Shelf.ROWS; i++) {
+            for(int j=0; j<Shelf.COLUMNS; j++) {
+                s.getShelfsMatrix()[i][j] = dummy;
+            }
         }
         assertEquals(0,s.getMaxFree(5));
     }

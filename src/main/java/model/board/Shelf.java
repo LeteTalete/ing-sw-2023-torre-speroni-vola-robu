@@ -33,25 +33,30 @@ public class Shelf {
     //if numberColumn > 4 it means we're about to check all the columns and find the max of empty
     //slots in the entirety of our array
 
+
+    public int getFreeCol(int nCol) {
+        int output = 0;
+        for(int i=0; i<ROWS; i++)
+        {
+            if(this.shelfsMatrix[i][nCol].getState().equals(State.EMPTY)){
+                output++;
+            }
+        }
+        return output;
+    }
+
     public int getMaxFree(int numberColumns){
         int maximum = 0;
         if(numberColumns > 4)
         {
-            for(int i=0; i<5; i++)
-            {
-                maximum = getMaxFree(i);
+            for(int i=0; i<COLUMNS; i++){
+                if(getFreeCol(i)>maximum)
+                maximum = getFreeCol(i);
             }
         }
         else
         {
-            //this needs to be rewritten asap, possibly using streams
-            for(int i=0; i<6; i++)
-            {
-                if(this.shelfsMatrix[numberColumns][i].getState().equals(State.EMPTY))
-                {
-                    maximum = maximum+1;
-                }
-            }
+            getFreeCol(numberColumns);
         }
         return maximum;
     }
@@ -97,6 +102,12 @@ public class Shelf {
     public Shelf(){
         this.shelfsMatrix = new Couple[ROWS][COLUMNS];
         this.cardsAlreadyChecked = new int[12];
+        for(int i = 0; i<ROWS; i++) {
+            for(int j=0; j<COLUMNS; j++) {
+                this.shelfsMatrix[i][j] = new Couple();
+                this.shelfsMatrix[i][j].setState(State.EMPTY);
+            }
+        }
     }
 
 }
