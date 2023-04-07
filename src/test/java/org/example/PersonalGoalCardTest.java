@@ -102,7 +102,7 @@ class PersonalGoalCardTest extends GoalCard{
                 positionTileColummn = readJSON.split(":"); // Split the string to have the tile position and type, separately.
                 lenPos = positionTileColummn.length; //To know the number of Tiles that are in a column
                 assertNotEquals(0, lenPos);
-                // if the lenPos is not greater than 1, it means that there is no tile to read in that column
+                // If the lenPos is not greater than 1, it means that there is no tile to read in that column
                 for (int index = 0; lenPos > 1 && index < lenPos; index = index + 2) {
                     positionRow = Integer.parseInt(positionTileColummn[index]);
                     assertNotNull(positionRow);
