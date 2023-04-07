@@ -1,12 +1,11 @@
 package model;
 
-import model.Player;
 import model.board.LivingRoom;
 import model.cards.CommonGoalCard;
 import model.cards.PersonalGoalCard;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -104,9 +103,9 @@ public class Game{
     public void refillLivingRoom(){
     }
 
-    public void scoreBoard(ArrayList<Player> ps){
+    public List<Player> scoreBoard(ArrayList<Player> ps){
         List<Player> ranking = new ArrayList<Player>();
-        return ranking = ps.stream().sorted((o1, o2)->o1.score.compareTo(o2.score)).collect(Collectors.toList());
+        return ranking = ps.stream().sorted(Comparator.comparing(Player::getMyScore)).collect(Collectors.toList());
     }
 
     public Player getCurrentPlayer(){
