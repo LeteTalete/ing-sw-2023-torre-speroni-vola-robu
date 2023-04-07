@@ -13,16 +13,6 @@ import static org.junit.Assert.*;
 import java.io.File;
 import java.io.IOException;
 
-// Class LivingRoomTest tests class LivingRoom
-// NB: Trying to run this test without fixing every return statement inside every class will result in an error
-//     To run this test locally you must:
-//     - Give size and tilekind their values (Ex: 132 and 6) Otherwise you'll get "/ by 0" error
-//     - Change numberofplayers to the desired number of players to test
-//     - Change LOCALLY the methods types to void to get rid of the warnings
-//     ( this won't be necessary once those methods will be written )
-//     ( Bad practice yes. DO NOT COMMIT THOSE CHANGES, REVERT BACK WHEN YOU ARE FINISHED )
-// Remove every System.out if you don't want to print testBoard
-
 public class LivingRoomTest {
     private Couple[][] testBoard;
     private int numberofplayers = 3; // Possible values 2 - 3 - 4

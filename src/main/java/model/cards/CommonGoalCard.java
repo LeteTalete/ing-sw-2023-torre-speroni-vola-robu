@@ -67,10 +67,6 @@ public class CommonGoalCard extends GoalCard {
         return 0;
     }
 
-    public int getRandomTiles() {
-        return 0;
-    }
-
     public String getType() {
         return null;
     }
@@ -78,4 +74,7 @@ public class CommonGoalCard extends GoalCard {
 
     public int checkConditions(Shelf shelf){ return 0; }
 
+    public int getNumOfOccurrences() {
+        return 0;
+    }
 }
