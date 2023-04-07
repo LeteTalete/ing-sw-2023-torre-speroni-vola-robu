@@ -52,7 +52,6 @@ public class GameTest {
                     System.out.println( card.getID() );
                     System.out.println( card.getType() );
                     System.out.println( card.getMirror() );
-                    System.out.println( card.getSameType() );
                     System.out.println( card.getStairs() );
 
                     for (Position position : card.getPositions() ) {
@@ -62,7 +61,6 @@ public class GameTest {
                     System.out.println( card.getID() );
                     System.out.println( card.getType() );
                     System.out.println( card.getMirror() );
-                    System.out.println( card.getSameType() );
                     System.out.println( card.getStairs() );
                 }
             } else if ( card.getType().equals("Group") ) {

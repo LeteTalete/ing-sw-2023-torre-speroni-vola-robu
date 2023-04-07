@@ -18,8 +18,6 @@ public class CG_Shape extends CommonGoalCard {
     private String type;
     private List<Position> positions;
     private int mirror;
-    private int sameType;
-    private int randomTiles;
     private int stairs;
 
     // Constructor for CG_Shape saves the CGC parameters given the card ID
@@ -51,11 +49,9 @@ public class CG_Shape extends CommonGoalCard {
 
                     this.type = cardNode.get("type").asText();
                     this.mirror = cardNode.get("mirror").asInt();
-                    this.sameType = cardNode.get("sameType").asInt();
-                    this.randomTiles = cardNode.get("randomTiles").asInt();
                     this.stairs = cardNode.get("stairs").asInt();
 
-                    if ( ( this.stairs == 0 ) && ( this.randomTiles == 0)) {
+                    if (  this.stairs == 0 ) {
                         JsonNode coordinatesNode = cardNode.get("coordinates");
                         for (JsonNode singleCoordinateNode : coordinatesNode) {
                             int x = singleCoordinateNode.get("x").asInt();
@@ -83,7 +79,7 @@ public class CG_Shape extends CommonGoalCard {
 
         while ( flag1 == 0 ) {
 
-            if ( ( this.mirror == 0 ) && ( this.randomTiles == 0 ) &&  ( this.stairs == 0 ) ) {
+            if ( ( this.mirror == 0 ) &&  ( this.stairs == 0 ) ) {
                 flag1 = 1;
             }
 
@@ -125,16 +121,8 @@ public class CG_Shape extends CommonGoalCard {
         return this.mirror;
     }
 
-    public int getSameType() {
-        return this.sameType;
-    }
-
     public int getStairs() {
         return this.stairs;
-    }
-
-    public int getRandomTiles() {
-        return this.randomTiles;
     }
 
     public String getType() {

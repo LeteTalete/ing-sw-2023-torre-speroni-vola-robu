@@ -4,7 +4,6 @@
     "type": "Shape",
     "numOfOccurrences": 1,
     "mirror": 1,
-    "sameType": 1,
     "stairs": 0,
     "coordinates": [
       {"x": 0, "y": 0},
@@ -19,7 +18,6 @@
     "type": "Shape",
     "numOfOccurrences": 1,
     "mirror": 0,
-    "sameType": 1,
     "stairs": 0,
     "coordinates": [
       {"x": 0, "y": 0},
@@ -33,7 +31,6 @@
     "type": "Shape",
     "numOfOccurrences": 2,
     "mirror": 0,
-    "sameType": 1,
     "stairs": 0,
     "coordinates": [
       {"x": 0, "y": 0},
@@ -47,7 +44,6 @@
     "type": "Shape",
     "numOfOccurrences": 1,
     "mirror": 0,
-    "sameType": 1,
     "stairs": 0,
     "coordinates": [
       {"x": 0, "y": 0},
@@ -62,7 +58,6 @@
     "type": "Shape",
     "numOfOccurrences": 1,
     "mirror": 1,
-    "sameType": 0,
     "stairs": 1
   },
   {

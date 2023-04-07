@@ -63,10 +63,6 @@ public class CommonGoalCard extends GoalCard {
         return 0;
     }
 
-    public int getSameType() {
-        return 0;
-    }
-
     public int getStairs() {
         return 0;
     }
