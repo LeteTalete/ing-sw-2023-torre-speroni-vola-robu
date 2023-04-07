@@ -2,9 +2,9 @@
   {
     "id": 0,
     "type": "Shape",
+    "numOfOccurrences": 1,
     "mirror": 1,
     "sameType": 1,
-    "randomTiles": 0,
     "stairs": 0,
     "coordinates": [
       {"x": 0, "y": 0},
@@ -17,9 +17,9 @@
   {
     "id": 1,
     "type": "Shape",
+    "numOfOccurrences": 1,
     "mirror": 0,
     "sameType": 1,
-    "randomTiles": 0,
     "stairs": 0,
     "coordinates": [
       {"x": 0, "y": 0},
@@ -31,9 +31,9 @@
   {
     "id": 2,
     "type": "Shape",
+    "numOfOccurrences": 2,
     "mirror": 0,
     "sameType": 1,
-    "randomTiles": 0,
     "stairs": 0,
     "coordinates": [
       {"x": 0, "y": 0},
@@ -45,9 +45,9 @@
   {
     "id": 3,
     "type": "Shape",
+    "numOfOccurrences": 1,
     "mirror": 0,
     "sameType": 1,
-    "randomTiles": 0,
     "stairs": 0,
     "coordinates": [
       {"x": 0, "y": 0},
@@ -60,18 +60,14 @@
   {
     "id": 4,
     "type": "Shape",
-    "mirror": 0,
-    "sameType": 1,
-    "randomTiles": 8,
-    "stairs": 0
+    "numOfOccurrences": 1,
+    "mirror": 1,
+    "sameType": 0,
+    "stairs": 1
   },
   {
     "id": 5,
-    "type": "Shape",
-    "mirror": 1,
-    "sameType": 0,
-    "randomTiles": 0,
-    "stairs": 1
+    "type": "Group"
   },
   {
     "id": 6,

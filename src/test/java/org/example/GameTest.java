@@ -47,13 +47,12 @@ public class GameTest {
 
         for (CommonGoalCard card : commonGoalCards) {
             if ( card.getType().equals("Shape") ) {
-                if ( ( card.getRandomTiles() == 0 ) && ( card.getStairs() == 0) ){
+                if (  card.getStairs() == 0 ){
 
                     System.out.println( card.getID() );
                     System.out.println( card.getType() );
                     System.out.println( card.getMirror() );
                     System.out.println( card.getSameType() );
-                    System.out.println( card.getRandomTiles() );
                     System.out.println( card.getStairs() );
 
                     for (Position position : card.getPositions() ) {
@@ -64,11 +63,11 @@ public class GameTest {
                     System.out.println( card.getType() );
                     System.out.println( card.getMirror() );
                     System.out.println( card.getSameType() );
-                    System.out.println( card.getRandomTiles() );
                     System.out.println( card.getStairs() );
                 }
             } else if ( card.getType().equals("Group") ) {
                 System.out.println( card.getID() );
+                System.out.println( card.getType() );
             }
         }
 

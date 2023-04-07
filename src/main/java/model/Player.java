@@ -60,7 +60,7 @@ public class Player{
                      choice.get((i-1)/3).setY(user_input.charAt(i)-48);
                    }
                }
-               if(livingRoom.checkPlayerChoice(choice))
+               if(this.livingRoom.checkPlayerChoice(choice))
                {
                    do {
                        sc= new Scanner(System.in); //System.in is a standard input stream
@@ -82,7 +82,7 @@ public class Player{
                 System.out.println(exc.toString());
             }
         }
-        livingRoom.setPickedCouples(choice);
+        this.livingRoom.setPickedCouples(choice);
 
         return choice;
     }
@@ -95,26 +95,29 @@ public class Player{
         //note: 'space' = 32
         int l = s.length();
 
+
         if(l!=2 && l!=5 && l!=8) return false;
         if(l > 5)
         {
             if(s.charAt(5) != 32) return false;
             if(s.charAt(6) < 48 || s.charAt(6) > 57) return false;
             if(s.charAt(7) < 48 || s.charAt(7) > 57) return false;
+            if(this.shelf.getMaxFree(5) < 3) return false;
         }
         if(l > 2)
         {
             if(s.charAt(2) != 32) return false;
             if(s.charAt(3) < 48 || s.charAt(3) > 57) return false;
             if(s.charAt(4) < 48 || s.charAt(4) > 57) return false;
+            if(this.shelf.getMaxFree(5) < 2) return false;
         }
         if(s.charAt(0) < 48 || s.charAt(0) > 57) return false;
         if(s.charAt(1) < 48 || s.charAt(1) > 57) return false;
         return true;
     }
 
-    public ArrayList<Position> chooseOrder(ArrayList<Position> tilesChosen){
-        //this method asks the player to select in wich order insert tiles choosen in the shelf
+    public ArrayList<Position> choseOrder(ArrayList<Position> tilesChosen){
+        //this method asks the player to select in wich order insert tiles chosen in the shelf
 
         ArrayList<Position> tiles = (ArrayList<Position>) tilesChosen.clone(); //making a deep copy for safety
         Tile t;
@@ -135,7 +138,7 @@ public class Player{
             while(!flag)
             {
                 Scanner sc= new Scanner(System.in); //System.in is a standard input stream
-                System.out.print("choose order: ");
+                System.out.print("chose order: ");
                 order_input = sc.nextLine();              //reads string
                 sc.close();
                 try
@@ -197,11 +200,52 @@ public class Player{
         return true;
     }
 
-    public void chooseColumn(int col){
+    public void choseColumn(ArrayList<Position> tilesChosen){
+        //in this method the player have to choose the column where he wants to insert the tiles he picked
+        //which are already sorted.
+        //The player can only choose columns which have enough free slots for the tiles to insert.
+        //note: 1 --> stays on the top
+        //      2 --> stays in the middle
+        //      3 --> stays at the bottom
 
+        ArrayList<Integer> valid_columns = new ArrayList<Integer>();
+        int chosed_column;
+
+        for(int i=0; i<5;i++)
+        {
+            if(this.shelf.getMaxFree(i)>=tilesChosen.size()) valid_columns.add(i);
+        }
+        //at this point valid_columns contains only the valid columns where the player can insert the chosen tiles
+
+        do
+        {
+            Scanner sc= new Scanner(System.in);
+            System.out.print("select a column:");
+            for(int i=0;i<valid_columns.size();i++) System.out.print(" "+valid_columns.get(i));
+            System.out.println();
+            chosed_column = sc.nextInt();
+            sc.close();
+            if(!valid_columns.contains(chosed_column)) System.out.println("please select a valid column");
+        }
+        while (!valid_columns.contains(chosed_column));
+
+        //if we want here we can add a "confirm?" y or n
+
+        //now that the column is chosen i insert the tiles in it
+        ArrayList<Tile> tiles = new ArrayList<Tile>();
+        for(int i=0;i<tilesChosen.size();i++)
+        {
+            tiles.add(this.livingRoom.getCouple(tilesChosen.get(i)).getTile());
+        }
+        this.shelf.insertTiles(chosed_column,tiles);
     }
 
     public String askNickname(){
+        //this method should ask the player to insert a nickname, this nickname will be sent to
+        //the controller wich will check if it is already used
+
+
+
 
         return nickname;
     }
