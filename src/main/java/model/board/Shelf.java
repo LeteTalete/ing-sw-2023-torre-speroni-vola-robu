@@ -2,6 +2,9 @@ package model.board;
 
 import model.enumerations.Couple;
 import model.enumerations.State;
+import model.enumerations.Tile;
+
+import java.util.ArrayList;
 
 public class Shelf {
     public static final int ROWS = 6;
@@ -10,7 +13,22 @@ public class Shelf {
     private int freeSlots[];
     private int[] cardsAlreadyChecked;
 
-
+    /**this method inserts the chosen tiles into the player's shelf.
+    the first tile to be inserted is at the end of the list, while the last tile to be inserted
+    is the first tile of the list**/
+    public void insertTiles(int col, ArrayList<Tile> toInsert)
+    {
+        int pos = 3;
+        for(int i = 0; i<ROWS; i++)
+        {
+            if(this.shelfsMatrix[i][col].getState().equals(State.EMPTY))
+            {
+                this.shelfsMatrix[i][col].setTile(toInsert.get(pos));
+                pos--;
+                if(pos==0){break;}
+            }
+        }
+    }
     //getMaxFree takes as an argument the number of column in which we want to count the empty spaces
     //if numberColumn > 4 it means we're about to check all the columns and find the max of empty
     //slots in the entirety of our array
