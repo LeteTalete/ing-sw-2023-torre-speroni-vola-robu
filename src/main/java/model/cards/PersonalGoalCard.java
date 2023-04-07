@@ -8,42 +8,38 @@ import model.enumerations.State;
 import model.enumerations.T_Type;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 
 
 public class PersonalGoalCard extends GoalCard {
     //This Method calculates each player's score of his Personal Card
-    public int scorePersonalGoalCard(Shelf shelf, int numPersonalCard){
-        Couple[][] myShelf = shelf.getShelfsMatrix();
-        String[] positionTileColummn; // the Array of String containing the position and the type of Tile to search for in a given column
+    public int scorePersonalGoalCard(Shelf myShelf, int numPersonalCard){
         int[] scorePersCard = {0, 1, 2, 3, 6, 9, 12}; // the Score Table
         int tilesCorrect = 0; //Number of correct Tiles found
-        int row; // Position of the tile (row) in which to search it.
+        int positionRow; // Position of the tile (row) in which to search it.
         int lenPos; // length of positionTileColummn,
         char type; // Type of Tile to search, read from JSON File
         T_Type typeTile; //Type of Tile read from myShelf
-        ArrayList<String> positionCards = new ArrayList<String>(); //ArrayList used to save player personal card, read from JSON file
         ObjectMapper objectMapper = new ObjectMapper();
+        String[] positionTileColummn; // the Array of String containing the position and the type of Tile to search for in a given column
+        String readJSON;
+        Couple[][] shelfCopy = myShelf.getShelfsMatrix();
         try {
             //Read JSON file
             File jsonFile = new File("src/main/java/JSONFile/PersonalGoals.json");
             JsonNode rootNode = objectMapper.readTree(jsonFile);
             JsonNode cardNode = rootNode.get(String.valueOf(numPersonalCard));
-            //Save the values in the Variable: positionCards
-            for (JsonNode node : cardNode) {
-                positionCards.add(node.fields().next().getValue().asText());
-            }
-            for(int column = 0; column < 6; column++){
+            for (int column = 0; column < 5; column++) {
                 // As the score of the Personal Card depends on how many Tiles are found correct
-                positionTileColummn = positionCards.get(column).split(":");
-                lenPos = positionTileColummn.length;
+                readJSON = cardNode.get(column).asText(); //Save the positions of the Tiles that are on that column
+                positionTileColummn = readJSON.split(":"); // Split the string to have the tile position and type, separately.
+                lenPos = positionTileColummn.length; //To know the number of Tiles that are in a column
                 // if the lenPos is not greater than 1, it means that there is no tile to read in that column
-                for(int index = 0; lenPos > 1 && index < lenPos; index = index + 2){
-                    row = Integer.parseInt(positionTileColummn[index]);
-                    if(myShelf[row][column].getState() != State.EMPTY){
-                        typeTile = myShelf[row][column].getTile().getTileType();
+                for (int index = 0; lenPos > 1 && index < lenPos; index = index + 2) {
+                    positionRow = Integer.parseInt(positionTileColummn[index]);
+                    if (shelfCopy[positionRow][column].getState() != State.EMPTY) {
+                        typeTile = shelfCopy[positionRow][column].getTile().getTileType();
                         type = positionTileColummn[index + 1].charAt(0);
-                        if(typeTile == T_Type.CAT && type == 'C'){
+                        if (typeTile == T_Type.CAT && type == 'C') {
                             tilesCorrect++;
                         } else if (typeTile == T_Type.PLANT && type == 'P') {
                             tilesCorrect++;
@@ -59,7 +55,7 @@ public class PersonalGoalCard extends GoalCard {
                     }
                 }
             }
-        } catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return scorePersCard[tilesCorrect];

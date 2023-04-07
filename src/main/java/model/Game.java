@@ -88,7 +88,6 @@ public class Game{
         return numberOfPlayers;
     }
 
-
     public void endGame(){
         //make one last round with the remaining players and then calculates score and shows the scoreboard
         calculateScore();
@@ -104,7 +103,7 @@ public class Game{
     public void refillLivingRoom(){
     }
 
-    public void scoreBoard(ArrayList<Player> ps){
+     public void scoreBoard(ArrayList<Player> ps){
         List<Player> ranking = new ArrayList<Player>();
         return ranking = ps.stream().sorted((o1, o2)->o1.score.compareTo(o2.score)).collect(Collectors.toList());
     }
