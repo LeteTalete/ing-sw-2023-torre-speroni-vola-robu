@@ -202,8 +202,8 @@ public class Player{
 
     public void choseColumn(ArrayList<Position> tilesChosen){
         //in this method the player have to choose the column where he wants to insert the tiles he picked
-        //wich are already sorted.
-        //The player can only choose columns wich have enough free slots for the tiles to insert.
+        //which are already sorted.
+        //The player can only choose columns which have enough free slots for the tiles to insert.
         //note: 1 --> stays on the top
         //      2 --> stays in the middle
         //      3 --> stays at the bottom
