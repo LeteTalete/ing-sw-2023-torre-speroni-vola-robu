@@ -1,8 +1,7 @@
 package it.polimi.ingsw.model.board;
 
-import game.model.board.Shelf;
-import game.model.enumerations.Couple;
-import game.model.enumerations.State;
+import it.polimi.ingsw.model.enumerations.Couple;
+import it.polimi.ingsw.model.enumerations.State;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

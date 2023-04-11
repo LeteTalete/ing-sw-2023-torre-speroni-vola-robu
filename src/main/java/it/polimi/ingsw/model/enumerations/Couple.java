@@ -1,4 +1,4 @@
-package game.model.enumerations;
+package it.polimi.ingsw.model.enumerations;
 
 public class Couple {
     private Tile tile;

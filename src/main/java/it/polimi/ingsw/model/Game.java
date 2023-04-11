@@ -1,8 +1,8 @@
-package game.model;
+package it.polimi.ingsw.model;
 
-import game.model.board.LivingRoom;
-import game.model.cards.CommonGoalCard;
-import game.model.cards.PersonalGoalCard;
+import it.polimi.ingsw.model.board.LivingRoom;
+import it.polimi.ingsw.model.cards.CommonGoalCard;
+import it.polimi.ingsw.model.cards.PersonalGoalCard;
 
 import java.util.ArrayList;
 import java.util.Comparator;

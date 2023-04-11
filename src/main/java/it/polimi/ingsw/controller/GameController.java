@@ -1,8 +1,8 @@
-package game.controller;
+package it.polimi.ingsw.controller;
 
-import game.model.board.LivingRoom;
-import game.model.Player;
-import game.model.Game;
+import it.polimi.ingsw.model.board.LivingRoom;
+import it.polimi.ingsw.model.Player;
+import it.polimi.ingsw.model.Game;
 
 public class GameController {
 

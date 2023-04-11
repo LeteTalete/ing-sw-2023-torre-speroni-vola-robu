@@ -1,9 +1,9 @@
-package game.model;
+package it.polimi.ingsw.model;
 
-import game.Exceptions.InvalidChoiceFormatException;
-import game.model.board.LivingRoom;
-import game.model.board.Shelf;
-import game.model.enumerations.Tile;
+import it.polimi.ingsw.Exceptions.InvalidChoiceFormatException;
+import it.polimi.ingsw.model.board.LivingRoom;
+import it.polimi.ingsw.model.board.Shelf;
+import it.polimi.ingsw.model.enumerations.Tile;
 
 import java.util.ArrayList;
 import java.util.Scanner;

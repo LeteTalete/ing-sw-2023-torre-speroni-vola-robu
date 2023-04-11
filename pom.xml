@@ -28,14 +28,14 @@
                         </goals>
                         <configuration>
 
-                            <finalName>game.ServerExecutable</finalName>
+                            <finalName>it.polimi.ingsw.ServerExecutable</finalName>
                             <shadedArtifactAttached>false</shadedArtifactAttached>
                             <outputFile>target/ServerExecutable.jar</outputFile>
 
 
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>game.ServerExecutable</mainClass>
+                                    <mainClass>it.polimi.ingsw.ServerExecutable</mainClass>
                                 </transformer>
 <!--                                <transformer implementation="org.apache.maven.plugins.shade.resource.DontIncludeResourceTransformer">
                                     <resource>graphics/**</resource>
@@ -60,13 +60,13 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <finalName>game.ClientExecutable</finalName>
+                            <finalName>it.polimi.ingsw.ClientExecutable</finalName>
                             <shadedArtifactAttached>false</shadedArtifactAttached>
                             <shadedClassifierName>jar-with-dependencies</shadedClassifierName>
                             <outputFile>target/ClientExecutable.jar</outputFile>
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>game.ClientExecutable</mainClass>
+                                    <mainClass>it.polimi.ingsw.ClientExecutable</mainClass>
                                 </transformer>
 
                             </transformers>

@@ -1,10 +1,10 @@
-package game.model.board;
+package it.polimi.ingsw.model.board;
 
-import game.model.Position;
-import game.model.enumerations.Couple;
-import game.model.enumerations.State;
-import game.model.enumerations.Tile;
-import game.model.Deck;
+import it.polimi.ingsw.model.Position;
+import it.polimi.ingsw.model.enumerations.Couple;
+import it.polimi.ingsw.model.enumerations.State;
+import it.polimi.ingsw.model.enumerations.Tile;
+import it.polimi.ingsw.model.Deck;
 
 
 import com.fasterxml.jackson.databind.JsonNode;
