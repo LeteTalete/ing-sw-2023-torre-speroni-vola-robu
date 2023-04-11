@@ -32,7 +32,7 @@ class PersonalGoalCardTest extends GoalCard{
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             //Read JSON file
-            File jsonFile = new File("src/main/java/JSONFile/PersonalGoals.json");
+            File jsonFile = new File("src/main/resources/JSON/PersonalGoals.json");
             JsonNode rootNode = objectMapper.readTree(jsonFile);
             JsonNode cardNode = rootNode.get(String.valueOf(numPersonalCard));
             assertNotNull(cardNode);

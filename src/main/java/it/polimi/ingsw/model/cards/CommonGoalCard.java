@@ -28,7 +28,7 @@ public class CommonGoalCard extends GoalCard {
         CommonGoalCard dummy = new CommonGoalCard();
         try {
             ObjectMapper mapper = new ObjectMapper();
-            File jsonFile = new File("src/main/java/it/polimi/ingsw/JSONFile/CommonGoalCards.json");
+            File jsonFile = new File("src/main/resources/JSON/CommonGoalCards.json");
             JsonNode rootNode = mapper.readTree(jsonFile);
 
             String cardType = null;

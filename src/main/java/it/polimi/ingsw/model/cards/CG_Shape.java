@@ -34,7 +34,7 @@ public class CG_Shape extends CommonGoalCard {
 
         try {
             ObjectMapper mapper = new ObjectMapper();
-            File jsonFile = new File("src/main/java/it/polimi/ingsw/JSONFile/CommonGoalCards.json");
+            File jsonFile = new File("src/main/resources/JSON/CommonGoalCards.json");
             JsonNode rootNode = mapper.readTree(jsonFile);
 
             this.ID = id;
@@ -120,8 +120,8 @@ public class CG_Shape extends CommonGoalCard {
                                 // positions to the coordinates of coupleZero and checks if the corresponding couple inside
                                 // shelfsMatrix is the same type of CoupleZero
 
-                                int rowCheck = i + position.getX();
-                                int columnChecK = j + position.getY();
+                                int rowCheck = i + position.getY();
+                                int columnChecK = j + position.getX();
                                 // rowCheck and columnCheck are used to not allow out of bounds indexes inside shelfsMatrix
 
                                 if (rowCheck < shelf.ROWS && columnChecK < shelf.COLUMNS) {
@@ -195,8 +195,8 @@ public class CG_Shape extends CommonGoalCard {
                         if (tile == null || shelfsMatrix[r][c].getTile().getTileType().equals(tile)) {
 
                             for (Position position : this.positions) {
-                                int rowCheck = r + position.getX();
-                                int columnChecK = c - position.getY(); // This allows to mirror the shape
+                                int rowCheck = r + position.getY();
+                                int columnChecK = c - position.getX(); // This allows to mirror the shape
                                 if (rowCheck < shelf.ROWS && columnChecK >= 0) {
                                     if (this.stairs != 1) {
                                         if (shelfsMatrix[r][c].getState().equals(State.EMPTY) || shelfsMatrix[rowCheck][columnChecK].getState().equals(State.EMPTY)) {

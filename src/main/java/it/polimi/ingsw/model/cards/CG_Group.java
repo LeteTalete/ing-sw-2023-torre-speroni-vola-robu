@@ -21,7 +21,7 @@ public class CG_Group extends CommonGoalCard {
 
         try {
             ObjectMapper mapper = new ObjectMapper();
-            File jsonFile = new File("src/main/java/it/polimi/ingsw/JSONFile/CommonGoalCards.json");
+            File jsonFile = new File("src/main/resources/JSON/CommonGoalCards.json");
             JsonNode rootNode = mapper.readTree(jsonFile);
 
             this.ID = id;

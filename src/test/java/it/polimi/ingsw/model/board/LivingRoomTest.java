@@ -24,7 +24,7 @@ public class LivingRoomTest {
     public void readLivingRoomFromJson() {
         try {
             ObjectMapper mapper = new ObjectMapper();
-            File jsonFile = new File("src/main/java/it/polimi/ingsw/JSONFile/LivingRoom.json");
+            File jsonFile = new File("src/main/resources/JSON/LivingRoom.json");
             JsonNode rootNode = mapper.readTree(jsonFile);
             int[][] jsonMatrixCopy = mapper.convertValue(rootNode.get("LivingRoomBoardJSON"), int[][].class);
 
