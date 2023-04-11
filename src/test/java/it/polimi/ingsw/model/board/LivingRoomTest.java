@@ -12,6 +12,7 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class LivingRoomTest {
     private Couple[][] testBoard;
@@ -24,8 +25,8 @@ public class LivingRoomTest {
     public void readLivingRoomFromJson() {
         try {
             ObjectMapper mapper = new ObjectMapper();
-            File jsonFile = new File("src/main/resources/JSON/LivingRoom.json");
-            JsonNode rootNode = mapper.readTree(jsonFile);
+            InputStream inputStream = LivingRoom.class.getClassLoader().getResourceAsStream("JSON/LivingRoom.json");
+            JsonNode rootNode = mapper.readTree(inputStream);
             int[][] jsonMatrixCopy = mapper.convertValue(rootNode.get("LivingRoomBoardJSON"), int[][].class);
 
             assertNotNull(rootNode);

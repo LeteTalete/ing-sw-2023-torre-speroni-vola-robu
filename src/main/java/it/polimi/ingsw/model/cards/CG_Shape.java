@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.cards;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.polimi.ingsw.model.board.LivingRoom;
 import it.polimi.ingsw.model.enumerations.Couple;
 import it.polimi.ingsw.model.enumerations.State;
 import it.polimi.ingsw.model.enumerations.T_Type;
@@ -10,6 +11,7 @@ import it.polimi.ingsw.model.board.Shelf;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,8 +36,8 @@ public class CG_Shape extends CommonGoalCard {
 
         try {
             ObjectMapper mapper = new ObjectMapper();
-            File jsonFile = new File("src/main/resources/JSON/CommonGoalCards.json");
-            JsonNode rootNode = mapper.readTree(jsonFile);
+            InputStream inputStream = CG_Shape.class.getClassLoader().getResourceAsStream("JSON/CommonGoalCards.json");
+            JsonNode rootNode = mapper.readTree(inputStream);
 
             this.ID = id;
             this.positions = new ArrayList<>();

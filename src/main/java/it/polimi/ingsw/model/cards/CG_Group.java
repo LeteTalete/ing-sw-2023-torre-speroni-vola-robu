@@ -2,9 +2,11 @@ package it.polimi.ingsw.model.cards;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.polimi.ingsw.model.board.LivingRoom;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 
 public class CG_Group extends CommonGoalCard {
@@ -21,8 +23,8 @@ public class CG_Group extends CommonGoalCard {
 
         try {
             ObjectMapper mapper = new ObjectMapper();
-            File jsonFile = new File("src/main/resources/JSON/CommonGoalCards.json");
-            JsonNode rootNode = mapper.readTree(jsonFile);
+            InputStream inputStream = CG_Group.class.getClassLoader().getResourceAsStream("JSON/CommonGoalCards.json");
+            JsonNode rootNode = mapper.readTree(inputStream);
 
             this.ID = id;
 

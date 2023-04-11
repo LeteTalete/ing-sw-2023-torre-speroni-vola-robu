@@ -2,6 +2,7 @@ package it.polimi.ingsw.model.cards;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.polimi.ingsw.model.board.LivingRoom;
 import it.polimi.ingsw.model.enumerations.Couple;
 import it.polimi.ingsw.model.enumerations.State;
 import it.polimi.ingsw.model.enumerations.T_Type;
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -31,8 +33,8 @@ class PersonalGoalCardTest extends GoalCard{
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             //Read JSON file
-            File jsonFile = new File("src/main/resources/JSON/PersonalGoals.json");
-            JsonNode rootNode = objectMapper.readTree(jsonFile);
+            InputStream inputStream = PersonalGoalCardTest.class.getClassLoader().getResourceAsStream("JSON/PersonalGoals.json");
+            JsonNode rootNode = objectMapper.readTree(inputStream);
             JsonNode cardNode = rootNode.get(String.valueOf(numPersonalCard));
             assertNotNull(cardNode);
             //Save the values in the Variable: positionCards

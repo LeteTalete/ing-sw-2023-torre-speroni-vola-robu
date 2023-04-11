@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 
@@ -100,8 +101,8 @@ public class LivingRoom {
 
         try {
             ObjectMapper mapper = new ObjectMapper();
-            File jsonFile = new File("src/main/java/JSONFile/LivingRoom.json");
-            JsonNode rootNode = mapper.readTree(jsonFile);
+            InputStream inputStream = LivingRoom.class.getClassLoader().getResourceAsStream("JSON/LivingRoom.json");
+            JsonNode rootNode = mapper.readTree(inputStream);
             int[][] jsonMatrixCopy = mapper.convertValue(rootNode.get("LivingRoomBoardJSON"), int[][].class);
 
             this.board = new Couple[jsonMatrixCopy.length][jsonMatrixCopy[0].length];
