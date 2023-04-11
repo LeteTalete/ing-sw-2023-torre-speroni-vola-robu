@@ -41,4 +41,9 @@ public class Deck{
        return tiles.pop();
    }
 
+   public int getSize()
+   {
+       return this.tiles.size();
+   }
+
 }

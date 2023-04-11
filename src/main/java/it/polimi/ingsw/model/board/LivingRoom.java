@@ -24,6 +24,7 @@ public class LivingRoom {
         return null;
     }
 
+
     public void setCouple(Position p, Tile t, State s) {
 
     }
@@ -38,6 +39,24 @@ public class LivingRoom {
     public void setPickedCouples(ArrayList<Position> choice)
     {
         //this method should set as PICKED the couple choosed by the player
+    }
+
+    public void refill(Deck d)
+    {
+        //this method refills the board in this way:
+        //iterates the Couple matrix, if the state is EMPTY it draw a tile form the deck and puts it in the couple,
+        //the state of that Couple will be set to PICKABLE
+        for(int i=0;i<this.board.length;i++)
+        {
+            for(int j=0;j<this.board[i].length;j++)
+            {
+                if((this.board[i][j].getState() == State.EMPTY) && (d.getSize() > 0))
+                {
+                    this.board[i][j].setTile(d.draw());
+                    this.board[i][j].setState(State.PICKABLE);
+                }
+            }
+        }
     }
 
     public LivingRoom(int numberofplayers) {
