@@ -59,26 +59,8 @@ public class Game{
     public void startGame(LivingRoom board){
         chooseFirstPlayer();
         this.gameBoard = board;
-        // while(!endgame)
-        // ask player which tile | ( up to
-        // check tile            |         3 times )
-        // ask player tile order
-        // check tile
-        // ask if player is sure
-        // insert tiles inside shelfie
-        // if shelfie is full endgame = 1
-        // else new turn
 
     }
-
-
-    // TO DO:
-    // - Generate 2 random numbers from 1 to 12
-    // - Read a .txt ( or a .json file ) and instantiate the cards written on the file corresponding to the 2 random numbers
-    //   Those will be the common goal cards
-    //   By doing it this way we only have to read and instantiate only 2 cards
-    //   Instantiate = save somewhere the shape, conditions, requirements of the card
-
 
 
     public int askHowManyPlayers(){
@@ -100,9 +82,6 @@ public class Game{
         this.currentPlayer = players.get(curr);
     }
 
-    public void refillLivingRoom(){
-    }
-
     public List<Player> scoreBoard(ArrayList<Player> ps){
         List<Player> ranking = new ArrayList<Player>();
         return ranking = ps.stream().sorted(Comparator.comparing(Player::getMyScore)).collect(Collectors.toList());
@@ -113,11 +92,12 @@ public class Game{
     }
 
 
-    // Method generateCGC generates and returns an ArrayList containing CommonGoalCard objects
-    // Those will be the cards that will be used in the game
-    // First it generates 2 different random numbers from 0 to 11
-    // (inside the code it's from 0 to 12 because the upper bound is exclusive)
-    // Then it iterates for how many cards are needed and adds the cards to the ArrayList
+    /** Method generateCGC generates and returns an ArrayList containing CommonGoalCard objects
+    * Those will be the cards that will be used in the game
+    * First it generates 2 different random numbers from 0 to 11
+    * (inside the code it's from 0 to 12 because the upper bound is exclusive)
+    * Then it iterates for how many cards are needed and adds the cards to the ArrayList
+    */
     public List<CommonGoalCard> generateCGC(){
         List<CommonGoalCard> commonGoalCards = new ArrayList<>();
         int numberOfCommonGoalCards = 2; // Change this number if you want to use more cards
@@ -129,6 +109,18 @@ public class Game{
         }
 
         return commonGoalCards;
+    }
+
+    /** Method generatePGC generates as many ints (all random and different) as there are players.
+     * Then it assigns a personal goal card to each player
+     * @param players - The Arraylist of players
+     */
+    public void generatePGC(ArrayList<Player> players){
+        int[] personalGoalCards = new Random().ints(1, 13).distinct().limit(players.size()).toArray();
+
+        for ( int i = 0; i < players.size() ; i++){
+            players.get(i).setGoalCard(personalGoalCards[i]);
+        }
     }
 
 
