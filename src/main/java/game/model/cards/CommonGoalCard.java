@@ -1,9 +1,9 @@
-package it.polimi.ingsw.model.cards;
+package game.model.cards;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polimi.ingsw.model.Position;
-import it.polimi.ingsw.model.board.Shelf;
+import game.model.Position;
+import game.model.board.Shelf;
 
 import java.io.File;
 import java.io.IOException;

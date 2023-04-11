@@ -1,4 +1,4 @@
-package it.polimi.ingsw.Exceptions;
+package game.Exceptions;
 
 public class InvalidChoiceFormatException extends Exception{
 

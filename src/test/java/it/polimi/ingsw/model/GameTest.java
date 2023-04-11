@@ -1,8 +1,8 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.Game;
-import it.polimi.ingsw.model.Position;
-import it.polimi.ingsw.model.cards.CommonGoalCard;
+import game.model.Game;
+import game.model.Position;
+import game.model.cards.CommonGoalCard;
 import org.junit.jupiter.api.Test;
 import static org.junit.Assert.*;
 

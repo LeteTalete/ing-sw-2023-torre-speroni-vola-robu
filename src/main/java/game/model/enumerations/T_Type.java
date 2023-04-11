@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model.enumerations;
+package game.model.enumerations;
 
 public enum T_Type {
     CAT,

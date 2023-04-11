@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model;
+package game.model;
 
 public class Position {
     private int x;

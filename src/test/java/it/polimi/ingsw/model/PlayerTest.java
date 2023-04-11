@@ -1,9 +1,9 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.Exceptions.InvalidChoiceFormatException;
-import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.model.Position;
-import it.polimi.ingsw.model.board.LivingRoom;
+import game.Exceptions.InvalidChoiceFormatException;
+import game.model.Player;
+import game.model.Position;
+import game.model.board.LivingRoom;
 import org.junit.Test;
 
 import java.util.ArrayList;

@@ -1,7 +1,7 @@
-package it.polimi.ingsw.model;
+package game.model;
 
-import it.polimi.ingsw.model.enumerations.T_Type;
-import it.polimi.ingsw.model.enumerations.Tile;
+import game.model.enumerations.T_Type;
+import game.model.enumerations.Tile;
 
 import java.util.Collections;
 import java.util.Stack;

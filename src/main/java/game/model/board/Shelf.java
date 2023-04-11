@@ -1,8 +1,8 @@
-package it.polimi.ingsw.model.board;
+package game.model.board;
 
-import it.polimi.ingsw.model.enumerations.Couple;
-import it.polimi.ingsw.model.enumerations.State;
-import it.polimi.ingsw.model.enumerations.Tile;
+import game.model.enumerations.Couple;
+import game.model.enumerations.State;
+import game.model.enumerations.Tile;
 
 import java.util.ArrayList;
 

@@ -1,8 +1,8 @@
-package it.polimi.ingsw.model;
+package game.model;
 
-import it.polimi.ingsw.model.board.LivingRoom;
-import it.polimi.ingsw.model.cards.CommonGoalCard;
-import it.polimi.ingsw.model.cards.PersonalGoalCard;
+import game.model.board.LivingRoom;
+import game.model.cards.CommonGoalCard;
+import game.model.cards.PersonalGoalCard;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -48,13 +48,6 @@ public class Game{
         return 0;
     }
 
-
-
-    // addplayers should initialize every player attribute to 0
-    public void addPlayers(Player newOne, String nickname){
-        newOne.setNickname(nickname);
-        this.players.add(newOne);
-    }
 
     public void startGame(LivingRoom board){
         chooseFirstPlayer();

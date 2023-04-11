@@ -1,11 +1,11 @@
-package it.polimi.ingsw.model.cards;
+package game.model.cards;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polimi.ingsw.model.enumerations.Couple;
-import it.polimi.ingsw.model.enumerations.State;
-import it.polimi.ingsw.model.enumerations.T_Type;
-import it.polimi.ingsw.model.Position;
-import it.polimi.ingsw.model.board.Shelf;
+import game.model.enumerations.Couple;
+import game.model.enumerations.State;
+import game.model.enumerations.T_Type;
+import game.model.Position;
+import game.model.board.Shelf;
 
 
 import java.io.File;

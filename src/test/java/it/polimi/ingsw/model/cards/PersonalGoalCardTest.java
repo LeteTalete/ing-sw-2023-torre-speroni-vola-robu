@@ -2,10 +2,10 @@ package it.polimi.ingsw.model.cards;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polimi.ingsw.model.cards.GoalCard;
-import it.polimi.ingsw.model.enumerations.Couple;
-import it.polimi.ingsw.model.enumerations.State;
-import it.polimi.ingsw.model.enumerations.T_Type;
+import game.model.cards.GoalCard;
+import game.model.enumerations.Couple;
+import game.model.enumerations.State;
+import game.model.enumerations.T_Type;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
