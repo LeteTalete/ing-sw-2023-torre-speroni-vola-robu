@@ -1,4 +1,4 @@
-package org.example;
+package it.polimi.ingsw.model.cards;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -89,7 +89,7 @@ class PersonalGoalCardTest extends GoalCard{
         Couple[][] shelfCopy = myShelf.getShelfsMatrix();
         try {
             //Read JSON file
-            InputStream inputStream = model.cards.PersonalGoalCard.class.getClassLoader().getResourceAsStream("JSON/PersonalGoals.json");
+            InputStream inputStream = PersonalGoalCard.class.getClassLoader().getResourceAsStream("JSON/PersonalGoals.json");
             JsonNode rootNode = objectMapper.readTree(inputStream);
             JsonNode cardNode = rootNode.get(String.valueOf(numPersonalCard));
             assertNotNull(cardNode);
