@@ -7,6 +7,7 @@ import it.polimi.ingsw.model.board.Shelf;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 public class CommonGoalCard extends GoalCard {
@@ -28,8 +29,8 @@ public class CommonGoalCard extends GoalCard {
         CommonGoalCard dummy = new CommonGoalCard();
         try {
             ObjectMapper mapper = new ObjectMapper();
-            File jsonFile = new File("src/main/resources/JSON/CommonGoalCards.json");
-            JsonNode rootNode = mapper.readTree(jsonFile);
+            InputStream inputStream = CommonGoalCard.class.getClassLoader().getResourceAsStream("JSON/CommonGoalCards.json");
+            JsonNode rootNode = mapper.readTree(inputStream);
 
             String cardType = null;
             for (JsonNode cardNode : rootNode) {
