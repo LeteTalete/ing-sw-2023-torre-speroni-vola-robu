@@ -10,8 +10,8 @@ import java.util.Stack;
 
 public class Deck{
 
-    private int size = 132;
-    private int tileKind = 6;
+    public static final int size = 132;
+    public static final int tileKind = 6;
 
     private Stack<Tile> tiles = new Stack<Tile>();
 

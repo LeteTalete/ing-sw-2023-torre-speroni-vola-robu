@@ -20,13 +20,14 @@ public class LivingRoom {
     private Couple[][] board;
 
     public Couple getCouple(Position p) {
-
-        return null;
+        return board[p.getX()][p.getY()];
     }
 
 
-    public void setCouple(Position p, Tile t, State s) {
-
+    public void setCouple(Position p, Tile t, State s)
+    {
+        board[p.getX()][p.getY()].setTile(t);
+        board[p.getX()][p.getY()].setState(s);
     }
 
     public boolean checkPlayerChoice(ArrayList<Position> choice)
@@ -36,9 +37,14 @@ public class LivingRoom {
         return true;
     }
 
-    public void setPickedCouples(ArrayList<Position> choice)
+    public void updateCouples(ArrayList<Position> choice)
     {
-        //this method should set as PICKED the couple choosed by the player
+        //this method should set the couples state chosen by the player as EMPTY
+        //and the tile field should be set as null
+        for(Position p : choice)
+        {
+            setCouple(p,null,State.EMPTY);
+        }
     }
 
     public void refill(Deck d)

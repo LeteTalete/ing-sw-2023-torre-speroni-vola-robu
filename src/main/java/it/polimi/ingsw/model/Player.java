@@ -17,12 +17,11 @@ public class Player{
     private int personalGoalCard;
     public int score;
     private boolean endGame;
-    private LivingRoom livingRoom;
 
     private ArrayList<Position> tilesChoosen;
 
 //methods
-    public ArrayList<Position> chooseTiles(){
+    public ArrayList<Position> chooseTiles(LivingRoom livingroom){
         //this method will ask the player to insert the coordinates of the tiles he wants to pick up
         //if the choice is valid and he confirms this method will return an ArrayList containing the positions
         // of the tiles choosen
@@ -56,7 +55,7 @@ public class Player{
                      choice.get((i-1)/3).setY(user_input.charAt(i)-48);
                    }
                }
-               if(this.livingRoom.checkPlayerChoice(choice))
+               if(livingroom.checkPlayerChoice(choice))
                {
                    do {
                        sc= new Scanner(System.in); //System.in is a standard input stream
@@ -78,7 +77,6 @@ public class Player{
                 System.out.println(exc.toString());
             }
         }
-        this.livingRoom.setPickedCouples(choice);
 
         return choice;
     }
@@ -112,7 +110,7 @@ public class Player{
         return true;
     }
 
-    public ArrayList<Position> choseOrder(ArrayList<Position> tilesChosen){
+    public ArrayList<Position> choseOrder(ArrayList<Position> tilesChosen, LivingRoom livingRoom){
         //this method asks the player to select in wich order insert tiles chosen in the shelf
 
         ArrayList<Position> tiles = (ArrayList<Position>) tilesChosen.clone(); //making a deep copy for safety
@@ -196,7 +194,7 @@ public class Player{
         return true;
     }
 
-    public void choseColumn(ArrayList<Position> tilesChosen){
+    public void chooseColumn(ArrayList<Position> tilesChosen, LivingRoom livingRoom){
         //in this method the player have to choose the column where he wants to insert the tiles he picked
         //which are already sorted.
         //The player can only choose columns which have enough free slots for the tiles to insert.
@@ -231,9 +229,10 @@ public class Player{
         ArrayList<Tile> tiles = new ArrayList<Tile>();
         for(int i=0;i<tilesChosen.size();i++)
         {
-            tiles.add(this.livingRoom.getCouple(tilesChosen.get(i)).getTile());
+            tiles.add(livingRoom.getCouple(tilesChosen.get(i)).getTile());
         }
         this.shelf.insertTiles(chosed_column,tiles);
+        livingRoom.updateCouples(tilesChosen);
     }
 
     public String askNickname(){
