@@ -47,6 +47,37 @@ public class LivingRoom {
         }
     }
 
+    public boolean checkForRefill()
+    {
+        //this method returns false if there are at least two couples adjacent containing a tile
+        //otherwise it returns true (in this case a refill is needed)
+
+        //this for checks horizontally
+        for(int i=0;i<this.board.length;i++) //for each row
+        {
+            for(int j=0;j<this.board[i].length-1;j++)
+            {
+                if((this.board[i][j].getState() == State.PICKABLE) && this.board[i][j+1].getState() == State.PICKABLE)
+                {
+                    return false;
+                }
+            }
+        }
+
+        //this for checks vertically
+        for(int i=0;i<this.board[0].length;i++) //for each column
+        {
+            for(int j=0;j<this.board.length-1;j++)
+            {
+                if((this.board[j][i].getState() == State.PICKABLE) && this.board[j+1][i].getState() == State.PICKABLE)
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     public void refill(Deck d)
     {
         //this method refills the board in this way:
