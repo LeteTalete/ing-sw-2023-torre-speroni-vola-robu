@@ -284,4 +284,136 @@ public class CGC2Test {
         assertEquals(0, CGC2.checkConditions(shelf));
     }
 
+    /** Test failTest3 checks that checkConditions returns 0 when two squares with the same tile type share
+     *  one single couple (it counts only as one square) */
+    @Test
+    public void failTest3(){
+        Shelf shelf = new Shelf();
+        Deck deck = new Deck();
+        Couple[][] shelfsMatrix = shelf.getShelfsMatrix();
+        CG_Shape CGC2 = new CG_Shape(2);
+
+        for (int i = 0; i < shelf.ROWS; i++) {
+            for (int j = 0; j < shelf.COLUMNS; j++) {
+                Couple couple = new Couple(deck.draw());
+                shelf.setCoordinate(i, j, couple);
+                assertEquals(couple.getTile(), shelfsMatrix[i][j].getTile());
+                assertEquals(couple.getState(), shelfsMatrix[i][j].getState());
+            }
+        }
+
+        Tile tile0 = new Tile(T_Type.CAT, 3);
+        Couple couple0 = new Couple(tile0);
+        shelf.setCoordinate(1, 0, couple0);
+
+        Tile tile1 = new Tile(T_Type.CAT, 3);
+        Couple couple1 = new Couple(tile1);
+        shelf.setCoordinate(1, 1, couple1);
+
+        Tile tile2 = new Tile(T_Type.CAT, 3);
+        Couple couple2 = new Couple(tile2);
+        shelf.setCoordinate(2, 0, couple2);
+
+        Tile tile3 = new Tile(T_Type.CAT, 3);
+        Couple couple3 = new Couple(tile3);
+        shelf.setCoordinate(2, 1, couple3);
+
+        Tile tile4 = new Tile(T_Type.CAT, 3);
+        Couple couple4 = new Couple(tile4);
+        shelf.setCoordinate(3, 1, couple4);
+
+        Tile tile5 = new Tile(T_Type.CAT, 3);
+        Couple couple5 = new Couple(tile5);
+        shelf.setCoordinate(2, 2, couple5);
+
+        Tile tile6 = new Tile(T_Type.CAT, 3);
+        Couple couple6 = new Couple(tile6);
+        shelf.setCoordinate(3, 2, couple6);
+
+        System.out.println("failTest3");
+        for ( int i = 0; i < shelf.ROWS; i++){
+            for ( int j = 0; j < shelf.COLUMNS; j++){
+                if ( shelfsMatrix[i][j].getState().equals(State.EMPTY) ){
+                    System.out.print( " " + " ");
+                } else {
+                    System.out.print(shelfsMatrix[i][j].getTile().getTileType().toString().charAt(0) + " ");
+                }
+            }
+            System.out.println();
+        }
+        System.out.println();
+
+        assertEquals(0, CGC2.checkConditions(shelf));
+    }
+
+    /** Test failTest4 checks that checkConditions returns 0 when there's a 3x3 square of the same tile type
+     *  Even though you can count multiple squares inside in the end only one counts  */
+    @Test
+    public void failTest4(){
+        Shelf shelf = new Shelf();
+        Deck deck = new Deck();
+        Couple[][] shelfsMatrix = shelf.getShelfsMatrix();
+        CG_Shape CGC2 = new CG_Shape(2);
+
+        for (int i = 0; i < shelf.ROWS; i++) {
+            for (int j = 0; j < shelf.COLUMNS; j++) {
+                Couple couple = new Couple(deck.draw());
+                shelf.setCoordinate(i, j, couple);
+                assertEquals(couple.getTile(), shelfsMatrix[i][j].getTile());
+                assertEquals(couple.getState(), shelfsMatrix[i][j].getState());
+            }
+        }
+
+        Tile tile0 = new Tile(T_Type.CAT, 3);
+        Couple couple0 = new Couple(tile0);
+        shelf.setCoordinate(2, 4, couple0);
+
+        Tile tile1 = new Tile(T_Type.CAT, 3);
+        Couple couple1 = new Couple(tile1);
+        shelf.setCoordinate(2, 2, couple1);
+
+        Tile tile2 = new Tile(T_Type.CAT, 3);
+        Couple couple2 = new Couple(tile2);
+        shelf.setCoordinate(3, 3, couple2);
+
+        Tile tile3 = new Tile(T_Type.CAT, 3);
+        Couple couple3 = new Couple(tile3);
+        shelf.setCoordinate(4, 4, couple3);
+
+        Tile tile4 = new Tile(T_Type.CAT, 3);
+        Couple couple4 = new Couple(tile4);
+        shelf.setCoordinate(4, 2, couple4);
+
+        Tile tile5 = new Tile(T_Type.CAT, 3);
+        Couple couple5 = new Couple(tile5);
+        shelf.setCoordinate(2, 3, couple5);
+
+        Tile tile6 = new Tile(T_Type.CAT, 3);
+        Couple couple6 = new Couple(tile6);
+        shelf.setCoordinate(3, 4, couple6);
+
+        Tile tile7 = new Tile(T_Type.CAT, 3);
+        Couple couple7 = new Couple(tile7);
+        shelf.setCoordinate(3, 2, couple7);
+
+        Tile tile8 = new Tile(T_Type.CAT, 3);
+        Couple couple8 = new Couple(tile8);
+        shelf.setCoordinate(4, 3, couple8);
+
+        System.out.println("failTest4");
+        for ( int i = 0; i < shelf.ROWS; i++){
+            for ( int j = 0; j < shelf.COLUMNS; j++){
+                if ( shelfsMatrix[i][j].getState().equals(State.EMPTY) ){
+                    System.out.print( " " + " ");
+                } else {
+                    System.out.print(shelfsMatrix[i][j].getTile().getTileType().toString().charAt(0) + " ");
+                }
+            }
+            System.out.println();
+        }
+        System.out.println();
+
+        assertEquals(0, CGC2.checkConditions(shelf));
+    }
+
 }
