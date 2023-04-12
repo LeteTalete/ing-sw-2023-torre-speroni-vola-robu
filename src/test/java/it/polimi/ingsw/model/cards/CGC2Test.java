@@ -186,7 +186,6 @@ public class CGC2Test {
         assertEquals(1, CGC2.checkConditions(shelf));
     }
 
-    // This test correctly fails as checkConditions still needs the code to differentiate the squares
     /** Test failTest1 checks that checkConditions returns 0 when there's a 2x3 rectangle with all its couples of the
      * same tile type */
     @Test

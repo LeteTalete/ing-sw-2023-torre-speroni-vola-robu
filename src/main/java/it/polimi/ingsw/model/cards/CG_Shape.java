@@ -98,6 +98,11 @@ public class CG_Shape extends CommonGoalCard {
         int[] cardsAlreadyChecked = shelf.getCardsAlreadyChecked(); // This array keeps track of all the cards which
         // conditions have already been met inside the player's shelf
 
+        List<Position> allOccPos = new ArrayList<>(); // This list stores the position of all the shape's couples when
+        // an occurrence is found inside shelfsMatrix when this.numOfOccurrences > 1
+        // ex: For the card that requires two 2x2 squares this saves the position of the first square preventing
+        // the first square's couples to be counted when searching for the second occurrence
+
         if (cardsAlreadyChecked[this.ID] != 1) { // When set to 1 the check is skipped
 
             // The first 2 for cycles identify a couple (let's call it coupleZero) which becomes the
@@ -126,7 +131,20 @@ public class CG_Shape extends CommonGoalCard {
                                 int columnChecK = j + position.getX();
                                 // rowCheck and columnCheck are used to not allow out of bounds indexes inside shelfsMatrix
 
-                                if (rowCheck < shelf.ROWS && columnChecK < shelf.COLUMNS) {
+                                // If the current couple is already part of one of the occurrences of the shape inside
+                                // the shelf then we skip to the next couple and restart
+                                if ( numOfOccFound > 0 ) {
+                                    if (rowCheck < shelf.ROWS && columnChecK < shelf.COLUMNS && rowCheck >= 0 && columnChecK >= 0 ) {
+                                        for (Position checkPos : allOccPos) {
+                                            if (shelfsMatrix[rowCheck][columnChecK].equals(shelfsMatrix[checkPos.getY()][checkPos.getX()])) {
+                                                notFound = 1;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+
+                                if (rowCheck < shelf.ROWS && columnChecK < shelf.COLUMNS && rowCheck >= 0 && columnChecK >= 0 && notFound != 1 ) {
                                     if (this.stairs != 1) {
                                         if (shelfsMatrix[i][j].getState().equals(State.EMPTY) || shelfsMatrix[rowCheck][columnChecK].getState().equals(State.EMPTY)) {
                                             // If coupleZero or ( coupleZero + position coordinates ) is empty then we skip
@@ -165,6 +183,7 @@ public class CG_Shape extends CommonGoalCard {
                                     break;
                                 }
                             }
+
                             if (notFound != 1) { // We enter this if statement when notFound == 0 which means all
                                 // conditions inside the card have been met
                                 if (this.numOfOccurrences > 1) { // This means the conditions are still to be met
@@ -173,6 +192,17 @@ public class CG_Shape extends CommonGoalCard {
                                     // shape's occurrence
                                     if (numOfOccFound == this.numOfOccurrences) {
                                         cardsAlreadyChecked[this.ID] = 1; //When the conditions are met we save the card id
+                                    } else {
+                                        // We have found an occurrence of the shape but the required amount hasn't been
+                                        // reached yet
+                                        // The position of the couples of this occurrence are saved inside allOccPos
+                                        // This prevents those couples to be counted when searching for another occurrence
+                                        for (Position position : this.positions) {
+                                            int saveY = i + position.getY();
+                                            int saveX = j + position.getX();
+                                            Position newPosition = new Position(saveX, saveY);
+                                            allOccPos.add(newPosition);
+                                        }
                                     }
                                 } else if (this.numOfOccurrences == 1) {
                                     cardsAlreadyChecked[this.ID] = 1; // When the conditions are met we save the card id
