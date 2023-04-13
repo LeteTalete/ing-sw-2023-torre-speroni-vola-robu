@@ -2,10 +2,9 @@ package it.polimi.ingsw.view;
 
 import java.util.*;
 
-import static it.polimi.ingsw.ClientExecutable.connectNow;
-
 public class ClientTUI implements View{
 
+    private String connectionType;
     //constructor
     public ClientTUI(){
         setupStdInput();
@@ -35,7 +34,28 @@ public class ClientTUI implements View{
             }
         }while(!connection.equals("RMI") && !connection.equals("SOCKET"));
 
-        //this method runs inside game.ClientExecutable class
-        connectNow(connection);
+        connectionType = connection;
+
+    }
+
+    @Override
+    public String getConnectionType() {
+        return this.connectionType;
+    }
+
+    public String getUsername(){
+        writeText("Insert username");
+        return frominput.nextLine();
+    }
+
+    @Override
+    public void displayNotification(String message) {
+        writeText(message);
+    }
+
+    @Override
+    public int askAmountOfPlayers() {
+        writeText("Insert number of players (from 2 to 4)");
+        return frominput.nextInt();
     }
 }

@@ -5,4 +5,24 @@ public class ClientGUI implements View {
     public void chooseConnection() {
 
     }
+
+    @Override
+    public String getConnectionType() {
+        return null;
+    }
+
+    @Override
+    public String getUsername() {
+        return null;
+    }
+
+    @Override
+    public void displayNotification(String message) {
+
+    }
+
+    @Override
+    public int askAmountOfPlayers() {
+        return 0;
+    }
 }
