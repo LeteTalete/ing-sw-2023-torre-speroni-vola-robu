@@ -98,7 +98,6 @@ public class PlayerTest
                 System.out.println(exc.toString());
             }
         }
-        livingRoom.setPickedCouples(choice);
     }
 
 }

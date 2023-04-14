@@ -15,6 +15,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 
 public class LivingRoom {
@@ -34,7 +37,95 @@ public class LivingRoom {
     public boolean checkPlayerChoice(ArrayList<Position> choice)
     {
         //this method should check if the choice made by player is a valid choice or not
+        //the positions chosen must identify PICKABLE couples which have at least one side free
+        //if there is more than one position chosen, then the positions must identify adjacent couples in the same direction
 
+        ArrayList<Integer> X = new ArrayList<Integer>();
+        ArrayList<Integer> Y = new ArrayList<Integer>();
+        boolean sameX = true;
+        boolean sameY = true;
+
+        for (Position p : choice)
+        {
+            if(getCouple(p).getState() != State.PICKABLE) return false;
+            if(!atLeastOneSideFree(p)) return false;
+            X.add(p.getX());
+            Y.add(p.getY());
+        }
+        if(choice.size()>1) //there is more than 1 position chosen
+        {
+            for(int i=0;i<choice.size()-1;i++)
+            {
+                if(!X.get(i).equals(X.get(i+1))) sameX = false; //not horizontal direction
+                if(!Y.get(i).equals(Y.get(i+1))) sameY = false; //not vertical direction
+            }
+            if(!sameX && !sameY) return false;
+            if(sameX)
+            {
+                Collections.sort(Y);
+                for(int i=0;i<choice.size()-1;i++)
+                {
+                   if(Y.get(i+1) - Y.get(i) != 1) return false; //not adjacent
+                }
+            }
+            if(sameY)
+            {
+                Collections.sort(X);
+                for(int i=0;i<choice.size()-1;i++)
+                {
+                    if(X.get(i+1) - X.get(i) != 1) return false; //not adjacent
+                }
+            }
+        }
+
+        return true;
+    }
+
+    public boolean atLeastOneSideFree(Position p)
+    {
+        //ATTENTION: this method works but is ugly, need to be optimized :)
+
+        int x = p.getX();
+        int y = p.getY();
+        if(x>0 && x<8 && y>0 && y<8)    //not in the perimeter
+        {
+            if(board[x+1][y].getState() == State.PICKABLE && board[x-1][y].getState() == State.PICKABLE
+                && board[x][y+1].getState() == State.PICKABLE && board[x][y-1].getState() == State.PICKABLE) return false;
+        }
+        else if(y == 0 && x!=0 && x!=8) //on the left side but not at the corners
+        {
+            if(board[x+1][y].getState() == State.PICKABLE && board[x-1][y].getState() == State.PICKABLE
+                    && board[x][y+1].getState() == State.PICKABLE) return false;
+        }
+        else if(y == 8 && x!=0 && x!=8) //on the right side but not at the corners
+        {
+            if(board[x+1][y].getState() == State.PICKABLE && board[x-1][y].getState() == State.PICKABLE
+                    && board[x][y-1].getState() == State.PICKABLE) return false;
+        }
+        else if(x == 0 && y!=0 && y!=8) //on the top side but not at the corners
+        {
+            if(board[x+1][y].getState() == State.PICKABLE && board[x][y+1].getState() == State.PICKABLE && board[x][y-1].getState() == State.PICKABLE) return false;
+        }
+        else if(x == 8 && y!=0 && y!=8) //on the bottom side but not at the corners
+        {
+            if(board[x-1][y].getState() == State.PICKABLE && board[x][y+1].getState() == State.PICKABLE && board[x][y-1].getState() == State.PICKABLE) return false;
+        }
+        else if(x == 0 && y == 0) //in the top left corner
+        {
+            if(board[x+1][y].getState() == State.PICKABLE && board[x][y+1].getState() == State.PICKABLE) return false;
+        }
+        else if(x == 0 && y == 8) //in the top right corner
+        {
+            if(board[x+1][y].getState() == State.PICKABLE && board[x][y-1].getState() == State.PICKABLE) return false;
+        }
+        else if(x == 8 && y == 0) //in the bottom left corner
+        {
+            if(board[x-1][y].getState() == State.PICKABLE && board[x][y+1].getState() == State.PICKABLE) return false;
+        }
+        else if(x == 8 && y == 8) //in the bottom right corner
+        {
+            if(board[x-1][y].getState() == State.PICKABLE && board[x][y-1].getState() == State.PICKABLE) return false;
+        }
         return true;
     }
 
