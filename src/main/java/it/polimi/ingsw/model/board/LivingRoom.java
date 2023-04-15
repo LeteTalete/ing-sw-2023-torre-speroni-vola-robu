@@ -83,50 +83,27 @@ public class LivingRoom {
 
     public boolean atLeastOneSideFree(Position p)
     {
-        //ATTENTION: this method works but is ugly, need to be optimized :)
-
         int x = p.getX();
         int y = p.getY();
-        if(x>0 && x<8 && y>0 && y<8)    //not in the perimeter
+
+        if(x+1 < board.length)
         {
-            if(board[x+1][y].getState() == State.PICKABLE && board[x-1][y].getState() == State.PICKABLE
-                && board[x][y+1].getState() == State.PICKABLE && board[x][y-1].getState() == State.PICKABLE) return false;
+            if(board[x+1][y].getState() != State.PICKABLE) return true;
         }
-        else if(y == 0 && x!=0 && x!=8) //on the left side but not at the corners
+        if(x-1 >= 0)
         {
-            if(board[x+1][y].getState() == State.PICKABLE && board[x-1][y].getState() == State.PICKABLE
-                    && board[x][y+1].getState() == State.PICKABLE) return false;
+            if(board[x-1][y].getState() != State.PICKABLE) return true;
         }
-        else if(y == 8 && x!=0 && x!=8) //on the right side but not at the corners
+        if(y+1 < board[0].length)
         {
-            if(board[x+1][y].getState() == State.PICKABLE && board[x-1][y].getState() == State.PICKABLE
-                    && board[x][y-1].getState() == State.PICKABLE) return false;
+            if(board[x][y+1].getState() != State.PICKABLE) return true;
         }
-        else if(x == 0 && y!=0 && y!=8) //on the top side but not at the corners
+        if(y-1 >= 0)
         {
-            if(board[x+1][y].getState() == State.PICKABLE && board[x][y+1].getState() == State.PICKABLE && board[x][y-1].getState() == State.PICKABLE) return false;
+            if(board[x][y-1].getState() != State.PICKABLE) return true;
         }
-        else if(x == 8 && y!=0 && y!=8) //on the bottom side but not at the corners
-        {
-            if(board[x-1][y].getState() == State.PICKABLE && board[x][y+1].getState() == State.PICKABLE && board[x][y-1].getState() == State.PICKABLE) return false;
-        }
-        else if(x == 0 && y == 0) //in the top left corner
-        {
-            if(board[x+1][y].getState() == State.PICKABLE && board[x][y+1].getState() == State.PICKABLE) return false;
-        }
-        else if(x == 0 && y == 8) //in the top right corner
-        {
-            if(board[x+1][y].getState() == State.PICKABLE && board[x][y-1].getState() == State.PICKABLE) return false;
-        }
-        else if(x == 8 && y == 0) //in the bottom left corner
-        {
-            if(board[x-1][y].getState() == State.PICKABLE && board[x][y+1].getState() == State.PICKABLE) return false;
-        }
-        else if(x == 8 && y == 8) //in the bottom right corner
-        {
-            if(board[x-1][y].getState() == State.PICKABLE && board[x][y-1].getState() == State.PICKABLE) return false;
-        }
-        return true;
+
+        return false;
     }
 
     public void updateCouples(ArrayList<Position> choice)
@@ -144,26 +121,29 @@ public class LivingRoom {
         //this method returns false if there are at least two couples adjacent containing a tile
         //otherwise it returns true (in this case a refill is needed)
 
-        //this for checks horizontally
-        for(int i=0;i<this.board.length;i++) //for each row
-        {
-            for(int j=0;j<this.board[i].length-1;j++)
-            {
-                if((this.board[i][j].getState() == State.PICKABLE) && this.board[i][j+1].getState() == State.PICKABLE)
-                {
-                    return false;
-                }
-            }
-        }
 
-        //this for checks vertically
-        for(int i=0;i<this.board[0].length;i++) //for each column
+        for(int i=0; i < board.length; i++)
         {
-            for(int j=0;j<this.board.length-1;j++)
+            for(int j=0; j < board[i].length; j++)
             {
-                if((this.board[j][i].getState() == State.PICKABLE) && this.board[j+1][i].getState() == State.PICKABLE)
+                if(board[i][j].getState() == State.PICKABLE)
                 {
-                    return false;
+                    if(i+1 < board.length)
+                    {
+                        if(board[i+1][j].getState() == State.PICKABLE) return false;
+                    }
+                    if(i-1 >= 0)
+                    {
+                        if(board[i-1][j].getState() == State.PICKABLE) return false;
+                    }
+                    if(j+1 < board[i].length)
+                    {
+                        if(board[i][j+1].getState() == State.PICKABLE) return false;
+                    }
+                    if(j-1 >= 0)
+                    {
+                        if(board[i][j-1].getState() == State.PICKABLE) return false;
+                    }
                 }
             }
         }

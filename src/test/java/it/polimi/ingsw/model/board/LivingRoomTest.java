@@ -4,8 +4,11 @@ import it.polimi.ingsw.model.Deck;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.model.enumerations.Couple;
 import it.polimi.ingsw.model.enumerations.State;
+import it.polimi.ingsw.model.enumerations.T_Type;
+import it.polimi.ingsw.model.enumerations.Tile;
 import org.junit.jupiter.api.Test;
 import static org.junit.Assert.*;
 
@@ -103,4 +106,89 @@ public class LivingRoomTest {
 
     }
 
+    @Test
+    public void checkPlayerChoiceTest()
+    {
+        //...
+    }
+
+    @Test
+    public void atLeastOneSideFreeTest()
+    {
+        LivingRoom l = new LivingRoom(4);
+        //l.refill(new Deck());
+
+        l.setCouple(new Position(5,5),null,State.EMPTY);
+
+        System.out.println();
+        for(int i=0; i<8;i++)
+        {
+            for(int j=0; j<8;j++)
+            {
+                if(l.getCouple(new Position(i,j)).getState() == State.PICKABLE)
+                {
+                    //System.out.print(" "+ l.getCouple(new Position(i,j)).getTile().getTileType());
+                    System.out.print(" G");
+                }
+                else if(l.getCouple(new Position(i,j)).getState() == State.EMPTY)
+                {
+                    System.out.print(" E");
+                }
+                else System.out.print(" X");
+            }
+            System.out.println();
+        }
+        assertTrue(l.atLeastOneSideFree(new Position(0,4)));
+        assertTrue(l.atLeastOneSideFree(new Position(3,8)));
+        assertFalse(l.atLeastOneSideFree(new Position(4,4)));
+        assertTrue(l.atLeastOneSideFree(new Position(4,8)));
+        assertTrue(l.atLeastOneSideFree(new Position(5,6)));
+    }
+
+    @Test
+    public void checkForRefillTest()
+    {
+        LivingRoom l = new LivingRoom(4);
+
+        assertFalse(l.checkForRefill());
+
+        for(int i=0;i<8;i++)
+        {
+            for(int j=0; j<8;j++)
+            {
+                if(l.getCouple(new Position(i,j)).getState() == State.PICKABLE)
+                {
+                    l.setCouple(new Position(i,j),null,State.EMPTY);
+                }
+            }
+        }
+
+        System.out.println();
+        for(int i=0; i<8;i++)
+        {
+            for(int j=0; j<8;j++)
+            {
+                if(l.getCouple(new Position(i,j)).getState() == State.PICKABLE)
+                {
+                    //System.out.print(" "+ l.getCouple(new Position(i,j)).getTile().getTileType());
+                    System.out.print(" G");
+                }
+                else if(l.getCouple(new Position(i,j)).getState() == State.EMPTY)
+                {
+                    System.out.print(" E");
+                }
+                else System.out.print(" X");
+            }
+            System.out.println();
+        }
+
+        assertTrue(l.checkForRefill());
+        l.setCouple(new Position(4,4),new Tile(T_Type.CAT,1),State.PICKABLE);
+        assertTrue(l.checkForRefill());
+        l.setCouple(new Position(5,5),new Tile(T_Type.CAT,1),State.PICKABLE);
+        assertTrue(l.checkForRefill());
+        l.setCouple(new Position(5,6),new Tile(T_Type.CAT,1),State.PICKABLE);
+        assertFalse(l.checkForRefill());
+    }
 }
+

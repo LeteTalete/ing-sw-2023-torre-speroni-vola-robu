@@ -2,6 +2,7 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.Exceptions.InvalidChoiceFormatException;
 import it.polimi.ingsw.model.board.LivingRoom;
+import it.polimi.ingsw.model.board.Shelf;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -14,9 +15,12 @@ public class PlayerTest
     public void testCheckUserInput()
     {
         Player p = new Player();
-        assertTrue(p.checkUserInput("09"));
-        assertTrue(p.checkUserInput("09 84"));
-        assertTrue(p.checkUserInput("09 84 11"));
+        p.setMyShelf(new Shelf());
+
+        assertTrue(p.checkUserInput("06"));
+        assertTrue(p.checkUserInput("06 84"));
+        assertTrue(p.checkUserInput("06 84 11"));
+        assertFalse(p.checkUserInput("09 84 11"));
         assertFalse(p.checkUserInput(""));
         assertFalse(p.checkUserInput("0"));
         assertFalse(p.checkUserInput("ab"));
@@ -25,6 +29,10 @@ public class PlayerTest
         assertFalse(p.checkUserInput("09 69 1B"));
         assertFalse(p.checkUserInput("09a84b11"));
         assertFalse(p.checkUserInput("09 84 11 99"));
+        assertFalse(p.checkUserInput("06 06"));
+        assertTrue(p.checkUserInput("06 04"));
+        assertFalse(p.checkUserInput("08 08 11"));
+        assertFalse(p.checkUserInput("06 08 08"));
     }
 
     @Test
@@ -49,13 +57,14 @@ public class PlayerTest
     {
         //this method will ask the player to insert the coordinates of the tiles he wants to pick up
         //if the choice is valid and he confirms this method will return an ArrayList containing the positions
-        // of the tiles choosen
+        // of the tiles chosen
 
         Player p = new Player();
+        p.setMyShelf(new Shelf());
         LivingRoom livingRoom = new LivingRoom(4);
         ArrayList<Position> choice = new ArrayList<Position>();
         boolean flag = false;
-        String user_input = "09 84 11";
+        String user_input = "06 84 11";
         char confirm = 'y';
 
         while(!flag)
