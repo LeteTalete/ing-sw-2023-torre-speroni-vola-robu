@@ -19,16 +19,16 @@ public class CGC2Test {
         assertEquals(2, CGC2.getID());
         assertEquals("Shape", CGC2.getType());
         assertEquals(2, CGC2.getNumOfOccurrences());
-        assertEquals(0, CGC2.getMirror());
+        assertEquals(0, CGC2.getDiffType());
         assertEquals(0, CGC2.getStairs());
-        assertEquals(0, CGC2.getPositions().get(0).getX());
-        assertEquals(0, CGC2.getPositions().get(0).getY());
-        assertEquals(0, CGC2.getPositions().get(1).getX());
-        assertEquals(1, CGC2.getPositions().get(1).getY());
-        assertEquals(1, CGC2.getPositions().get(2).getX());
-        assertEquals(1, CGC2.getPositions().get(2).getY());
-        assertEquals(1, CGC2.getPositions().get(3).getX());
-        assertEquals(0, CGC2.getPositions().get(3).getY());
+        assertEquals(0, CGC2.getPositions().get(0).get(0).getX());
+        assertEquals(0, CGC2.getPositions().get(0).get(0).getY());
+        assertEquals(0, CGC2.getPositions().get(0).get(1).getX());
+        assertEquals(1, CGC2.getPositions().get(0).get(1).getY());
+        assertEquals(1, CGC2.getPositions().get(0).get(2).getX());
+        assertEquals(1, CGC2.getPositions().get(0).get(2).getY());
+        assertEquals(1, CGC2.getPositions().get(0).get(3).getX());
+        assertEquals(0, CGC2.getPositions().get(0).get(3).getY());
     }
 
     /** Test emptyShelfTest checks that the card is not accepted when the shelf is empty */
@@ -66,6 +66,9 @@ public class CGC2Test {
         for (int i = 0; i < shelf.ROWS; i++) {
             for (int j = 0; j < shelf.COLUMNS; j++) {
                 Couple couple = new Couple(deck.draw());
+                while ( couple.getTile().getTileType().equals(T_Type.CAT) ){
+                    couple = new Couple(deck.draw());
+                }
                 shelf.setCoordinate(i, j, couple);
                 assertEquals(couple.getTile(), shelfsMatrix[i][j].getTile());
                 assertEquals(couple.getState(), shelfsMatrix[i][j].getState());
@@ -75,34 +78,13 @@ public class CGC2Test {
         Tile tile0 = new Tile(T_Type.CAT, 3);
         Couple couple0 = new Couple(tile0);
         shelf.setCoordinate(1, 0, couple0);
-
-        Tile tile1 = new Tile(T_Type.CAT, 3);
-        Couple couple1 = new Couple(tile1);
-        shelf.setCoordinate(1, 1, couple1);
-
-        Tile tile2 = new Tile(T_Type.CAT, 3);
-        Couple couple2 = new Couple(tile2);
-        shelf.setCoordinate(2, 0, couple2);
-
-        Tile tile3 = new Tile(T_Type.CAT, 3);
-        Couple couple3 = new Couple(tile3);
-        shelf.setCoordinate(2, 1, couple3);
-
-        Tile tile4 = new Tile(T_Type.CAT, 3);
-        Couple couple4 = new Couple(tile4);
-        shelf.setCoordinate(4, 4, couple4);
-
-        Tile tile5 = new Tile(T_Type.CAT, 3);
-        Couple couple5 = new Couple(tile5);
-        shelf.setCoordinate(4, 3, couple5);
-
-        Tile tile6 = new Tile(T_Type.CAT, 3);
-        Couple couple6 = new Couple(tile6);
-        shelf.setCoordinate(3, 4, couple6);
-
-        Tile tile7 = new Tile(T_Type.CAT, 3);
-        Couple couple7 = new Couple(tile7);
-        shelf.setCoordinate(3, 3, couple7);
+        shelf.setCoordinate(1, 1, couple0);
+        shelf.setCoordinate(2, 0, couple0);
+        shelf.setCoordinate(2, 1, couple0);
+        shelf.setCoordinate(4, 4, couple0);
+        shelf.setCoordinate(4, 3, couple0);
+        shelf.setCoordinate(3, 4, couple0);
+        shelf.setCoordinate(3, 3, couple0);
 
         System.out.println("squareTest1");
         for ( int i = 0; i < shelf.ROWS; i++){
@@ -120,8 +102,10 @@ public class CGC2Test {
         assertEquals(1, CGC2.checkConditions(shelf));
     }
 
-    /** Test squareTest2 checks if two 2x2 squares with the same tile type are correctly identified
-     *  when they are adjacent */
+    /** Test squareTest2 checks if checkConditions can correctly identify two not overlapping 2x2 squares when tiles are
+     *  placed so that multiple overlapping 2x2 square can be counted
+     *  In the test tiles are placed so that you can count four overlapping 2x2 squares but since we need two not
+     *  overlapping squares the algorithm checks if those two squares can fit inside that space */
     @Test
     public void squareTest2(){
         Shelf shelf = new Shelf();
@@ -132,6 +116,9 @@ public class CGC2Test {
         for (int i = 0; i < shelf.ROWS; i++) {
             for (int j = 0; j < shelf.COLUMNS; j++) {
                 Couple couple = new Couple(deck.draw());
+                while ( couple.getTile().getTileType().equals(T_Type.CAT) ){
+                    couple = new Couple(deck.draw());
+                }
                 shelf.setCoordinate(i, j, couple);
                 assertEquals(couple.getTile(), shelfsMatrix[i][j].getTile());
                 assertEquals(couple.getState(), shelfsMatrix[i][j].getState());
@@ -141,34 +128,15 @@ public class CGC2Test {
         Tile tile0 = new Tile(T_Type.CAT, 3);
         Couple couple0 = new Couple(tile0);
         shelf.setCoordinate(1, 0, couple0);
-
-        Tile tile1 = new Tile(T_Type.CAT, 3);
-        Couple couple1 = new Couple(tile1);
-        shelf.setCoordinate(1, 1, couple1);
-
-        Tile tile2 = new Tile(T_Type.CAT, 3);
-        Couple couple2 = new Couple(tile2);
-        shelf.setCoordinate(2, 0, couple2);
-
-        Tile tile3 = new Tile(T_Type.CAT, 3);
-        Couple couple3 = new Couple(tile3);
-        shelf.setCoordinate(2, 1, couple3);
-
-        Tile tile4 = new Tile(T_Type.CAT, 3);
-        Couple couple4 = new Couple(tile4);
-        shelf.setCoordinate(1, 2, couple4);
-
-        Tile tile5 = new Tile(T_Type.CAT, 3);
-        Couple couple5 = new Couple(tile5);
-        shelf.setCoordinate(2, 2, couple5);
-
-        Tile tile6 = new Tile(T_Type.CAT, 3);
-        Couple couple6 = new Couple(tile6);
-        shelf.setCoordinate(1, 3, couple6);
-
-        Tile tile7 = new Tile(T_Type.CAT, 3);
-        Couple couple7 = new Couple(tile7);
-        shelf.setCoordinate(2, 3, couple7);
+        shelf.setCoordinate(1, 1, couple0);
+        shelf.setCoordinate(2, 0, couple0);
+        shelf.setCoordinate(2, 1, couple0);
+        shelf.setCoordinate(1, 2, couple0);
+        shelf.setCoordinate(2, 2, couple0);
+        shelf.setCoordinate(1, 3, couple0);
+        shelf.setCoordinate(2, 3, couple0);
+        shelf.setCoordinate(0, 1, couple0);
+        shelf.setCoordinate(0, 2, couple0);
 
         System.out.println("squareTest2");
         for ( int i = 0; i < shelf.ROWS; i++){
@@ -195,9 +163,13 @@ public class CGC2Test {
         Couple[][] shelfsMatrix = shelf.getShelfsMatrix();
         CG_Shape CGC2 = new CG_Shape(2);
 
+
         for (int i = 0; i < shelf.ROWS; i++) {
             for (int j = 0; j < shelf.COLUMNS; j++) {
                 Couple couple = new Couple(deck.draw());
+                while ( couple.getTile().getTileType().equals(T_Type.CAT) ){
+                    couple = new Couple(deck.draw());
+                }
                 shelf.setCoordinate(i, j, couple);
                 assertEquals(couple.getTile(), shelfsMatrix[i][j].getTile());
                 assertEquals(couple.getState(), shelfsMatrix[i][j].getState());
@@ -207,26 +179,11 @@ public class CGC2Test {
         Tile tile0 = new Tile(T_Type.CAT, 3);
         Couple couple0 = new Couple(tile0);
         shelf.setCoordinate(1, 0, couple0);
-
-        Tile tile1 = new Tile(T_Type.CAT, 3);
-        Couple couple1 = new Couple(tile1);
-        shelf.setCoordinate(1, 1, couple1);
-
-        Tile tile2 = new Tile(T_Type.CAT, 3);
-        Couple couple2 = new Couple(tile2);
-        shelf.setCoordinate(2, 0, couple2);
-
-        Tile tile3 = new Tile(T_Type.CAT, 3);
-        Couple couple3 = new Couple(tile3);
-        shelf.setCoordinate(2, 1, couple3);
-
-        Tile tile4 = new Tile(T_Type.CAT, 3);
-        Couple couple4 = new Couple(tile4);
-        shelf.setCoordinate(1, 2, couple4);
-
-        Tile tile5 = new Tile(T_Type.CAT, 3);
-        Couple couple5 = new Couple(tile5);
-        shelf.setCoordinate(2, 2, couple5);
+        shelf.setCoordinate(1, 1, couple0);
+        shelf.setCoordinate(2, 0, couple0);
+        shelf.setCoordinate(2, 1, couple0);
+        shelf.setCoordinate(1, 2, couple0);
+        shelf.setCoordinate(2, 2, couple0);
 
         System.out.println("failTest1");
         for ( int i = 0; i < shelf.ROWS; i++){
@@ -255,18 +212,9 @@ public class CGC2Test {
         Tile tile0 = new Tile(T_Type.CAT, 3);
         Couple couple0 = new Couple(tile0);
         shelf.setCoordinate(5, 0, couple0);
-
-        Tile tile1 = new Tile(T_Type.CAT, 3);
-        Couple couple1 = new Couple(tile1);
-        shelf.setCoordinate(4, 0, couple1);
-
-        Tile tile2 = new Tile(T_Type.CAT, 3);
-        Couple couple2 = new Couple(tile2);
-        shelf.setCoordinate(5, 1, couple2);
-
-        Tile tile3 = new Tile(T_Type.CAT, 3);
-        Couple couple3 = new Couple(tile3);
-        shelf.setCoordinate(4, 1, couple3);
+        shelf.setCoordinate(4, 0, couple0);
+        shelf.setCoordinate(5, 1, couple0);
+        shelf.setCoordinate(4, 1, couple0);
 
         System.out.println("failTest2");
         for ( int i = 0; i < shelf.ROWS; i++){
@@ -296,6 +244,9 @@ public class CGC2Test {
         for (int i = 0; i < shelf.ROWS; i++) {
             for (int j = 0; j < shelf.COLUMNS; j++) {
                 Couple couple = new Couple(deck.draw());
+                while ( couple.getTile().getTileType().equals(T_Type.CAT) ){
+                    couple = new Couple(deck.draw());
+                }
                 shelf.setCoordinate(i, j, couple);
                 assertEquals(couple.getTile(), shelfsMatrix[i][j].getTile());
                 assertEquals(couple.getState(), shelfsMatrix[i][j].getState());
@@ -305,30 +256,12 @@ public class CGC2Test {
         Tile tile0 = new Tile(T_Type.CAT, 3);
         Couple couple0 = new Couple(tile0);
         shelf.setCoordinate(1, 0, couple0);
-
-        Tile tile1 = new Tile(T_Type.CAT, 3);
-        Couple couple1 = new Couple(tile1);
-        shelf.setCoordinate(1, 1, couple1);
-
-        Tile tile2 = new Tile(T_Type.CAT, 3);
-        Couple couple2 = new Couple(tile2);
-        shelf.setCoordinate(2, 0, couple2);
-
-        Tile tile3 = new Tile(T_Type.CAT, 3);
-        Couple couple3 = new Couple(tile3);
-        shelf.setCoordinate(2, 1, couple3);
-
-        Tile tile4 = new Tile(T_Type.CAT, 3);
-        Couple couple4 = new Couple(tile4);
-        shelf.setCoordinate(3, 1, couple4);
-
-        Tile tile5 = new Tile(T_Type.CAT, 3);
-        Couple couple5 = new Couple(tile5);
-        shelf.setCoordinate(2, 2, couple5);
-
-        Tile tile6 = new Tile(T_Type.CAT, 3);
-        Couple couple6 = new Couple(tile6);
-        shelf.setCoordinate(3, 2, couple6);
+        shelf.setCoordinate(1, 1, couple0);
+        shelf.setCoordinate(2, 0, couple0);
+        shelf.setCoordinate(2, 1, couple0);
+        shelf.setCoordinate(3, 1, couple0);
+        shelf.setCoordinate(2, 2, couple0);
+        shelf.setCoordinate(3, 2, couple0);
 
         System.out.println("failTest3");
         for ( int i = 0; i < shelf.ROWS; i++){
@@ -358,6 +291,9 @@ public class CGC2Test {
         for (int i = 0; i < shelf.ROWS; i++) {
             for (int j = 0; j < shelf.COLUMNS; j++) {
                 Couple couple = new Couple(deck.draw());
+                while ( couple.getTile().getTileType().equals(T_Type.CAT) ){
+                    couple = new Couple(deck.draw());
+                }
                 shelf.setCoordinate(i, j, couple);
                 assertEquals(couple.getTile(), shelfsMatrix[i][j].getTile());
                 assertEquals(couple.getState(), shelfsMatrix[i][j].getState());
@@ -367,38 +303,14 @@ public class CGC2Test {
         Tile tile0 = new Tile(T_Type.CAT, 3);
         Couple couple0 = new Couple(tile0);
         shelf.setCoordinate(2, 4, couple0);
-
-        Tile tile1 = new Tile(T_Type.CAT, 3);
-        Couple couple1 = new Couple(tile1);
-        shelf.setCoordinate(2, 2, couple1);
-
-        Tile tile2 = new Tile(T_Type.CAT, 3);
-        Couple couple2 = new Couple(tile2);
-        shelf.setCoordinate(3, 3, couple2);
-
-        Tile tile3 = new Tile(T_Type.CAT, 3);
-        Couple couple3 = new Couple(tile3);
-        shelf.setCoordinate(4, 4, couple3);
-
-        Tile tile4 = new Tile(T_Type.CAT, 3);
-        Couple couple4 = new Couple(tile4);
-        shelf.setCoordinate(4, 2, couple4);
-
-        Tile tile5 = new Tile(T_Type.CAT, 3);
-        Couple couple5 = new Couple(tile5);
-        shelf.setCoordinate(2, 3, couple5);
-
-        Tile tile6 = new Tile(T_Type.CAT, 3);
-        Couple couple6 = new Couple(tile6);
-        shelf.setCoordinate(3, 4, couple6);
-
-        Tile tile7 = new Tile(T_Type.CAT, 3);
-        Couple couple7 = new Couple(tile7);
-        shelf.setCoordinate(3, 2, couple7);
-
-        Tile tile8 = new Tile(T_Type.CAT, 3);
-        Couple couple8 = new Couple(tile8);
-        shelf.setCoordinate(4, 3, couple8);
+        shelf.setCoordinate(2, 2, couple0);
+        shelf.setCoordinate(3, 3, couple0);
+        shelf.setCoordinate(4, 4, couple0);
+        shelf.setCoordinate(4, 2, couple0);
+        shelf.setCoordinate(2, 3, couple0);
+        shelf.setCoordinate(3, 4, couple0);
+        shelf.setCoordinate(3, 2, couple0);
+        shelf.setCoordinate(4, 3, couple0);
 
         System.out.println("failTest4");
         for ( int i = 0; i < shelf.ROWS; i++){

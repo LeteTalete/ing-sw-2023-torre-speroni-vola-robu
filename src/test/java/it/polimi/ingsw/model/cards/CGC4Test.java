@@ -19,18 +19,30 @@ public class CGC4Test {
         assertEquals(4, CGC4.getID());
         assertEquals("Shape", CGC4.getType());
         assertEquals(1, CGC4.getNumOfOccurrences());
-        assertEquals(1, CGC4.getMirror());
+        assertEquals(0, CGC4.getDiffType());
         assertEquals(1, CGC4.getStairs());
-        assertEquals(0, CGC4.getPositions().get(0).getX());
-        assertEquals(1, CGC4.getPositions().get(0).getY());
-        assertEquals(1, CGC4.getPositions().get(1).getX());
-        assertEquals(2, CGC4.getPositions().get(1).getY());
-        assertEquals(2, CGC4.getPositions().get(2).getX());
-        assertEquals(3, CGC4.getPositions().get(2).getY());
-        assertEquals(3, CGC4.getPositions().get(3).getX());
-        assertEquals(4, CGC4.getPositions().get(3).getY());
-        assertEquals(4, CGC4.getPositions().get(4).getX());
-        assertEquals(5, CGC4.getPositions().get(4).getY());
+
+        assertEquals(0, CGC4.getPositions().get(0).get(0).getX());
+        assertEquals(0, CGC4.getPositions().get(0).get(0).getY());
+        assertEquals(1, CGC4.getPositions().get(0).get(1).getX());
+        assertEquals(1, CGC4.getPositions().get(0).get(1).getY());
+        assertEquals(2, CGC4.getPositions().get(0).get(2).getX());
+        assertEquals(2, CGC4.getPositions().get(0).get(2).getY());
+        assertEquals(3, CGC4.getPositions().get(0).get(3).getX());
+        assertEquals(3, CGC4.getPositions().get(0).get(3).getY());
+        assertEquals(4, CGC4.getPositions().get(0).get(4).getX());
+        assertEquals(4, CGC4.getPositions().get(0).get(4).getY());
+
+        assertEquals(0, CGC4.getPositions().get(1).get(0).getX());
+        assertEquals(0, CGC4.getPositions().get(1).get(0).getY());
+        assertEquals(-1, CGC4.getPositions().get(1).get(1).getX());
+        assertEquals(1, CGC4.getPositions().get(1).get(1).getY());
+        assertEquals(-2, CGC4.getPositions().get(1).get(2).getX());
+        assertEquals(2, CGC4.getPositions().get(1).get(2).getY());
+        assertEquals(-3, CGC4.getPositions().get(1).get(3).getX());
+        assertEquals(3, CGC4.getPositions().get(1).get(3).getY());
+        assertEquals(-4, CGC4.getPositions().get(1).get(4).getX());
+        assertEquals(4, CGC4.getPositions().get(1).get(4).getY());
     }
 
     /** Test emptyShelfTest checks that the card is not accepted when the shelf is empty */

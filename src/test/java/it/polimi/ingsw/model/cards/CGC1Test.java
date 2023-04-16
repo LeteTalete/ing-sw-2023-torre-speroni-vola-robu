@@ -19,16 +19,16 @@ public class CGC1Test {
         assertEquals(1, CGC1.getID());
         assertEquals("Shape", CGC1.getType());
         assertEquals(1, CGC1.getNumOfOccurrences());
-        assertEquals(0, CGC1.getMirror());
+        assertEquals(0, CGC1.getDiffType());
         assertEquals(0, CGC1.getStairs());
-        assertEquals(0, CGC1.getPositions().get(0).getX());
-        assertEquals(0, CGC1.getPositions().get(0).getY());
-        assertEquals(4, CGC1.getPositions().get(1).getX());
-        assertEquals(0, CGC1.getPositions().get(1).getY());
-        assertEquals(0, CGC1.getPositions().get(2).getX());
-        assertEquals(5, CGC1.getPositions().get(2).getY());
-        assertEquals(4, CGC1.getPositions().get(3).getX());
-        assertEquals(5, CGC1.getPositions().get(3).getY());
+        assertEquals(0, CGC1.getPositions().get(0).get(0).getX());
+        assertEquals(0, CGC1.getPositions().get(0).get(0).getY());
+        assertEquals(4, CGC1.getPositions().get(0).get(1).getX());
+        assertEquals(0, CGC1.getPositions().get(0).get(1).getY());
+        assertEquals(0, CGC1.getPositions().get(0).get(2).getX());
+        assertEquals(5, CGC1.getPositions().get(0).get(2).getY());
+        assertEquals(4, CGC1.getPositions().get(0).get(3).getX());
+        assertEquals(5, CGC1.getPositions().get(0).get(3).getY());
     }
 
     /** Test emptyShelfTest checks that the card is not accepted when the shelf is empty */
