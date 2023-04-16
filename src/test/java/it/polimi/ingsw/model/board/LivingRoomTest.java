@@ -16,6 +16,7 @@ import static org.junit.Assert.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 public class LivingRoomTest {
     private Couple[][] testBoard;
@@ -109,7 +110,39 @@ public class LivingRoomTest {
     @Test
     public void checkPlayerChoiceTest()
     {
-        //...
+        LivingRoom l = new LivingRoom(4);
+
+        l.printBoard();
+
+        ArrayList<Position> choice = new ArrayList<Position>();
+        choice.add(new Position(0,0));
+
+        assertFalse(l.checkPlayerChoice(choice));
+
+        choice.clear();
+        choice.add(new Position(4,4));
+        assertFalse(l.checkPlayerChoice(choice));
+        choice.add(new Position(4,5));
+        assertFalse(l.checkPlayerChoice(choice));
+
+        choice.clear();
+        choice.add(new Position(0,3));
+        assertTrue(l.checkPlayerChoice(choice));
+        choice.add(new Position(0,4));
+        assertTrue(l.checkPlayerChoice(choice));
+
+        choice.clear();
+        choice.add(new Position(0,3));
+        choice.add(new Position(4,4));
+        assertFalse(l.checkPlayerChoice(choice));
+
+        choice.clear();
+        choice.add(new Position(0,3));
+        choice.add(new Position(1,3));
+        assertTrue(l.checkPlayerChoice(choice));
+        choice.add(new Position(2,3));
+        assertFalse(l.checkPlayerChoice(choice));
+
     }
 
     @Test
@@ -120,24 +153,7 @@ public class LivingRoomTest {
 
         l.setCouple(new Position(5,5),null,State.EMPTY);
 
-        System.out.println();
-        for(int i=0; i<8;i++)
-        {
-            for(int j=0; j<8;j++)
-            {
-                if(l.getCouple(new Position(i,j)).getState() == State.PICKABLE)
-                {
-                    //System.out.print(" "+ l.getCouple(new Position(i,j)).getTile().getTileType());
-                    System.out.print(" G");
-                }
-                else if(l.getCouple(new Position(i,j)).getState() == State.EMPTY)
-                {
-                    System.out.print(" E");
-                }
-                else System.out.print(" X");
-            }
-            System.out.println();
-        }
+        l.printBoard();
         assertTrue(l.atLeastOneSideFree(new Position(0,4)));
         assertTrue(l.atLeastOneSideFree(new Position(3,8)));
         assertFalse(l.atLeastOneSideFree(new Position(4,4)));
@@ -152,35 +168,8 @@ public class LivingRoomTest {
 
         assertFalse(l.checkForRefill());
 
-        for(int i=0;i<8;i++)
-        {
-            for(int j=0; j<8;j++)
-            {
-                if(l.getCouple(new Position(i,j)).getState() == State.PICKABLE)
-                {
-                    l.setCouple(new Position(i,j),null,State.EMPTY);
-                }
-            }
-        }
-
-        System.out.println();
-        for(int i=0; i<8;i++)
-        {
-            for(int j=0; j<8;j++)
-            {
-                if(l.getCouple(new Position(i,j)).getState() == State.PICKABLE)
-                {
-                    //System.out.print(" "+ l.getCouple(new Position(i,j)).getTile().getTileType());
-                    System.out.print(" G");
-                }
-                else if(l.getCouple(new Position(i,j)).getState() == State.EMPTY)
-                {
-                    System.out.print(" E");
-                }
-                else System.out.print(" X");
-            }
-            System.out.println();
-        }
+        l.clearBoard();
+        l.printBoard();
 
         assertTrue(l.checkForRefill());
         l.setCouple(new Position(4,4),new Tile(T_Type.CAT,1),State.PICKABLE);

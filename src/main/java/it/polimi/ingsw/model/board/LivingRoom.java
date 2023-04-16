@@ -150,6 +150,44 @@ public class LivingRoom {
         return true;
     }
 
+    public void printBoard()
+    {
+        //this method is only used for testing
+
+        System.out.println();
+        for(int i=0; i< board.length;i++)
+        {
+            for(int j=0; j<board[i].length;j++)
+            {
+                if(getCouple(new Position(i,j)).getState() == State.PICKABLE)
+                {
+                    //System.out.print(" "+ l.getCouple(new Position(i,j)).getTile().getTileType());
+                    System.out.print(" G");
+                }
+                else if(getCouple(new Position(i,j)).getState() == State.EMPTY)
+                {
+                    System.out.print(" E");
+                }
+                else System.out.print(" X");
+            }
+            System.out.println();
+        }
+    }
+
+    public void clearBoard()
+    {
+        for(int i=0;i<board.length;i++)
+        {
+            for(int j=0; j<board[i].length;j++)
+            {
+                if(getCouple(new Position(i,j)).getState() == State.PICKABLE)
+                {
+                    setCouple(new Position(i,j),null,State.EMPTY);
+                }
+            }
+        }
+    }
+
     public void refill(Deck d)
     {
         //this method refills the board in this way:
