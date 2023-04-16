@@ -7,4 +7,7 @@ public interface View {
     String getUsername();
     void displayNotification(String message);
     int askAmountOfPlayers();
+    //choose tiles from board
+    //reorder tiles
+    //place tiles on shelf
 }
