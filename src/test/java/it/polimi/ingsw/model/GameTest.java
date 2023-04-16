@@ -27,14 +27,16 @@ public class GameTest {
                     System.out.println( card.getType() );
                     assertNotNull(card.getNumOfOccurrences());
                     System.out.println( card.getNumOfOccurrences() );
-                    assertNotNull(card.getMirror());
-                    System.out.println( card.getMirror() );
+                    assertNotNull(card.getDiffType());
+                    System.out.println( card.getDiffType() );
                     assertNotNull(card.getStairs());
                     System.out.println( card.getStairs() );
 
-                    for (Position position : card.getPositions() ) {
-                        assertNotNull(position);
-                        System.out.println("x: " + position.getX() + ", y: " + position.getY());
+                    for (List<Position> currentShape : card.getPositions() ) {
+                        for ( Position position : currentShape ) {
+                            assertNotNull(position);
+                            System.out.println("x: " + position.getX() + ", y: " + position.getY());
+                        }
                     }
 
             } else if ( card.getType().equals("Group") ) {

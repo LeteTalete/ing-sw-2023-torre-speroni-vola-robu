@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.model.board.Shelf;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -60,7 +59,7 @@ public class CommonGoalCard extends GoalCard {
         return 0;
     }
 
-    public int getMirror() {
+    public int getDiffType() {
         return 0;
     }
 
@@ -71,7 +70,7 @@ public class CommonGoalCard extends GoalCard {
     public String getType() {
         return null;
     }
-    public List<Position> getPositions() { return null; }
+    public List<List<Position>> getPositions() { return null; }
 
     public int checkConditions(Shelf shelf){ return 0; }
 
