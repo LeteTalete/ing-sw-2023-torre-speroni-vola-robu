@@ -53,16 +53,7 @@ public class CGC4Test {
         CG_Shape CGC4 = new CG_Shape(4);
 
         System.out.println("emptyShelfTest");
-        for ( int i = 0; i < shelf.ROWS; i++){
-            for ( int j = 0; j < shelf.COLUMNS; j++){
-                if ( shelfsMatrix[i][j].getState().equals(State.EMPTY) ){
-                    System.out.print( " " + " ");
-                } else {
-                    System.out.print(shelfsMatrix[i][j].getTile().getTileType().toString().charAt(0) + " ");
-                }
-            }
-            System.out.println();
-        }
+        shelf.printShelf();
         System.out.println();
 
         assertEquals(0, CGC4.checkConditions(shelf));
@@ -86,16 +77,7 @@ public class CGC4Test {
         }
 
         System.out.println("stairsTest");
-        for ( int i = 0; i < shelf.ROWS; i++){
-            for ( int j = 0; j < shelf.COLUMNS; j++){
-                if ( shelfsMatrix[i][j].getState().equals(State.EMPTY) ){
-                    System.out.print( " " + " ");
-                } else {
-                    System.out.print(shelfsMatrix[i][j].getTile().getTileType().toString().charAt(0) + " ");
-                }
-            }
-            System.out.println();
-        }
+        shelf.printShelf();
         System.out.println();
 
         assertEquals(1, CGC4.checkConditions(shelf));
@@ -121,16 +103,7 @@ public class CGC4Test {
         }
 
         System.out.println("mirrorStairsTest");
-        for ( int i = 0; i < shelf.ROWS; i++){
-            for ( int j = 0; j < shelf.COLUMNS; j++){
-                if ( shelfsMatrix[i][j].getState().equals(State.EMPTY) ){
-                    System.out.print( " " + " ");
-                } else {
-                    System.out.print(shelfsMatrix[i][j].getTile().getTileType().toString().charAt(0) + " ");
-                }
-            }
-            System.out.println();
-        }
+        shelf.printShelf();
         System.out.println();
 
         assertEquals(1, CGC4.checkConditions(shelf));
@@ -158,16 +131,7 @@ public class CGC4Test {
         }
 
         System.out.println("failTest1");
-        for ( int i = 0; i < shelf.ROWS; i++){
-            for ( int j = 0; j < shelf.COLUMNS; j++){
-                if ( shelfsMatrix[i][j].getState().equals(State.EMPTY) ){
-                    System.out.print( " " + " ");
-                } else {
-                    System.out.print(shelfsMatrix[i][j].getTile().getTileType().toString().charAt(0) + " ");
-                }
-            }
-            System.out.println();
-        }
+        shelf.printShelf();
         System.out.println();
 
         assertEquals(0, CGC4.checkConditions(shelf));
@@ -195,16 +159,7 @@ public class CGC4Test {
         }
 
         System.out.println("failTest2");
-        for ( int i = 0; i < shelf.ROWS; i++){
-            for ( int j = 0; j < shelf.COLUMNS; j++){
-                if ( shelfsMatrix[i][j].getState().equals(State.EMPTY) ){
-                    System.out.print( " " + " ");
-                } else {
-                    System.out.print(shelfsMatrix[i][j].getTile().getTileType().toString().charAt(0) + " ");
-                }
-            }
-            System.out.println();
-        }
+        shelf.printShelf();
         System.out.println();
 
         assertEquals(0, CGC4.checkConditions(shelf));
@@ -229,16 +184,7 @@ public class CGC4Test {
         }
 
         System.out.println("failTest3");
-        for ( int i = 0; i < shelf.ROWS; i++){
-            for ( int j = 0; j < shelf.COLUMNS; j++){
-                if ( shelfsMatrix[i][j].getState().equals(State.EMPTY) ){
-                    System.out.print( " " + " ");
-                } else {
-                    System.out.print(shelfsMatrix[i][j].getTile().getTileType().toString().charAt(0) + " ");
-                }
-            }
-            System.out.println();
-        }
+        shelf.printShelf();
         System.out.println();
 
         assertEquals(0, CGC4.checkConditions(shelf));
@@ -265,16 +211,7 @@ public class CGC4Test {
         }
 
         System.out.println("failTest4");
-        for ( int i = 0; i < shelf.ROWS; i++){
-            for ( int j = 0; j < shelf.COLUMNS; j++){
-                if ( shelfsMatrix[i][j].getState().equals(State.EMPTY) ){
-                    System.out.print( " " + " ");
-                } else {
-                    System.out.print(shelfsMatrix[i][j].getTile().getTileType().toString().charAt(0) + " ");
-                }
-            }
-            System.out.println();
-        }
+        shelf.printShelf();
         System.out.println();
 
         assertEquals(0, CGC4.checkConditions(shelf));

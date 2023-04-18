@@ -39,16 +39,7 @@ public class CGC1Test {
         CG_Shape CGC1 = new CG_Shape(1);
 
         System.out.println("emptyShelfTest");
-        for ( int i = 0; i < shelf.ROWS; i++){
-            for ( int j = 0; j < shelf.COLUMNS; j++){
-                if ( shelfsMatrix[i][j].getState().equals(State.EMPTY) ){
-                    System.out.print( " " + " ");
-                } else {
-                    System.out.print(shelfsMatrix[i][j].getTile().getTileType().toString().charAt(0) + " ");
-                }
-            }
-            System.out.println();
-        }
+        shelf.printShelf();
         System.out.println();
 
         assertEquals(0, CGC1.checkConditions(shelf));
@@ -80,16 +71,7 @@ public class CGC1Test {
         }
 
         System.out.println("cornerTest");
-        for ( int i = 0; i < shelf.ROWS; i++){
-            for ( int j = 0; j < shelf.COLUMNS; j++){
-                if ( shelfsMatrix[i][j].getState().equals(State.EMPTY) ){
-                    System.out.print( " " + " ");
-                } else {
-                    System.out.print(shelfsMatrix[i][j].getTile().getTileType().toString().charAt(0) + " ");
-                }
-            }
-            System.out.println();
-        }
+        shelf.printShelf();
         System.out.println();
 
         assertEquals(1, CGC1.checkConditions(shelf));
@@ -128,16 +110,7 @@ public class CGC1Test {
         }
 
         System.out.println("differentCornerTest");
-        for ( int i = 0; i < shelf.ROWS; i++){
-            for ( int j = 0; j < shelf.COLUMNS; j++){
-                if ( shelfsMatrix[i][j].getState().equals(State.EMPTY) ){
-                    System.out.print( " " + " ");
-                } else {
-                    System.out.print(shelfsMatrix[i][j].getTile().getTileType().toString().charAt(0) + " ");
-                }
-            }
-            System.out.println();
-        }
+        shelf.printShelf();
         System.out.println();
 
         assertEquals(0, CGC1.checkConditions(shelf));
@@ -172,16 +145,7 @@ public class CGC1Test {
         }
 
         System.out.println("emptyCornerTest");
-        for ( int i = 0; i < shelf.ROWS; i++){
-            for ( int j = 0; j < shelf.COLUMNS; j++){
-                if ( shelfsMatrix[i][j].getState().equals(State.EMPTY) ){
-                    System.out.print( " " + " ");
-                } else {
-                    System.out.print(shelfsMatrix[i][j].getTile().getTileType().toString().charAt(0) + " ");
-                }
-            }
-            System.out.println();
-        }
+        shelf.printShelf();
         System.out.println();
 
         assertEquals(0, CGC1.checkConditions(shelf));
