@@ -25,7 +25,8 @@ public class CG_Shape extends CommonGoalCard {
      * id - Card ID used to identify the card
      * type - Shape or Group. In this case Shape
      * numOfOccurrences - Specifies how many occurrences of the same shape are needed to satisfy the card conditions
-     * mirror - Default 0. If set to 1 then the shape must be checked both normally and mirrored
+     * diffType - When set to 0 all the shape's occurrences must be of the same tile type
+     *            When set to 1 each of the shape's occurrences can be of a different tile type from the others
      * stairs - Default 0. If set to 1 it identifies the 12th CGC on the rulebook.
      * coordinates - This set of coordinates identifies the shape itself that the card requires
      *             - Those coordinates are saved in positions
