@@ -24,7 +24,7 @@ public class Player{
     public ArrayList<Position> chooseTiles(LivingRoom livingroom){
         //this method will ask the player to insert the coordinates of the tiles he wants to pick up
         //if the choice is valid and he confirms this method will return an ArrayList containing the positions
-        // of the tiles choosen
+        // of the tiles chosen
 
         ArrayList<Position> choice = new ArrayList<Position>();
         boolean flag = false;

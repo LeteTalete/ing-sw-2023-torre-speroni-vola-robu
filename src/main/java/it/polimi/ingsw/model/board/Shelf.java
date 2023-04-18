@@ -18,16 +18,22 @@ public class Shelf {
     is the first tile of the list**/
     public void insertTiles(int col, ArrayList<Tile> toInsert)
     {
-        int pos = 3;
-        for(int i = 0; i<ROWS; i++)
+        boolean flag;
+
+        for(int i=0;i<toInsert.size();i++)
         {
-            if(this.shelfsMatrix[i][col].getState().equals(State.EMPTY))
+            flag = true;
+            for(int j=ROWS-1;j>=0;j--)
             {
-                this.shelfsMatrix[i][col].setTile(toInsert.get(pos));
-                pos--;
-                if(pos==0){break;}
+                if(flag && shelfsMatrix[j][col].getState() == State.EMPTY)
+                {
+                    shelfsMatrix[j][col].setTile(toInsert.get(i));
+                    shelfsMatrix[j][col].setState(State.PICKABLE);
+                    flag = false;
+                }
             }
         }
+
     }
     //getMaxFree takes as an argument the number of column in which we want to count the empty spaces
     //if numberColumn > 4 it means we're about to check all the columns and find the max of empty
@@ -98,6 +104,23 @@ public class Shelf {
         return this.cardsAlreadyChecked;
     }
 
+    public void printShelf()
+    {
+        System.out.println("------------------------");
+        for(int i=0;i<shelfsMatrix.length;i++)
+        {
+            for(int j=0;j<shelfsMatrix[i].length;j++)
+            {
+                if ( shelfsMatrix[i][j].getState().equals(State.EMPTY) ){
+                    System.out.print( " " + " ");
+                } else {
+                    System.out.print(shelfsMatrix[i][j].getTile().getTileType().toString().charAt(0) + " ");
+                }
+            }
+            System.out.println();
+        }
+        System.out.println("------------------------");
+    }
 
     public Shelf(){
         this.shelfsMatrix = new Couple[ROWS][COLUMNS];

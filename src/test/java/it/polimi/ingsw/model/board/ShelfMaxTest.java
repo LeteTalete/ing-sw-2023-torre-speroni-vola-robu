@@ -2,7 +2,13 @@ package it.polimi.ingsw.model.board;
 
 import it.polimi.ingsw.model.enumerations.Couple;
 import it.polimi.ingsw.model.enumerations.State;
+import it.polimi.ingsw.model.enumerations.T_Type;
+import it.polimi.ingsw.model.enumerations.Tile;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -11,7 +17,6 @@ class ShelfMaxTest {
     private Shelf s;
 
     private Couple dummy;
-
 
     @Test
     void testMaxFree() {
