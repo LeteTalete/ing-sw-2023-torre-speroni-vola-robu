@@ -7,7 +7,7 @@ import it.polimi.ingsw.model.enumerations.Tile;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -17,6 +17,41 @@ class ShelfMaxTest {
     private Shelf s;
 
     private Couple dummy;
+
+    /** Test randomInsertTilesTest fills a shelf using random generated hands (an arraylist filled with tiles)
+     *  Each hand's size ranges from 1 to 3
+     *  Each tile's tile type and image is randomly chosen
+     */
+    @Test
+    void randomInsertTilesTest(){
+
+        Shelf shelf = new Shelf();
+        ArrayList<Tile> hand = new ArrayList<>();
+        int handSize;
+        int randomColumn;
+        T_Type[] values = T_Type.values();
+        int size = values.length;
+
+        while( !shelf.checkShelfFull() ){
+            randomColumn =  new Random().nextInt(5);
+            handSize = new Random().nextInt(3) + 1;
+
+            for (int i = 0; i < handSize ; i++) {
+                Random random = new Random();
+                int rand = new Random().nextInt(3);
+                hand.add(new Tile(values[random.nextInt(size)], rand));
+            }
+            assertNotNull(hand);
+            if ( hand.size() <= shelf.getMaxFree(randomColumn) ) {
+                shelf.insertTiles(randomColumn, hand);
+            }
+            hand.clear();
+        }
+        assertTrue(shelf.checkShelfFull());
+        shelf.printShelf();
+
+    }
+
 
     @Test
     void testMaxFree() {
