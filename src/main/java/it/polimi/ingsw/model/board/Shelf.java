@@ -62,7 +62,7 @@ public class Shelf {
         }
         else
         {
-            getFreeCol(numberColumns);
+            maximum = getFreeCol(numberColumns);
         }
         return maximum;
     }
