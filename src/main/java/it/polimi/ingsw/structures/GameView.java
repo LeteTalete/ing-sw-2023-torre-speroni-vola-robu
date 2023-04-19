@@ -1,9 +1,6 @@
 package it.polimi.ingsw.structures;
 
 import it.polimi.ingsw.model.Game;
-import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.model.board.LivingRoom;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 

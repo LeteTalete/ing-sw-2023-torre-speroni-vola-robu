@@ -1,6 +1,5 @@
 package it.polimi.ingsw.view;
 
-
 import it.polimi.ingsw.model.enumerations.Couple;
 import it.polimi.ingsw.structures.LivingRoomView;
 import it.polimi.ingsw.structures.ShelfView;

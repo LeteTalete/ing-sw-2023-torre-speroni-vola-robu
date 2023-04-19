@@ -1,7 +1,6 @@
 package it.polimi.ingsw.structures;
 
 import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.model.board.Shelf;
 
 import java.io.Serializable;
 

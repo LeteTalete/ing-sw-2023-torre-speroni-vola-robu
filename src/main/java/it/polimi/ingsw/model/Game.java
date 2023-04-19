@@ -3,7 +3,6 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.model.board.LivingRoom;
 import it.polimi.ingsw.model.cards.CommonGoalCard;
 import it.polimi.ingsw.model.cards.PersonalGoalCard;
-import it.polimi.ingsw.structures.PlayerView;
 
 import java.util.ArrayList;
 import java.util.Comparator;
