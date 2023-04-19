@@ -3,6 +3,7 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.model.board.LivingRoom;
 import it.polimi.ingsw.model.cards.CommonGoalCard;
 import it.polimi.ingsw.model.cards.PersonalGoalCard;
+import it.polimi.ingsw.structures.PlayerView;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -11,7 +12,7 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 public class Game{
-    private ArrayList<Player> players;
+    private ArrayList<Player> players = new ArrayList<>();
 
     private LivingRoom gameBoard;
 
@@ -46,6 +47,18 @@ public class Game{
             calcNow.score =+ add + calcNow.getMyShelf().additionalPoints();
         }
         return 0;
+    }
+
+    public LivingRoom getGameBoard(){
+        return this.gameBoard;
+    }
+
+    public ArrayList<Player> getPlayers(){
+        return this.players;
+    }
+
+    public void setPlayersView(ArrayList<Player> players) {
+        this.players = players;
     }
 
 

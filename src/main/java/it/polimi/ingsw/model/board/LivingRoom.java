@@ -24,6 +24,9 @@ public class LivingRoom {
         return board[p.getX()][p.getY()];
     }
 
+    public Couple[][] getBoard(){
+        return this.board;
+    }
 
     public void setCouple(Position p, Tile t, State s)
     {
