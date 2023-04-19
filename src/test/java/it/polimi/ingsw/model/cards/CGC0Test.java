@@ -20,18 +20,30 @@ public class CGC0Test {
         assertEquals(0, CGC0.getID());
         assertEquals("Shape", CGC0.getType());
         assertEquals(1, CGC0.getNumOfOccurrences());
-        assertEquals(1, CGC0.getMirror());
+        assertEquals(0, CGC0.getDiffType());
         assertEquals(0, CGC0.getStairs());
-        assertEquals(0, CGC0.getPositions().get(0).getX());
-        assertEquals(0, CGC0.getPositions().get(0).getY());
-        assertEquals(1, CGC0.getPositions().get(1).getX());
-        assertEquals(1, CGC0.getPositions().get(1).getY());
-        assertEquals(2, CGC0.getPositions().get(2).getX());
-        assertEquals(2, CGC0.getPositions().get(2).getY());
-        assertEquals(3, CGC0.getPositions().get(3).getX());
-        assertEquals(3, CGC0.getPositions().get(3).getY());
-        assertEquals(4, CGC0.getPositions().get(4).getX());
-        assertEquals(4, CGC0.getPositions().get(4).getY());
+
+        assertEquals(0, CGC0.getPositions().get(0).get(0).getX());
+        assertEquals(0, CGC0.getPositions().get(0).get(0).getY());
+        assertEquals(1, CGC0.getPositions().get(0).get(1).getX());
+        assertEquals(1, CGC0.getPositions().get(0).get(1).getY());
+        assertEquals(2, CGC0.getPositions().get(0).get(2).getX());
+        assertEquals(2, CGC0.getPositions().get(0).get(2).getY());
+        assertEquals(3, CGC0.getPositions().get(0).get(3).getX());
+        assertEquals(3, CGC0.getPositions().get(0).get(3).getY());
+        assertEquals(4, CGC0.getPositions().get(0).get(4).getX());
+        assertEquals(4, CGC0.getPositions().get(0).get(4).getY());
+
+        assertEquals(0, CGC0.getPositions().get(1).get(0).getX());
+        assertEquals(0, CGC0.getPositions().get(1).get(0).getY());
+        assertEquals(-1, CGC0.getPositions().get(1).get(1).getX());
+        assertEquals(1, CGC0.getPositions().get(1).get(1).getY());
+        assertEquals(-2, CGC0.getPositions().get(1).get(2).getX());
+        assertEquals(2, CGC0.getPositions().get(1).get(2).getY());
+        assertEquals(-3, CGC0.getPositions().get(1).get(3).getX());
+        assertEquals(3, CGC0.getPositions().get(1).get(3).getY());
+        assertEquals(-4, CGC0.getPositions().get(1).get(4).getX());
+        assertEquals(4, CGC0.getPositions().get(1).get(4).getY());
     }
 
     /** Test emptyShelfTest checks that the card is not accepted when the shelf is empty */
@@ -42,16 +54,7 @@ public class CGC0Test {
         CG_Shape CGC0 = new CG_Shape(0);
 
         System.out.println("emptyShelfTest");
-        for ( int i = 0; i < shelf.ROWS; i++){
-            for ( int j = 0; j < shelf.COLUMNS; j++){
-                if ( shelfsMatrix[i][j].getState().equals(State.EMPTY) ){
-                    System.out.print( " " + " ");
-                } else {
-                    System.out.print(shelfsMatrix[i][j].getTile().getTileType().toString().charAt(0) + " ");
-                }
-            }
-            System.out.println();
-        }
+        shelf.printShelf();
         System.out.println();
 
         assertEquals(0, CGC0.checkConditions(shelf));
@@ -75,26 +78,19 @@ public class CGC0Test {
                     assertEquals(couple0.getTile(), shelfsMatrix[i][j].getTile());
                     assertEquals(couple0.getState(), shelfsMatrix[i][j].getState());
                 } else {
-                    Couple couple1 = new Couple(deck.draw());
-                    shelf.setCoordinate(i, j, couple1);
-                    assertEquals(couple1.getTile(), shelfsMatrix[i][j].getTile());
-                    assertEquals(couple1.getState(), shelfsMatrix[i][j].getState());
-
+                    Couple couple = new Couple(deck.draw());
+                    while ( couple.getTile().getTileType().equals(T_Type.CAT) ){
+                        couple = new Couple(deck.draw());
+                    }
+                    shelf.setCoordinate(i, j, couple);
+                    assertEquals(couple.getTile(), shelfsMatrix[i][j].getTile());
+                    assertEquals(couple.getState(), shelfsMatrix[i][j].getState());
                 }
             }
         }
 
         System.out.println("diagonalTest1");
-        for ( int i = 0; i < shelf.ROWS; i++){
-            for ( int j = 0; j < shelf.COLUMNS; j++){
-                if ( shelfsMatrix[i][j].getState().equals(State.EMPTY) ){
-                    System.out.print( " " + " ");
-                } else {
-                    System.out.print(shelfsMatrix[i][j].getTile().getTileType().toString().charAt(0) + " ");
-                }
-            }
-            System.out.println();
-        }
+        shelf.printShelf();
         System.out.println();
 
         assertEquals(1, CGC0.checkConditions(shelf));
@@ -118,26 +114,19 @@ public class CGC0Test {
                     assertEquals(couple0.getTile(), shelfsMatrix[i][j].getTile());
                     assertEquals(couple0.getState(), shelfsMatrix[i][j].getState());
                 } else {
-                    Couple couple1 = new Couple(deck.draw());
-                    shelf.setCoordinate(i, j, couple1);
-                    assertEquals(couple1.getTile(), shelfsMatrix[i][j].getTile());
-                    assertEquals(couple1.getState(), shelfsMatrix[i][j].getState());
-
+                    Couple couple = new Couple(deck.draw());
+                    while ( couple.getTile().getTileType().equals(T_Type.CAT) ){
+                        couple = new Couple(deck.draw());
+                    }
+                    shelf.setCoordinate(i, j, couple);
+                    assertEquals(couple.getTile(), shelfsMatrix[i][j].getTile());
+                    assertEquals(couple.getState(), shelfsMatrix[i][j].getState());
                 }
             }
         }
 
         System.out.println("diagonalTest2");
-        for ( int i = 0; i < shelf.ROWS; i++){
-            for ( int j = 0; j < shelf.COLUMNS; j++){
-                if ( shelfsMatrix[i][j].getState().equals(State.EMPTY) ){
-                    System.out.print( " " + " ");
-                } else {
-                    System.out.print(shelfsMatrix[i][j].getTile().getTileType().toString().charAt(0) + " ");
-                }
-            }
-            System.out.println();
-        }
+        shelf.printShelf();
         System.out.println();
 
         assertEquals(1, CGC0.checkConditions(shelf));
@@ -160,26 +149,19 @@ public class CGC0Test {
                     assertEquals(couple0.getTile(), shelfsMatrix[i][j].getTile());
                     assertEquals(couple0.getState(), shelfsMatrix[i][j].getState());
                 } else {
-                    Couple couple1 = new Couple(deck.draw());
-                    shelf.setCoordinate(i, j, couple1);
-                    assertEquals(couple1.getTile(), shelfsMatrix[i][j].getTile());
-                    assertEquals(couple1.getState(), shelfsMatrix[i][j].getState());
-
+                    Couple couple = new Couple(deck.draw());
+                    while ( couple.getTile().getTileType().equals(T_Type.CAT) ){
+                        couple = new Couple(deck.draw());
+                    }
+                    shelf.setCoordinate(i, j, couple);
+                    assertEquals(couple.getTile(), shelfsMatrix[i][j].getTile());
+                    assertEquals(couple.getState(), shelfsMatrix[i][j].getState());
                 }
             }
         }
 
         System.out.println("mirrorDiagonalTest1");
-        for ( int i = 0; i < shelf.ROWS; i++){
-            for ( int j = 0; j < shelf.COLUMNS; j++){
-                if ( shelfsMatrix[i][j].getState().equals(State.EMPTY) ){
-                    System.out.print( " " + " ");
-                } else {
-                    System.out.print(shelfsMatrix[i][j].getTile().getTileType().toString().charAt(0) + " ");
-                }
-            }
-            System.out.println();
-        }
+        shelf.printShelf();
         System.out.println();
 
         assertEquals(1, CGC0.checkConditions(shelf));
@@ -202,26 +184,19 @@ public class CGC0Test {
                     assertEquals(couple0.getTile(), shelfsMatrix[i][j].getTile());
                     assertEquals(couple0.getState(), shelfsMatrix[i][j].getState());
                 } else {
-                    Couple couple1 = new Couple(deck.draw());
-                    shelf.setCoordinate(i, j, couple1);
-                    assertEquals(couple1.getTile(), shelfsMatrix[i][j].getTile());
-                    assertEquals(couple1.getState(), shelfsMatrix[i][j].getState());
-
+                    Couple couple = new Couple(deck.draw());
+                    while ( couple.getTile().getTileType().equals(T_Type.CAT) ){
+                        couple = new Couple(deck.draw());
+                    }
+                    shelf.setCoordinate(i, j, couple);
+                    assertEquals(couple.getTile(), shelfsMatrix[i][j].getTile());
+                    assertEquals(couple.getState(), shelfsMatrix[i][j].getState());
                 }
             }
         }
 
         System.out.println("mirrorDiagonalTest2");
-        for ( int i = 0; i < shelf.ROWS; i++){
-            for ( int j = 0; j < shelf.COLUMNS; j++){
-                if ( shelfsMatrix[i][j].getState().equals(State.EMPTY) ){
-                    System.out.print( " " + " ");
-                } else {
-                    System.out.print(shelfsMatrix[i][j].getTile().getTileType().toString().charAt(0) + " ");
-                }
-            }
-            System.out.println();
-        }
+        shelf.printShelf();
         System.out.println();
 
         assertEquals(1, CGC0.checkConditions(shelf));
@@ -245,11 +220,13 @@ public class CGC0Test {
                     assertEquals(couple0.getTile(), shelfsMatrix[i][j].getTile());
                     assertEquals(couple0.getState(), shelfsMatrix[i][j].getState());
                 } else {
-                    Couple couple1 = new Couple(deck.draw());
-                    shelf.setCoordinate(i, j, couple1);
-                    assertEquals(couple1.getTile(), shelfsMatrix[i][j].getTile());
-                    assertEquals(couple1.getState(), shelfsMatrix[i][j].getState());
-
+                    Couple couple = new Couple(deck.draw());
+                    while ( couple.getTile().getTileType().equals(T_Type.CAT) ){
+                        couple = new Couple(deck.draw());
+                    }
+                    shelf.setCoordinate(i, j, couple);
+                    assertEquals(couple.getTile(), shelfsMatrix[i][j].getTile());
+                    assertEquals(couple.getState(), shelfsMatrix[i][j].getState());
                 }
             }
         }
@@ -259,16 +236,7 @@ public class CGC0Test {
         shelf.setCoordinate(3, 3, couple0);
 
         System.out.println("failTest1");
-        for ( int i = 0; i < shelf.ROWS; i++){
-            for ( int j = 0; j < shelf.COLUMNS; j++){
-                if ( shelfsMatrix[i][j].getState().equals(State.EMPTY) ){
-                    System.out.print( " " + " ");
-                } else {
-                    System.out.print(shelfsMatrix[i][j].getTile().getTileType().toString().charAt(0) + " ");
-                }
-            }
-            System.out.println();
-        }
+        shelf.printShelf();
         System.out.println();
 
         assertEquals(0, CGC0.checkConditions(shelf));
@@ -292,11 +260,13 @@ public class CGC0Test {
                     assertEquals(couple0.getTile(), shelfsMatrix[i][j].getTile());
                     assertEquals(couple0.getState(), shelfsMatrix[i][j].getState());
                 } else {
-                    Couple couple1 = new Couple(deck.draw());
-                    shelf.setCoordinate(i, j, couple1);
-                    assertEquals(couple1.getTile(), shelfsMatrix[i][j].getTile());
-                    assertEquals(couple1.getState(), shelfsMatrix[i][j].getState());
-
+                    Couple couple = new Couple(deck.draw());
+                    while ( couple.getTile().getTileType().equals(T_Type.CAT) ){
+                        couple = new Couple(deck.draw());
+                    }
+                    shelf.setCoordinate(i, j, couple);
+                    assertEquals(couple.getTile(), shelfsMatrix[i][j].getTile());
+                    assertEquals(couple.getState(), shelfsMatrix[i][j].getState());
                 }
             }
         }
@@ -306,16 +276,7 @@ public class CGC0Test {
         shelf.setCoordinate(3, 3, couple0);
 
         System.out.println("failTest2");
-        for ( int i = 0; i < shelf.ROWS; i++){
-            for ( int j = 0; j < shelf.COLUMNS; j++){
-                if ( shelfsMatrix[i][j].getState().equals(State.EMPTY) ){
-                    System.out.print( " " + " ");
-                } else {
-                    System.out.print(shelfsMatrix[i][j].getTile().getTileType().toString().charAt(0) + " ");
-                }
-            }
-            System.out.println();
-        }
+        shelf.printShelf();
         System.out.println();
 
         assertEquals(0, CGC0.checkConditions(shelf));

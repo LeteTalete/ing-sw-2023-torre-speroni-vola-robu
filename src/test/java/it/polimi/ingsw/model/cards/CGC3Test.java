@@ -19,18 +19,18 @@ public class CGC3Test {
         assertEquals(3, CGC3.getID());
         assertEquals("Shape", CGC3.getType());
         assertEquals(1, CGC3.getNumOfOccurrences());
-        assertEquals(0, CGC3.getMirror());
+        assertEquals(0, CGC3.getDiffType());
         assertEquals(0, CGC3.getStairs());
-        assertEquals(0, CGC3.getPositions().get(0).getX());
-        assertEquals(0, CGC3.getPositions().get(0).getY());
-        assertEquals(1, CGC3.getPositions().get(1).getX());
-        assertEquals(1, CGC3.getPositions().get(1).getY());
-        assertEquals(2, CGC3.getPositions().get(2).getX());
-        assertEquals(2, CGC3.getPositions().get(2).getY());
-        assertEquals(2, CGC3.getPositions().get(3).getX());
-        assertEquals(0, CGC3.getPositions().get(3).getY());
-        assertEquals(0, CGC3.getPositions().get(4).getX());
-        assertEquals(2, CGC3.getPositions().get(4).getY());
+        assertEquals(0, CGC3.getPositions().get(0).get(0).getX());
+        assertEquals(0, CGC3.getPositions().get(0).get(0).getY());
+        assertEquals(1, CGC3.getPositions().get(0).get(1).getX());
+        assertEquals(1, CGC3.getPositions().get(0).get(1).getY());
+        assertEquals(2, CGC3.getPositions().get(0).get(2).getX());
+        assertEquals(2, CGC3.getPositions().get(0).get(2).getY());
+        assertEquals(2, CGC3.getPositions().get(0).get(3).getX());
+        assertEquals(0, CGC3.getPositions().get(0).get(3).getY());
+        assertEquals(0, CGC3.getPositions().get(0).get(4).getX());
+        assertEquals(2, CGC3.getPositions().get(0).get(4).getY());
     }
 
     /** Test emptyShelfTest checks that the card is not accepted when the shelf is empty */
@@ -41,16 +41,7 @@ public class CGC3Test {
         CG_Shape CGC3 = new CG_Shape(3);
 
         System.out.println("emptyShelfTest");
-        for ( int i = 0; i < shelf.ROWS; i++){
-            for ( int j = 0; j < shelf.COLUMNS; j++){
-                if ( shelfsMatrix[i][j].getState().equals(State.EMPTY) ){
-                    System.out.print( " " + " ");
-                } else {
-                    System.out.print(shelfsMatrix[i][j].getTile().getTileType().toString().charAt(0) + " ");
-                }
-            }
-            System.out.println();
-        }
+        shelf.printShelf();
         System.out.println();
 
         assertEquals(0, CGC3.checkConditions(shelf));
@@ -76,34 +67,13 @@ public class CGC3Test {
         Tile tile0 = new Tile(T_Type.CAT, 3);
         Couple couple0 = new Couple(tile0);
         shelf.setCoordinate(2, 4, couple0);
-
-        Tile tile1 = new Tile(T_Type.CAT, 3);
-        Couple couple1 = new Couple(tile1);
-        shelf.setCoordinate(2, 2, couple1);
-
-        Tile tile2 = new Tile(T_Type.CAT, 3);
-        Couple couple2 = new Couple(tile2);
-        shelf.setCoordinate(3, 3, couple2);
-
-        Tile tile3 = new Tile(T_Type.CAT, 3);
-        Couple couple3 = new Couple(tile3);
-        shelf.setCoordinate(4, 4, couple3);
-
-        Tile tile4 = new Tile(T_Type.CAT, 3);
-        Couple couple4 = new Couple(tile4);
-        shelf.setCoordinate(4, 2, couple4);
+        shelf.setCoordinate(2, 2, couple0);
+        shelf.setCoordinate(3, 3, couple0);
+        shelf.setCoordinate(4, 4, couple0);
+        shelf.setCoordinate(4, 2, couple0);
 
         System.out.println("xTest1");
-        for ( int i = 0; i < shelf.ROWS; i++){
-            for ( int j = 0; j < shelf.COLUMNS; j++){
-                if ( shelfsMatrix[i][j].getState().equals(State.EMPTY) ){
-                    System.out.print( " " + " ");
-                } else {
-                    System.out.print(shelfsMatrix[i][j].getTile().getTileType().toString().charAt(0) + " ");
-                }
-            }
-            System.out.println();
-        }
+        shelf.printShelf();
         System.out.println();
 
         assertEquals(1, CGC3.checkConditions(shelf));
@@ -130,50 +100,17 @@ public class CGC3Test {
         Tile tile0 = new Tile(T_Type.CAT, 3);
         Couple couple0 = new Couple(tile0);
         shelf.setCoordinate(2, 4, couple0);
-
-        Tile tile1 = new Tile(T_Type.CAT, 3);
-        Couple couple1 = new Couple(tile1);
-        shelf.setCoordinate(2, 2, couple1);
-
-        Tile tile2 = new Tile(T_Type.CAT, 3);
-        Couple couple2 = new Couple(tile2);
-        shelf.setCoordinate(3, 3, couple2);
-
-        Tile tile3 = new Tile(T_Type.CAT, 3);
-        Couple couple3 = new Couple(tile3);
-        shelf.setCoordinate(4, 4, couple3);
-
-        Tile tile4 = new Tile(T_Type.CAT, 3);
-        Couple couple4 = new Couple(tile4);
-        shelf.setCoordinate(4, 2, couple4);
-
-        Tile tile5 = new Tile(T_Type.CAT, 3);
-        Couple couple5 = new Couple(tile5);
-        shelf.setCoordinate(2, 3, couple5);
-
-        Tile tile6 = new Tile(T_Type.CAT, 3);
-        Couple couple6 = new Couple(tile6);
-        shelf.setCoordinate(3, 4, couple6);
-
-        Tile tile7 = new Tile(T_Type.CAT, 3);
-        Couple couple7 = new Couple(tile7);
-        shelf.setCoordinate(3, 2, couple7);
-
-        Tile tile8 = new Tile(T_Type.CAT, 3);
-        Couple couple8 = new Couple(tile8);
-        shelf.setCoordinate(4, 3, couple8);
+        shelf.setCoordinate(2, 2, couple0);
+        shelf.setCoordinate(3, 3, couple0);
+        shelf.setCoordinate(4, 4, couple0);
+        shelf.setCoordinate(4, 2, couple0);
+        shelf.setCoordinate(2, 3, couple0);
+        shelf.setCoordinate(3, 4, couple0);
+        shelf.setCoordinate(3, 2, couple0);
+        shelf.setCoordinate(4, 3, couple0);
 
         System.out.println("xTest2");
-        for ( int i = 0; i < shelf.ROWS; i++){
-            for ( int j = 0; j < shelf.COLUMNS; j++){
-                if ( shelfsMatrix[i][j].getState().equals(State.EMPTY) ){
-                    System.out.print( " " + " ");
-                } else {
-                    System.out.print(shelfsMatrix[i][j].getTile().getTileType().toString().charAt(0) + " ");
-                }
-            }
-            System.out.println();
-        }
+        shelf.printShelf();
         System.out.println();
 
         assertEquals(1, CGC3.checkConditions(shelf));
@@ -200,34 +137,16 @@ public class CGC3Test {
         Tile tile0 = new Tile(T_Type.CAT, 3);
         Couple couple0 = new Couple(tile0);
         shelf.setCoordinate(2, 4, couple0);
+        shelf.setCoordinate(2, 2, couple0);
+        shelf.setCoordinate(4, 4, couple0);
+        shelf.setCoordinate(4, 2, couple0);
 
-        Tile tile1 = new Tile(T_Type.CAT, 3);
+        Tile tile1 = new Tile(T_Type.TROPHY, 3);
         Couple couple1 = new Couple(tile1);
-        shelf.setCoordinate(2, 2, couple1);
-
-        Tile tile2 = new Tile(T_Type.TROPHY, 3);
-        Couple couple2 = new Couple(tile2);
-        shelf.setCoordinate(3, 3, couple2);
-
-        Tile tile3 = new Tile(T_Type.CAT, 3);
-        Couple couple3 = new Couple(tile3);
-        shelf.setCoordinate(4, 4, couple3);
-
-        Tile tile4 = new Tile(T_Type.CAT, 3);
-        Couple couple4 = new Couple(tile4);
-        shelf.setCoordinate(4, 2, couple4);
+        shelf.setCoordinate(3, 3, couple1);
 
         System.out.println("failTest");
-        for ( int i = 0; i < shelf.ROWS; i++){
-            for ( int j = 0; j < shelf.COLUMNS; j++){
-                if ( shelfsMatrix[i][j].getState().equals(State.EMPTY) ){
-                    System.out.print( " " + " ");
-                } else {
-                    System.out.print(shelfsMatrix[i][j].getTile().getTileType().toString().charAt(0) + " ");
-                }
-            }
-            System.out.println();
-        }
+        shelf.printShelf();
         System.out.println();
 
         assertEquals(0, CGC3.checkConditions(shelf));

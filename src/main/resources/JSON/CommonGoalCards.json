@@ -3,81 +3,143 @@
     "id": 0,
     "type": "Shape",
     "numOfOccurrences": 1,
-    "mirror": 1,
+    "diffType": 0,
     "stairs": 0,
     "coordinates": [
-      {"x": 0, "y": 0},
-      {"x": 1, "y": 1},
-      {"x": 2, "y": 2},
-      {"x": 3, "y": 3},
-      {"x": 4, "y": 4}
+      [
+        {"x": 0, "y": 0},
+        {"x": 1, "y": 1},
+        {"x": 2, "y": 2},
+        {"x": 3, "y": 3},
+        {"x": 4, "y": 4}
+      ],
+      [
+        {"x": 0, "y": 0},
+        {"x": -1, "y": 1},
+        {"x": -2, "y": 2},
+        {"x": -3, "y": 3},
+        {"x": -4, "y": 4}
+      ]
     ]
   },
   {
     "id": 1,
     "type": "Shape",
     "numOfOccurrences": 1,
-    "mirror": 0,
+    "diffType": 0,
     "stairs": 0,
     "coordinates": [
-      {"x": 0, "y": 0},
-      {"x": 4, "y": 0},
-      {"x": 0, "y": 5},
-      {"x": 4, "y": 5}
+      [
+        {"x": 0, "y": 0},
+        {"x": 4, "y": 0},
+        {"x": 0, "y": 5},
+        {"x": 4, "y": 5}
+      ]
     ]
   },
   {
     "id": 2,
     "type": "Shape",
     "numOfOccurrences": 2,
-    "mirror": 0,
+    "diffType": 0,
     "stairs": 0,
     "coordinates": [
-      {"x": 0, "y": 0},
-      {"x": 0, "y": 1},
-      {"x": 1, "y": 1},
-      {"x": 1, "y": 0}
+      [
+        {"x": 0, "y": 0},
+        {"x": 0, "y": 1},
+        {"x": 1, "y": 1},
+        {"x": 1, "y": 0}
+      ]
     ]
   },
   {
     "id": 3,
     "type": "Shape",
     "numOfOccurrences": 1,
-    "mirror": 0,
+    "diffType": 0,
     "stairs": 0,
     "coordinates": [
-      {"x": 0, "y": 0},
-      {"x": 1, "y": 1},
-      {"x": 2, "y": 2},
-      {"x": 2, "y": 0},
-      {"x": 0, "y": 2}
+      [
+        {"x": 0, "y": 0},
+        {"x": 1, "y": 1},
+        {"x": 2, "y": 2},
+        {"x": 2, "y": 0},
+        {"x": 0, "y": 2}
+      ]
     ]
   },
   {
     "id": 4,
     "type": "Shape",
     "numOfOccurrences": 1,
-    "mirror": 1,
+    "diffType": 0,
     "stairs": 1,
     "coordinates": [
-      {"x": 0, "y": 1},
-      {"x": 1, "y": 2},
-      {"x": 2, "y": 3},
-      {"x": 3, "y": 4},
-      {"x": 4, "y": 5}
+      [
+        {"x": 0, "y": 0},
+        {"x": 1, "y": 1},
+        {"x": 2, "y": 2},
+        {"x": 3, "y": 3},
+        {"x": 4, "y": 4}
+      ],
+      [
+        {"x": 0, "y": 0},
+        {"x": -1, "y": 1},
+        {"x": -2, "y": 2},
+        {"x": -3, "y": 3},
+        {"x": -4, "y": 4}
+      ]
     ]
   },
   {
     "id": 5,
-    "type": "Group"
+    "type": "Shape",
+    "numOfOccurrences": 6,
+    "diffType": 1,
+    "stairs": 0,
+    "coordinates": [
+      [
+        {"x": 0, "y": 0},
+        {"x": 0, "y": 1}
+      ],
+      [
+        {"x": 0, "y": 0},
+        {"x": 1, "y": 0}
+      ]
+    ]
   },
   {
     "id": 6,
-    "type": "Group"
+    "type": "Shape",
+    "numOfOccurrences": 4,
+    "diffType": 1,
+    "stairs": 0,
+    "coordinates": [
+      [
+        {"x": 0, "y": 0},
+        {"x": 0, "y": 1},
+        {"x": 0, "y": 2},
+        {"x": 0, "y": 3}
+      ],
+      [
+        {"x": 0, "y": 0},
+        {"x": 1, "y": 0},
+        {"x": 2, "y": 0},
+        {"x": 3, "y": 0}
+      ]
+    ]
   },
   {
     "id": 7,
-    "type": "Group"
+    "type": "Shape",
+    "numOfOccurrences": 8,
+    "diffType": 0,
+    "stairs": 0,
+    "coordinates": [
+      [
+        {"x": 0, "y": 0}
+      ]
+    ]
   },
   {
     "id": 8,
