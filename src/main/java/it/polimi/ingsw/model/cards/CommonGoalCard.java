@@ -12,6 +12,7 @@ import java.util.List;
 public class CommonGoalCard extends GoalCard {
     private int ID;
 
+
     public CommonGoalCard(){
     }
 

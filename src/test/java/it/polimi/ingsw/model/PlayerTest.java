@@ -64,7 +64,7 @@ public class PlayerTest
         LivingRoom livingRoom = new LivingRoom(4);
         ArrayList<Position> choice = new ArrayList<Position>();
         boolean flag = false;
-        String user_input = "06 84 11";
+        String user_input = "03 04";
         char confirm = 'y';
 
         while(!flag)

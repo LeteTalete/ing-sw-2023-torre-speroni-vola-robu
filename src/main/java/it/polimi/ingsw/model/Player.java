@@ -15,7 +15,7 @@ public class Player{
     private boolean isPlaying;
     private Shelf shelf;
     private int personalGoalCard;
-    public int score;
+    private int score;
     private boolean endGame;
 
     private ArrayList<Position> tilesChoosen;
@@ -279,11 +279,11 @@ public class Player{
     }
 
 
-    public int getMyScore (){
+    public int getScore (){
         return this.score;
     }
 
-    public void setMyScore (int myScore){
+    public void setScore (int myScore){
         this.score = myScore;
         return;
     }

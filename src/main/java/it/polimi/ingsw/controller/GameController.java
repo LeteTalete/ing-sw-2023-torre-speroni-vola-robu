@@ -74,7 +74,7 @@ public class GameController {
 
     public List<Player> scoreBoard(ArrayList<Player> ps){
         List<Player> ranking = new ArrayList<Player>();
-        return ranking = ps.stream().sorted(Comparator.comparing(Player::getMyScore)).collect(Collectors.toList());
+        return ranking = ps.stream().sorted(Comparator.comparing(Player::getScore)).collect(Collectors.toList());
     }
 
     public void endGame(){
@@ -91,7 +91,7 @@ public class GameController {
             int PGC = calcNow.getGoalCard();
             PersonalGoalCard card = new PersonalGoalCard();
             int add = card.scorePersonalGoalCard(calcNow.getMyShelf(), PGC);
-            calcNow.score =+ add + calcNow.getMyShelf().additionalPoints();
+            calcNow.setScore(calcNow.getScore() + add + calcNow.getMyShelf().additionalPoints());
         }
         return 0;
     }
