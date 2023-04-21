@@ -188,4 +188,78 @@ class ShelfMaxTest {
         assertEquals(0,shelf.getMaxFree(2));
         assertEquals(0,shelf.getMaxFree(5));
     }
+
+    @Test
+    public void additionalPointsTest()
+    {
+        s = new Shelf();
+        ArrayList<Tile> tiles = new ArrayList<Tile>();
+
+        s.printShelf();
+        assertEquals(0,s.additionalPoints());
+
+        tiles.add(new Tile(T_Type.CAT,1));
+        tiles.add(new Tile(T_Type.CAT,2));
+        s.insertTiles(0, tiles);
+        s.printShelf();
+        assertEquals(0,s.additionalPoints());
+
+        tiles.clear();
+        tiles.add(new Tile(T_Type.CAT,1));
+        s.insertTiles(0, tiles);
+        s.printShelf();
+        assertEquals(2,s.additionalPoints());
+
+        //this is the same case shown in the rulebook
+        s.clearShelf();
+        tiles.clear();
+        tiles.add(new Tile(T_Type.TROPHY,1));
+        tiles.add(new Tile(T_Type.FRAME,1));
+        tiles.add(new Tile(T_Type.FRAME,1));
+        tiles.add(new Tile(T_Type.FRAME,1));
+        tiles.add(new Tile(T_Type.PLANT,1));
+        tiles.add(new Tile(T_Type.PLANT,1));
+        s.insertTiles(0, tiles);
+        tiles.clear();
+        tiles.add(new Tile(T_Type.TROPHY,1));
+        tiles.add(new Tile(T_Type.TROPHY,1));
+        tiles.add(new Tile(T_Type.GAMES,1));
+        tiles.add(new Tile(T_Type.FRAME,1));
+        tiles.add(new Tile(T_Type.PLANT,1));
+        tiles.add(new Tile(T_Type.PLANT,1));
+        s.insertTiles(1, tiles);
+        tiles.clear();
+        tiles.add(new Tile(T_Type.TROPHY,1));
+        tiles.add(new Tile(T_Type.CAT,1));
+        tiles.add(new Tile(T_Type.GAMES,1));
+        tiles.add(new Tile(T_Type.PLANT,1));
+        tiles.add(new Tile(T_Type.PLANT,1));
+        s.insertTiles(2, tiles);
+        tiles.clear();
+        tiles.add(new Tile(T_Type.CAT,1));
+        tiles.add(new Tile(T_Type.CAT,1));
+        tiles.add(new Tile(T_Type.GAMES,1));
+        tiles.add(new Tile(T_Type.PLANT,1));
+        tiles.add(new Tile(T_Type.PLANT,1));
+        s.insertTiles(3, tiles);
+        tiles.clear();
+        tiles.add(new Tile(T_Type.CAT,1));
+        tiles.add(new Tile(T_Type.CAT,1));
+        tiles.add(new Tile(T_Type.BOOK,1));
+        tiles.add(new Tile(T_Type.BOOK,1));
+        s.insertTiles(4, tiles);
+        s.printShelf();
+        assertEquals(21,s.additionalPoints());
+
+
+        //trying with shelf full
+        tiles.clear();
+        tiles.add(new Tile(T_Type.TROPHY,1));
+        s.insertTiles(2, tiles);
+        s.insertTiles(3, tiles);
+        tiles.add(new Tile(T_Type.TROPHY,1));
+        s.insertTiles(4, tiles);
+        s.printShelf();
+        assertEquals(24,s.additionalPoints());
+    }
 }

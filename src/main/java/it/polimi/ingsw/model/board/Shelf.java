@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.board;
 
+import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.model.enumerations.Couple;
 import it.polimi.ingsw.model.enumerations.State;
 import it.polimi.ingsw.model.enumerations.Tile;
@@ -75,6 +76,7 @@ public class Shelf {
 
     public void setFreeSlots(int row, int column)
     {
+        this.shelfsMatrix[row][column].setTile(null);
         this.shelfsMatrix[row][column].setState(State.EMPTY);
     }
 
@@ -86,13 +88,107 @@ public class Shelf {
         this.shelfsMatrix[row][column] = insert;
     }
 
-    public Couple getCoordinate(int column, int row)
+    public Couple getCoordinate(int row, int col)
     {
-        return this.shelfsMatrix[column][row];
+        return this.shelfsMatrix[row][col];
+    }
+
+    public Couple getCouple(Position p)
+    {
+        return this.shelfsMatrix[p.getX()][p.getY()];
     }
 
     public int additionalPoints(){
+        //this method will scan the shelf looking for adjacent same tile kinds groups and return points in this way:
+        //3 -> +2
+        //4 -> +3
+        //5 -> +5
+        //6+ -> +8
+
         int scoring = 0;
+        int x,y;
+        int count = 0;
+        ArrayList<Position> group = new ArrayList<Position>();
+        ArrayList<ArrayList<Position>> groups = new ArrayList<ArrayList<Position>>();
+        ArrayList<Couple> visited = new  ArrayList<Couple>();
+
+        //finding groups
+        for(int i=0; i<ROWS; i++)
+        {
+            for(int j=0; j<COLUMNS; j++)
+            {
+                if((shelfsMatrix[i][j].getState() == State.PICKABLE) && (!visited.contains(shelfsMatrix[i][j])))
+                {
+                    group = new ArrayList<Position>();
+                    group.add(new Position(i,j));
+                    visited.add(shelfsMatrix[i][j]);
+                    for(int k=0; k<group.size(); k++)
+                    {
+                        x = group.get(k).getX();
+                        y = group.get(k).getY();
+
+                        if(y+1 < COLUMNS)
+                        {
+                            if((getCoordinate(x,y+1).getState() == State.PICKABLE) &&
+                                    (getCoordinate(x,y+1).getTile().getTileType() == getCoordinate(x,y).getTile().getTileType()) &&
+                                    (!visited.contains(getCoordinate(x,y+1))))
+                            {
+                                group.add(new Position(x,y+1));
+                                visited.add(shelfsMatrix[x][y+1]);
+                            }
+                        }
+                        if(x+1 < ROWS)
+                        {
+                            if((getCoordinate(x+1,y).getState() == State.PICKABLE) &&
+                                    (getCoordinate(x+1,y).getTile().getTileType() == getCoordinate(x,y).getTile().getTileType()) &&
+                                    (!visited.contains(getCoordinate(x+1,y))))
+                            {
+                                group.add(new Position(x+1,y));
+                                visited.add(shelfsMatrix[x+1][y]);
+                            }
+                        }
+                        if(y-1 >= 0)
+                        {
+                            if((getCoordinate(x,y-1).getState() == State.PICKABLE) &&
+                                    (getCoordinate(x,y-1).getTile().getTileType() == getCoordinate(x,y).getTile().getTileType()) &&
+                                    (!visited.contains(getCoordinate(x,y-1))))
+                            {
+                                group.add(new Position(x,y-1));
+                                visited.add(shelfsMatrix[x][y-1]);
+                            }
+                        }
+                        if(x-1 >= 0)
+                        {
+                            if((getCoordinate(x-1,y).getState() == State.PICKABLE) &&
+                                    (getCoordinate(x-1,y).getTile().getTileType() == getCoordinate(x,y).getTile().getTileType()) &&
+                                    (!visited.contains(getCoordinate(x-1,y))))
+                            {
+                                group.add(new Position(x-1,y));
+                                visited.add(shelfsMatrix[x-1][y]);
+                            }
+                        }
+                    }
+                    groups.add(group);
+                }
+                else visited.add(shelfsMatrix[i][j]);
+            }
+        }
+
+        //calculate score
+        for(ArrayList<Position> g : groups)
+        {
+            count = 0;
+            for (Position p : g)
+            {
+                count ++;
+            }
+            if(count == 3) scoring +=2;
+            else if(count == 4) scoring += 3;
+            else if(count == 5) scoring += 5;
+            else if(count >= 6) scoring += 8;
+        }
+
+
         return scoring;
     }
 
@@ -104,6 +200,17 @@ public class Shelf {
         return this.cardsAlreadyChecked;
     }
 
+    public void clearShelf()
+    {
+        for(int i=0;i<ROWS;i++)
+        {
+            for(int j=0;j<COLUMNS;j++)
+            {
+                setFreeSlots(i,j);
+            }
+
+        }
+    }
     public void printShelf() {
         System.out.println("------------------------");
         for( int i = 0; i < ROWS; i++) {
