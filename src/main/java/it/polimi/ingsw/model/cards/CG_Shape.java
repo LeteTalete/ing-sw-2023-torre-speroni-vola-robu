@@ -33,7 +33,7 @@ public class CG_Shape extends CommonGoalCard {
      * coordinates - This set of coordinates identifies the shape itself that the card requires
      *             - Those coordinates are saved in positions
     **/
-    public CG_Shape(int id, int numOfPlayers) {
+    public CG_Shape(int id) {
 
         try {
             ObjectMapper mapper = new ObjectMapper();
@@ -43,19 +43,6 @@ public class CG_Shape extends CommonGoalCard {
             this.ID = id;
             this.positions = new ArrayList<>();
             this.points = new Stack<>();
-            if ( numOfPlayers == 2 ){
-                this.points.push(4);
-                this.points.push(8);
-            } else if ( numOfPlayers == 3) {
-                this.points.push(4);
-                this.points.push(6);
-                this.points.push(8);
-            } else if ( numOfPlayers == 4 ) {
-                this.points.push(2);
-                this.points.push(4);
-                this.points.push(6);
-                this.points.push(8);
-            }
 
             for (JsonNode cardNode : rootNode) {
                 int cardId = cardNode.get("id").asInt();

@@ -110,7 +110,22 @@ public class Game{
 
         for ( int i = 0; i < numberOfCommonGoalCards; i++){
             CommonGoalCard dummy = new CommonGoalCard(idsOfTheCards[i]);
-            commonGoalCards.add(dummy.typeGroupOrShape(numOfPlayers));
+            commonGoalCards.add(dummy.typeGroupOrShape());
+        }
+        for ( CommonGoalCard card : commonGoalCards ) {
+            if ( numOfPlayers == 2 ){
+                card.getPoints().push(4);
+                card.getPoints().push(8);
+            } else if ( numOfPlayers == 3) {
+                card.getPoints().push(4);
+                card.getPoints().push(6);
+                card.getPoints().push(8);
+            } else if ( numOfPlayers == 4 ) {
+                card.getPoints().push(2);
+                card.getPoints().push(4);
+                card.getPoints().push(6);
+                card.getPoints().push(8);
+            }
         }
 
         return commonGoalCards;

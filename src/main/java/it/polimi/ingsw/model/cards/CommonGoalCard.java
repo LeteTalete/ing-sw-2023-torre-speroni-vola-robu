@@ -28,7 +28,7 @@ public class CommonGoalCard extends GoalCard {
     // The method uses the card ID to find its respective CardType from the json file
     // Then it initializes the card and returns it
     // CommonGoalCard dummy is a null card, it won't be ever returned and its purpose is to eliminate the warning
-    public CommonGoalCard typeGroupOrShape(int numOfPlayers){
+    public CommonGoalCard typeGroupOrShape(){
 
         CommonGoalCard dummy = new CommonGoalCard();
         try {
@@ -45,10 +45,10 @@ public class CommonGoalCard extends GoalCard {
             }
 
             if (cardType.equals("Group")) {
-                CG_Group card = new CG_Group(this.ID, numOfPlayers);
+                CG_Group card = new CG_Group(this.ID);
                 return card;
             } else if (cardType.equals("Shape")) {
-                CG_Shape card = new CG_Shape(this.ID, numOfPlayers);
+                CG_Shape card = new CG_Shape(this.ID);
                 return card;
             }
 

@@ -15,7 +15,7 @@ public class CGC7Test {
     /** Test createCardTest creates an instance of CGC7 and checks if all parameters are correct */
     @Test
     public void createCardTest(){
-        CG_Shape CGC7 = new CG_Shape(7,4);
+        CG_Shape CGC7 = new CG_Shape(7);
         assertEquals(7, CGC7.getID());
         assertEquals("Shape", CGC7.getType());
         assertEquals(8, CGC7.getNumOfOccurrences());
@@ -31,8 +31,7 @@ public class CGC7Test {
     @Test
     public void emptyShelfTest(){
         Shelf shelf = new Shelf();
-        Couple[][] shelfsMatrix = shelf.getShelfsMatrix();
-        CG_Shape CGC7 = new CG_Shape(7,4);
+        CG_Shape CGC7 = new CG_Shape(7);
 
         System.out.println("emptyShelfTest");
         shelf.printShelf();
@@ -47,8 +46,7 @@ public class CGC7Test {
     public void eightOccTest1(){
 
         Shelf shelf = new Shelf();
-        Couple[][] shelfsMatrix = shelf.getShelfsMatrix();
-        CG_Shape CGC7 = new CG_Shape(7,4);
+        CG_Shape CGC7 = new CG_Shape(7);
 
         Tile tile = new Tile(T_Type.CAT, 3);
         Couple couple0 = new Couple(tile);
@@ -77,7 +75,7 @@ public class CGC7Test {
         Shelf shelf = new Shelf();
         Deck deck = new Deck();
         Couple[][] shelfsMatrix = shelf.getShelfsMatrix();
-        CG_Shape CGC7 = new CG_Shape(7,4);
+        CG_Shape CGC7 = new CG_Shape(7);
         int[] check = new int[6];
 
         for (int i = 0; i < shelf.ROWS; i++) {
@@ -168,7 +166,7 @@ public class CGC7Test {
         Shelf shelf = new Shelf();
         Deck deck = new Deck();
         Couple[][] shelfsMatrix = shelf.getShelfsMatrix();
-        CG_Shape CGC7 = new CG_Shape(7,4);
+        CG_Shape CGC7 = new CG_Shape(7);
         int[] check = new int[6];
 
         for (int i = 0; i < shelf.ROWS; i++) {

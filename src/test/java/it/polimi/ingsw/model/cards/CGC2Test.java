@@ -15,7 +15,7 @@ public class CGC2Test {
     /** Test createCardTest creates an instance of CGC2 and checks if all parameters are correct */
     @Test
     public void createCardTest(){
-        CG_Shape CGC2 = new CG_Shape(2,4);
+        CG_Shape CGC2 = new CG_Shape(2);
         assertEquals(2, CGC2.getID());
         assertEquals("Shape", CGC2.getType());
         assertEquals(2, CGC2.getNumOfOccurrences());
@@ -36,7 +36,7 @@ public class CGC2Test {
     public void emptyShelfTest(){
         Shelf shelf = new Shelf();
         Couple[][] shelfsMatrix = shelf.getShelfsMatrix();
-        CG_Shape CGC2 = new CG_Shape(2,4);
+        CG_Shape CGC2 = new CG_Shape(2);
 
         System.out.println("emptyShelfTest");
         shelf.printShelf();
@@ -52,7 +52,7 @@ public class CGC2Test {
         Shelf shelf = new Shelf();
         Deck deck = new Deck();
         Couple[][] shelfsMatrix = shelf.getShelfsMatrix();
-        CG_Shape CGC2 = new CG_Shape(2,4);
+        CG_Shape CGC2 = new CG_Shape(2);
 
         for (int i = 0; i < shelf.ROWS; i++) {
             for (int j = 0; j < shelf.COLUMNS; j++) {
@@ -93,7 +93,7 @@ public class CGC2Test {
         Shelf shelf = new Shelf();
         Deck deck = new Deck();
         Couple[][] shelfsMatrix = shelf.getShelfsMatrix();
-        CG_Shape CGC2 = new CG_Shape(2,4);
+        CG_Shape CGC2 = new CG_Shape(2);
 
         for (int i = 0; i < shelf.ROWS; i++) {
             for (int j = 0; j < shelf.COLUMNS; j++) {
@@ -134,7 +134,7 @@ public class CGC2Test {
         Shelf shelf = new Shelf();
         Deck deck = new Deck();
         Couple[][] shelfsMatrix = shelf.getShelfsMatrix();
-        CG_Shape CGC2 = new CG_Shape(2,4);
+        CG_Shape CGC2 = new CG_Shape(2);
 
 
         for (int i = 0; i < shelf.ROWS; i++) {
@@ -169,9 +169,7 @@ public class CGC2Test {
     @Test
     public void failTest2(){
         Shelf shelf = new Shelf();
-        Deck deck = new Deck();
-        Couple[][] shelfsMatrix = shelf.getShelfsMatrix();
-        CG_Shape CGC2 = new CG_Shape(2,4);
+        CG_Shape CGC2 = new CG_Shape(2);
 
         Tile tile0 = new Tile(T_Type.CAT, 3);
         Couple couple0 = new Couple(tile0);
@@ -194,7 +192,7 @@ public class CGC2Test {
         Shelf shelf = new Shelf();
         Deck deck = new Deck();
         Couple[][] shelfsMatrix = shelf.getShelfsMatrix();
-        CG_Shape CGC2 = new CG_Shape(2,4);
+        CG_Shape CGC2 = new CG_Shape(2);
 
         for (int i = 0; i < shelf.ROWS; i++) {
             for (int j = 0; j < shelf.COLUMNS; j++) {
@@ -232,7 +230,7 @@ public class CGC2Test {
         Shelf shelf = new Shelf();
         Deck deck = new Deck();
         Couple[][] shelfsMatrix = shelf.getShelfsMatrix();
-        CG_Shape CGC2 = new CG_Shape(2,4);
+        CG_Shape CGC2 = new CG_Shape(2);
 
         for (int i = 0; i < shelf.ROWS; i++) {
             for (int j = 0; j < shelf.COLUMNS; j++) {

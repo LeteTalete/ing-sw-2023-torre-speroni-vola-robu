@@ -14,7 +14,7 @@ public class CGC5Test {
     /** Test createCardTest creates an instance of CGC5 and checks if all parameters are correct */
     @Test
     public void createCardTest(){
-        CG_Shape CGC5 = new CG_Shape(5,4);
+        CG_Shape CGC5 = new CG_Shape(5);
         assertEquals(5, CGC5.getID());
         assertEquals("Shape", CGC5.getType());
         assertEquals(6, CGC5.getNumOfOccurrences());
@@ -37,8 +37,7 @@ public class CGC5Test {
     @Test
     public void emptyShelfTest(){
         Shelf shelf = new Shelf();
-        Couple[][] shelfsMatrix = shelf.getShelfsMatrix();
-        CG_Shape CGC5 = new CG_Shape(5,4);
+        CG_Shape CGC5 = new CG_Shape(5);
 
         System.out.println("emptyShelfTest");
         shelf.printShelf();
@@ -55,8 +54,7 @@ public class CGC5Test {
     public void sixOccTest1(){
 
         Shelf shelf = new Shelf();
-        Couple[][] shelfsMatrix = shelf.getShelfsMatrix();
-        CG_Shape CGC5 = new CG_Shape(5,4);
+        CG_Shape CGC5 = new CG_Shape(5);
 
         for (int i = 0; i < shelf.ROWS; i++) {
             for (int j = 0; j < shelf.COLUMNS; j++) {
@@ -103,8 +101,7 @@ public class CGC5Test {
     public void sixOccTest2(){
 
         Shelf shelf = new Shelf();
-        Couple[][] shelfsMatrix = shelf.getShelfsMatrix();
-        CG_Shape CGC5 = new CG_Shape(5,4);
+        CG_Shape CGC5 = new CG_Shape(5);
 
         for (int i = 0; i < shelf.ROWS; i++) {
             for (int j = 0; j < shelf.COLUMNS; j++) {
@@ -152,8 +149,7 @@ public class CGC5Test {
     public void sixOccTest3(){
 
         Shelf shelf = new Shelf();
-        Couple[][] shelfsMatrix = shelf.getShelfsMatrix();
-        CG_Shape CGC5 = new CG_Shape(5,4);
+        CG_Shape CGC5 = new CG_Shape(5);
 
         for (int i = 0; i < shelf.ROWS; i++) {
             for (int j = 0; j < shelf.COLUMNS; j++) {
@@ -200,8 +196,7 @@ public class CGC5Test {
     public void sixOccTest4(){
 
         Shelf shelf = new Shelf();
-        Couple[][] shelfsMatrix = shelf.getShelfsMatrix();
-        CG_Shape CGC5 = new CG_Shape(5,4);
+        CG_Shape CGC5 = new CG_Shape(5);
 
         for (int i = 0; i < shelf.ROWS; i++) {
             for (int j = 0; j < shelf.COLUMNS; j++) {
@@ -229,8 +224,7 @@ public class CGC5Test {
     public void sixOccTest5(){
 
         Shelf shelf = new Shelf();
-        Couple[][] shelfsMatrix = shelf.getShelfsMatrix();
-        CG_Shape CGC5 = new CG_Shape(5,4);
+        CG_Shape CGC5 = new CG_Shape(5);
 
         for (int i = 0; i < shelf.ROWS; i++) {
             for (int j = 0; j < shelf.COLUMNS; j++) {
@@ -259,8 +253,7 @@ public class CGC5Test {
     public void sixOccTest6(){
 
         Shelf shelf = new Shelf();
-        Couple[][] shelfsMatrix = shelf.getShelfsMatrix();
-        CG_Shape CGC5 = new CG_Shape(5,4);
+        CG_Shape CGC5 = new CG_Shape(5);
 
         for (int i = 0; i < shelf.ROWS; i++) {
             for (int j = 0; j < shelf.COLUMNS; j++) {
@@ -287,8 +280,7 @@ public class CGC5Test {
     public void sixOccTest7(){
 
         Shelf shelf = new Shelf();
-        Couple[][] shelfsMatrix = shelf.getShelfsMatrix();
-        CG_Shape CGC5 = new CG_Shape(5,4);
+        CG_Shape CGC5 = new CG_Shape(5);
 
         for (int i = 0; i < shelf.ROWS; i++) {
             for (int j = 0; j < shelf.COLUMNS; j++) {
@@ -321,8 +313,7 @@ public class CGC5Test {
     public void sixOccTest8(){
 
         Shelf shelf = new Shelf();
-        Couple[][] shelfsMatrix = shelf.getShelfsMatrix();
-        CG_Shape CGC5 = new CG_Shape(5,4);
+        CG_Shape CGC5 = new CG_Shape(5);
 
         for (int i = 0; i < shelf.ROWS; i++) {
             for (int j = 0; j < shelf.COLUMNS; j++) {
@@ -369,8 +360,7 @@ public class CGC5Test {
     public void sixOccTest9(){
 
         Shelf shelf = new Shelf();
-        Couple[][] shelfsMatrix = shelf.getShelfsMatrix();
-        CG_Shape CGC5 = new CG_Shape(5,4);
+        CG_Shape CGC5 = new CG_Shape(5);
 
         for (int i = 0; i < shelf.ROWS; i++) {
             for (int j = 0; j < shelf.COLUMNS; j++) {
@@ -426,8 +416,7 @@ public class CGC5Test {
     public void sixOccTest10(){
 
         Shelf shelf = new Shelf();
-        Couple[][] shelfsMatrix = shelf.getShelfsMatrix();
-        CG_Shape CGC5 = new CG_Shape(5,4);
+        CG_Shape CGC5 = new CG_Shape(5);
 
         for (int i = 0; i < shelf.ROWS; i++) {
             for (int j = 0; j < shelf.COLUMNS; j++) {
@@ -484,8 +473,7 @@ public class CGC5Test {
     public void failTest1(){
 
         Shelf shelf = new Shelf();
-        Couple[][] shelfsMatrix = shelf.getShelfsMatrix();
-        CG_Shape CGC5 = new CG_Shape(5,4);
+        CG_Shape CGC5 = new CG_Shape(5);
 
         for (int i = 0; i < shelf.ROWS; i++) {
             for (int j = 0; j < shelf.COLUMNS; j++) {
@@ -530,8 +518,7 @@ public class CGC5Test {
     public void failTest2(){
 
         Shelf shelf = new Shelf();
-        Couple[][] shelfsMatrix = shelf.getShelfsMatrix();
-        CG_Shape CGC5 = new CG_Shape(5,4);
+        CG_Shape CGC5 = new CG_Shape(5);
 
         for (int i = 0; i < shelf.ROWS; i++) {
             for (int j = 0; j < shelf.COLUMNS; j++) {
@@ -574,8 +561,7 @@ public class CGC5Test {
     public void failTest3(){
 
         Shelf shelf = new Shelf();
-        Couple[][] shelfsMatrix = shelf.getShelfsMatrix();
-        CG_Shape CGC5 = new CG_Shape(5,4);
+        CG_Shape CGC5 = new CG_Shape(5);
 
         for (int i = 0; i < shelf.ROWS; i++) {
             for (int j = 0; j < shelf.COLUMNS; j++) {

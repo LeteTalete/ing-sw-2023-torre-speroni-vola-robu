@@ -31,7 +31,7 @@ public class CG_Group extends CommonGoalCard {
      *
      * @param id - card ID
      */
-    public CG_Group(int id, int numOfPlayers) {
+    public CG_Group(int id) {
 
         try {
             ObjectMapper mapper = new ObjectMapper();
@@ -50,19 +50,6 @@ public class CG_Group extends CommonGoalCard {
                     this.horizontal = cardNode.get("horizontal").asInt();
                     this.vertical = cardNode.get("vertical").asInt();
                     this.points = new Stack<>();
-                    if ( numOfPlayers == 2 ){
-                        this.points.push(4);
-                        this.points.push(8);
-                    } else if ( numOfPlayers == 3) {
-                        this.points.push(4);
-                        this.points.push(6);
-                        this.points.push(8);
-                    } else if ( numOfPlayers == 4 ) {
-                        this.points.push(2);
-                        this.points.push(4);
-                        this.points.push(6);
-                        this.points.push(8);
-                    }
                     break;
                 }
             }
@@ -72,6 +59,49 @@ public class CG_Group extends CommonGoalCard {
             e.printStackTrace();
 
         }
+    }
+
+    @Override
+    public int checkConditions(Shelf shelf){
+
+        Couple[][] shelfsMatrix = shelf.getShelfsMatrix();
+        int[] cardsAlreadyChecked = shelf.getCardsAlreadyChecked();
+        List<T_Type> typesInside = new ArrayList<>();
+        int flag;
+        int count = 0;
+
+        if( this.vertical == 1 ) {
+            for ( int i = 0; i < shelf.COLUMNS; i++) {
+                typesInside.clear();
+                flag = 0;
+                for ( int j = 0; j < shelf.ROWS; j++) {
+                    if (!shelfsMatrix[j][i].getState().equals(State.EMPTY)) {
+                        for (T_Type t_type : typesInside) {
+                            if (shelfsMatrix[j][i].getTile().getTileType() == t_type) {
+                                flag = 1;
+                            }
+                        }
+                        if (flag == 0) {
+                            typesInside.add(shelfsMatrix[j][i].getTile().getTileType());
+                        }
+                    } else {
+                        break;
+                    }
+                }
+                if (typesInside.size() == this.diffUpTo) {
+                    count++;
+                }
+            }
+        }
+
+        if (this.horizontal == 1 ) {
+            for ( int i = 0; i < shelf.ROWS; i++) {
+                for ( int j = 0; j < shelf.COLUMNS; j++) {
+
+                }
+            }
+        }
+        return 0;
     }
 
     public String getType() {
