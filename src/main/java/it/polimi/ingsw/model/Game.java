@@ -103,14 +103,14 @@ public class Game{
     * (inside the code it's from 0 to 12 because the upper bound is exclusive)
     * Then it iterates for how many cards are needed and adds the cards to the ArrayList
     */
-    public List<CommonGoalCard> generateCGC(){
+    public List<CommonGoalCard> generateCGC(int numOfPlayers){
         List<CommonGoalCard> commonGoalCards = new ArrayList<>();
         int numberOfCommonGoalCards = 2; // Change this number if you want to use more cards
         int[] idsOfTheCards = new Random().ints(0, 12).distinct().limit(numberOfCommonGoalCards).toArray();
 
         for ( int i = 0; i < numberOfCommonGoalCards; i++){
             CommonGoalCard dummy = new CommonGoalCard(idsOfTheCards[i]);
-            commonGoalCards.add(dummy.typeGroupOrShape());
+            commonGoalCards.add(dummy.typeGroupOrShape(numOfPlayers));
         }
 
         return commonGoalCards;

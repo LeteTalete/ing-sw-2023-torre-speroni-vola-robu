@@ -4,13 +4,17 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.model.board.Shelf;
+import it.polimi.ingsw.model.enumerations.State;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 public class CommonGoalCard extends GoalCard {
     private int ID;
+    private Stack<Integer> points;
 
 
     public CommonGoalCard(){
@@ -24,7 +28,7 @@ public class CommonGoalCard extends GoalCard {
     // The method uses the card ID to find its respective CardType from the json file
     // Then it initializes the card and returns it
     // CommonGoalCard dummy is a null card, it won't be ever returned and its purpose is to eliminate the warning
-    public CommonGoalCard typeGroupOrShape(){
+    public CommonGoalCard typeGroupOrShape(int numOfPlayers){
 
         CommonGoalCard dummy = new CommonGoalCard();
         try {
@@ -41,10 +45,10 @@ public class CommonGoalCard extends GoalCard {
             }
 
             if (cardType.equals("Group")) {
-                CG_Group card = new CG_Group(this.ID);
+                CG_Group card = new CG_Group(this.ID, numOfPlayers);
                 return card;
             } else if (cardType.equals("Shape")) {
-                CG_Shape card = new CG_Shape(this.ID);
+                CG_Shape card = new CG_Shape(this.ID, numOfPlayers);
                 return card;
             }
 
@@ -78,4 +82,11 @@ public class CommonGoalCard extends GoalCard {
     public int getNumOfOccurrences() {
         return 0;
     }
+    public Stack<Integer> getPoints(){
+        return null;
+    }
+
+    public int getDiffUpTo() { return 0;}
+    public int getHorizontal() { return 0;}
+    public int getVertical() { return 0;}
 }

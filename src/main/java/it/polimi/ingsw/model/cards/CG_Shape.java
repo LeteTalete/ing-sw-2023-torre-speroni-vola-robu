@@ -12,12 +12,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 public class CG_Shape extends CommonGoalCard {
     private int ID;
+    private Stack<Integer> points;
     private String type;
     private List<List<Position>> positions;
-    int numOfOccurrences;
+    private int numOfOccurrences;
     private int diffType;
     private int stairs;
 
@@ -31,7 +33,7 @@ public class CG_Shape extends CommonGoalCard {
      * coordinates - This set of coordinates identifies the shape itself that the card requires
      *             - Those coordinates are saved in positions
     **/
-    public CG_Shape(int id) {
+    public CG_Shape(int id, int numOfPlayers) {
 
         try {
             ObjectMapper mapper = new ObjectMapper();
@@ -40,6 +42,20 @@ public class CG_Shape extends CommonGoalCard {
 
             this.ID = id;
             this.positions = new ArrayList<>();
+            this.points = new Stack<>();
+            if ( numOfPlayers == 2 ){
+                this.points.push(4);
+                this.points.push(8);
+            } else if ( numOfPlayers == 3) {
+                this.points.push(4);
+                this.points.push(6);
+                this.points.push(8);
+            } else if ( numOfPlayers == 4 ) {
+                this.points.push(2);
+                this.points.push(4);
+                this.points.push(6);
+                this.points.push(8);
+            }
 
             for (JsonNode cardNode : rootNode) {
                 int cardId = cardNode.get("id").asInt();
@@ -288,6 +304,7 @@ public class CG_Shape extends CommonGoalCard {
         return this.ID;
     }
 
+    public Stack<Integer> getPoints() { return this.points; }
     public int getDiffType() {
         return this.diffType;
     }
