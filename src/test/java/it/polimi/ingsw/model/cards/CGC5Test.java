@@ -14,7 +14,7 @@ public class CGC5Test {
     /** Test createCardTest creates an instance of CGC5 and checks if all parameters are correct */
     @Test
     public void createCardTest(){
-        CG_Shape CGC5 = new CG_Shape(5);
+        CG_Shape CGC5 = new CG_Shape(5,4);
         assertEquals(5, CGC5.getID());
         assertEquals("Shape", CGC5.getType());
         assertEquals(6, CGC5.getNumOfOccurrences());
@@ -38,7 +38,7 @@ public class CGC5Test {
     public void emptyShelfTest(){
         Shelf shelf = new Shelf();
         Couple[][] shelfsMatrix = shelf.getShelfsMatrix();
-        CG_Shape CGC5 = new CG_Shape(5);
+        CG_Shape CGC5 = new CG_Shape(5,4);
 
         System.out.println("emptyShelfTest");
         shelf.printShelf();
@@ -56,7 +56,7 @@ public class CGC5Test {
 
         Shelf shelf = new Shelf();
         Couple[][] shelfsMatrix = shelf.getShelfsMatrix();
-        CG_Shape CGC5 = new CG_Shape(5);
+        CG_Shape CGC5 = new CG_Shape(5,4);
 
         for (int i = 0; i < shelf.ROWS; i++) {
             for (int j = 0; j < shelf.COLUMNS; j++) {
@@ -104,7 +104,7 @@ public class CGC5Test {
 
         Shelf shelf = new Shelf();
         Couple[][] shelfsMatrix = shelf.getShelfsMatrix();
-        CG_Shape CGC5 = new CG_Shape(5);
+        CG_Shape CGC5 = new CG_Shape(5,4);
 
         for (int i = 0; i < shelf.ROWS; i++) {
             for (int j = 0; j < shelf.COLUMNS; j++) {
@@ -153,7 +153,7 @@ public class CGC5Test {
 
         Shelf shelf = new Shelf();
         Couple[][] shelfsMatrix = shelf.getShelfsMatrix();
-        CG_Shape CGC5 = new CG_Shape(5);
+        CG_Shape CGC5 = new CG_Shape(5,4);
 
         for (int i = 0; i < shelf.ROWS; i++) {
             for (int j = 0; j < shelf.COLUMNS; j++) {
@@ -201,7 +201,7 @@ public class CGC5Test {
 
         Shelf shelf = new Shelf();
         Couple[][] shelfsMatrix = shelf.getShelfsMatrix();
-        CG_Shape CGC5 = new CG_Shape(5);
+        CG_Shape CGC5 = new CG_Shape(5,4);
 
         for (int i = 0; i < shelf.ROWS; i++) {
             for (int j = 0; j < shelf.COLUMNS; j++) {
@@ -230,7 +230,7 @@ public class CGC5Test {
 
         Shelf shelf = new Shelf();
         Couple[][] shelfsMatrix = shelf.getShelfsMatrix();
-        CG_Shape CGC5 = new CG_Shape(5);
+        CG_Shape CGC5 = new CG_Shape(5,4);
 
         for (int i = 0; i < shelf.ROWS; i++) {
             for (int j = 0; j < shelf.COLUMNS; j++) {
@@ -260,7 +260,7 @@ public class CGC5Test {
 
         Shelf shelf = new Shelf();
         Couple[][] shelfsMatrix = shelf.getShelfsMatrix();
-        CG_Shape CGC5 = new CG_Shape(5);
+        CG_Shape CGC5 = new CG_Shape(5,4);
 
         for (int i = 0; i < shelf.ROWS; i++) {
             for (int j = 0; j < shelf.COLUMNS; j++) {
@@ -288,7 +288,7 @@ public class CGC5Test {
 
         Shelf shelf = new Shelf();
         Couple[][] shelfsMatrix = shelf.getShelfsMatrix();
-        CG_Shape CGC5 = new CG_Shape(5);
+        CG_Shape CGC5 = new CG_Shape(5,4);
 
         for (int i = 0; i < shelf.ROWS; i++) {
             for (int j = 0; j < shelf.COLUMNS; j++) {
@@ -322,7 +322,7 @@ public class CGC5Test {
 
         Shelf shelf = new Shelf();
         Couple[][] shelfsMatrix = shelf.getShelfsMatrix();
-        CG_Shape CGC5 = new CG_Shape(5);
+        CG_Shape CGC5 = new CG_Shape(5,4);
 
         for (int i = 0; i < shelf.ROWS; i++) {
             for (int j = 0; j < shelf.COLUMNS; j++) {
@@ -370,7 +370,7 @@ public class CGC5Test {
 
         Shelf shelf = new Shelf();
         Couple[][] shelfsMatrix = shelf.getShelfsMatrix();
-        CG_Shape CGC5 = new CG_Shape(5);
+        CG_Shape CGC5 = new CG_Shape(5,4);
 
         for (int i = 0; i < shelf.ROWS; i++) {
             for (int j = 0; j < shelf.COLUMNS; j++) {
@@ -427,7 +427,7 @@ public class CGC5Test {
 
         Shelf shelf = new Shelf();
         Couple[][] shelfsMatrix = shelf.getShelfsMatrix();
-        CG_Shape CGC5 = new CG_Shape(5);
+        CG_Shape CGC5 = new CG_Shape(5,4);
 
         for (int i = 0; i < shelf.ROWS; i++) {
             for (int j = 0; j < shelf.COLUMNS; j++) {
@@ -485,7 +485,7 @@ public class CGC5Test {
 
         Shelf shelf = new Shelf();
         Couple[][] shelfsMatrix = shelf.getShelfsMatrix();
-        CG_Shape CGC5 = new CG_Shape(5);
+        CG_Shape CGC5 = new CG_Shape(5,4);
 
         for (int i = 0; i < shelf.ROWS; i++) {
             for (int j = 0; j < shelf.COLUMNS; j++) {
@@ -531,7 +531,7 @@ public class CGC5Test {
 
         Shelf shelf = new Shelf();
         Couple[][] shelfsMatrix = shelf.getShelfsMatrix();
-        CG_Shape CGC5 = new CG_Shape(5);
+        CG_Shape CGC5 = new CG_Shape(5,4);
 
         for (int i = 0; i < shelf.ROWS; i++) {
             for (int j = 0; j < shelf.COLUMNS; j++) {
@@ -575,7 +575,7 @@ public class CGC5Test {
 
         Shelf shelf = new Shelf();
         Couple[][] shelfsMatrix = shelf.getShelfsMatrix();
-        CG_Shape CGC5 = new CG_Shape(5);
+        CG_Shape CGC5 = new CG_Shape(5,4);
 
         for (int i = 0; i < shelf.ROWS; i++) {
             for (int j = 0; j < shelf.COLUMNS; j++) {

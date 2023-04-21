@@ -143,18 +143,34 @@
   },
   {
     "id": 8,
-    "type": "Group"
+    "type": "Group",
+    "numOfOccurrences": 3,
+    "diffUpTo": 3,
+    "vertical": 1,
+    "horizontal": 0
   },
   {
     "id": 9,
-    "type": "Group"
+    "type": "Group",
+    "numOfOccurrences": 4,
+    "diffUpTo": 3,
+    "vertical": 0,
+    "horizontal": 1
   },
   {
     "id": 10,
-    "type": "Group"
+    "type": "Group",
+    "numOfOccurrences": 2,
+    "diffUpTo": 0,
+    "vertical": 1,
+    "horizontal": 0
   },  
   {
     "id": 11,
-    "type": "Group"
+    "type": "Group",
+    "numOfOccurrences": 2,
+    "diffUpTo": 0,
+    "vertical": 0,
+    "horizontal": 1
   }
 ]

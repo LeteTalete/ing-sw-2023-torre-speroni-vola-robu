@@ -15,7 +15,7 @@ public class CGC3Test {
     /** Test createCardTest creates an instance of CGC3 and checks if all parameters are correct */
     @Test
     public void createCardTest(){
-        CG_Shape CGC3 = new CG_Shape(3);
+        CG_Shape CGC3 = new CG_Shape(3,4);
         assertEquals(3, CGC3.getID());
         assertEquals("Shape", CGC3.getType());
         assertEquals(1, CGC3.getNumOfOccurrences());
@@ -38,7 +38,7 @@ public class CGC3Test {
     public void emptyShelfTest(){
         Shelf shelf = new Shelf();
         Couple[][] shelfsMatrix = shelf.getShelfsMatrix();
-        CG_Shape CGC3 = new CG_Shape(3);
+        CG_Shape CGC3 = new CG_Shape(3,4);
 
         System.out.println("emptyShelfTest");
         shelf.printShelf();
@@ -53,7 +53,7 @@ public class CGC3Test {
         Shelf shelf = new Shelf();
         Deck deck = new Deck();
         Couple[][] shelfsMatrix = shelf.getShelfsMatrix();
-        CG_Shape CGC3 = new CG_Shape(3);
+        CG_Shape CGC3 = new CG_Shape(3,4);
 
         for (int i = 0; i < shelf.ROWS; i++) {
             for (int j = 0; j < shelf.COLUMNS; j++) {
@@ -86,7 +86,7 @@ public class CGC3Test {
         Shelf shelf = new Shelf();
         Deck deck = new Deck();
         Couple[][] shelfsMatrix = shelf.getShelfsMatrix();
-        CG_Shape CGC3 = new CG_Shape(3);
+        CG_Shape CGC3 = new CG_Shape(3,4);
 
         for (int i = 0; i < shelf.ROWS; i++) {
             for (int j = 0; j < shelf.COLUMNS; j++) {
@@ -123,7 +123,7 @@ public class CGC3Test {
         Shelf shelf = new Shelf();
         Deck deck = new Deck();
         Couple[][] shelfsMatrix = shelf.getShelfsMatrix();
-        CG_Shape CGC3 = new CG_Shape(3);
+        CG_Shape CGC3 = new CG_Shape(3,4);
 
         for (int i = 0; i < shelf.ROWS; i++) {
             for (int j = 0; j < shelf.COLUMNS; j++) {
