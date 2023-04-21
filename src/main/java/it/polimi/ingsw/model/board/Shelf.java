@@ -104,18 +104,36 @@ public class Shelf {
         return this.cardsAlreadyChecked;
     }
 
-    public void printShelf()
-    {
+    public void printShelf() {
         System.out.println("------------------------");
-        for(int i=0;i<shelfsMatrix.length;i++)
-        {
-            for(int j=0;j<shelfsMatrix[i].length;j++)
-            {
-                if ( shelfsMatrix[i][j].getState().equals(State.EMPTY) ){
-                    System.out.print( " " + " ");
+        for( int i = 0; i < ROWS; i++) {
+            for( int j = 0 ; j < COLUMNS; j++) {
+
+                if (shelfsMatrix[i][j].getState().equals(State.EMPTY)) {
+                    System.out.print( " " + " " + " ");
                 } else {
-                    System.out.print(shelfsMatrix[i][j].getTile().getTileType().toString().charAt(0) + " ");
+                    switch (shelfsMatrix[i][j].getTile().getTileType().toString()) {
+                        case "CAT":
+                            System.out.print( "\033[0;102m" + "\033[1;90m" + " " + shelfsMatrix[i][j].getTile().getTileType().toString().charAt(0) + " " + "\033[0m"  );
+                            break;
+                        case "PLANT":
+                            System.out.print( "\033[0;105m" + "\033[1;90m" + " " + shelfsMatrix[i][j].getTile().getTileType().toString().charAt(0) + " " + "\033[0m" );
+                            break;
+                        case "FRAME":
+                            System.out.print( "\033[0;104m" + "\033[1;90m" + " " + shelfsMatrix[i][j].getTile().getTileType().toString().charAt(0) + " " + "\033[0m" );
+                            break;
+                        case "TROPHY":
+                            System.out.print( "\033[0;106m" + "\033[1;90m" + " " + shelfsMatrix[i][j].getTile().getTileType().toString().charAt(0) + " " + "\033[0m" );
+                            break;
+                        case "BOOK":
+                            System.out.print( "\033[0;107m" + "\033[1;90m" + " " + shelfsMatrix[i][j].getTile().getTileType().toString().charAt(0) + " " + "\033[0m"  );
+                            break;
+                        case "GAMES":
+                            System.out.print( "\033[0;103m" + "\033[1;90m" + " " + shelfsMatrix[i][j].getTile().getTileType().toString().charAt(0) + " " + "\033[0m"  );
+                            break;
+                    }
                 }
+
             }
             System.out.println();
         }

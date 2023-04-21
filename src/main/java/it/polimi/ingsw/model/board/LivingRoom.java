@@ -156,25 +156,40 @@ public class LivingRoom {
     public void printBoard()
     {
         //this method is only used for testing
+        for( int i = 0; i < board.length; i++) {
+            for( int j = 0 ; j < board[0].length; j++) {
 
-        System.out.println();
-        for(int i=0; i< board.length;i++)
-        {
-            for(int j=0; j<board[i].length;j++)
-            {
-                if(getCouple(new Position(i,j)).getState() == State.PICKABLE)
-                {
-                    //System.out.print(" "+ l.getCouple(new Position(i,j)).getTile().getTileType());
-                    System.out.print(" G");
+                if (getCouple(new Position(i,j)).getState().equals(State.EMPTY) || getCouple(new Position(i,j)).getState().equals(State.EMPTY_AND_UNUSABLE)) {
+                    System.out.print( " " + " " + " ");
+                } else if (getCouple(new Position(i,j)).getState().equals(State.INVALID)) {
+                    System.out.print( "\033[0;100m" + " " + " " + " " + "\033[0m" );
+                } else {
+                    switch (getCouple(new Position(i,j)).getTile().getTileType().toString()) {
+                        case "CAT":
+                            System.out.print( "\033[0;102m" + "\033[1;90m" + " " + getCouple(new Position(i,j)).getTile().getTileType().toString().charAt(0) + " " + "\033[0m"  );
+                            break;
+                        case "PLANT":
+                            System.out.print( "\033[0;105m" + "\033[1;90m" + " " + getCouple(new Position(i,j)).getTile().getTileType().toString().charAt(0) + " " + "\033[0m" );
+                            break;
+                        case "FRAME":
+                            System.out.print( "\033[0;104m" + "\033[1;90m" + " " + getCouple(new Position(i,j)).getTile().getTileType().toString().charAt(0) + " " + "\033[0m" );
+                            break;
+                        case "TROPHY":
+                            System.out.print( "\033[0;106m" + "\033[1;90m" + " " + getCouple(new Position(i,j)).getTile().getTileType().toString().charAt(0) + " " + "\033[0m" );
+                            break;
+                        case "BOOK":
+                            System.out.print( "\033[0;107m" + "\033[1;90m" + " " + getCouple(new Position(i,j)).getTile().getTileType().toString().charAt(0) + " " + "\033[0m"  );
+                            break;
+                        case "GAMES":
+                            System.out.print( "\033[0;103m" + "\033[1;90m" + " " + getCouple(new Position(i,j)).getTile().getTileType().toString().charAt(0) + " " + "\033[0m"  );
+                            break;
+                    }
                 }
-                else if(getCouple(new Position(i,j)).getState() == State.EMPTY)
-                {
-                    System.out.print(" E");
-                }
-                else System.out.print(" X");
+
             }
             System.out.println();
         }
+
     }
 
     public void clearBoard()
