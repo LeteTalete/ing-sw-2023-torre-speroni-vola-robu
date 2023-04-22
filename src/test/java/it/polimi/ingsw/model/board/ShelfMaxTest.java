@@ -261,5 +261,13 @@ class ShelfMaxTest {
         s.insertTiles(4, tiles);
         s.printShelf();
         assertEquals(24,s.additionalPoints());
+
+        //trying with isolated tiles
+        s.setFreeSlots(0,3);
+        tiles.clear();
+        tiles.add(new Tile(T_Type.CAT,1));
+        s.insertTiles(3,tiles);
+        s.printShelf();
+        assertEquals(21,s.additionalPoints());
     }
 }
