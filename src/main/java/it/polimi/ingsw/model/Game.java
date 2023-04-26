@@ -40,10 +40,8 @@ public class Game{
         for(int i=0; i<numOfPlayers; i++)
         {
             Player calcNow = players.get(i);
-            int PGC = calcNow.getGoalCard();
-            PersonalGoalCard card = new PersonalGoalCard();
-            int add = card.scorePersonalGoalCard(calcNow.getMyShelf(), PGC);
-            calcNow.setScore(calcNow.getScore() + add + calcNow.getMyShelf().additionalPoints());
+            int scorePGC = calcNow.getGoalCard().scorePersonalGoalCard(calcNow.getMyShelf());
+            calcNow.setScore(scorePGC  + calcNow.getMyShelf().additionalPoints());
         }
         return 0;
     }

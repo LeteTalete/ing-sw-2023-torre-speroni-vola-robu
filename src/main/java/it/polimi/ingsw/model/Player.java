@@ -3,8 +3,10 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.Exceptions.InvalidChoiceFormatException;
 import it.polimi.ingsw.model.board.LivingRoom;
 import it.polimi.ingsw.model.board.Shelf;
+import it.polimi.ingsw.model.cards.PersonalGoalCard;
 import it.polimi.ingsw.model.enumerations.Tile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -14,8 +16,8 @@ public class Player{
     private String nickname;
     private boolean isPlaying;
     private Shelf shelf;
-    private int personalGoalCard;
-    private int score;
+    private PersonalGoalCard personalGoalCard;
+    private int score = 0;
     private boolean endGame;
 
     private ArrayList<Position> tilesChoosen;
@@ -260,13 +262,12 @@ public class Player{
         this.nickname = new String(nm);
     }
 
-    public int getGoalCard(){
+    public PersonalGoalCard getGoalCard(){
         return this.personalGoalCard;
     }
 
     public void setGoalCard(int pGCard) {
-        this.personalGoalCard = pGCard;
-        return;
+        this.personalGoalCard = new PersonalGoalCard(pGCard);
     }
 
     public Shelf getMyShelf(){
@@ -275,7 +276,6 @@ public class Player{
 
     public void setMyShelf(Shelf myShelf){
         this.shelf = myShelf;
-        return;
     }
 
 
@@ -284,14 +284,7 @@ public class Player{
     }
 
     public void setScore (int myScore){
-        this.score = myScore;
-        return;
+        this.score += myScore;
     }
-
-
-
-
-
-
 
 }

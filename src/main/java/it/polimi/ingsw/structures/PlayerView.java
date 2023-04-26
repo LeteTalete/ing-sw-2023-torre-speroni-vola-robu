@@ -1,6 +1,7 @@
 package it.polimi.ingsw.structures;
 
 import it.polimi.ingsw.model.Player;
+import it.polimi.ingsw.model.cards.PersonalGoalCard;
 
 import java.io.Serializable;
 
@@ -8,7 +9,7 @@ public class PlayerView implements Serializable {
 
     private String nickname;
     private ShelfView shelfView;
-    private int personalGoalCard;
+    private PersonalGoalCard personalGoalCard;
     public int score;
 
     public PlayerView(Player player){
@@ -29,11 +30,9 @@ public class PlayerView implements Serializable {
         return this.score;
     }
 
-    public int getPersonalGoalCard(){
+    public PersonalGoalCard getPersonalGoalCard(){
         return this.personalGoalCard;
     }
-
-
 
 
 }
