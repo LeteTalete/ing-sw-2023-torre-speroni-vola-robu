@@ -25,6 +25,7 @@ public class GameController {
         players = playersList;
         numOfPlayers = players.size();
         gameId = id;
+        gameBoard = new LivingRoom(players.size());
     }
 
     public GameController() {
@@ -54,7 +55,7 @@ public class GameController {
 
     // choose randomly a player and set is as the first one to play
     public void chooseFirstPlayer(){
-        int curr = new Random().nextInt(numOfPlayers-1);
+        int curr = new Random().nextInt(numOfPlayers);
         this.currentPlayer = players.get(curr);
         //didn't the first player had a boolean like 'Chair'?
     }
@@ -157,7 +158,9 @@ public class GameController {
     public Player getCurrentPlayer(){
         return this.currentPlayer;
     }
-
+    public void setNumOfPlayers(int num){
+        this.numOfPlayers = num;
+    }
     public LivingRoom getGameBoard(){
         return this.gameBoard;
     }

@@ -15,7 +15,7 @@ public class Player{
     private boolean chair;
     private String nickname;
     private boolean isPlaying;
-    private Shelf shelf;
+    private Shelf shelf = new Shelf();
     private PersonalGoalCard personalGoalCard;
     private int score = 0;
     private boolean endGame;
@@ -39,7 +39,6 @@ public class Player{
             Scanner sc= new Scanner(System.in); //System.in is a standard input stream
             System.out.print("insert coordinates: ");
             user_input = sc.nextLine();              //reads string
-            sc.close();
             try
             {
                if(!checkUserInput(user_input)) throw new InvalidChoiceFormatException();
@@ -63,7 +62,6 @@ public class Player{
                        sc= new Scanner(System.in); //System.in is a standard input stream
                        System.out.print("confirm? ");
                        confirm = sc.next().charAt(0);              //reads string
-                       sc.close();
                        if(confirm != 'y' && confirm != 'n')
                        {
                            System.out.println("please insert y or n");
@@ -142,7 +140,6 @@ public class Player{
                 Scanner sc= new Scanner(System.in); //System.in is a standard input stream
                 System.out.print("chose order: ");
                 order_input = sc.nextLine();              //reads string
-                sc.close();
                 try
                 {
                     if(!checkOrderInput(order_input)) throw new InvalidChoiceFormatException();
@@ -152,7 +149,6 @@ public class Player{
                             sc= new Scanner(System.in); //System.in is a standard input stream
                             System.out.print("confirm? ");
                             confirm = sc.next().charAt(0);              //reads string
-                            sc.close();
                             if(confirm != 'y' && confirm != 'n')
                             {
                                 System.out.println("please insert y or n");
@@ -230,7 +226,6 @@ public class Player{
             for(int i=0;i<valid_columns.size();i++) System.out.print(" "+valid_columns.get(i));
             System.out.println();
             chosed_column = sc.nextInt();
-            sc.close();
             if(!valid_columns.contains(chosed_column)) System.out.println("please select a valid column");
         }
         while (!valid_columns.contains(chosed_column));
