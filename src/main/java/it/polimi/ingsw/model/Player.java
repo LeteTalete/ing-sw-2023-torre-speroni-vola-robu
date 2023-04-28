@@ -191,13 +191,17 @@ public class Player{
         //note: ASCII: '0' = 48 ... '9' = 57
         //note: 'space' = 32
 
-        if(s.length()!=5) return false;
+        if(s.length()!=3 && s.length()!=5) return false;
         if(s.charAt(0) < 49 || s.charAt(0) > 51) return false;
         if(s.charAt(1) != 32) return false;
         if(s.charAt(2) < 49 || s.charAt(2) > 51) return false;
-        if(s.charAt(3) != 32) return false;
-        if(s.charAt(4) < 49 || s.charAt(4) > 51) return false;
-        if(s.charAt(0) == s.charAt(2) || s.charAt(0) == s.charAt(4) || s.charAt(2) == s.charAt(4)) return false;
+        if(s.charAt(0) == s.charAt(2)) return false;
+        if(s.length()>3)
+        {
+            if(s.charAt(3) != 32) return false;
+            if(s.charAt(4) < 49 || s.charAt(4) > 51) return false;
+            if(s.charAt(0) == s.charAt(4) || s.charAt(2) == s.charAt(4)) return false;
+        }
 
         return true;
     }
