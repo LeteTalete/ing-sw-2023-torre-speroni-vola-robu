@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.model.cards.CommonGoalCard;
 import org.junit.jupiter.api.Test;
 import static org.junit.Assert.*;
@@ -12,7 +13,7 @@ public class GameTest {
     // It prints the parameters saved inside each card
     @Test
     public static void main( String[] args ) {
-        Game game = new Game();
+        GameController game = new GameController();
         assertNotNull(game);
         int i = 0;
         int j;

@@ -2,7 +2,7 @@ package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.model.board.LivingRoom;
 import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.model.Game;
+import it.polimi.ingsw.model.cards.CommonGoalCard;
 import it.polimi.ingsw.model.cards.PersonalGoalCard;
 
 import java.util.ArrayList;
@@ -15,16 +15,19 @@ public class GameController {
     private Player currentPlayer;
     private int gameId;
     private static String ViewInterface;
-    private static Game game;
+    private static GameController game;
     private ArrayList<Player> players;
     private int numOfPlayers;
-    private LivingRoom board;
+    private LivingRoom gameBoard;
     private static Player player;//what was this for?
     //constructor
     public GameController(ArrayList<Player> playersList, int id) {
         players = playersList;
         numOfPlayers = players.size();
         gameId = id;
+    }
+
+    public GameController() {
     }
 
     public void main() {
@@ -34,7 +37,7 @@ public class GameController {
         }
         /**we need the server to pass the number of players and the list of players to the gameController, somehow**/
         // create and setup board (we're assuming this all happens in the next instruction)
-         this.board = new LivingRoom(numOfPlayers);
+         this.gameBoard = new LivingRoom(numOfPlayers);
 
         /**once the living room is set, controller decides who's first**/
         chooseFirstPlayer();
@@ -48,12 +51,14 @@ public class GameController {
 
     }
 
+
     // choose randomly a player and set is as the first one to play
     public void chooseFirstPlayer(){
         int curr = new Random().nextInt(numOfPlayers-1);
         this.currentPlayer = players.get(curr);
         //didn't the first player had a boolean like 'Chair'?
     }
+
 
     public void nextTurn(){
         int next = 0;
@@ -77,6 +82,12 @@ public class GameController {
         return ranking = ps.stream().sorted(Comparator.comparing(Player::getScore)).collect(Collectors.toList());
     }
 
+    public void startGame(LivingRoom board){
+        chooseFirstPlayer();
+        this.gameBoard = board;
+
+    }
+
     public void endGame(){
         //make one last round with the remaining players and then calculates score and shows the scoreboard
         calculateScore();
@@ -92,6 +103,71 @@ public class GameController {
             calcNow.setScore(scorePGC  + calcNow.getMyShelf().additionalPoints());
         }
         return 0;
+    }
+
+    /** Method generateCGC generates and returns an ArrayList containing CommonGoalCard objects
+     * Those will be the cards that will be used in the game
+     * First it generates 2 different random numbers from 0 to 11
+     * (inside the code it's from 0 to 12 because the upper bound is exclusive)
+     * Then it iterates for how many cards are needed and adds the cards to the ArrayList
+     */
+    public List<CommonGoalCard> generateCGC(int numOfPlayers){
+        List<CommonGoalCard> commonGoalCards = new ArrayList<>();
+        int numberOfCommonGoalCards = 2; // Change this number if you want to use more cards
+        int[] idsOfTheCards = new Random().ints(0, 12).distinct().limit(numberOfCommonGoalCards).toArray();
+
+        for ( int i = 0; i < numberOfCommonGoalCards; i++){
+            CommonGoalCard dummy = new CommonGoalCard(idsOfTheCards[i]);
+            commonGoalCards.add(dummy.typeGroupOrShape());
+        }
+        for ( CommonGoalCard card : commonGoalCards ) {
+            if ( numOfPlayers == 2 ){
+                card.getPoints().push(4);
+                card.getPoints().push(8);
+            } else if ( numOfPlayers == 3) {
+                card.getPoints().push(4);
+                card.getPoints().push(6);
+                card.getPoints().push(8);
+            } else if ( numOfPlayers == 4 ) {
+                card.getPoints().push(2);
+                card.getPoints().push(4);
+                card.getPoints().push(6);
+                card.getPoints().push(8);
+            }
+        }
+
+        return commonGoalCards;
+    }
+
+    /** Method generatePGC generates as many ints (all random and different) as there are players.
+     * Then it assigns a personal goal card to each player
+     * @param players - The Arraylist of players
+     */
+    public void generatePGC(ArrayList<Player> players){
+        int[] personalGoalCards = new Random().ints(1, 13).distinct().limit(players.size()).toArray();
+
+        for ( int i = 0; i < players.size() ; i++){
+            players.get(i).setGoalCard(personalGoalCards[i]);
+        }
+    }
+
+    public void setCurrentPlayer(Player currentPlayer) {
+        this.currentPlayer = currentPlayer;
+    }
+    public Player getCurrentPlayer(){
+        return this.currentPlayer;
+    }
+
+    public LivingRoom getGameBoard(){
+        return this.gameBoard;
+    }
+
+    public ArrayList<Player> getPlayers(){
+        return this.players;
+    }
+
+    public void setPlayersView(ArrayList<Player> players) {
+        this.players = players;
     }
     public int getGameId(){
         return this.gameId;
