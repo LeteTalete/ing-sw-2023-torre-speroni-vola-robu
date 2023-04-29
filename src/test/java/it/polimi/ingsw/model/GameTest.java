@@ -9,18 +9,17 @@ import java.util.List;
 
 public class GameTest {
 
-    // This tests if the list of CGC is correctly created
-    // It prints the parameters saved inside each card
+    /** Test generateCGCTest randomly chooses 2 CGCs from the 12 cards of the game and prints their parameters */
     @Test
-    public static void main( String[] args ) {
+    public void generateCGCTest() {
         GameController game = new GameController();
         assertNotNull(game);
         int i = 0;
         int j;
-        List<CommonGoalCard> commonGoalCards = game.generateCGC(4);
-        assertNotNull(commonGoalCards);
+        game.generateCGC(4);
+        assertNotNull(game.getCommonGoalCards());
 
-        for (CommonGoalCard card : commonGoalCards) {
+        for (CommonGoalCard card : game.getCommonGoalCards()) {
             j = 0;
             if ( card.getType().equals("Shape") ) {
 

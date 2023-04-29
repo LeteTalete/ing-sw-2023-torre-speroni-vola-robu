@@ -19,6 +19,7 @@ public class GameController {
     private ArrayList<Player> players;
     private int numOfPlayers;
     private LivingRoom gameBoard;
+    private List<CommonGoalCard> commonGoalCards;
     private static Player player;//what was this for?
     //constructor
     public GameController(ArrayList<Player> playersList, int id) {
@@ -112,8 +113,8 @@ public class GameController {
      * (inside the code it's from 0 to 12 because the upper bound is exclusive)
      * Then it iterates for how many cards are needed and adds the cards to the ArrayList
      */
-    public List<CommonGoalCard> generateCGC(int numOfPlayers){
-        List<CommonGoalCard> commonGoalCards = new ArrayList<>();
+    public void generateCGC(int numOfPlayers){
+        commonGoalCards = new ArrayList<>();
         int numberOfCommonGoalCards = 2; // Change this number if you want to use more cards
         int[] idsOfTheCards = new Random().ints(0, 12).distinct().limit(numberOfCommonGoalCards).toArray();
 
@@ -136,8 +137,6 @@ public class GameController {
                 card.getPoints().push(8);
             }
         }
-
-        return commonGoalCards;
     }
 
     /** Method generatePGC generates as many ints (all random and different) as there are players.
@@ -164,6 +163,7 @@ public class GameController {
     public LivingRoom getGameBoard(){
         return this.gameBoard;
     }
+    public List<CommonGoalCard> getCommonGoalCards() { return  this.commonGoalCards; }
 
     public ArrayList<Player> getPlayers(){
         return this.players;
