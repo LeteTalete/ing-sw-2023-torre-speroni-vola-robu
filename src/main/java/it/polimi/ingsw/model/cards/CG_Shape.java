@@ -93,6 +93,8 @@ public class CG_Shape extends CommonGoalCard {
         // When the flag is set to 1 a break is triggered to skip to the next couple
         // and restart the search for a 2x2 square.
 
+        int found = 0; // When the card requirements are met we set this flag to 1.
+
         T_Type tile = null; // Saves the current tile type that is going to be searched inside the shelf.
 
         Couple[][] shelfsMatrix = shelf.getShelfsMatrix();
@@ -133,8 +135,8 @@ public class CG_Shape extends CommonGoalCard {
 
                         // The first 2 for cycles identify a couple (let's call it coupleZero) which becomes the
                         // first piece of the shape described on the card.
-                        for (int i = 0; i < shelf.ROWS && cardsAlreadyChecked[this.ID] != 1; i++) {
-                            for (int j = 0; j < shelf.COLUMNS && cardsAlreadyChecked[this.ID] != 1; j++) {
+                        for (int i = 0; i < shelf.ROWS && found != 1; i++) {
+                            for (int j = 0; j < shelf.COLUMNS && found != 1; j++) {
                                 notFound = 0; // This flag is reset for every new couple allowing to restart the search.
                                 count = 0;
                                 if (!shelfsMatrix[i][j].getState().equals(State.EMPTY) && shelfsMatrix[i][j].getTile().getTileType().equals(tile)) {
@@ -255,11 +257,11 @@ public class CG_Shape extends CommonGoalCard {
 
                                             if (allOccPos.size() == this.numOfOccurrences) { // When inside allOccPos all
                                                 // the occurrences needed have been added it means the card requirements have been met
-                                                cardsAlreadyChecked[this.ID] = 1; // When the conditions are met we save this info.
+                                                found = 1; // When the conditions are met we save this info.
                                             }
 
                                         } else if (this.numOfOccurrences == 1) {
-                                            cardsAlreadyChecked[this.ID] = 1; // When the conditions are met we save this info.
+                                            found = 1; // When the conditions are met we save this info.
                                         }
                                     }
                                 }
@@ -282,7 +284,9 @@ public class CG_Shape extends CommonGoalCard {
             }
         }
 
-        if (cardsAlreadyChecked[this.ID] == 1) {
+        if ( found == 1 && cardsAlreadyChecked[this.ID] == 0 ) { // checkConditions returns 1 only when the card requirements
+            // are met for the first time.
+            cardsAlreadyChecked[this.ID] = 1;
             return 1;
         } else return 0;
     }

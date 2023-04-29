@@ -79,6 +79,7 @@ public class CG_Group extends CommonGoalCard {
         // inside the current column/row.
         int flag = 0; // // This flag is set to 1 when one of the couples inside the column/row has the same tile type
         // of one of the tile types in typesInside.
+        int found = 0; // When the card requirements are met we set this flag to 1.
         int count = 0; // Keeps track of all the columns/rows that have satisfied the card requirements.
         int notFull = 0; // When set to 1 it means that the current column/row has an empty tile, it triggers a break
         // to the next column/row.
@@ -164,15 +165,15 @@ public class CG_Group extends CommonGoalCard {
 
             if ( count >= this.numOfOccurrences ) { // If the number of columns/rows that satisfy the card requirements
                 // is equal or greater than the number required then we can conclude that the conditions have been met.
-                cardsAlreadyChecked[this.ID] = 1;
+                found = 1;
             }
         }
 
-        if (cardsAlreadyChecked[this.ID] ==  1 ){
+        if ( found == 1 && cardsAlreadyChecked[this.ID] == 0 ) { // checkConditions returns 1 only when the card requirements
+            // are met for the first time.
+            cardsAlreadyChecked[this.ID] = 1;
             return 1;
-        } else {
-            return 0;
-        }
+        } else return 0;
     }
 
     public String getType() {
