@@ -1,13 +1,20 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.controller.GameController;
+import it.polimi.ingsw.model.board.Shelf;
+import it.polimi.ingsw.model.cards.CG_Group;
+import it.polimi.ingsw.model.cards.CG_Shape;
 import it.polimi.ingsw.model.cards.CommonGoalCard;
+import it.polimi.ingsw.model.enumerations.T_Type;
+import it.polimi.ingsw.model.enumerations.Tile;
 import org.junit.jupiter.api.Test;
 import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class GameTest {
+public class GameControllerTest {
 
     /** Test generateCGCTest randomly chooses 2 CGCs from the 12 cards of the game and prints their parameters */
     @Test
@@ -94,7 +101,83 @@ public class GameTest {
                 System.out.println();
             }
         }
-
     }
+
+    @Test
+    public void calculateScoreTest(){
+
+        Shelf shelf = new Shelf();
+        ArrayList<Tile> tiles = new ArrayList<Tile>();
+
+        Player player = new Player();
+        player.setNickname("lalala");
+        player.setMyShelf(shelf);
+        player.setGoalCard(1);
+
+        List<CommonGoalCard> commonGoalCards = new ArrayList<>();
+        commonGoalCards.add(new CG_Shape(1));
+        commonGoalCards.add(new CG_Group(9));
+        for ( CommonGoalCard card : commonGoalCards ) {
+            card.getPoints().push(2);
+            card.getPoints().push(4);
+            card.getPoints().push(6);
+            card.getPoints().push(8);
+        }
+
+        tiles.add(new Tile(T_Type.PLANT,1));
+        tiles.add(new Tile(T_Type.FRAME,1));
+        tiles.add(new Tile(T_Type.FRAME,1));
+        tiles.add(new Tile(T_Type.FRAME,1));
+        tiles.add(new Tile(T_Type.PLANT,1));
+        tiles.add(new Tile(T_Type.PLANT,1));
+        player.getMyShelf().insertTiles(0, tiles);
+        tiles.clear();
+        tiles.add(new Tile(T_Type.TROPHY,1));
+        tiles.add(new Tile(T_Type.TROPHY,1));
+        tiles.add(new Tile(T_Type.GAMES,1));
+        tiles.add(new Tile(T_Type.FRAME,1));
+        tiles.add(new Tile(T_Type.PLANT,1));
+        tiles.add(new Tile(T_Type.PLANT,1));
+        player.getMyShelf().insertTiles(1, tiles);
+        tiles.clear();
+        tiles.add(new Tile(T_Type.TROPHY,1));
+        tiles.add(new Tile(T_Type.CAT,1));
+        tiles.add(new Tile(T_Type.GAMES,1));
+        tiles.add(new Tile(T_Type.PLANT,1));
+        tiles.add(new Tile(T_Type.PLANT,1));
+        player.getMyShelf().insertTiles(2, tiles);
+        tiles.clear();
+        tiles.add(new Tile(T_Type.CAT,1));
+        tiles.add(new Tile(T_Type.CAT,1));
+        tiles.add(new Tile(T_Type.GAMES,1));
+        tiles.add(new Tile(T_Type.PLANT,1));
+        tiles.add(new Tile(T_Type.PLANT,1));
+        player.getMyShelf().insertTiles(3, tiles);
+        tiles.clear();
+        tiles.add(new Tile(T_Type.PLANT,1));
+        tiles.add(new Tile(T_Type.CAT,1));
+        tiles.add(new Tile(T_Type.BOOK,1));
+        tiles.add(new Tile(T_Type.BOOK,1));
+        tiles.add(new Tile(T_Type.PLANT,1));
+        tiles.add(new Tile(T_Type.PLANT,1));
+        player.getMyShelf().insertTiles(4, tiles);
+        player.getMyShelf().printShelf();
+
+        for (CommonGoalCard card : commonGoalCards ) {
+            if ( card.checkConditions(player.getMyShelf()) == 1 ) {
+                int points = card.getPoints().pop();
+                player.setScore(points);
+                System.out.println(player.getNickname() + " has received " + points + " points from CGC " + card.getID());
+            }
+        }
+
+        player.setScore(player.getGoalCard().scorePersonalGoalCard(player.getMyShelf()));
+        System.out.println(player.getGoalCard().scorePersonalGoalCard(player.getMyShelf()));
+
+        player.setScore(player.getMyShelf().additionalPoints());
+
+        assertEquals(34,player.getScore());
+    }
+
 
 }
