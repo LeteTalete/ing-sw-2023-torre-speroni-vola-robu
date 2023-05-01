@@ -27,15 +27,13 @@ public class GameExample {
         }
 
         GameController game = new GameController(players, 0);
-        game.generateCGC(players.size());
-        game.generatePGC(game.getPlayers());
-        game.chooseFirstPlayer();
+        game.startGame();
         System.out.println("The first player will be: " + game.getCurrentPlayer().getNickname());
         System.out.println();
 
-        int end = 0;
+        int endGame = 0;
         int endTurn = 0;
-        while( end != players.size() - 1 ){
+        while( true ){
             System.out.println("The current player is: " + game.getCurrentPlayer().getNickname());
             System.out.println();
             endTurn = 0;
@@ -82,33 +80,43 @@ public class GameExample {
             }
 
             if ( game.getCurrentPlayer().getMyShelf().checkShelfFull() ){
-                end++;
-            } else if ( end != 0 ){
-                end++;
+                endGame = 1;
             }
 
             for (CommonGoalCard card : game.getCommonGoalCards() ) {
                 if ( card.checkConditions(game.getCurrentPlayer().getMyShelf()) == 1 ) {
-                    game.getCurrentPlayer().setScore(card.getPoints().pop());
+                    int points = card.getPoints().pop();
+                    game.getCurrentPlayer().setScore(points);
+                    System.out.println(game.getCurrentPlayer().getNickname() + " has received " + points + " points from CGC " + card.getID());
                 }
             }
 
-            game.nextTurn();
+            if ( game.getGameBoard().checkForRefill() ){
+                game.getGameBoard().refill();
+            }
+
+            if ( endGame == 1 && game.getPreviousPlayer().getChair() ){
+                break;
+            } else {
+                game.nextTurn();
+            }
+
             System.out.println();
             System.out.println();
         }
 
         System.out.println("Calculating scores...");
         game.calculateScore();
+        game.scoreBoard(game.getPlayers());
+        System.out.println();
         Player highestScore = game.getPlayers().get(0);
-        for ( Player player : game.getPlayers() ){
-            System.out.println( player.getNickname() + "'s score is: " + player.getScore());
-            if (player.getScore() > highestScore.getScore()) {
+        for ( Player player : game.getPlayers() ) {
+            if ( player.getScore() > highestScore.getScore() ){
                 highestScore = player;
             }
         }
-        System.out.println();
         System.out.println("The winner is: " + highestScore.getNickname());
+
     }
 
 }

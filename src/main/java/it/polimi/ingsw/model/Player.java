@@ -276,8 +276,12 @@ public class Player{
     public void setMyShelf(Shelf myShelf){
         this.shelf = myShelf;
     }
-
-
+    public void setChair() {
+        this.chair = true;
+    }
+    public boolean getChair() {
+        return this.chair;
+    }
     public int getScore (){
         return this.score;
     }

@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 
 public class GameController {
     private Player currentPlayer;
+    private Player previousPlayer;
     private int gameId;
     private static String ViewInterface;
     private static GameController game;
@@ -53,41 +54,44 @@ public class GameController {
 
     }
 
-
-    // choose randomly a player and set is as the first one to play
+    /** Method chooseFirstPlayer randomly chooses the first player and gives it the chair */
     public void chooseFirstPlayer(){
-        int curr = new Random().nextInt(numOfPlayers);
-        this.currentPlayer = players.get(curr);
-        //didn't the first player had a boolean like 'Chair'?
+        this.currentPlayer = players.get(new Random().nextInt(numOfPlayers));
+        this.currentPlayer.setChair();
     }
 
-
+    /** Method nextTurn passes to the next turn by saving the current player in previousPlayer and then
+     *  changing currentPlayer to the next one on the list
+     *  If the current player is the last on the list then it starts back from the first */
     public void nextTurn(){
         int next = 0;
-        for(int i = 0; i < numOfPlayers + 1; i++)
-        {
-            if(players.get(i).equals(currentPlayer))
-            {
+        for(int i = 0; i < numOfPlayers; i++) {
+            if(players.get(i).equals(currentPlayer)) {
                 next = i + 1;
                 break;
             }
         }
-        if(next > numOfPlayers)
-        {
+        if(next == numOfPlayers) {
             next = 0;
         }
+        previousPlayer = currentPlayer;
         currentPlayer = players.get(next);
     }
 
-    public List<Player> scoreBoard(ArrayList<Player> ps){
-        List<Player> ranking = new ArrayList<Player>();
-        return ranking = ps.stream().sorted(Comparator.comparing(Player::getScore)).collect(Collectors.toList());
+    /** Method scoreBoard ranks in descending order the players by their scores and then prints them */
+    public void scoreBoard(ArrayList<Player> ps){
+        List<Player> ranking;
+        ranking = ps.stream().sorted(Comparator.comparing(Player::getScore).reversed()).collect(Collectors.toList());
+        for ( Player player : ranking ){
+            System.out.println( player.getNickname() + "'s score is: " + player.getScore());
+        }
     }
 
-    public void startGame(LivingRoom board){
+    /** Method startGame initializes CGCs, PGCs and chooses the first player */
+    public void startGame(){
+        generateCGC(players.size());
+        generatePGC(players);
         chooseFirstPlayer();
-        this.gameBoard = board;
-
     }
 
     public void endGame(){
@@ -96,15 +100,11 @@ public class GameController {
         scoreBoard(players);
     }
 
-    public int calculateScore(){
-
-        for(int i=0; i<numOfPlayers; i++)
-        {
-            Player calcNow = players.get(i);
-            int scorePGC = calcNow.getGoalCard().scorePersonalGoalCard(calcNow.getMyShelf());
-            calcNow.setScore(scorePGC  + calcNow.getMyShelf().additionalPoints());
+    /** Method calculateScore calculates the score of each player at the end of the game */
+    public void calculateScore(){
+        for ( Player player : players ){
+            player.setScore(player.getMyShelf().additionalPoints() + player.getGoalCard().scorePersonalGoalCard(player.getMyShelf()));
         }
-        return 0;
     }
 
     /** Method generateCGC generates and returns an ArrayList containing CommonGoalCard objects
@@ -156,6 +156,13 @@ public class GameController {
     }
     public Player getCurrentPlayer(){
         return this.currentPlayer;
+    }
+
+    public void setPreviousPlayer(Player previousPlayerPlayer) {
+        this.previousPlayer = currentPlayer;
+    }
+    public Player getPreviousPlayer(){
+        return this.previousPlayer;
     }
     public void setNumOfPlayers(int num){
         this.numOfPlayers = num;

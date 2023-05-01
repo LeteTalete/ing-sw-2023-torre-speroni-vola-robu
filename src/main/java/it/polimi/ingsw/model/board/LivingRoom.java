@@ -22,6 +22,7 @@ import java.util.List;
 
 public class LivingRoom {
     private Couple[][] board;
+    private Deck deck;
 
     public Couple getCouple(Position p) {
         return board[p.getX()][p.getY()];
@@ -36,6 +37,7 @@ public class LivingRoom {
         board[p.getX()][p.getY()].setTile(t);
         board[p.getX()][p.getY()].setState(s);
     }
+    public Deck getDeck() { return this.deck; }
 
     public boolean checkPlayerChoice(ArrayList<Position> choice)
     {
@@ -206,7 +208,7 @@ public class LivingRoom {
         }
     }
 
-    public void refill(Deck d)
+    public void refill()
     {
         //this method refills the board in this way:
         //iterates the Couple matrix, if the state is EMPTY it draw a tile form the deck and puts it in the couple,
@@ -215,9 +217,9 @@ public class LivingRoom {
         {
             for(int j=0;j<this.board[i].length;j++)
             {
-                if((this.board[i][j].getState() == State.EMPTY) && (d.getSize() > 0))
+                if((this.board[i][j].getState() == State.EMPTY) && (deck.getSize() > 0))
                 {
-                    this.board[i][j].setTile(d.draw());
+                    this.board[i][j].setTile(deck.draw());
                     this.board[i][j].setState(State.PICKABLE);
                 }
             }
@@ -233,7 +235,7 @@ public class LivingRoom {
             int[][] jsonMatrixCopy = mapper.convertValue(rootNode.get("LivingRoomBoardJSON"), int[][].class);
 
             this.board = new Couple[jsonMatrixCopy.length][jsonMatrixCopy[0].length];
-            Deck deck = new Deck();
+            deck = new Deck();
             int emptyUnusableCheck;
 
             for (int i = 0; i < jsonMatrixCopy.length; i++) {
