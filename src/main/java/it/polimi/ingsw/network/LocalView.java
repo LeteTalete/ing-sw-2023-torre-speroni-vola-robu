@@ -37,7 +37,12 @@ public class LocalView implements Serializable {
         return number;
     }
 
-    public void sendNotification(String gameStart) {
-        viewListener.notification(gameStart);
+    public void sendNotification(String message){
+        try {
+            viewListener.sendNotification(message);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
     }
+
 }

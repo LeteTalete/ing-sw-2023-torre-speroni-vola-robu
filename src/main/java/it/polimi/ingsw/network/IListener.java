@@ -7,5 +7,5 @@ import java.rmi.RemoteException;
 public interface IListener extends Remote, Serializable {
     void processLogin(String result) throws RemoteException;
     int askHowMany() throws RemoteException;
-    void notification(String gameStart);
+    void sendNotification(String message) throws RemoteException;
 }

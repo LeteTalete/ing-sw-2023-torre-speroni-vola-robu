@@ -24,7 +24,8 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IListener 
     }
 
     @Override
-    public void notification(String gameStart) {
-        view.displayNotification(gameStart);
+    public void sendNotification(String message) throws RemoteException {
+        view.displayNotification(message);
     }
+
 }
