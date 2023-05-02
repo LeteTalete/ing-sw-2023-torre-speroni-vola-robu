@@ -41,14 +41,11 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
                 System.out.println("i deleted the waiting room "+waitingRoom.getId()+" and started the game!");
                 System.out.println("there are currently "+activeGames.size()+" games active!");
                 //now we need to notify all the players that the game is about to start
-                List<String> list = activeUsers.entrySet()
+                activeUsers.entrySet()
                         .stream()
-                        .filter(e -> e.getValue(waitingRoom.getId()))
-                        .map(Map.Entry::getKey)
-                        .collect(Collectors.toList());
-                for(String l : list) {
-                    ConnectionManager.get().getLocalView(l).sendNotification(StaticStrings.GAME_START);
-                }
+                        .filter(e -> e.getValue().equals(waitingRoom.getId()))
+                        .forEach(e -> ConnectionManager.get().getLocalView(e.getKey()).sendNotification(StaticStrings.GAME_START));
+
                 game.main();
                 waitingRoom=null;
                 return enoughPLayers;
