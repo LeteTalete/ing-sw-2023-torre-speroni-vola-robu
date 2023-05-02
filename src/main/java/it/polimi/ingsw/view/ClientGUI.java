@@ -1,8 +1,11 @@
 package it.polimi.ingsw.view;
 
 import it.polimi.ingsw.model.enumerations.Couple;
+import it.polimi.ingsw.network.IListener;
 import it.polimi.ingsw.structures.LivingRoomView;
 import it.polimi.ingsw.structures.ShelfView;
+
+import java.rmi.RemoteException;
 
 public class ClientGUI implements View {
     @Override
@@ -52,6 +55,17 @@ public class ClientGUI implements View {
 
     @Override
     public void showSlotTile(Couple tile) {
+
+    }
+
+    @Override
+    public IListener getListener() {
+        return null;
+    }
+
+
+    @Override
+    public void printError(String message) {
 
     }
 

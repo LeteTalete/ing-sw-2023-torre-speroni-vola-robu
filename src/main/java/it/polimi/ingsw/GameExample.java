@@ -26,7 +26,7 @@ public class GameExample {
             players.add(player);
         }
 
-        GameController game = new GameController(players, 0);
+        GameController game = new GameController(players, "0");
         game.startGame();
         System.out.println("The first player will be: " + game.getCurrentPlayer().getNickname());
         System.out.println();

@@ -1,6 +1,6 @@
 package it.polimi.ingsw;
 
-import it.polimi.ingsw.client.ClientHandler;
+import it.polimi.ingsw.client.ClientController;
 import it.polimi.ingsw.view.ClientGUI;
 import it.polimi.ingsw.view.ClientTUI;
 import it.polimi.ingsw.view.View;
@@ -9,18 +9,22 @@ import java.util.Scanner;
 import java.lang.String;
 
 public class ClientExecutable {
-    private static ClientHandler client;
+    private static ClientController clientController;
     private static View clientView;
-
+//we need to write the ip of the server as an argument each time we launch the game
+    //or we can use java properties
     public static void main(String[] args) {
         String interfaceC = interfaceChoice();
         //if it's equal to GUI then we start the GUI
+
         if(interfaceC.equals("GUI")){
             clientView = new ClientGUI();
         }else {
             clientView = new ClientTUI();
         }
-        client = new ClientHandler(clientView);
+        //client executable will run an instance of ClientRMI or ClientSocket
+        //accordingly to the preferred connection
+        clientController = new ClientController(clientView);
     }
 
 

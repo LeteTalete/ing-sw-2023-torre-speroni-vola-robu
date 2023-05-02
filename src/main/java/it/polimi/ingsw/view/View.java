@@ -1,8 +1,11 @@
 package it.polimi.ingsw.view;
 
 import it.polimi.ingsw.model.enumerations.Couple;
+import it.polimi.ingsw.network.IListener;
 import it.polimi.ingsw.structures.LivingRoomView;
 import it.polimi.ingsw.structures.ShelfView;
+
+import java.rmi.RemoteException;
 
 public interface View {
     void chooseConnection();
@@ -20,4 +23,7 @@ public interface View {
     void showPersonalGoalCard();
     void showSlotTile(Couple tile);
 
+    IListener getListener();
+
+    void printError(String message);
 }

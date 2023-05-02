@@ -4,6 +4,7 @@ import it.polimi.ingsw.model.board.LivingRoom;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.cards.CommonGoalCard;
 import it.polimi.ingsw.model.cards.PersonalGoalCard;
+import it.polimi.ingsw.model.enumerations.Tile;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -14,7 +15,7 @@ import java.util.stream.Collectors;
 public class GameController {
     private Player currentPlayer;
     private Player previousPlayer;
-    private int gameId;
+    private String gameId;
     private static String ViewInterface;
     private static GameController game;
     private ArrayList<Player> players;
@@ -23,7 +24,7 @@ public class GameController {
     private List<CommonGoalCard> commonGoalCards;
     private static Player player;//what was this for?
     //constructor
-    public GameController(ArrayList<Player> playersList, int id) {
+    public GameController(ArrayList<Player> playersList, String id) {
         players = playersList;
         numOfPlayers = players.size();
         gameId = id;
@@ -179,7 +180,16 @@ public class GameController {
     public void setPlayersView(ArrayList<Player> players) {
         this.players = players;
     }
-    public int getGameId(){
+    public String getGameId(){
         return this.gameId;
+    }
+
+    public String chooseTiles(List<Tile> tilesChosen) {
+        //it will do something, I guess
+        return null;
+    }
+
+    public String placeTilesOnShelf(List<Tile> tilesChosen, int column) {
+        return null;
     }
 }

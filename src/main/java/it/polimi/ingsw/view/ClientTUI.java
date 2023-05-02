@@ -3,13 +3,17 @@ package it.polimi.ingsw.view;
 import it.polimi.ingsw.model.enumerations.Couple;
 import it.polimi.ingsw.model.enumerations.State;
 import it.polimi.ingsw.model.enumerations.T_Type;
+import it.polimi.ingsw.network.ClientListenerTUI;
+import it.polimi.ingsw.network.IListener;
 import it.polimi.ingsw.structures.LivingRoomView;
 import it.polimi.ingsw.structures.ShelfView;
+
+import java.rmi.RemoteException;
 import java.util.*;
 
 
 public class ClientTUI implements View{
-
+    private IListener listenerClient;
     static final String colorRESET = "\033[0m";  // Reset Changes
     static final String colorTileG = "\033[1;51;30;48;5;214m"; //Orange
     static final String colorTileC = "\033[1;51;30;48;5;10m"; //Green
@@ -25,6 +29,11 @@ public class ClientTUI implements View{
     //constructor
     public ClientTUI(){
         setupStdInput();
+        try {
+            this.listenerClient = new ClientListenerTUI(this);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
     }
     //this one is to read from keyboard input
     private Scanner frominput;
@@ -243,6 +252,17 @@ public class ClientTUI implements View{
             printString(" ", sizeSlotTile);
         }
     }
+
+    @Override
+    public IListener getListener() {
+        return listenerClient;
+    }
+
+    @Override
+    public void printError(String message) {
+
+    }
+
     private void printColorTile(String typeTile){
         if(typeTile == "G") {
             printString(colorTileG + " G " + colorRESET );
@@ -260,4 +280,5 @@ public class ClientTUI implements View{
             printString(" ", sizeSlotTile);
         }
     }
+
 }

@@ -5,13 +5,13 @@ import it.polimi.ingsw.model.Player;
 import java.util.ArrayList;
 
 public class WaitingRoom {
-    private int id;
+    private String id;
     private int playersWaiting;
     private int maxPLayers;
     private ArrayList<Player> players;
     //constructor
     public WaitingRoom(int identifier, int max_players){
-        this.id = identifier;
+        this.id = "room-" + identifier;
         this.playersWaiting = 0;
         players = new ArrayList<Player>();
         this.maxPLayers = max_players;
@@ -29,12 +29,12 @@ public class WaitingRoom {
         if(playersWaiting==maxPLayers)
         {
             System.out.println("ready to play!");
-            return "Ready";
+            return StaticStrings.GAME_START;
         }
-        return "Waiting";
+        return StaticStrings.GAME_WAITING;
     }
 
-    public int getId(){
+    public String getId(){
         return this.id;
     }
 
