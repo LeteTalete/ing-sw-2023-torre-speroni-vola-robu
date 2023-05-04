@@ -5,6 +5,7 @@
     "numOfOccurrences": 1,
     "diffType": 0,
     "stairs": 0,
+    "description": "Five tiles of the same type forming a diagonal.",
     "coordinates": [
       [
         {"x": 0, "y": 0},
@@ -28,6 +29,7 @@
     "numOfOccurrences": 1,
     "diffType": 0,
     "stairs": 0,
+    "description": "Four tiles of the same type in the four corners of the bookshelf.",
     "coordinates": [
       [
         {"x": 0, "y": 0},
@@ -43,6 +45,7 @@
     "numOfOccurrences": 2,
     "diffType": 0,
     "stairs": 0,
+    "description": "Two groups each containing 4 tiles of the same type in a 2x2 square.\nThe tiles of one square can be different from those of the other square.",
     "coordinates": [
       [
         {"x": 0, "y": 0},
@@ -58,6 +61,7 @@
     "numOfOccurrences": 1,
     "diffType": 0,
     "stairs": 0,
+    "description": "Five tiles of the same type forming an X.",
     "coordinates": [
       [
         {"x": 0, "y": 0},
@@ -74,6 +78,7 @@
     "numOfOccurrences": 1,
     "diffType": 0,
     "stairs": 1,
+    "description": "Five columns of increasing or decreasing height. Starting from the first column on the left or on the right,\neach next column must be made of exactly one more tile. Tiles can be of any type.",
     "coordinates": [
       [
         {"x": 0, "y": 0},
@@ -97,6 +102,7 @@
     "numOfOccurrences": 6,
     "diffType": 1,
     "stairs": 0,
+    "description": "Six groups each containing at least 2 tiles of the same type (not necessarily in the depicted shape).\nThe tiles of one group can be different from those of another group.",
     "coordinates": [
       [
         {"x": 0, "y": 0},
@@ -114,6 +120,7 @@
     "numOfOccurrences": 4,
     "diffType": 1,
     "stairs": 0,
+    "description": "Four groups each containing at least 4 tiles of the same type (not necessarily in the depicted shape).\nThe tiles of one group can be different from those of another group.",
     "coordinates": [
       [
         {"x": 0, "y": 0},
@@ -135,6 +142,7 @@
     "numOfOccurrences": 8,
     "diffType": 0,
     "stairs": 0,
+    "description": "Eight tiles of the same type. There’s no restriction about the position of these tiles.",
     "coordinates": [
       [
         {"x": 0, "y": 0}
@@ -147,7 +155,8 @@
     "numOfOccurrences": 3,
     "diffUpTo": 3,
     "vertical": 1,
-    "horizontal": 0
+    "horizontal": 0,
+    "description": "Three columns each formed by 6 tiles of maximum three different types.\nOne column can show the same or a different combination of another column."
   },
   {
     "id": 9,
@@ -155,7 +164,8 @@
     "numOfOccurrences": 4,
     "diffUpTo": 3,
     "vertical": 0,
-    "horizontal": 1
+    "horizontal": 1,
+    "description": "Four lines each formed by 5 tiles of maximum three different types.\nOne line can show the same or a different combination of another line."
   },
   {
     "id": 10,
@@ -163,7 +173,8 @@
     "numOfOccurrences": 2,
     "diffUpTo": 0,
     "vertical": 1,
-    "horizontal": 0
+    "horizontal": 0,
+    "description": "Two columns each formed by 6 different types of tiles."
   },  
   {
     "id": 11,
@@ -171,6 +182,7 @@
     "numOfOccurrences": 2,
     "diffUpTo": 0,
     "vertical": 0,
-    "horizontal": 1
+    "horizontal": 1,
+    "description": "Two lines each formed by 5 different types of tiles.\nOne line can show the same or a different combination of the other line."
   }
 ]

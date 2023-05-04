@@ -6,13 +6,14 @@ import it.polimi.ingsw.model.enumerations.State;
 import it.polimi.ingsw.model.enumerations.Tile;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Shelf {
     public static final int ROWS = 6;
     public static final int COLUMNS = 5;
     private Couple[][] shelfsMatrix;
     private int freeSlots[];
-    private int[] cardsAlreadyChecked;
+    private List<Integer> cardsAlreadyChecked;
 
     /**this method inserts the chosen tiles into the player's shelf.
     the first tile to be inserted is at the end of the list, while the last tile to be inserted
@@ -196,7 +197,7 @@ public class Shelf {
         return this.shelfsMatrix;
     }
 
-    public int[] getCardsAlreadyChecked(){
+    public List<Integer> getCardsAlreadyChecked(){
         return this.cardsAlreadyChecked;
     }
 
@@ -249,7 +250,7 @@ public class Shelf {
 
     public Shelf(){
         this.shelfsMatrix = new Couple[ROWS][COLUMNS];
-        this.cardsAlreadyChecked = new int[12];
+        this.cardsAlreadyChecked = new ArrayList<>();
         for(int i = 0; i<ROWS; i++) {
             for(int j=0; j<COLUMNS; j++) {
                 this.shelfsMatrix[i][j] = new Couple();

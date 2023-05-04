@@ -14,6 +14,7 @@ import java.util.Stack;
 
 public class CommonGoalCard extends GoalCard {
     private int ID;
+    private String description;
     private Stack<Integer> points;
 
 
@@ -89,4 +90,8 @@ public class CommonGoalCard extends GoalCard {
     public int getDiffUpTo() { return 0;}
     public int getHorizontal() { return 0;}
     public int getVertical() { return 0;}
+
+    public String getDescription() {
+        return null;
+    }
 }
