@@ -5,6 +5,7 @@ import it.polimi.ingsw.model.enumerations.State;
 import it.polimi.ingsw.model.enumerations.T_Type;
 import it.polimi.ingsw.network.ClientListenerTUI;
 import it.polimi.ingsw.network.IListener;
+import it.polimi.ingsw.stati.Status;
 import it.polimi.ingsw.structures.LivingRoomView;
 import it.polimi.ingsw.structures.ShelfView;
 
@@ -78,11 +79,20 @@ public class ClientTUI implements View{
     public void displayNotification(String message) {
         writeText(message);
     }
+    //gamerstatus has a status as an argument
+    @Override
+    public void GamerStatus(Status current) {
+
+    }
 
     @Override
     public int askAmountOfPlayers() {
-        writeText("Insert number of players (from 2 to 4)");
-        return frominput.nextInt();
+        int number = 0;
+        while(number==0 || number > 4){
+            writeText("Insert number of players (from 2 to 4)");
+            number = frominput.nextInt();
+        }
+        return number;
     }
 
     public void startGame(){

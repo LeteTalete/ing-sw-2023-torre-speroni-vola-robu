@@ -2,6 +2,7 @@ package it.polimi.ingsw.view;
 
 import it.polimi.ingsw.model.enumerations.Couple;
 import it.polimi.ingsw.network.IListener;
+import it.polimi.ingsw.stati.Status;
 import it.polimi.ingsw.structures.LivingRoomView;
 import it.polimi.ingsw.structures.ShelfView;
 
@@ -25,6 +26,11 @@ public class ClientGUI implements View {
 
     @Override
     public void displayNotification(String message) {
+
+    }
+
+    @Override
+    public void GamerStatus(Status current) {
 
     }
 

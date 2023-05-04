@@ -76,7 +76,6 @@ public class GameExample {
                         }
                     }
                 }
-
             }
 
             if ( game.getCurrentPlayer().getMyShelf().checkShelfFull() ){

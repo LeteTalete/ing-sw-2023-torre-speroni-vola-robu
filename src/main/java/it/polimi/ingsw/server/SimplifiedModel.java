@@ -1,17 +1,18 @@
-package it.polimi.ingsw.network;
+package it.polimi.ingsw.server;
 
+import it.polimi.ingsw.network.IListener;
 import it.polimi.ingsw.server.ConnectionManager;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
 
 //proxy pattern
-public class LocalView implements Serializable {
+public class SimplifiedModel implements Serializable {
     private final ConnectionManager connectionManager;
     private final IListener viewListener;
     private final String username;
 
-    public LocalView(IListener viewL, String name){
+    public SimplifiedModel(IListener viewL, String name){
         this.connectionManager = ConnectionManager.get();
         this.viewListener = viewL;
         this.username = name;

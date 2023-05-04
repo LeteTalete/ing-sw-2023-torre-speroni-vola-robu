@@ -8,7 +8,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 
-public class ClientRMI implements IClient, Remote, Serializable {
+public class ClientRMI implements IClientConnection, Remote, Serializable {
     private ClientController master;
     private final IRemoteController remoteController;
     private View viewClient;

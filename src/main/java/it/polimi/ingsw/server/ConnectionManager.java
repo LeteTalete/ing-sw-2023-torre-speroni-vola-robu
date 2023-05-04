@@ -1,7 +1,6 @@
 package it.polimi.ingsw.server;
 
 import it.polimi.ingsw.network.IListener;
-import it.polimi.ingsw.network.LocalView;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -14,7 +13,7 @@ public class ConnectionManager implements Serializable {
     //a client's username as a key. The servercontroller will have a map with clients' username as keys and the
     //number of their "room" (i.e. the game controller for their game) as values
     Map<String, IListener> viewListenerMap = new HashMap<>();
-    private Map<String, LocalView> clientLocals = new HashMap<>();
+    private Map<String, SimplifiedModel> clientLocals = new HashMap<>();
     private ConnectionManager(){
 
     }
@@ -29,12 +28,12 @@ public class ConnectionManager implements Serializable {
         if(viewListenerMap.get(name)==null)
         {
             viewListenerMap.put(name, viewListener);
-            clientLocals.put(name, new LocalView(viewListener, name));
+            clientLocals.put(name, new SimplifiedModel(viewListener, name));
             return StaticStrings.LOGIN_OK_NEW_ROOM;
         }
         return StaticStrings.LOGIN_KO;
     }
-    synchronized LocalView getLocalView(String username){
+    synchronized SimplifiedModel getLocalView(String username){
         return clientLocals.get(username);
     }
 }

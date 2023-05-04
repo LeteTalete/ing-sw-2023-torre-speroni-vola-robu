@@ -2,6 +2,7 @@ package it.polimi.ingsw.view;
 
 import it.polimi.ingsw.model.enumerations.Couple;
 import it.polimi.ingsw.network.IListener;
+import it.polimi.ingsw.stati.Status;
 import it.polimi.ingsw.structures.LivingRoomView;
 import it.polimi.ingsw.structures.ShelfView;
 
@@ -12,6 +13,7 @@ public interface View {
     String getConnectionType();
     String getUsername();
     void displayNotification(String message);
+    void GamerStatus(Status current);
     int askAmountOfPlayers();
     //choose tiles from board
     //reorder tiles

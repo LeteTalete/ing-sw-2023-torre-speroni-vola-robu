@@ -8,7 +8,6 @@ import it.polimi.ingsw.network.IRemoteController;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class ServerManager extends UnicastRemoteObject implements IRemoteController {
     private Map<String, GameController> activeGames;
@@ -32,6 +31,7 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
         }
         else{
             String enoughPLayers = waitingRoom.addPlayerToWaitingRoom(name);
+            activeUsers.put(name,waitingRoom.getId());
             System.out.println("Added user "+ name + " to waiting room "+waitingRoom.getId()+" successfully!");
             if(enoughPLayers.equals(StaticStrings.GAME_START)){
                 //i have to create the players when creating the game
@@ -70,16 +70,6 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
         //if the game is shut down, the server will notify all the players about it
     }
 
-    public synchronized String chooseTiles(List<Tile> tilesChosen, String name) {
-        String gameId = activeUsers.get(name);
-        return activeGames.get(gameId).chooseTiles(tilesChosen);
-    }
-
-    public synchronized String placeTilesOnShelf(List<Tile> tilesChosen, int column, String name) {
-        String gameId = activeUsers.get(name);
-        return activeGames.get(gameId).placeTilesOnShelf(tilesChosen, column);
-    }
-
     @Override
     public String login(String name, IListener viewListener) throws RemoteException {
         String success = ConnectionManager.get().addClientView(name, viewListener);
@@ -94,8 +84,26 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
             activeUsers.put(name, response);
             return StaticStrings.LOGIN_OK_NEW_ROOM;
         }
-        activeUsers.put(name,response);
+        if(response.equals(StaticStrings.GAME_START))
+        {
+            return response;
+        }
         return StaticStrings.WAITING_4_START;
+    }
+
+    @Override
+    public void pickedTiles(String username, String tilesCoordinates) throws RemoteException {
+
+    }
+
+    @Override
+    public void rearrangeTiles(String username, String tilesOrdered) throws RemoteException {
+
+    }
+
+    @Override
+    public void selectColumn(String username, int column) throws RemoteException {
+
     }
 
 }

@@ -12,7 +12,7 @@ import java.rmi.registry.Registry;
 public class ClientController {
     private View currentView;
     private String username;
-    private ClientRMI currentConnection;
+    private IClientConnection currentConnection;
     private IListener listenerClient;
     private Registry registry;
     private IRemoteController remoteController;
@@ -46,7 +46,9 @@ public class ClientController {
             this.currentConnection = clientRMI;
             clientRMI.setViewClient(currentView);
             String LoginSuccess = userLogin();
-            System.out.println(LoginSuccess);
+            if(LoginSuccess.equals(StaticStrings.LOGIN_OK_NEW_ROOM)){
+                System.out.println(StaticStrings.LOGIN_OK_NEW_ROOM);
+            }
         }catch(Exception e){
             return e.toString();
         }
