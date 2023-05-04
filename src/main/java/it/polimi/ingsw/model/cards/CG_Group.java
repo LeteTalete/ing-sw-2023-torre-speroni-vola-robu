@@ -25,6 +25,7 @@ public class CG_Group extends CommonGoalCard {
     private int diffUpTo;
     private int horizontal;
     private int vertical;
+    private String description;
 
     /** The constructor given the card ID as a parameter retrieves the card's type from the json
      * file "CommonGoalCards.json"
@@ -49,6 +50,7 @@ public class CG_Group extends CommonGoalCard {
                     this.diffUpTo = cardNode.get("diffUpTo").asInt();
                     this.horizontal = cardNode.get("horizontal").asInt();
                     this.vertical = cardNode.get("vertical").asInt();
+                    this.description = cardNode.get("description").asText();
                     this.points = new Stack<>();
                     break;
                 }
@@ -73,7 +75,7 @@ public class CG_Group extends CommonGoalCard {
     public int checkConditions(Shelf shelf){
 
         Couple[][] shelfsMatrix = shelf.getShelfsMatrix();
-        int[] cardsAlreadyChecked = shelf.getCardsAlreadyChecked(); // This array keeps track of all the cards which
+        List<Integer> cardsAlreadyChecked = shelf.getCardsAlreadyChecked(); // This array keeps track of all the cards which
         // conditions have already been met inside the player's shelf.
         List<T_Type> typesInside = new ArrayList<>(); // This list keeps track of all the tile types that have been found
         // inside the current column/row.
@@ -84,7 +86,7 @@ public class CG_Group extends CommonGoalCard {
         int notFull = 0; // When set to 1 it means that the current column/row has an empty tile, it triggers a break
         // to the next column/row.
 
-        if ( cardsAlreadyChecked[this.ID] != 1 ) {
+        if ( !cardsAlreadyChecked.contains(this.ID) ) {
 
             if (this.vertical == 1) {
                 for (int i = 0; i < shelf.COLUMNS; i++) {
@@ -169,9 +171,9 @@ public class CG_Group extends CommonGoalCard {
             }
         }
 
-        if ( found == 1 && cardsAlreadyChecked[this.ID] == 0 ) { // checkConditions returns 1 only when the card requirements
+        if ( found == 1 && !cardsAlreadyChecked.contains(this.ID) ) { // checkConditions returns 1 only when the card requirements
             // are met for the first time.
-            cardsAlreadyChecked[this.ID] = 1;
+            cardsAlreadyChecked.add(this.ID);
             return 1;
         } else return 0;
     }
@@ -192,4 +194,7 @@ public class CG_Group extends CommonGoalCard {
     public int getDiffUpTo() { return this.diffUpTo;}
     public int getHorizontal() { return this.horizontal;}
     public int getVertical() { return this.vertical;}
+    public String getDescription() {
+        return this.description;
+    }
 }

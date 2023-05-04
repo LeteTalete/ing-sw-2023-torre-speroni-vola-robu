@@ -22,6 +22,7 @@ public class CG_Shape extends CommonGoalCard {
     private int numOfOccurrences;
     private int diffType;
     private int stairs;
+    private String description;
 
     /** Constructor for CG_Shape saves the CGC parameters given the card ID
      * id - Card ID used to identify the card
@@ -52,7 +53,7 @@ public class CG_Shape extends CommonGoalCard {
                     this.numOfOccurrences = cardNode.get("numOfOccurrences").asInt();
                     this.diffType = cardNode.get("diffType").asInt();
                     this.stairs = cardNode.get("stairs").asInt();
-
+                    this.description = cardNode.get("description").asText();
 
                     JsonNode allShapes = cardNode.get("coordinates");
                     for (JsonNode singleShape : allShapes ) {
@@ -98,7 +99,7 @@ public class CG_Shape extends CommonGoalCard {
         T_Type tile = null; // Saves the current tile type that is going to be searched inside the shelf.
 
         Couple[][] shelfsMatrix = shelf.getShelfsMatrix();
-        int[] cardsAlreadyChecked = shelf.getCardsAlreadyChecked(); // This array keeps track of all the cards which
+        List<Integer> cardsAlreadyChecked = shelf.getCardsAlreadyChecked(); // This array keeps track of all the cards which
         // conditions have already been met inside the player's shelf.
 
         List<List<Position>> allOccPos = new ArrayList<>(); // allOccPos is a list where each element is a collection
@@ -115,7 +116,7 @@ public class CG_Shape extends CommonGoalCard {
         // If the position is already inside then we increment count, we do the same for all positions of the current shape found
         // Relevant values: 0 and 1.
 
-        if (cardsAlreadyChecked[this.ID] != 1) { // When set to 1 the check is skipped.
+        if ( !cardsAlreadyChecked.contains(this.ID) ) { // When set to 1 the check is skipped.
 
 
             for (List<Position> singleShape : this.positions) { // Some cards might be mirrored or even rotated by 90°
@@ -284,9 +285,9 @@ public class CG_Shape extends CommonGoalCard {
             }
         }
 
-        if ( found == 1 && cardsAlreadyChecked[this.ID] == 0 ) { // checkConditions returns 1 only when the card requirements
+        if ( found == 1 && !cardsAlreadyChecked.contains(this.ID) ) { // checkConditions returns 1 only when the card requirements
             // are met for the first time.
-            cardsAlreadyChecked[this.ID] = 1;
+            cardsAlreadyChecked.add(this.ID);
             return 1;
         } else return 0;
     }
@@ -312,5 +313,8 @@ public class CG_Shape extends CommonGoalCard {
     }
     public int getNumOfOccurrences() {
         return this.numOfOccurrences;
+    }
+    public String getDescription() {
+        return description;
     }
 }

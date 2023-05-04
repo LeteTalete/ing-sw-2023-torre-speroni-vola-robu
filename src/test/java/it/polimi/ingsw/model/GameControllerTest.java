@@ -42,6 +42,8 @@ public class GameControllerTest {
                 System.out.println("Different type: " + card.getDiffType());
                 assertNotNull(card.getStairs());
                 System.out.println("Stairs: " + card.getStairs());
+                assertNotNull(card.getDescription());
+                System.out.println("Description: " + card.getDescription());
 
                 System.out.println("All card's shapes: ");
                 for (List<Position> currentShape : card.getPositions()) {
@@ -84,6 +86,8 @@ public class GameControllerTest {
                 System.out.println("Vertical: " + card.getVertical());
                 assertNotNull(card.getHorizontal());
                 System.out.println("Horizontal: " + card.getHorizontal());
+                assertNotNull(card.getDescription());
+                System.out.println("Description: " + card.getDescription());
                 assertEquals(2, card.getPoints().get(0).intValue());
                 assertEquals(4, card.getPoints().get(1).intValue());
                 assertEquals(6, card.getPoints().get(2).intValue());
@@ -171,12 +175,10 @@ public class GameControllerTest {
             }
         }
 
-        player.setScore(player.getGoalCard().scorePersonalGoalCard(player.getMyShelf()));
-        System.out.println(player.getGoalCard().scorePersonalGoalCard(player.getMyShelf()));
-
-        player.setScore(player.getMyShelf().additionalPoints());
-
-        assertEquals(34,player.getScore());
+        player.setScore(player.getGoalCard().scorePersonalGoalCard(player.getMyShelf()) + player.getMyShelf().additionalPoints());
+        System.out.println("Final score: " + player.getScore());
+        System.out.println("\n");
+        assertEquals(38,player.getScore());
     }
 
 
