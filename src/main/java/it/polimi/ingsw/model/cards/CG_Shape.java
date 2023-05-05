@@ -118,21 +118,19 @@ public class CG_Shape extends CommonGoalCard {
 
         if ( !cardsAlreadyChecked.contains(this.ID) ) { // When set to 1 the check is skipped.
 
+            for (int k = 0; k < shelfsMatrix.length / 2; k++) {  // In some edge cases it is needed to run the check
+                // multiple times.
+                // shelfsMatrix.length/2 is set in case the length of the shelf needs to be changed.
 
-            for (List<Position> singleShape : this.positions) { // Some cards might be mirrored or even rotated by 90°
-                // If the card requires to check also the mirrored or rotated shape then like the normal shape its
-                // positions are specified inside the json file.
-                // While a card might check only one shape it is required to write inside the json file also the
-                // positions for the mirrored/rotated version if those are needed to be checked as well.
+                for (T_Type t_type : T_Type.values()) { // 6 tile types have been defined, we search inside the shelf looking
+                    // one tile type at the time.
+                    tile = t_type; // tile saves the current tile type.
 
-                for (int k = 0; k < shelfsMatrix.length/2 ; k++) { // In some edge cases it is needed to run the check
-                    // multiple times.
-                    // shelfsMatrix.length/2 is set in case the length of the shelf needs to be changed.
-
-                    for (T_Type t_type : T_Type.values()) { // 6 tile types have been defined, we search inside the shelf looking
-                        // one tile type at the time.
-                        tile = t_type; // tile saves the current tile type.
-
+                    for (List<Position> singleShape : this.positions) { // Some cards might be mirrored or even rotated by 90°
+                        // If the card requires to check also the mirrored or rotated shape then like the normal shape its
+                        // positions are specified inside the json file.
+                        // While a card might check only one shape it is required to write inside the json file also the
+                        // positions for the mirrored/rotated version if those are needed to be checked as well.
 
                         // The first 2 for cycles identify a couple (let's call it coupleZero) which becomes the
                         // first piece of the shape described on the card.
@@ -268,18 +266,18 @@ public class CG_Shape extends CommonGoalCard {
                                 }
                             }
                         }
-                        // diffType == 0 means that the card requires all the shapes to be the same tile type.
-                        // allOccPos gets reset so that no shapes with different tile type count towards the card requirements.
-                        // ex: If inside the shelf there are three 2x2 squares, one with tile type cat and the other two with tile type book.
-                        //     When we first iter looking for cat tiles we need to reset allOccPos at the end because when we
-                        //     later iter looking for book tiles we don't want the first cat square to count.
-                        //     If allOccPos doesn't get reset then the card requirement gets met with one square made of cat tiles
-                        //     and one square made of book tiles, but that's not the card requirement!
-                        //     If we reset then when we later look for book tiles the two 2x2 squares with tile type book
-                        //     will be correctly found.
-                        if (this.diffType == 0) {
-                            allOccPos.clear();
-                        }
+                    }
+                    // diffType == 0 means that the card requires all the shapes to be the same tile type.
+                    // allOccPos gets reset so that no shapes with different tile type count towards the card requirements.
+                    // ex: If inside the shelf there are three 2x2 squares, one with tile type cat and the other two with tile type book.
+                    //     When we first iter looking for cat tiles we need to reset allOccPos at the end because when we
+                    //     later iter looking for book tiles we don't want the first cat square to count.
+                    //     If allOccPos doesn't get reset then the card requirement gets met with one square made of cat tiles
+                    //     and one square made of book tiles, but that's not the card requirement!
+                    //     If we reset then when we later look for book tiles the two 2x2 squares with tile type book
+                    //     will be correctly found.
+                    if (this.diffType == 0) {
+                        allOccPos.clear();
                     }
                 }
             }
