@@ -3,7 +3,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.model.board.Shelf;
-import it.polimi.ingsw.model.enumerations.Couple;
 import it.polimi.ingsw.model.enumerations.State;
 import it.polimi.ingsw.model.enumerations.T_Type;
 
@@ -24,16 +23,18 @@ public class CG_Shape extends CommonGoalCard {
     private int stairs;
     private String description;
 
-    /** Constructor for CG_Shape saves the CGC parameters given the card ID
-     * id - Card ID used to identify the card
-     * type - Shape or Group. In this case Shape
-     * numOfOccurrences - Specifies how many occurrences of the same shape are needed to satisfy the card conditions
-     * diffType - When set to 0 all the shape's occurrences must be of the same tile type
-     *            When set to 1 each of the shape's occurrences can be of a different tile type from the others
+    /**
+     * Constructor for CG_Shape saves the CGC parameters given the card ID.
+     * id - Card ID used to identify the card.
+     * type - Shape or Group. In this case Shape.
+     * numOfOccurrences - Specifies how many occurrences of the same shape are needed to satisfy the card conditions.
+     * diffType - When set to 0 all the shape's occurrences must be of the same tile type.
+     *            When set to 1 each of the shape's occurrences can be of a different tile type from the others.
      * stairs - Default 0. If set to 1 it identifies the 12th CGC on the rulebook.
-     * coordinates - This set of coordinates identifies the shape itself that the card requires
-     *             - Those coordinates are saved in positions
-    **/
+     * description - The card description.
+     * coordinates - This set of coordinates identifies the shape itself that the card requires.
+     *             - Those coordinates are saved in positions.
+     */
     public CG_Shape(int id) {
 
         try {
@@ -78,216 +79,231 @@ public class CG_Shape extends CommonGoalCard {
     }
 
     /**
-     * Method checkConditions overrides checkConditions in class CommonGoalCards
-     * This method is called upon a common goal card and takes as param the shelf of the current player
-     * It checks if the card's conditions are met inside the player's shelf
-     *
-     * @param shelf - The shelf of the current player
-     * @return - If the card's conditions have been met it returns 1 else 0
+     * Method checkConditions overrides checkConditions in class CommonGoalCards.
+     * This method is called upon a common goal card and takes as param the shelf of the current player.
+     * It checks if the card's conditions are met inside the player's shelf.
+     * @param shelf - The shelf of the current player.
+     * @return - If the card's conditions have been met for the first time it returns 1 else 0.
      */
-   @Override
+    @Override
     public int checkConditions(Shelf shelf){
-        int notFound = 0; // This flag is set to 1 when one of the shelf matrix's couple doesn't meet one of the
-        // requirements on the common goal card.
-        // ex: I've found three cells with a cat and I need the last one to make
-        // a 2x2 square, if this last cell is not a cat then the flag is set to 1.
-        // When the flag is set to 1 a break is triggered to skip to the next couple
-        // and restart the search for a 2x2 square.
 
-        int found = 0; // When the card requirements are met we set this flag to 1.
+        int found = 0;
+        T_Type tile;
+        List<List<Position>> allOccPos = new ArrayList<>();
 
-        T_Type tile = null; // Saves the current tile type that is going to be searched inside the shelf.
+        if ( !shelf.getCardsAlreadyChecked().contains(this.ID) ) {
 
-        Couple[][] shelfsMatrix = shelf.getShelfsMatrix();
-        List<Integer> cardsAlreadyChecked = shelf.getCardsAlreadyChecked(); // This array keeps track of all the cards which
-        // conditions have already been met inside the player's shelf.
+            for (T_Type t_type : T_Type.values()) {
+                tile = t_type;
 
-        List<List<Position>> allOccPos = new ArrayList<>(); // allOccPos is a list where each element is a collection
-        // of position objects. The collection of position objects corresponds to a shape's occurrence inside the shelf.
-        // The single position objects are the coordinates on the board of the shape's occurrence.
-        // This way allOccPos saves every shape's occurrence which becomes an element inside its list.
-        // Then to access a single position of a shape's occurrence we first iter allOccPos and when we find the occurrence
-        // we are interested in we access its positions.
-        // When this.numOfOccurrences > 1 we save every occurrence.
+                for (List<Position> singleShape : this.positions) {
 
-        int count = 0; // This flag is used when shapes are overlapping.
-        // When a shape is found we take all its positions and run a check on them, we are looking if one of its positions
-        // is already saved inside allOccPos.
-        // If the position is already inside then we increment count, we do the same for all positions of the current shape found
-        // Relevant values: 0 and 1.
-
-        if ( !cardsAlreadyChecked.contains(this.ID) ) { // When set to 1 the check is skipped.
-
-            for (int k = 0; k < shelfsMatrix.length / 2; k++) {  // In some edge cases it is needed to run the check
-                // multiple times.
-                // shelfsMatrix.length/2 is set in case the length of the shelf needs to be changed.
-
-                for (T_Type t_type : T_Type.values()) { // 6 tile types have been defined, we search inside the shelf looking
-                    // one tile type at the time.
-                    tile = t_type; // tile saves the current tile type.
-
-                    for (List<Position> singleShape : this.positions) { // Some cards might be mirrored or even rotated by 90°
-                        // If the card requires to check also the mirrored or rotated shape then like the normal shape its
-                        // positions are specified inside the json file.
-                        // While a card might check only one shape it is required to write inside the json file also the
-                        // positions for the mirrored/rotated version if those are needed to be checked as well.
-
-                        // The first 2 for cycles identify a couple (let's call it coupleZero) which becomes the
-                        // first piece of the shape described on the card.
-                        for (int i = 0; i < shelf.ROWS && found != 1; i++) {
-                            for (int j = 0; j < shelf.COLUMNS && found != 1; j++) {
-                                notFound = 0; // This flag is reset for every new couple allowing to restart the search.
-                                count = 0;
-                                if (!shelfsMatrix[i][j].getState().equals(State.EMPTY) && shelfsMatrix[i][j].getTile().getTileType().equals(tile)) {
-                                    // 1. For a faster check we skip every couple with state == EMPTY.
-                                    // 2. For a faster check we skip every couple that doesn't have the same tile type as tile.
-
-                                    for (Position position : singleShape) { // This for cycle adds the coordinates of the current
-                                        // shape we are looking for to the coordinates of coupleZero and checks if the
-                                        // corresponding couple inside shelfsMatrix is the same type of CoupleZero.
-
-                                        int rowCheck = i + position.getY();
-                                        int columnChecK = j + position.getX();
-                                        // rowCheck and columnCheck are used to not allow out of bounds indexes inside shelfsMatrix.
-
-                                        if (rowCheck < shelf.ROWS && columnChecK < shelf.COLUMNS && rowCheck >= 0 && columnChecK >= 0 && notFound != 1) {
-                                            if (this.stairs != 1) {
-                                                if (shelfsMatrix[i][j].getState().equals(State.EMPTY) || shelfsMatrix[rowCheck][columnChecK].getState().equals(State.EMPTY)) {
-                                                    // If coupleZero or ( coupleZero + position coordinates ) is empty then we skip
-                                                    // to the next couple and restart.
-                                                    notFound = 1;
-                                                    break;
-                                                } else if (!shelfsMatrix[i][j].getTile().getTileType().equals(shelfsMatrix[rowCheck][columnChecK].getTile().getTileType())) {
-                                                    // If coupleZero and ( coupleZero + position coordinates ) have a different
-                                                    // tileType then we skip to the next couple and restart.
-                                                    notFound = 1;
-                                                    break;
-                                                }
-                                            } else {
-                                                if (rowCheck >= 1) {
-                                                    if (shelfsMatrix[rowCheck][columnChecK].getState().equals(State.EMPTY) || !( shelfsMatrix[rowCheck - 1][columnChecK].getState().equals(State.EMPTY) )) {
-                                                        // The only case we don't enter this if statement is when
-                                                        // ( coupleZero + position coordinates ) is not empty and the couple above it
-                                                        // is empty.
-                                                        notFound = 1;
-                                                        break;
-                                                    }
-                                                } else {
-                                                    notFound = 1;
-                                                    break;
-                                                }
-                                            }
-                                        } else { // If the indexes of ( coupleZero + position coordinates ) are out of bounds
-                                            // then we skip to the next couple and restart.
-                                            notFound = 1;
-                                            break;
-                                        }
-                                    }
-
-                                    if (notFound != 1) { // We enter this if statement when notFound == 0 which means all
-                                        // conditions inside the card have been met, we've found one shape occurrence.
-                                        if (this.numOfOccurrences > 1) { // This means the conditions are still to be met.
-                                            count = 0; // Reset.
-
-                                            if (allOccPos.size() > 0) { // If at least one shape has been found we enter this if.
-                                                List<List<Position>> toRemove = new ArrayList<>();
-                                                List<Position> singleShapeToRemove = new ArrayList<>();
-                                                for (Position position : singleShape) { // We iter through the coordinates
-                                                    // of the shape we have found inside the shelf.
-                                                    // We are checking if one of the coordinates is overlapping with another
-                                                    // shape's occurrence that has been saved inside allOccPos.
-                                                    int y = i + position.getY();
-                                                    int x = j + position.getX();
-                                                    // x and y give the shape's coordinates inside the shelf.
-                                                    for (List<Position> singleShape1 : allOccPos) { // We do this for every shape
-                                                        // occurrence that has been saved.
-                                                        for (Position position1 : singleShape1) { // We check if the coordinates
-                                                            // are overlapping.
-                                                            if (x == position1.getX() && y == position1.getY()) {
-                                                                count++; // Count is incremented for every overlap.
-                                                                singleShapeToRemove = singleShape1; // We save the shape that is overlapping
-                                                                // and later decide if it gets eliminated from allOccPos.
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                                // When count == 1 it means that inside allOccPos there's a shape that
-                                                // overlaps only by one square with the current shape that we have found.
-                                                if (count == 1) {
-                                                    toRemove.add(singleShapeToRemove);
-                                                    allOccPos.removeAll(toRemove); // We remove from allOccPos
-                                                    // the shape that is overlapping.
-                                                    List<Position> dummy3 = new ArrayList<>();
-                                                    for (Position position : singleShape) { // We create a new shape element and
-                                                        // save the current shape positions inside it.
-                                                        int saveY = i + position.getY();
-                                                        int saveX = j + position.getX();
-                                                        Position newPosition = new Position(saveX, saveY);
-                                                        dummy3.add(newPosition);
-                                                    }
-                                                    allOccPos.add(dummy3); // This new shape element is then added to allOccPos.
-                                                    // The reason behind this is that if two shape's occurrences are
-                                                    // sharing only one tile inside the shelf then we can't have both of them
-                                                    // inside allOccPos. When such cases appear then the shape that is
-                                                    // lower inside the shelf is the one between the two that gets added
-                                                    // to allOccPos in the end.
-                                                } else if (count == 0) {
-                                                    // If count == 0 then we simply create a new shape element and add
-                                                    // it to allOccPos.
-                                                    List<Position> dummy1 = new ArrayList<>();
-                                                    for (Position position : singleShape) {
-                                                        int saveY = i + position.getY();
-                                                        int saveX = j + position.getX();
-                                                        Position newPosition = new Position(saveX, saveY);
-                                                        dummy1.add(newPosition);
-                                                    }
-                                                    allOccPos.add(dummy1);
-                                                }
-                                            } else { // If allOccPos.size() == 0 then this is the first shape we have found.
-                                                List<Position> dummy2 = new ArrayList<>();
-                                                for (Position position : singleShape) {
-                                                    int saveY = i + position.getY();
-                                                    int saveX = j + position.getX();
-                                                    Position newPosition = new Position(saveX, saveY);
-                                                    dummy2.add(newPosition);
-                                                }
-                                                allOccPos.add(dummy2);
-                                            }
-
-                                            if (allOccPos.size() == this.numOfOccurrences) { // When inside allOccPos all
-                                                // the occurrences needed have been added it means the card requirements have been met
-                                                found = 1; // When the conditions are met we save this info.
-                                            }
-
-                                        } else if (this.numOfOccurrences == 1) {
-                                            found = 1; // When the conditions are met we save this info.
-                                        }
-                                    }
+                    for (int i = 0; i < Shelf.ROWS ; i++) {
+                        for (int j = 0; j < Shelf.COLUMNS ; j++) {
+                            if (!shelf.getShelfsMatrix()[i][j].getState().equals(State.EMPTY) && shelf.getShelfsMatrix()[i][j].getTile().getTileType().equals(tile)) {
+                                if (shapeFinder(shelf, singleShape, i, j) == 1) {
+                                    addShape(allOccPos, singleShape, i, j);
                                 }
                             }
                         }
                     }
-                    // diffType == 0 means that the card requires all the shapes to be the same tile type.
-                    // allOccPos gets reset so that no shapes with different tile type count towards the card requirements.
-                    // ex: If inside the shelf there are three 2x2 squares, one with tile type cat and the other two with tile type book.
-                    //     When we first iter looking for cat tiles we need to reset allOccPos at the end because when we
-                    //     later iter looking for book tiles we don't want the first cat square to count.
-                    //     If allOccPos doesn't get reset then the card requirement gets met with one square made of cat tiles
-                    //     and one square made of book tiles, but that's not the card requirement!
-                    //     If we reset then when we later look for book tiles the two 2x2 squares with tile type book
-                    //     will be correctly found.
-                    if (this.diffType == 0) {
-                        allOccPos.clear();
-                    }
+                }
+
+                if (requirementsCheck(allOccPos) == 1) {
+                    found = 1;
+                    break;
                 }
             }
         }
 
-        if ( found == 1 && !cardsAlreadyChecked.contains(this.ID) ) { // checkConditions returns 1 only when the card requirements
-            // are met for the first time.
-            cardsAlreadyChecked.add(this.ID);
+        if ( found == 1 && !shelf.getCardsAlreadyChecked().contains(this.ID) ) {
+            shelf.getCardsAlreadyChecked().add(this.ID);
             return 1;
-        } else return 0;
+        } else {
+            return 0;
+        }
+    }
+
+    /**
+     * Method shapeFinder is called upon all eligible couples inside the shelf.
+     * It adds the coordinates inside singleShape to the ones of the couple which the method was called upon.
+     * If all the couples tile type match then the shape has been found.
+     * @param shelf - The shelf of the current player.
+     * @param singleShape - A list of coordinates that identifies a shape.
+     * @param i - Current couple y coordinate.
+     * @param j - Current couple x coordinate.
+     * @return - The method returns 1 if the shape is found, 0 otherwise.
+     */
+    public int shapeFinder(Shelf shelf, List<Position> singleShape, int i, int j){
+
+        for (Position position : singleShape) {
+            int rowCheck = i + position.getY();
+            int columnCheck = j + position.getX();
+
+            if (rowCheck < Shelf.ROWS && columnCheck < Shelf.COLUMNS && rowCheck >= 0 && columnCheck >= 0 ) {
+                if (this.stairs != 1) {
+                    if (shelf.getShelfsMatrix()[rowCheck][columnCheck].getState().equals(State.EMPTY) || !shelf.getShelfsMatrix()[i][j].getTile().getTileType().equals(shelf.getShelfsMatrix()[rowCheck][columnCheck].getTile().getTileType())) {
+                        return 0;
+                    }
+                } else {
+                    if (rowCheck >= 1) {
+                        if (shelf.getShelfsMatrix()[rowCheck][columnCheck].getState().equals(State.EMPTY) || !( shelf.getShelfsMatrix()[rowCheck - 1][columnCheck].getState().equals(State.EMPTY) )) {
+                            return 0;
+                        }
+                    } else {
+                        return 0;
+                    }
+                }
+            } else {
+                return 0;
+            }
+        }
+        return 1;
+    }
+
+    /**
+     * Method duplicateDeleter searches allOccPos and deletes all shape's occurrences that overlap inside the shelf.
+     * Let 'size' be the number of cells that a shape occupies inside the shelf.
+     * Starting to delete from the shapes that completely overlap with others (num of cells that overlap == size) it then
+     * decreases and keeps deleting the shapes that overlap with all cells but one (size - 1) and so on until it stops
+     * before size reaches 0. At the end allOccPos will contain only shapes that don't overlap inside the shelf.
+     * @param allOccPos - List of Lists of Positions where each list identifies a shape occurrence inside the shelf.
+     */
+    public void duplicateDeleter(List<List<Position>> allOccPos) {
+
+        int count;
+        List<Position> singleShapeToRemove = new ArrayList<>();
+        int size = this.positions.get(0).size();
+
+        while (size != 0) {
+            for (int i = 0; i < allOccPos.size(); i++) {
+                for (List<Position> singleShape1 : allOccPos) {
+                    count = 0;
+                    for (List<Position> singleShape2 : allOccPos) {
+                        if (!singleShape1.equals(singleShape2)) {
+                            for (Position position1 : singleShape1) {
+                                for (Position position2 : singleShape2) {
+                                    if (position1.getY() == position2.getY() && position1.getX() == position2.getX()) {
+                                        count++;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        if (count == size) {
+                            break;
+                        }
+                    }
+                    if (count == size) {
+                        singleShapeToRemove = singleShape1;
+                        break;
+                    }
+                }
+                if ( !singleShapeToRemove.isEmpty() ) {
+                    allOccPos.remove(singleShapeToRemove);
+                    singleShapeToRemove.clear();
+                }
+            }
+            size--;
+        }
+    }
+
+    /**
+     * Method occAdjuster fixes miscounts. When a card allows a shape to be rotated it may happen that duplicateDeleter
+     * wrongfully deletes a shape occurrence inside allOccPos (this is due to the order in which shapes are saved
+     * inside allOccPos). After duplicateDeleter method occAdjuster compares the shapes inside allOccPosCopy
+     * to the ones in allOccPos, if a shape inside allOccPosCopy doesn't overlap with any shape occurrence in allOccPos
+     * than that shape can be readded to allOccPos.
+     * @param allOccPos - List of non overlapping shapes inside the shelf.
+     * @param allOccPosCopy - Copy of allOccPos before duplicateDeleter is called.
+     */
+    public void occAdjuster(List<List<Position>> allOccPos, List<List<Position>> allOccPosCopy ){
+
+        if ( this.positions.size() > 1 ) {
+            for (List<Position> singleShape1 : allOccPosCopy) {
+                int count = 0;
+                for (List<Position> singleShape2 : allOccPos) {
+                    for (Position position1 : singleShape1) {
+                        for (Position position2 : singleShape2) {
+                            if (position1.getY() == position2.getY() && position1.getX() == position2.getX()) {
+                                count++;
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (count == 0) {
+                    allOccPos.add(singleShape1);
+                }
+            }
+        }
+
+    }
+
+    /**
+     * Method requirementsCheck sorts the logic. Most notably when diffType == 0 if the card requirements have not been
+     * met for the current tile type then allOccPoss is cleared. If diffType == 1 then allOccPos is preserved as all
+     * shape occurrences can have a different tile type from the others.
+     * @param allOccPos - List of Lists of Positions where each list identifies a shape occurrence inside the shelf.
+     * @return - The method returns 1 if the card requirements have been met, 0 otherwise.
+     */
+    public int requirementsCheck(List<List<Position>> allOccPos){
+
+        if (this.numOfOccurrences == 1) {
+            if (allOccPos.size() >= 1) {
+                return 1;
+            }
+        } else {
+            if (diffType == 0) {
+                List<List<Position>> allOccPosCopy = cloneList(allOccPos);
+                duplicateDeleter(allOccPos);
+                occAdjuster(allOccPos, allOccPosCopy);
+                if (allOccPos.size() == this.numOfOccurrences) {
+                    return 1;
+                } else {
+                    allOccPos.clear();
+                }
+            } else if (diffType == 1) {
+                List<List<Position>> allOccPosCopy = cloneList(allOccPos);
+                duplicateDeleter(allOccPos);
+                occAdjuster(allOccPos, allOccPosCopy);
+                if (allOccPos.size() == this.numOfOccurrences) {
+                    return 1;
+                }
+            }
+        }
+        return 0;
+    }
+
+    /**
+     * Method addShape is an auxiliary method used to add a shape occurrence in allOccPos.
+     * The shape coordinates (positions) saved are the ones that the shape has inside the shelf.
+     * @param allOccPos - List of Lists of Positions where each list identifies a shape occurrence inside the shelf.
+     * @param singleShape -  A list of coordinates (positions) that identifies a shape.
+     * @param i - Current couple y coordinate.
+     * @param j - Current couple x coordinate.
+     */
+    public void addShape(List<List<Position>> allOccPos, List<Position> singleShape, int i, int j){
+
+        List<Position> dummy = new ArrayList<>();
+        for (Position position : singleShape) {
+            dummy.add(new Position(position.getX() + j, position.getY() + i));
+        }
+        allOccPos.add(dummy);
+    }
+
+    /**
+     * Method cloneList is an auxiliary method used to make a deep copy of allOccPos before duplicateDeleter is called.
+     * @param allOccPos - List of shapes that might be overlapping inside the shelf.
+     * @return - It returns a deep copy of allOccPos.
+     */
+    public List<List<Position>> cloneList(List<List<Position>> allOccPos){
+        List<List<Position>> allOccPosCopy = new ArrayList<>();
+        for( List<Position> sublist : allOccPos) {
+            allOccPosCopy.add(new ArrayList<>(sublist));
+        }
+        return allOccPosCopy;
     }
 
     public int getID() {
@@ -316,3 +332,4 @@ public class CG_Shape extends CommonGoalCard {
         return description;
     }
 }
+

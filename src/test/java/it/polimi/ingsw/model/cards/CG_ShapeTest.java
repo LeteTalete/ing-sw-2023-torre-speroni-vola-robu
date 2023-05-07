@@ -25,6 +25,7 @@ public class CG_ShapeTest {
     int numOfOccurrences;
     private int diffType;
     private int stairs;
+    private String description;
 
     @Test
     public void constructorTest() {
@@ -54,11 +55,14 @@ public class CG_ShapeTest {
                     this.numOfOccurrences = cardNode.get("numOfOccurrences").asInt();
                     this.diffType = cardNode.get("diffType").asInt();
                     this.stairs = cardNode.get("stairs").asInt();
+                    this.description = cardNode.get("description").asText();
 
                     assertEquals("Shape", this.type);
                     assertEquals(1, this.numOfOccurrences);
                     assertEquals(0, this.diffType);
                     assertEquals(0, this.stairs);
+                    assertEquals("Five tiles of the same type forming an X.", this.description);
+
 
                     JsonNode allShapes = cardNode.get("coordinates");
                     for (JsonNode singleShape : allShapes ) {
