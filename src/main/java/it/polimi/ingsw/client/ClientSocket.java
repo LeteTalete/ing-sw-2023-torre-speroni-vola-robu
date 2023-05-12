@@ -1,15 +1,18 @@
 package it.polimi.ingsw.client;
 
+import it.polimi.ingsw.view.View;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
-public class ClientSocket
+public class ClientSocket implements IClientConnection
 {
     private String ip;
     private int port;
+    private View viewClient;
 
 
     public ClientSocket(String ip, int port)
@@ -18,19 +21,6 @@ public class ClientSocket
         this.port = port;
     }
 
-
-    public static void main(String[] args)
-    {
-        ClientSocket client = new ClientSocket("127.0.0.1",1420);
-        try
-        {
-            client.startClient();
-        }
-        catch (IOException e)
-        {
-            System.err.println(e.getMessage());
-        }
-    }
 
     public void startClient() throws IOException
     {
@@ -71,5 +61,23 @@ public class ClientSocket
             socketOut.close();
             socket.close();
         }
+    }
+
+    @Override
+    public void setViewClient(View currentView)
+    {
+        this.viewClient = currentView;
+    }
+
+    @Override
+    public String login(String name)
+    {
+        String success = null;
+
+        //login ...
+        //DEBUG
+        System.out.println("DEBUG: effettuo il login...");
+
+        return success;
     }
 }

@@ -5,6 +5,7 @@ import it.polimi.ingsw.network.IRemoteController;
 import it.polimi.ingsw.server.StaticStrings;
 import it.polimi.ingsw.view.View;
 
+import java.io.IOException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
@@ -31,11 +32,26 @@ public class ClientController {
             connectionStatus = setupRMI();
         }
         else if(currentView.getConnectionType().equals("SOCKET")){
-            //add socket connection
+            connectionStatus = setupSocket();
         }
         if(connectionStatus!=null){
             this.currentView.displayNotification(connectionStatus);
         }
+    }
+
+    public String setupSocket()
+    {
+        ClientSocket client = new ClientSocket("127.0.0.1",1420);
+        try
+        {
+            client.startClient();
+        }
+        catch (IOException e)
+        {
+            System.err.println(e.getMessage());
+        }
+
+        return null;
     }
 
     private String setupRMI() {

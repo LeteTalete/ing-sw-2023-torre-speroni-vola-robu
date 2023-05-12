@@ -1,5 +1,4 @@
 package it.polimi.ingsw.util;
-
 import java.util.Vector;
 
 public class Observable<Event extends Enum<Event>>
