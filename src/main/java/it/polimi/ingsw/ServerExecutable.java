@@ -1,5 +1,6 @@
 package it.polimi.ingsw;
 
+import it.polimi.ingsw.server.MultiServerSocket;
 import it.polimi.ingsw.server.ServerManager;
 
 import java.rmi.RemoteException;
@@ -12,6 +13,10 @@ public class ServerExecutable {
             ServerManager serverManager = new ServerManager();
             Registry registry = LocateRegistry.createRegistry(8089);
             registry.rebind("Login", serverManager);
+
+            //Socket
+            MultiServerSocket server = new MultiServerSocket(1420);
+            server.startServer();
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }

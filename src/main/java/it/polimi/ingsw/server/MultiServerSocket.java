@@ -48,11 +48,5 @@ public class MultiServerSocket
         }
         executor.shutdown();
     }
-
-    public static void main(String[] args)
-    {
-        MultiServerSocket server = new MultiServerSocket(1420);
-        server.startServer();
-    }
 }
 
