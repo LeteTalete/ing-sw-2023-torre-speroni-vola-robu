@@ -19,7 +19,7 @@ public interface View {
     //reorder tiles
     //place tiles on shelf
 
-    void startGame();
+    void GameTitle();
     void showShelf(ShelfView myShelf);
     void showLivingRoom(LivingRoomView livingRoomView);
 

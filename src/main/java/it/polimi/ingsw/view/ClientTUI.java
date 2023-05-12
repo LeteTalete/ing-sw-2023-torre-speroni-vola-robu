@@ -25,6 +25,7 @@ public class ClientTUI implements View{
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
+        GameTitle();
     }
     //this one is to read from keyboard input
     private Scanner frominput;
@@ -85,7 +86,7 @@ public class ClientTUI implements View{
         return number;
     }
 
-    public void startGame(){
+    public void GameTitle(){
         DrawTui.printlnString(colorTitle + """                       
                                #           #                                ######       ####                   ##        ######
                              ##          ##                               ###    ##     ##   #                  ##      ##     ##
