@@ -1,9 +1,9 @@
 package it.polimi.ingsw.view;
 
-import it.polimi.ingsw.model.enumerations.Couple;
 import it.polimi.ingsw.network.IListener;
 import it.polimi.ingsw.stati.Status;
 import it.polimi.ingsw.structures.LivingRoomView;
+import it.polimi.ingsw.structures.PlayerView;
 import it.polimi.ingsw.structures.ShelfView;
 
 import java.rmi.RemoteException;
@@ -22,9 +22,11 @@ public interface View {
     void startGame();
     void showShelf(ShelfView myShelf);
     void showLivingRoom(LivingRoomView livingRoomView);
-    void showPersonalGoalCard();
-    void showSlotTile(Couple tile);
 
+    void showBoardPlayer(PlayerView playerBoardView, LivingRoomView livingRoomView);
+
+    void showPersonalGoalCard();
+    void showBoard(LivingRoomView livingRoomView);
     IListener getListener();
 
     void printError(String message);

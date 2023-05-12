@@ -4,6 +4,7 @@ import it.polimi.ingsw.model.enumerations.Couple;
 import it.polimi.ingsw.network.IListener;
 import it.polimi.ingsw.stati.Status;
 import it.polimi.ingsw.structures.LivingRoomView;
+import it.polimi.ingsw.structures.PlayerView;
 import it.polimi.ingsw.structures.ShelfView;
 
 import java.rmi.RemoteException;
@@ -55,14 +56,20 @@ public class ClientGUI implements View {
     }
 
     @Override
+    public void showBoardPlayer(PlayerView playerBoardView, LivingRoomView livingRoomView) {
+
+    }
+
+    @Override
     public void showPersonalGoalCard() {
 
     }
 
     @Override
-    public void showSlotTile(Couple tile) {
+    public void showBoard(LivingRoomView livingRoomView) {
 
     }
+
 
     @Override
     public IListener getListener() {

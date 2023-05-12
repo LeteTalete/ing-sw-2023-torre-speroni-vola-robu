@@ -1,13 +1,9 @@
 package it.polimi.ingsw.view;
 
-import it.polimi.ingsw.model.enumerations.Couple;
-import it.polimi.ingsw.model.enumerations.State;
-import it.polimi.ingsw.model.enumerations.T_Type;
 import it.polimi.ingsw.network.ClientListenerTUI;
 import it.polimi.ingsw.network.IListener;
 import it.polimi.ingsw.stati.Status;
-import it.polimi.ingsw.structures.LivingRoomView;
-import it.polimi.ingsw.structures.ShelfView;
+import it.polimi.ingsw.structures.*;
 
 import java.rmi.RemoteException;
 import java.util.*;
@@ -16,12 +12,6 @@ import java.util.*;
 public class ClientTUI implements View{
     private IListener listenerClient;
     static final String colorRESET = "\033[0m";  // Reset Changes
-    static final String colorTileG = "\033[1;51;30;48;5;214m"; //Orange
-    static final String colorTileC = "\033[1;51;30;48;5;10m"; //Green
-    static final String colorTileB = "\033[1;51;30;48;5;230m"; //White
-    static final String colorTileP = "\033[1;51;30;48;5;13m"; //Magenta
-    static final String colorTileF = "\033[1;51;30;48;5;27m"; //Blue
-    static final String colorTileT = "\033[1;51;30;48;5;14m"; //Cyan
     static final String colorTitle = "\033[38;5;11m"; //Yellow
     private final Integer sizeSlotTile = 3; //Tile size to be colored
     private String connectionType;
@@ -96,7 +86,7 @@ public class ClientTUI implements View{
     }
 
     public void startGame(){
-        System.out.println(colorTitle + """                       
+        DrawTui.printlnString(colorTitle + """                       
                                #           #                                ######       ####                   ##        ######
                              ##          ##                               ###    ##     ##   #                  ##      ##     ##
                             ###         ###                                ##     ##   ##                       ##     ##        \s
@@ -111,157 +101,45 @@ public class ClientTUI implements View{
                                                 #         ##                                                         ##
                                                  ##     ###                                                         #
                                                    #####                          \s
-                   """ + colorRESET);
-        printString("\t\t++++++++++++++++++++++++++++[ START GAME ]++++++++++++++++++++++++++++\n");
+                   """ + colorRESET
+        );
+        DrawTui.printlnString("+++++++++++++++++++++++++++++++++++++++++++[ START GAME ]+++++++++++++++++++++++++++++++++++++++++++");
+
 
     }
-
-    private void printString(String text, int repeatNum){
-        String textRepeat;
-        textRepeat = text.repeat(repeatNum);
-        System.out.print(textRepeat);
-    }
-    private void printString(String text){
-        System.out.print(text);
-    }
-    private String returnStringRepeat(String text, int repeatNum){
-        String textRepeat;
-        textRepeat = text.repeat(repeatNum);
-        return textRepeat;
-    }
-
-    /*
-    Schema Shelf:
-        ___________________________
-        ||---||---||---||---||---||
-        ||   ||   ||   ||   ||   ||
-        ||---||---||---||---||---||
-        ||   ||   ||   ||   ||   ||
-        ||---||---||---||---||---||
-        ||   ||   ||   ||   ||   ||
-        ||---||---||---||---||---||
-        ||   ||   ||   ||   ||   ||
-        ||---||---||---||---||---||
-        ||   ||   ||   ||   ||   ||
-        ||---||---||---||---||---||
-        ||   ||   ||   ||   ||   ||
-        ||---||---||---||---||---||
-       /___________________________\
-           0    1    2    3    4
-     */
 
     @Override
     public void showShelf(ShelfView myShelf){
-        Couple[][] shelfView = myShelf.getShelfsMatrixView();
-        int lengthShelf = shelfView[0].length;
-        String roofShelf = returnStringRepeat("_", lengthShelf*(2 + sizeSlotTile) + 2);
-        String boardShelf = "||";
-        String dividerShelf = returnStringRepeat(boardShelf + returnStringRepeat("-", sizeSlotTile), lengthShelf) + boardShelf;
-        Iterator<Couple[]> board = Arrays.asList(shelfView).iterator();
+        DrawTui.graphicsShelf(myShelf, true, false);
 
-        printString("\t" + roofShelf + "\n\t");
-        printString(dividerShelf + "\n\t");
-        while(board.hasNext()){
-            Couple[] rowShelf = board.next();
-            for (Couple couple : rowShelf) {
-                printString(boardShelf);
-                showSlotTile(couple);
-            }
-            printString(boardShelf + "\n\t");
-            printString(dividerShelf + "\n\t");
-        }
-        printString("\r   /" + roofShelf + "\\ \n\n");
     }
 
-    /*
-    Schema Living Room:
-         ----- ----- ----- ----- ----- ----- ----- ----- -----
-     0  |     |     |     |     |     |     |     |     |     |
-         ----- ----- ----- ----- ----- ----- ----- ----- -----
-     1  |     |     |     |     |     |     |     |     |     |
-         ----- ----- ----- ----- ----- ----- ----- ----- -----
-     2  |     |     |     |     |     |     |     |     |     |
-         ----- ----- ----- ----- ----- ----- ----- ----- -----
-     3  |     |     |     |     |     |     |     |     |     |
-         ----- ----- ----- ----- ----- ----- ----- ----- -----
-     4  |     |     |     |     |     |     |     |     |     |
-         ----- ----- ----- ----- ----- ----- ----- ----- -----
-     5  |     |     |     |     |     |     |     |     |     |
-         ----- ----- ----- ----- ----- ----- ----- ----- -----
-     6  |     |     |     |     |     |     |     |     |     |
-         ----- ----- ----- ----- ----- ----- ----- ----- -----
-     7  |     |     |     |     |     |     |     |     |     |
-         ----- ----- ----- ----- ----- ----- ----- ----- -----
-     8  |     |     |     |     |     |     |     |     |     |
-         ----- ----- ----- ----- ----- ----- ----- ----- -----
-           0     1     2     3     4     5     6     7     8
-     */
     @Override
     public void showLivingRoom(LivingRoomView livingRoomView){
-        Couple[][] livingRoom = livingRoomView.getBoard();
-        Iterator<Couple[]> board = Arrays.asList(livingRoom).iterator();
-        int numColum = 0;
-        int numRow = livingRoom[0].length;
-        String roofLivingRoom = returnStringRepeat(" -----", numRow);
-        String limitLivingRoom = "|";
-        String whiteSpace = " ";
-        printString("\t" + roofLivingRoom + "\n");
-        while(board.hasNext()){
-            printString(" " + numColum + "  ");
-            Couple[] rowLivingRoom = board.next();
-            for (Couple couple : rowLivingRoom) {
-                printString(limitLivingRoom + whiteSpace);
-                showSlotTile(couple);
-                printString(whiteSpace + limitLivingRoom);
-            }
-            printString("\n\t " + roofLivingRoom);
-            ++numColum;
-        }
-        printString("\n\n");
+         DrawTui.printlnString(DrawTui.graphicsLivingRoom(livingRoomView, true, false));
     }
-    /*
-    Schema PersonalGoal:
-        ___________________________
-        ||---||---||---||---||---||
-        ||   ||   ||   ||   ||   ||
-        ||---||---||---||---||---||
-        ||   ||   ||   ||   ||   ||
-        ||---||---||---||---||---||
-        ||   ||   ||   ||   ||   ||
-        ||---||---||---||---||---||
-        ||   ||   ||   ||   ||   ||
-        ||---||---||---||---||---||
-        ||   ||   ||   ||   ||   ||
-        ||---||---||---||---||---||
-        ||   ||   ||   ||   ||   ||
-        ||---||---||---||---||---||
-        ---------------------------
-     */
+
+    @Override
+    public void showBoardPlayer(PlayerView playerBoardView, LivingRoomView livingRoomView){
+        String livingRoomP = DrawTui.graphicsLivingRoom(livingRoomView, false, true);  //livingRoom of Player
+        String shelfP = DrawTui.graphicsShelf(playerBoardView.getShelf(), true, true);
+        DrawTui.printlnString(DrawTui.mergerString(livingRoomP, shelfP, true, false, false));
+        chooseTiles();
+    }
+    public void chooseTiles(){
+        DrawTui.askWhat("Choose the tiles [Row, Column]");
+    }
+
     @Override
     public void showPersonalGoalCard(){
 
     }
+
     @Override
-    public void showSlotTile(Couple tile){
-        if(tile.getState() != State.EMPTY){
-            T_Type typeTile = tile.getTile().getTileType();
-            if(typeTile == T_Type.GAMES) {
-                printString(colorTileG + " G " + colorRESET );
-            } else if (typeTile == T_Type.CAT) {
-                printString(colorTileC + " C " + colorRESET );
-            } else if (typeTile == T_Type.BOOK) {
-                printString(colorTileB + " B " + colorRESET );
-            } else if (typeTile == T_Type.PLANT) {
-                printString(colorTileP + " P " + colorRESET );
-            } else if (typeTile == T_Type.TROPHY) {
-                printString(colorTileT + " T " + colorRESET );
-            } else if (typeTile == T_Type.FRAME) {
-                printString(colorTileF + " F " + colorRESET );
-            }
-        } else {
-            printString(" ", sizeSlotTile);
-        }
+    public void showBoard(LivingRoomView livingRoomView) {
+        DrawTui.printlnString(DrawTui.graphicsLivingRoom(livingRoomView, true, false));
     }
+
 
     @Override
     public IListener getListener() {
@@ -273,22 +151,5 @@ public class ClientTUI implements View{
 
     }
 
-    private void printColorTile(String typeTile){
-        if(typeTile == "G") {
-            printString(colorTileG + " G " + colorRESET );
-        } else if (typeTile == "C") {
-            printString(colorTileC + " C " + colorRESET );
-        } else if (typeTile == "B") {
-            printString(colorTileB + " B " + colorRESET );
-        } else if (typeTile == "P") {
-            printString(colorTileP + " P " + colorRESET );
-        } else if (typeTile == "T") {
-            printString(colorTileT + " T " + colorRESET );
-        } else if (typeTile == "F") {
-            printString(colorTileF + " F " + colorRESET );
-        } else {
-            printString(" ", sizeSlotTile);
-        }
-    }
 
 }
