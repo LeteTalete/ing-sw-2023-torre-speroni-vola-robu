@@ -214,7 +214,7 @@ public class CG_Shape extends CommonGoalCard {
      * wrongfully deletes a shape occurrence inside allOccPos (this is due to the order in which shapes are saved
      * inside allOccPos). After duplicateDeleter method occAdjuster compares the shapes inside allOccPosCopy
      * to the ones in allOccPos, if a shape inside allOccPosCopy doesn't overlap with any shape occurrence in allOccPos
-     * than that shape can be readded to allOccPos.
+     * then that shape can be readded to allOccPos.
      * @param allOccPos - List of non overlapping shapes inside the shelf.
      * @param allOccPosCopy - Copy of allOccPos before duplicateDeleter is called.
      */

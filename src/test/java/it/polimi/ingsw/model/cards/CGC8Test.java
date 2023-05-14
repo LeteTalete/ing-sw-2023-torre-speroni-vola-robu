@@ -9,24 +9,30 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.Random;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class CGC8Test {
 
-    /** Test createCardTest creates an instance of CGC8 and checks if all parameters are correct */
+    /**
+     * Test createCardTest creates an instance of CGC8 and checks if all parameters are correct.
+     */
     @Test
     public void createCardTest(){
         CG_Group CGC8 = new CG_Group(8);
+        System.out.println(CGC8.getDescription());
         assertEquals(8, CGC8.getID());
         assertEquals("Group", CGC8.getType());
         assertEquals(3, CGC8.getNumOfOccurrences());
         assertEquals(3, CGC8.getDiffUpTo());
         assertEquals(1, CGC8.getVertical());
         assertEquals(0, CGC8.getHorizontal());
+        assertEquals("Three columns each formed by 6 tiles of maximum three different types.\nOne column can show the same or a different combination of another column.", CGC8.getDescription());
 
     }
 
-    /** Test emptyShelfTest checks that the card is not accepted when the shelf is empty */
+    /**
+     * Test emptyShelfTest checks that the card is not accepted when the shelf is empty.
+     */
     @Test
     public void emptyShelfTest(){
         Shelf shelf = new Shelf();
@@ -36,14 +42,17 @@ public class CGC8Test {
         shelf.printShelf();
         System.out.println();
 
+        assertTrue(shelf.getCardsAlreadyChecked().isEmpty());
         assertEquals(0, CGC8.checkConditions(shelf));
+        assertFalse(shelf.getCardsAlreadyChecked().contains(CGC8.getID()));
     }
 
-    /** Test threeVerticalTest1 checks if 3 randomly generated columns with up to 3 different tile types
-     * are correctly identified */
+    /**
+     * Test threeVerticalTest1 checks if 3 randomly generated columns with up to 3 different tile types
+     * are correctly identified.
+     */
     @Test
     public void threeVerticalTest1(){
-
         Shelf shelf = new Shelf();
         ArrayList<Tile> tiles = new ArrayList<>();
         CG_Group CGC8 = new CG_Group(8);
@@ -62,14 +71,18 @@ public class CGC8Test {
         shelf.printShelf();
         System.out.println();
 
+        assertTrue(shelf.getCardsAlreadyChecked().isEmpty());
         assertEquals(1, CGC8.checkConditions(shelf));
+        assertTrue(shelf.getCardsAlreadyChecked().contains(CGC8.getID()));
+        assertEquals(0, CGC8.checkConditions(shelf));
     }
 
-    /** Test threeVerticalTest2 checks if 3 randomly generated columns with up to 2 different tile types
-     * are correctly identified */
+    /**
+     * Test threeVerticalTest2 checks if 3 randomly generated columns with up to 2 different tile types
+     * are correctly identified.
+     */
     @Test
     public void threeVerticalTest2(){
-
         Shelf shelf = new Shelf();
         ArrayList<Tile> tiles = new ArrayList<>();
         CG_Group CGC8 = new CG_Group(8);
@@ -88,14 +101,18 @@ public class CGC8Test {
         shelf.printShelf();
         System.out.println();
 
+        assertTrue(shelf.getCardsAlreadyChecked().isEmpty());
         assertEquals(1, CGC8.checkConditions(shelf));
+        assertTrue(shelf.getCardsAlreadyChecked().contains(CGC8.getID()));
+        assertEquals(0, CGC8.checkConditions(shelf));
     }
 
-    /** Test threeVerticalTest3 checks if 3 randomly generated columns each made of one tile type
-     *  are correctly identified */
+    /**
+     * Test threeVerticalTest3 checks if 3 randomly generated columns each made of one tile type
+     * are correctly identified.
+     */
     @Test
     public void threeVerticalTest3(){
-
         Shelf shelf = new Shelf();
         ArrayList<Tile> tiles = new ArrayList<>();
         CG_Group CGC8 = new CG_Group(8);
@@ -116,16 +133,20 @@ public class CGC8Test {
         shelf.printShelf();
         System.out.println();
 
+        assertTrue(shelf.getCardsAlreadyChecked().isEmpty());
         assertEquals(1, CGC8.checkConditions(shelf));
+        assertTrue(shelf.getCardsAlreadyChecked().contains(CGC8.getID()));
+        assertEquals(0, CGC8.checkConditions(shelf));
     }
 
-    /** Test threeVerticalTest4 checks if 3 randomly generated columns are correctly identified when:
-     *  - The first one is generated with up to 3 different tile types
-     *  - The second one in made of one tile type
-     *  - The third one is generated with up to 2 different tile types */
+    /**
+     * Test threeVerticalTest4 checks if 3 randomly generated columns are correctly identified when:
+     *  - The first one is generated with up to 3 different tile types.
+     *  - The second one in made of one tile type.
+     *  - The third one is generated with up to 2 different tile types.
+     */
     @Test
     public void threeVerticalTest4(){
-
         Shelf shelf = new Shelf();
         ArrayList<Tile> tiles = new ArrayList<>();
         CG_Group CGC8 = new CG_Group(8);
@@ -158,14 +179,18 @@ public class CGC8Test {
         shelf.printShelf();
         System.out.println();
 
+        assertTrue(shelf.getCardsAlreadyChecked().isEmpty());
         assertEquals(1, CGC8.checkConditions(shelf));
+        assertTrue(shelf.getCardsAlreadyChecked().contains(CGC8.getID()));
+        assertEquals(0, CGC8.checkConditions(shelf));
     }
 
-    /** Test failTest1 checks if checkConditions returns 0 when 2 columns follow the requirements on the card but
-     *  the third one doesn't */
+    /**
+     * Test failTest1 checks if checkConditions returns 0 when 2 columns follow the requirements on the card but
+     * the third one doesn't.
+     */
     @Test
     public void failTest1(){
-
         Shelf shelf = new Shelf();
         ArrayList<Tile> tiles = new ArrayList<>();
         CG_Group CGC8 = new CG_Group(8);
@@ -200,14 +225,17 @@ public class CGC8Test {
         shelf.printShelf();
         System.out.println();
 
+        assertTrue(shelf.getCardsAlreadyChecked().isEmpty());
         assertEquals(0, CGC8.checkConditions(shelf));
+        assertFalse(shelf.getCardsAlreadyChecked().contains(CGC8.getID()));
     }
 
-    /** Test failTest2 checks if checkConditions returns 0 when 2 columns (0 and 4) follow the requirements on the card
-     * but none of the others do while each of them is generated randomly with 6 different tile types */
+    /**
+     * Test failTest2 checks if checkConditions returns 0 when 2 columns (0 and 4) follow the requirements on the card
+     * but none of the others do while each of them is generated randomly with 6 different tile types.
+     */
     @Test
     public void failTest2(){
-
         Shelf shelf = new Shelf();
         ArrayList<Tile> tiles = new ArrayList<>();
         CG_Group CGC8 = new CG_Group(8);
@@ -235,7 +263,9 @@ public class CGC8Test {
         shelf.printShelf();
         System.out.println();
 
+        assertTrue(shelf.getCardsAlreadyChecked().isEmpty());
         assertEquals(0, CGC8.checkConditions(shelf));
+        assertFalse(shelf.getCardsAlreadyChecked().contains(CGC8.getID()));
     }
 
 
