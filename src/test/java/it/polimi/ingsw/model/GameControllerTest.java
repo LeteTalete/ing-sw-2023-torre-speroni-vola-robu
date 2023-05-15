@@ -19,11 +19,18 @@ public class GameControllerTest {
     /** Test generateCGCTest randomly chooses 2 CGCs from the 12 cards of the game and prints their parameters */
     @Test
     public void generateCGCTest() {
-        GameController game = new GameController();
+        ArrayList<Player> players = new ArrayList<>();
+        Integer gameid = 0;
+        int num = 4;
+        for ( int i = 0; i < num; i++){
+            players.add(new Player());
+        }
+
+        GameController game = new GameController(players,gameid.toString());
         assertNotNull(game);
         int i = 0;
         int j;
-        game.generateCGC(4);
+        game.generateCGC();
         assertNotNull(game.getCommonGoalCards());
 
         for (CommonGoalCard card : game.getCommonGoalCards()) {

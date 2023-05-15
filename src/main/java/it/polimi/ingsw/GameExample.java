@@ -106,7 +106,7 @@ public class GameExample {
 
         System.out.println("Calculating scores...");
         game.calculateScore();
-        game.scoreBoard(game.getPlayers());
+        game.scoreBoard();
         System.out.println();
         Player highestScore = game.getPlayers().get(0);
         for ( Player player : game.getPlayers() ) {
