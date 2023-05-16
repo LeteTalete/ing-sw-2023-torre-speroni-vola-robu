@@ -1,5 +1,6 @@
 package it.polimi.ingsw.view;
 
+import it.polimi.ingsw.client.ClientController;
 import it.polimi.ingsw.network.IClientListener;
 import it.polimi.ingsw.stati.Status;
 import it.polimi.ingsw.structures.LivingRoomView;
@@ -30,4 +31,6 @@ public interface View {
     void printError(String message);
 
     void setMyTurn(boolean b);
+
+    void setMaster(ClientController clientController);
 }

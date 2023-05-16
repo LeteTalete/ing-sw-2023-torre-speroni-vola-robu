@@ -9,6 +9,7 @@ import java.rmi.RemoteException;
 
 
 public class ClientRMI implements IClientConnection, Remote, Serializable {
+    private String name;
     private ClientController master;
     private final IRemoteController remoteController;
     private View viewClient;
@@ -31,6 +32,10 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
     }
 
 
+    @Override
+    public void setName(String name) {
+        this.name=name;
+    }
 
     public void setViewClient(View currentView) {
         this.viewClient = currentView;

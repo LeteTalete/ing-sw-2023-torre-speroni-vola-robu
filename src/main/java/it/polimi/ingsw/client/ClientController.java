@@ -22,6 +22,7 @@ public class ClientController {
     public ClientController(View currentView) {
         this.currentView = currentView;
         this.listenerClient = currentView.getListener();
+        currentView.setMaster(this);
         setupConnection();
     }
 
@@ -83,6 +84,7 @@ public class ClientController {
             serverResponse = currentConnection.login(name);
         }
         this.username = name;
+        currentConnection.setName(name);
         return serverResponse;
     }
 

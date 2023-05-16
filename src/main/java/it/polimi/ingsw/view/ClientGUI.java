@@ -1,5 +1,6 @@
 package it.polimi.ingsw.view;
 
+import it.polimi.ingsw.client.ClientController;
 import it.polimi.ingsw.network.IClientListener;
 import it.polimi.ingsw.stati.Status;
 import it.polimi.ingsw.structures.LivingRoomView;
@@ -7,6 +8,7 @@ import it.polimi.ingsw.structures.PlayerView;
 import it.polimi.ingsw.structures.ShelfView;
 
 public class ClientGUI implements View {
+    private ClientController master;
     @Override
     public void chooseConnection() {
 
@@ -82,6 +84,11 @@ public class ClientGUI implements View {
     @Override
     public void setMyTurn(boolean b) {
 
+    }
+
+    @Override
+    public void setMaster(ClientController clientController) {
+        this.master = clientController;
     }
 
 }

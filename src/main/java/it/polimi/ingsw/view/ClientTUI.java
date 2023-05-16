@@ -1,5 +1,6 @@
 package it.polimi.ingsw.view;
 
+import it.polimi.ingsw.client.ClientController;
 import it.polimi.ingsw.network.ClientListenerTUI;
 import it.polimi.ingsw.network.IClientListener;
 import it.polimi.ingsw.stati.Status;
@@ -10,6 +11,7 @@ import java.util.*;
 
 
 public class ClientTUI implements View{
+    private ClientController master;
     private ClientListenerTUI listenerClient;
     private boolean MyTurn;
     static final String colorRESET = "\033[0m";  // Reset Changes
@@ -159,6 +161,11 @@ public class ClientTUI implements View{
         //if this b is false, none of the input can be sent to the server. it is only elaborated when the client asks
         //to see another player's shelf, for example
         this.MyTurn=b;
+    }
+
+    @Override
+    public void setMaster(ClientController clientController) {
+        this.master = clientController;
     }
 
 

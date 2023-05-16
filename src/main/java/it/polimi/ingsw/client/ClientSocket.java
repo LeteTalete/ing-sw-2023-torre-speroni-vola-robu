@@ -10,6 +10,8 @@ import java.util.Scanner;
 
 public class ClientSocket implements IClientConnection
 {
+    private String name;
+
     private String ip;
     private int port;
     private View viewClient;
@@ -80,6 +82,11 @@ public class ClientSocket implements IClientConnection
             socketOut.close();
             socket.close();
         }
+    }
+
+    @Override
+    public void setName(String name) {
+        this.name=name;
     }
 
     @Override
