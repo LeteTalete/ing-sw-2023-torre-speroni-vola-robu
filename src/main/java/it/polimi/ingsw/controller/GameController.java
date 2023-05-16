@@ -19,8 +19,8 @@ public class GameController {
         gameId = id;
         model.createGameBoard(playersList.size());
     }
-    public void main(){
-        model.main();
+    public void initialize(){
+        model.initialize();
     }
 
     public void generateCGC(){

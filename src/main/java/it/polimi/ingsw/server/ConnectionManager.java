@@ -13,7 +13,7 @@ public class ConnectionManager implements Serializable {
     //a client's username as a key. The servercontroller will have a map with clients' username as keys and the
     //number of their "room" (i.e. the game controller for their game) as values
     Map<String, IClientListener> viewListenerMap = new HashMap<>();
-    private Map<String, SimplifiedModel> clientLocals = new HashMap<>();
+    private Map<String, ViewServerProxyRMI> clientLocals = new HashMap<>();
     private ConnectionManager(){
 
     }
@@ -28,12 +28,12 @@ public class ConnectionManager implements Serializable {
         if(viewListenerMap.get(name)==null)
         {
             viewListenerMap.put(name, viewListener);
-            clientLocals.put(name, new SimplifiedModel(viewListener, name));
+            clientLocals.put(name, new ViewServerProxyRMI(viewListener, name));
             return StaticStrings.LOGIN_OK_NEW_ROOM;
         }
         return StaticStrings.LOGIN_KO;
     }
-    synchronized SimplifiedModel getLocalView(String username){
+    synchronized ViewServerProxyRMI getLocalView(String username){
         return clientLocals.get(username);
     }
 }

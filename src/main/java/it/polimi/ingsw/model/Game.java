@@ -29,7 +29,7 @@ public class Game {
         this.gameController = gameC;
     }
 
-    public void main() {
+    public void initialize() {
         System.out.println("I've created a game and here are the players:");
         for (Player player : players) {
             System.out.println(player.getNickname());
@@ -37,10 +37,12 @@ public class Game {
         /**we need the server to pass the number of players and the list of players to the gameController, somehow**/
         // create and setup board (we're assuming this all happens in the next instruction)
         this.gameBoard = new LivingRoom(numOfPlayers);
+        this.livingRoomView = new LivingRoomView(gameBoard);
+        System.out.println(("I've created a living room board!"));
 
         /**once the living room is set, controller decides who's first**/
         chooseFirstPlayer();
-
+        //time to notify the player who's first
 
         /**has a method to start a turn, which will notify each player that it's "nickname"'s turn**/
 

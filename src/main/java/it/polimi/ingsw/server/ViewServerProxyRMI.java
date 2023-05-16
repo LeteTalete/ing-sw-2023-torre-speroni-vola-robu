@@ -6,12 +6,12 @@ import java.io.Serializable;
 import java.rmi.RemoteException;
 
 //proxy pattern
-public class SimplifiedModel implements Serializable {
+public class ViewServerProxyRMI implements Serializable {
     private final ConnectionManager connectionManager;
     private final IClientListener viewListener;
     private final String username;
 
-    public SimplifiedModel(IClientListener viewL, String name){
+    public ViewServerProxyRMI(IClientListener viewL, String name){
         this.connectionManager = ConnectionManager.get();
         this.viewListener = viewL;
         this.username = name;
