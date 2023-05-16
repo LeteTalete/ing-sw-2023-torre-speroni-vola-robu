@@ -40,4 +40,13 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
     public void setViewClient(View currentView) {
         this.viewClient = currentView;
     }
+
+    @Override
+    public void chooseTiles(String tilesChosen) {
+        try {
+            remoteController.pickedTiles(this.name, tilesChosen);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

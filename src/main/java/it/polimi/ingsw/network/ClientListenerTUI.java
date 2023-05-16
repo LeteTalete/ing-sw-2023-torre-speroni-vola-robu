@@ -29,4 +29,7 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
         view.displayNotification(message);
     }
 
+    public void chooseTiles(String tileScelte) {
+
+    }
 }

@@ -96,6 +96,11 @@ public class ClientSocket implements IClientConnection
     }
 
     @Override
+    public void chooseTiles(String tilesChosen) {
+
+    }
+
+    @Override
     public String login(String name)
     {
         String success = null;
