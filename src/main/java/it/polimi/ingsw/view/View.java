@@ -1,12 +1,10 @@
 package it.polimi.ingsw.view;
 
-import it.polimi.ingsw.network.IListener;
+import it.polimi.ingsw.network.IClientListener;
 import it.polimi.ingsw.stati.Status;
 import it.polimi.ingsw.structures.LivingRoomView;
 import it.polimi.ingsw.structures.PlayerView;
 import it.polimi.ingsw.structures.ShelfView;
-
-import java.rmi.RemoteException;
 
 public interface View {
     void chooseConnection();
@@ -27,7 +25,7 @@ public interface View {
 
     void showPersonalGoalCard();
     void showBoard(LivingRoomView livingRoomView);
-    IListener getListener();
+    IClientListener getListener();
 
     void printError(String message);
 }

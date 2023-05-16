@@ -1,6 +1,6 @@
 package it.polimi.ingsw.server;
 
-import it.polimi.ingsw.network.IListener;
+import it.polimi.ingsw.network.IClientListener;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -12,7 +12,7 @@ public class ConnectionManager implements Serializable {
     //it's important for these to be maps, so that the search is made easier with the usage of
     //a client's username as a key. The servercontroller will have a map with clients' username as keys and the
     //number of their "room" (i.e. the game controller for their game) as values
-    Map<String, IListener> viewListenerMap = new HashMap<>();
+    Map<String, IClientListener> viewListenerMap = new HashMap<>();
     private Map<String, SimplifiedModel> clientLocals = new HashMap<>();
     private ConnectionManager(){
 
@@ -24,7 +24,7 @@ public class ConnectionManager implements Serializable {
         return instance;
     }
 
-    synchronized String addClientView(String name, IListener viewListener) {
+    synchronized String addClientView(String name, IClientListener viewListener) {
         if(viewListenerMap.get(name)==null)
         {
             viewListenerMap.put(name, viewListener);

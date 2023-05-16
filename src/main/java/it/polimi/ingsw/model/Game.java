@@ -4,6 +4,7 @@ import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.model.board.LivingRoom;
 import it.polimi.ingsw.model.cards.CommonGoalCard;
 import it.polimi.ingsw.model.enumerations.Tile;
+import it.polimi.ingsw.structures.LivingRoomView;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -16,14 +17,17 @@ public class Game {
     private Player currentPlayer;
     private Player previousPlayer;
     private String gameId;
-    private static String ViewInterface;
-    private static GameController game;
+    private static GameController gameController;
     private ArrayList<Player> players;
     private int numOfPlayers;
     private LivingRoom gameBoard;
+    private LivingRoomView livingRoomView;
     private List<CommonGoalCard> commonGoalCards;
 
-    private static Player player;//what was this for?
+    public Game(String id, GameController gameC){
+        this.gameId = id;
+        this.gameController = gameC;
+    }
 
     public void main() {
         System.out.println("I've created a game and here are the players:");

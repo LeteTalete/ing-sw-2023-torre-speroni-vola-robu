@@ -1,7 +1,6 @@
 package it.polimi.ingsw.server;
 
-import it.polimi.ingsw.network.IListener;
-import it.polimi.ingsw.server.ConnectionManager;
+import it.polimi.ingsw.network.IClientListener;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
@@ -9,10 +8,10 @@ import java.rmi.RemoteException;
 //proxy pattern
 public class SimplifiedModel implements Serializable {
     private final ConnectionManager connectionManager;
-    private final IListener viewListener;
+    private final IClientListener viewListener;
     private final String username;
 
-    public SimplifiedModel(IListener viewL, String name){
+    public SimplifiedModel(IClientListener viewL, String name){
         this.connectionManager = ConnectionManager.get();
         this.viewListener = viewL;
         this.username = name;
@@ -22,7 +21,7 @@ public class SimplifiedModel implements Serializable {
 
     public void processLogin(String message){
         try{
-            viewListener.processLogin(message);
+            viewListener.sendNotification(message);
         }catch(RemoteException e) {
             System.err.println(e.getMessage());
         }

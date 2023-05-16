@@ -1,13 +1,10 @@
 package it.polimi.ingsw.view;
 
-import it.polimi.ingsw.model.enumerations.Couple;
-import it.polimi.ingsw.network.IListener;
+import it.polimi.ingsw.network.IClientListener;
 import it.polimi.ingsw.stati.Status;
 import it.polimi.ingsw.structures.LivingRoomView;
 import it.polimi.ingsw.structures.PlayerView;
 import it.polimi.ingsw.structures.ShelfView;
-
-import java.rmi.RemoteException;
 
 public class ClientGUI implements View {
     @Override
@@ -72,7 +69,7 @@ public class ClientGUI implements View {
 
 
     @Override
-    public IListener getListener() {
+    public IClientListener getListener() {
         return null;
     }
 

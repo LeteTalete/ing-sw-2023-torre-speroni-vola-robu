@@ -1,8 +1,7 @@
 package it.polimi.ingsw.server;
 
 import it.polimi.ingsw.controller.GameController;
-import it.polimi.ingsw.model.enumerations.Tile;
-import it.polimi.ingsw.network.IListener;
+import it.polimi.ingsw.network.IClientListener;
 import it.polimi.ingsw.network.IRemoteController;
 
 import java.rmi.RemoteException;
@@ -15,7 +14,6 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
     //network manager: to instantiate RMI and socket
     //these are all the usernames and the respective rooms
     private Map<String, String> activeUsers;
-    private ServerSocket serverSocket;
 
     //constructor
     public ServerManager() throws RemoteException{
@@ -71,7 +69,7 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
     }
 
     @Override
-    public String login(String name, IListener viewListener) throws RemoteException {
+    public String login(String name, IClientListener viewListener) throws RemoteException {
         String success = ConnectionManager.get().addClientView(name, viewListener);
         if(success.equals(StaticStrings.LOGIN_KO)){
             return success;

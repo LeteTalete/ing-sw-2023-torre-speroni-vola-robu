@@ -1,7 +1,7 @@
 package it.polimi.ingsw.view;
 
 import it.polimi.ingsw.network.ClientListenerTUI;
-import it.polimi.ingsw.network.IListener;
+import it.polimi.ingsw.network.IClientListener;
 import it.polimi.ingsw.stati.Status;
 import it.polimi.ingsw.structures.*;
 
@@ -10,7 +10,7 @@ import java.util.*;
 
 
 public class ClientTUI implements View{
-    private IListener listenerClient;
+    private IClientListener listenerClient;
     static final String colorRESET = "\033[0m";  // Reset Changes
     static final String colorTitle = "\033[38;5;11m"; //Yellow
     private final Integer sizeSlotTile = 3; //Tile size to be colored
@@ -143,7 +143,7 @@ public class ClientTUI implements View{
 
 
     @Override
-    public IListener getListener() {
+    public IClientListener getListener() {
         return listenerClient;
     }
 

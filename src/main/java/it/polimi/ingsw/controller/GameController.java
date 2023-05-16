@@ -1,34 +1,24 @@
 package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.model.Game;
-import it.polimi.ingsw.model.board.LivingRoom;
 import it.polimi.ingsw.model.Player;
+import it.polimi.ingsw.model.board.LivingRoom;
 import it.polimi.ingsw.model.cards.CommonGoalCard;
-import it.polimi.ingsw.model.cards.PersonalGoalCard;
-import it.polimi.ingsw.model.enumerations.Tile;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Random;
-import java.util.stream.Collectors;
 
 public class GameController {
     private Game model;
     private String gameId;
 
     public GameController(ArrayList<Player> playersList, String id) {
-        model = new Game();
+        model = new Game(id, this);
         model.setPlayers(playersList);
         model.setNumOfPlayers(playersList.size());
         gameId = id;
         model.createGameBoard(playersList.size());
     }
-
-    public GameController() {
-        model = new Game();
-    }
-
     public void main(){
         model.main();
     }

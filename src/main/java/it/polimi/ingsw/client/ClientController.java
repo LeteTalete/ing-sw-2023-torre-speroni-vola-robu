@@ -1,6 +1,6 @@
 package it.polimi.ingsw.client;
 
-import it.polimi.ingsw.network.IListener;
+import it.polimi.ingsw.network.IClientListener;
 import it.polimi.ingsw.network.IRemoteController;
 import it.polimi.ingsw.server.StaticStrings;
 import it.polimi.ingsw.view.View;
@@ -14,7 +14,7 @@ public class ClientController {
     private View currentView;
     private String username;
     private IClientConnection currentConnection;
-    private IListener listenerClient;
+    private IClientListener listenerClient;
     private Registry registry;
     private IRemoteController remoteController;
 
