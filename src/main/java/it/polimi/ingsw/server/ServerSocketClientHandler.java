@@ -1,20 +1,29 @@
 package it.polimi.ingsw.server;
 
+import it.polimi.ingsw.network.IClientListener;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.rmi.RemoteException;
 import java.util.Scanner;
 
 
 //this class handles the communication with the client associated to the assigned socket
-public class ServerSocketClientHandler implements Runnable
+public class ServerSocketClientHandler implements Runnable, IClientListener
 {
     private Socket socket;
+    private ServerManager serverManager;
 
     public ServerSocketClientHandler(Socket socket)
     {
         this.socket = socket;
+    }
+    public ServerSocketClientHandler(Socket socket, ServerManager serverManager)
+    {
+        this.socket = socket;
+        this.serverManager = serverManager;
     }
 
     public void run()
@@ -24,19 +33,11 @@ public class ServerSocketClientHandler implements Runnable
             Scanner in = new Scanner(socket.getInputStream());
             PrintWriter out = new PrintWriter(socket.getOutputStream());
 
-            //leggo e scrivo nella connessione finche non ricevo "quit" (DEBUG)
-            String debug = "q";
-            while(!debug.equals("quit"))
-            {
-                String line = in.nextLine();
-                System.out.println("Client sent: " + line);
-                if(line.equals("quit")) break;
-                else
-                {
-                    out.println("from Server: " + line);
-                    out.flush();
-                }
-            }
+            String clientInput = in.nextLine();
+            //check if the nickname is not already used
+            //...
+            out.println("from Server: " + clientInput);
+            out.flush();
 
             //closing streams
             in.close();
@@ -47,5 +48,17 @@ public class ServerSocketClientHandler implements Runnable
         {
             System.err.println(e.getMessage());
         }
+    }
+
+    @Override
+    public int askHowMany() throws RemoteException
+    {
+        return 0;
+    }
+
+    @Override
+    public void sendNotification(String message) throws RemoteException
+    {
+
     }
 }

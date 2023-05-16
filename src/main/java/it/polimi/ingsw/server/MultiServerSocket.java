@@ -12,10 +12,16 @@ import java.util.concurrent.Executors;
 public class MultiServerSocket
 {
     private int port;
+    private ServerManager serverManager;
 
     public MultiServerSocket(int port)
     {
         this.port = port;
+    }
+    public MultiServerSocket(int port, ServerManager serverManager)
+    {
+        this.port = port;
+        this.serverManager = serverManager;
     }
 
     public void startServer()
@@ -39,7 +45,7 @@ public class MultiServerSocket
             try
             {
                 Socket socket = serverSocket.accept();
-                executor.submit(new ServerSocketClientHandler(socket));
+                executor.submit(new ServerSocketClientHandler(socket,serverManager));
             }
             catch (IOException e)
             {

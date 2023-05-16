@@ -15,7 +15,7 @@ public class ServerExecutable {
             registry.rebind("Login", serverManager);
 
             //Socket
-            MultiServerSocket server = new MultiServerSocket(1420);
+            MultiServerSocket server = new MultiServerSocket(1420, serverManager);
             server.startServer();
         } catch (RemoteException e) {
             throw new RuntimeException(e);

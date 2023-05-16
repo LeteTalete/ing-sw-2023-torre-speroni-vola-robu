@@ -26,9 +26,10 @@ public class ClientSocket implements IClientConnection
     {
         //open a socket by specifying server's ip address and listening port
         Socket socket = new Socket(ip,port);
-        System.out.println("Connection established");
+        System.out.println(">> Connection established");
 
         //if the connection is successful i can use socket's streams to communicate with the server
+        System.out.println(">> Insert username");
         Scanner socketIn = new Scanner(socket.getInputStream());
         PrintWriter socketOut = new PrintWriter(socket.getOutputStream());
 
@@ -36,7 +37,24 @@ public class ClientSocket implements IClientConnection
         Scanner stdin = new Scanner(System.in);
         try
         {
-            String debug = "q";
+            String input = stdin.nextLine();
+            String success = null;
+            do
+            {
+                //success = login(input);
+
+                //sending nickname
+                socketOut.println(input);
+                socketOut.flush();
+
+                //receiving response
+                success = socketIn.nextLine();
+                System.out.println(success);
+            }
+            while(!success.equals("success"));
+
+            //------------
+            String debug = "quit";
             while(!debug.equals("quit"))
             {
                 //sending something to the server
@@ -48,6 +66,7 @@ public class ClientSocket implements IClientConnection
                 String socketLine = socketIn.nextLine();
                 System.out.println(socketLine);
             }
+            //----------
         }
         catch (NoSuchElementException e)
         {
@@ -74,7 +93,6 @@ public class ClientSocket implements IClientConnection
     {
         String success = null;
 
-        //login ...
         //DEBUG
         System.out.println("DEBUG: effettuo il login...");
 
