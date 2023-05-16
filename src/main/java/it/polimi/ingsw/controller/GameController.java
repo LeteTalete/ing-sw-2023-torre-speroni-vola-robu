@@ -4,6 +4,7 @@ import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.board.LivingRoom;
 import it.polimi.ingsw.model.cards.CommonGoalCard;
+import it.polimi.ingsw.server.ServerManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +12,16 @@ import java.util.List;
 public class GameController {
     private Game model;
     private String gameId;
+    private ServerManager master;
 
+    public GameController(ArrayList<Player> playersList, String id, ServerManager serverMaster) {
+        model = new Game(id, this);
+        model.setPlayers(playersList);
+        model.setNumOfPlayers(playersList.size());
+        gameId = id;
+        model.createGameBoard(playersList.size());
+        master = serverMaster;
+    }
     public GameController(ArrayList<Player> playersList, String id) {
         model = new Game(id, this);
         model.setPlayers(playersList);
@@ -21,6 +31,14 @@ public class GameController {
     }
     public void initialize(){
         model.initialize();
+    }
+
+    public void notifySinglePlayer(){
+
+    }
+
+    public void notifyAllPlayers(String message){
+        master.notifyAllPlayers(gameId, message);
     }
 
     public void generateCGC(){

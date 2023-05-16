@@ -42,8 +42,9 @@ public class Game {
 
         /**once the living room is set, controller decides who's first**/
         chooseFirstPlayer();
-        //time to notify the player who's first
-
+        //time to notify the players who's first
+        String firstPlayer = getCurrentPlayer().getNickname();
+        gameController.notifyAllPlayers("First player is: " + firstPlayer);
         /**has a method to start a turn, which will notify each player that it's "nickname"'s turn**/
 
         /**has a method to change turns (it could already be implemented into Game**/

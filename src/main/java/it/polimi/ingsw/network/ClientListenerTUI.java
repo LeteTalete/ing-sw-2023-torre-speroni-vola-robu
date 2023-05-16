@@ -1,14 +1,14 @@
 package it.polimi.ingsw.network;
 
-import it.polimi.ingsw.view.View;
+import it.polimi.ingsw.view.ClientTUI;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
 public class ClientListenerTUI extends UnicastRemoteObject implements IClientListener {
-    private transient final View view;
+    private transient final ClientTUI view;
 
-    public ClientListenerTUI(View currentView) throws RemoteException{
+    public ClientListenerTUI(ClientTUI currentView) throws RemoteException{
         this.view = currentView;
     }
 

@@ -10,7 +10,7 @@ import java.util.*;
 
 
 public class ClientTUI implements View{
-    private IClientListener listenerClient;
+    private ClientListenerTUI listenerClient;
     static final String colorRESET = "\033[0m";  // Reset Changes
     static final String colorTitle = "\033[38;5;11m"; //Yellow
     private final Integer sizeSlotTile = 3; //Tile size to be colored

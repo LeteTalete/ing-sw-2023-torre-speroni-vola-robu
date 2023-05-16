@@ -33,13 +33,13 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
             System.out.println("Added user "+ name + " to waiting room "+waitingRoom.getId()+" successfully!");
             if(enoughPLayers.equals(StaticStrings.GAME_START)){
                 //i have to create the players when creating the game
-                GameController game = new GameController(waitingRoom.getListOfPlayers(), waitingRoom.getId());
+                GameController game = new GameController(waitingRoom.getListOfPlayers(), waitingRoom.getId(), this);
                 activeGames.put(waitingRoom.getId(), game);
                 //
                 System.out.println("i deleted the waiting room "+waitingRoom.getId()+" and started the game!");
                 System.out.println("there are currently "+activeGames.size()+" games active!");
                 //now we need to notify all the players that the game is about to start
-                SendNotifToPlayers(waitingRoom.getId(), StaticStrings.GAME_START);
+                notifyAllPlayers(waitingRoom.getId(), StaticStrings.GAME_START);
 
                 game.initialize();
                 waitingRoom=null;
@@ -49,7 +49,7 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
         }
     }
 
-    private void SendNotifToPlayers(String id, String something) {
+    public void notifyAllPlayers(String id, String something) {
         activeUsers.entrySet()
                 .stream()
                 .filter(e -> e.getValue().equals(id))
