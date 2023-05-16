@@ -7,6 +7,7 @@ import it.polimi.ingsw.model.enumerations.Tile;
 import it.polimi.ingsw.server.StaticStrings;
 import it.polimi.ingsw.structures.LivingRoomView;
 
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -30,7 +31,7 @@ public class Game {
         this.gameController = gameC;
     }
 
-    public void initialize() {
+    public void initialize() throws RemoteException {
         System.out.println("I've created a game and here are the players:");
         for (Player player : players) {
             System.out.println(player.getNickname());

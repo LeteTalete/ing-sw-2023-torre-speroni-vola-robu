@@ -6,6 +6,7 @@ import it.polimi.ingsw.model.board.LivingRoom;
 import it.polimi.ingsw.model.cards.CommonGoalCard;
 import it.polimi.ingsw.server.ServerManager;
 
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,11 +30,11 @@ public class GameController {
         gameId = id;
         model.createGameBoard(playersList.size());
     }
-    public void initialize(){
+    public void initialize() throws RemoteException {
         model.initialize();
     }
 
-    public void notifySinglePlayer(String name, String message){
+    public void notifySinglePlayer(String name, String message) throws RemoteException {
         master.notifySinglePlayer(name, message);
     }
 

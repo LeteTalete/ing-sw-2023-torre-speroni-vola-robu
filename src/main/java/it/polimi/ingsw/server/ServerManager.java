@@ -22,7 +22,7 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
         activeUsers = new HashMap<String,String>();
     }
 
-    public synchronized String putInWaitingRoom(String name){
+    public synchronized String putInWaitingRoom(String name) throws RemoteException {
         if(waitingRoom==null){
             System.out.println("i will create a new waiting room for you");
             return null;
@@ -49,7 +49,7 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
         }
     }
 
-    public synchronized void notifySinglePlayer(String name, String message) {
+    public synchronized void notifySinglePlayer(String name, String message) throws RemoteException {
         ConnectionManager.get().getLocalView(name).sendNotification(message);
     }
 
@@ -57,7 +57,13 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
         activeUsers.entrySet()
                 .stream()
                 .filter(e -> e.getValue().equals(id))
-                .forEach(e -> ConnectionManager.get().getLocalView(e.getKey()).sendNotification(something));
+                .forEach(e -> {
+                    try {
+                        ConnectionManager.get().getLocalView(e.getKey()).sendNotification(something);
+                    } catch (RemoteException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                });
     }
 
     public synchronized String createWaitingRoom (String name, int howMany){
@@ -83,7 +89,7 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
         if(success.equals(StaticStrings.LOGIN_KO)){
             return success;
         }
-        ConnectionManager.get().getLocalView(name).processLogin("Server registered you as a user");
+        ConnectionManager.get().getLocalView(name).sendNotification("Server registered you as a user");
         String response = putInWaitingRoom(name);
         if(response==null){
             int num = ConnectionManager.get().getLocalView(name).askHowMany();

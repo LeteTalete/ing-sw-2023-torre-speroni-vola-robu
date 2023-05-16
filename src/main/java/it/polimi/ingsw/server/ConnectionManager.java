@@ -15,8 +15,8 @@ public class ConnectionManager implements Serializable {
 
     /**instead of viewListener we need a generic ConnectionType that allows me to send something to the client without
     the need for the need for the server to know what kind of connection the single clients are using**/
+
     Map<String, IClientListener> viewListenerMap = new HashMap<>();
-    private Map<String, ViewServerProxyRMI> clientLocals = new HashMap<>();
     private ConnectionManager(){
 
     }
@@ -31,12 +31,11 @@ public class ConnectionManager implements Serializable {
         if(viewListenerMap.get(name)==null)
         {
             viewListenerMap.put(name, viewListener);
-            clientLocals.put(name, new ViewServerProxyRMI(viewListener, name));
             return StaticStrings.LOGIN_OK_NEW_ROOM;
         }
         return StaticStrings.LOGIN_KO;
     }
-    synchronized ViewServerProxyRMI getLocalView(String username){
-        return clientLocals.get(username);
+    synchronized IClientListener getLocalView(String username){
+        return viewListenerMap.get(username);
     }
 }
