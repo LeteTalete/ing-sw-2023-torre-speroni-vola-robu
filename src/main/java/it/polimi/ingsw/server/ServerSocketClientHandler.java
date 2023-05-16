@@ -36,6 +36,7 @@ public class ServerSocketClientHandler implements Runnable, IClientListener
             String clientInput = in.nextLine();
             //check if the nickname is not already used
             //...
+            serverManager.login(clientInput,this);
             out.println("from Server: " + clientInput);
             out.flush();
 
