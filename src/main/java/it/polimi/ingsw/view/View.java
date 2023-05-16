@@ -28,4 +28,6 @@ public interface View {
     IClientListener getListener();
 
     void printError(String message);
+
+    void setMyTurn(boolean b);
 }

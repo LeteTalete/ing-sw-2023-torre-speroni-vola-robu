@@ -1,5 +1,6 @@
 package it.polimi.ingsw.network;
 
+import it.polimi.ingsw.server.StaticStrings;
 import it.polimi.ingsw.view.ClientTUI;
 
 import java.rmi.RemoteException;
@@ -19,6 +20,12 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
 
     @Override
     public void sendNotification(String message) throws RemoteException {
+        if(message.equals(StaticStrings.YOUR_TURN)){
+            view.setMyTurn(true);
+        }
+        if(message.equals(StaticStrings.END_TURN)){
+            view.setMyTurn(false);
+        }
         view.displayNotification(message);
     }
 

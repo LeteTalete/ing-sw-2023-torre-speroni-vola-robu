@@ -33,8 +33,8 @@ public class GameController {
         model.initialize();
     }
 
-    public void notifySinglePlayer(){
-
+    public void notifySinglePlayer(String name, String message){
+        master.notifySinglePlayer(name, message);
     }
 
     public void notifyAllPlayers(String message){

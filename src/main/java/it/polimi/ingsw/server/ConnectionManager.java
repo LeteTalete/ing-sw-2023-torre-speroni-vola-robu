@@ -12,6 +12,9 @@ public class ConnectionManager implements Serializable {
     //it's important for these to be maps, so that the search is made easier with the usage of
     //a client's username as a key. The servercontroller will have a map with clients' username as keys and the
     //number of their "room" (i.e. the game controller for their game) as values
+
+    /**instead of viewListener we need a generic ConnectionType that allows me to send something to the client without
+    the need for the need for the server to know what kind of connection the single clients are using**/
     Map<String, IClientListener> viewListenerMap = new HashMap<>();
     private Map<String, ViewServerProxyRMI> clientLocals = new HashMap<>();
     private ConnectionManager(){

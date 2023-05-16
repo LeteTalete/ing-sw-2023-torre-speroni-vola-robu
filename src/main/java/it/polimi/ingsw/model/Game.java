@@ -4,6 +4,7 @@ import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.model.board.LivingRoom;
 import it.polimi.ingsw.model.cards.CommonGoalCard;
 import it.polimi.ingsw.model.enumerations.Tile;
+import it.polimi.ingsw.server.StaticStrings;
 import it.polimi.ingsw.structures.LivingRoomView;
 
 import java.util.ArrayList;
@@ -45,6 +46,7 @@ public class Game {
         //time to notify the players who's first
         String firstPlayer = getCurrentPlayer().getNickname();
         gameController.notifyAllPlayers("First player is: " + firstPlayer);
+        gameController.notifySinglePlayer(firstPlayer, StaticStrings.YOUR_TURN);
         /**has a method to start a turn, which will notify each player that it's "nickname"'s turn**/
 
         /**has a method to change turns (it could already be implemented into Game**/

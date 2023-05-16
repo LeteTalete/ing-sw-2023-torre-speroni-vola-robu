@@ -49,7 +49,11 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
         }
     }
 
-    public void notifyAllPlayers(String id, String something) {
+    public synchronized void notifySinglePlayer(String name, String message) {
+        ConnectionManager.get().getLocalView(name).sendNotification(message);
+    }
+
+    public synchronized void notifyAllPlayers(String id, String something) {
         activeUsers.entrySet()
                 .stream()
                 .filter(e -> e.getValue().equals(id))
@@ -72,8 +76,9 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
         //if the game is shut down, the server will notify all the players about it
     }
 
+    //this is for rmi
     @Override
-    public String login(String name, IClientListener viewListener) throws RemoteException {
+    public synchronized String login(String name, IClientListener viewListener) throws RemoteException {
         String success = ConnectionManager.get().addClientView(name, viewListener);
         if(success.equals(StaticStrings.LOGIN_KO)){
             return success;
@@ -94,18 +99,19 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
     }
 
     @Override
-    public void pickedTiles(String username, String tilesCoordinates) throws RemoteException {
+    public synchronized void pickedTiles(String username, String tilesCoordinates) throws RemoteException {
 
     }
 
     @Override
-    public void rearrangeTiles(String username, String tilesOrdered) throws RemoteException {
+    public synchronized void rearrangeTiles(String username, String tilesOrdered) throws RemoteException {
 
     }
 
     @Override
-    public void selectColumn(String username, int column) throws RemoteException {
+    public synchronized void selectColumn(String username, int column) throws RemoteException {
 
     }
+
 
 }

@@ -7,4 +7,6 @@ public class StaticStrings {
     public static final String GAME_START = "We're all set to play!";
     public static final String GAME_WAITING = "Waiting";
     public static final String OK = "The move is valid! Proceed.";
+    public static final String YOUR_TURN = "It's your turn, now!";
+    public static final String END_TURN = "Your turn is over.";
 }

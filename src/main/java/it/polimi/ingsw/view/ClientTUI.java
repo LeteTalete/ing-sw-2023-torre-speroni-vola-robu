@@ -11,6 +11,7 @@ import java.util.*;
 
 public class ClientTUI implements View{
     private ClientListenerTUI listenerClient;
+    private boolean MyTurn;
     static final String colorRESET = "\033[0m";  // Reset Changes
     static final String colorTitle = "\033[38;5;11m"; //Yellow
     private final Integer sizeSlotTile = 3; //Tile size to be colored
@@ -152,5 +153,16 @@ public class ClientTUI implements View{
 
     }
 
+    @Override
+    public void setMyTurn(boolean b) {
+        //the view has a while loop that gets the player's input
+        //if this b is false, none of the input can be sent to the server. it is only elaborated when the client asks
+        //to see another player's shelf, for example
+        this.MyTurn=b;
+    }
 
+
+    public boolean getMyTurn() {
+        return MyTurn;
+    }
 }
