@@ -1,6 +1,7 @@
 package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.Exceptions.InvalidChoiceFormatException;
+import it.polimi.ingsw.Updates.ModelUpdate;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.Position;
@@ -47,6 +48,11 @@ public class GameController {
     public void notifyAllPlayers(String message) {
         master.notifyAllPlayers(gameId, message);
     }
+
+    public void notifyAllPlayers(ModelUpdate message) {
+        master.notifyAllPlayers(message);
+    }
+
 
     public void chooseTiles(String username, String userInput) throws RemoteException {
 

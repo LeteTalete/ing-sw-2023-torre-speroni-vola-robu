@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.Updates.ModelUpdate;
 import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.model.board.LivingRoom;
 import it.polimi.ingsw.model.cards.CommonGoalCard;
@@ -8,10 +9,7 @@ import it.polimi.ingsw.server.StaticStrings;
 import it.polimi.ingsw.structures.LivingRoomView;
 
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Game {
@@ -23,7 +21,6 @@ public class Game {
     private ArrayList<Player> players;
     private int numOfPlayers;
     private LivingRoom gameBoard;
-    private LivingRoomView livingRoomView;
     private List<CommonGoalCard> commonGoalCards;
 
     public Game(String id, GameController gameC){
@@ -39,7 +36,6 @@ public class Game {
         /**we need the server to pass the number of players and the list of players to the gameController, somehow**/
         // create and setup board (we're assuming this all happens in the next instruction)
         this.gameBoard = new LivingRoom(numOfPlayers);
-        this.livingRoomView = new LivingRoomView(gameBoard);
         System.out.println(("I've created a living room board!"));
 
         /**once the living room is set, controller decides who's first**/
@@ -153,6 +149,16 @@ public class Game {
         }
     }
 
+    public void updateCouples(ArrayList<Position> choice){
+        this.gameBoard.updateCouples(choice);
+        gameController.notifyAllPlayers(new ModelUpdate(this));
+    }
+
+    public void insertTiles(int columnChosen, ArrayList<Tile> tiles){
+        this.getCurrentPlayer().getMyShelf().insertTiles(columnChosen, tiles);
+    }
+
+
     public void setCurrentPlayer(Player currentPlayer) {
         this.currentPlayer = currentPlayer;
     }
@@ -179,7 +185,6 @@ public class Game {
     }
 
     public void setPlayers(ArrayList<Player> players){
-        this.players = new ArrayList<>();
         this.players = players;
     }
     public void setPlayersView(ArrayList<Player> players) {
