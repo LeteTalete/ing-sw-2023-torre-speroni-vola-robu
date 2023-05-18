@@ -96,7 +96,7 @@ public class ClientSocket implements IClientConnection
     }
 
     @Override
-    public void chooseTiles(String tilesChosen) {
+    public void chooseTiles(String name, String tilesChosen) {
 
     }
 

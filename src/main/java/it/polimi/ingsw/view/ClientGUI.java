@@ -87,8 +87,18 @@ public class ClientGUI implements View {
     }
 
     @Override
+    public void startRun() {
+
+    }
+
+    @Override
     public void setMaster(ClientController clientController) {
         this.master = clientController;
+    }
+
+    @Override
+    public void askForTiles() {
+
     }
 
 }

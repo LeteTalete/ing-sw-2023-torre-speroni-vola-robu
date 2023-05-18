@@ -19,14 +19,6 @@ public class ViewServerProxyRMI implements Serializable {
 
     public String getUsername() {return username;}
 
-    public void processLogin(String message){
-        try{
-            viewListener.sendNotification(message);
-        }catch(RemoteException e) {
-            System.err.println(e.getMessage());
-        }
-    }
-
     public int askHowMany() {
         int number;
         try {

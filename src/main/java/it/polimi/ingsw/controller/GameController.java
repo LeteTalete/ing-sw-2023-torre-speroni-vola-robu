@@ -50,12 +50,14 @@ public class GameController {
     }
 
     public void notifyAllPlayers(ModelUpdate message) {
-        master.notifyAllPlayers(message);
+        master.notifyAllPlayers(gameId, message);
     }
 
 
     public void chooseTiles(String username, String userInput) throws RemoteException {
+        System.out.println("AAAAAA");
 
+        //this needs to be rewritten asap
         ArrayList<Position> choice = new ArrayList<>();
 
         for (int i = 0; i < userInput.length(); i++) {
@@ -69,6 +71,10 @@ public class GameController {
 
         if (this.getGameBoard().checkPlayerChoice(choice)) {
             master.notifySinglePlayer(username, StaticStrings.OK);
+        }
+        else{
+            master.notifySinglePlayer(username, StaticStrings.INVALID_MOVE);
+
         }
         // needs else with StaticString.NO in case the choice is wrong
 
@@ -118,6 +124,7 @@ public class GameController {
     public String getGameId(){
         return this.gameId;
     }
+
 
     // Dunno what to do with those two
 

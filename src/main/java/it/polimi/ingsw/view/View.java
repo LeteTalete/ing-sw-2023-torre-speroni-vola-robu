@@ -31,6 +31,9 @@ public interface View {
     void printError(String message);
 
     void setMyTurn(boolean b);
+    void startRun();
 
     void setMaster(ClientController clientController);
+
+    void askForTiles();
 }

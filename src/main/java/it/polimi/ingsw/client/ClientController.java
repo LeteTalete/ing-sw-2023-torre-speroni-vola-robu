@@ -12,6 +12,8 @@ import java.rmi.registry.Registry;
 
 public class ClientController {
     private View currentView;
+    private boolean gameOn;
+    private boolean myTurn;
     private String username;
     private IClientConnection currentConnection;
     private IClientListener listenerClient;
@@ -22,6 +24,7 @@ public class ClientController {
     public ClientController(View currentView) {
         this.currentView = currentView;
         this.listenerClient = currentView.getListener();
+        this.username = new String();
         currentView.setMaster(this);
         setupConnection();
     }
@@ -83,7 +86,7 @@ public class ClientController {
             name = currentView.getUsername();
             serverResponse = currentConnection.login(name);
         }
-        this.username = name;
+        setUsername(name);
         currentConnection.setName(name);
         return serverResponse;
     }
@@ -93,4 +96,29 @@ public class ClientController {
     }
 
 
+    public void chooseTiles(String tilesChosen) {
+        System.out.println("correct "+ username);
+
+        currentConnection.chooseTiles(username, tilesChosen);
+    }
+
+    public boolean isGameOn() {
+        return gameOn;
+    }
+
+    public void setGameOn(boolean gameOn) {
+        this.gameOn = gameOn;
+    }
+
+    public boolean isMyTurn() {
+        return myTurn;
+    }
+
+    public void setMyTurn(boolean myTurn) {
+        this.myTurn = myTurn;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 }

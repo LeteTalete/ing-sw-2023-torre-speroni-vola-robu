@@ -3,6 +3,7 @@ package it.polimi.ingsw.view;
 import it.polimi.ingsw.client.ClientController;
 import it.polimi.ingsw.network.ClientListenerTUI;
 import it.polimi.ingsw.network.IClientListener;
+import it.polimi.ingsw.server.StaticStrings;
 import it.polimi.ingsw.stati.Status;
 import it.polimi.ingsw.structures.*;
 
@@ -10,10 +11,9 @@ import java.rmi.RemoteException;
 import java.util.*;
 
 
-public class ClientTUI implements View, Runnable{
+public class ClientTUI implements View{
     private ClientController master;
     private ClientListenerTUI listenerClient;
-    private boolean MyTurn;
     static final String colorRESET = "\033[0m";  // Reset Changes
     static final String colorTitle = "\033[38;5;11m"; //Yellow
     private final Integer sizeSlotTile = 3; //Tile size to be colored
@@ -158,17 +158,34 @@ public class ClientTUI implements View, Runnable{
         //the view has a while loop that gets the player's input
         //if this b is false, none of the input can be sent to the server. it is only elaborated when the client asks
         //to see another player's shelf, for example
-        this.MyTurn=b;
+        this.master.setMyTurn(b);
     }
+
+    @Override
+    public void startRun() {
+        //playing();
+    }
+
+
 
     @Override
     public void setMaster(ClientController clientController) {
         this.master = clientController;
     }
 
+    @Override
+    public void askForTiles() {
+        chooseTiles();
+        String tileScelte = frominput.nextLine();
+        if ( checkUserInput(tileScelte) ) {
+            master.chooseTiles(tileScelte);
+        }
+
+    }
+
 
     public boolean getMyTurn() {
-        return MyTurn;
+        return master.isMyTurn();
     }
 
     public boolean checkUserInput(String s)
@@ -204,17 +221,17 @@ public class ClientTUI implements View, Runnable{
         return true;
     }
 
-    @Override
-    public void run() {
-
-        do {
-        chooseTiles();
-        String tileScelte = frominput.nextLine();
-        if ( checkUserInput(tileScelte) ) {
-            listenerClient.chooseTiles(tileScelte);
-        }
-        }while(true);
+    //this should be some kind of run that only gets lines and parses them
+    public void playing() {
+        //needs fixing
 
     }
 
+    public boolean isGameOn() {
+        return master.isGameOn();
+    }
+
+    public void setGameOn(boolean gameOn) {
+        master.setGameOn(gameOn);
+    }
 }

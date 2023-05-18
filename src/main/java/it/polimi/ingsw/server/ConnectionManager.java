@@ -28,8 +28,7 @@ public class ConnectionManager implements Serializable {
     }
 
     synchronized String addClientView(String name, IClientListener viewListener) {
-        if(viewListenerMap.get(name)==null)
-        {
+        if(viewListenerMap.get(name)==null) {
             viewListenerMap.put(name, viewListener);
             return StaticStrings.LOGIN_OK_NEW_ROOM;
         }

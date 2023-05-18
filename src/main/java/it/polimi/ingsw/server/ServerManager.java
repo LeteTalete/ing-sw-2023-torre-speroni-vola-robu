@@ -1,5 +1,6 @@
 package it.polimi.ingsw.server;
 
+import it.polimi.ingsw.Updates.ModelUpdate;
 import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.network.IClientListener;
 import it.polimi.ingsw.network.IRemoteController;
@@ -39,9 +40,11 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
                 System.out.println("i deleted the waiting room "+waitingRoom.getId()+" and started the game!");
                 System.out.println("there are currently "+activeGames.size()+" games active!");
                 //now we need to notify all the players that the game is about to start
+
                 notifyAllPlayers(waitingRoom.getId(), StaticStrings.GAME_START);
 
                 game.initialize();
+
                 waitingRoom=null;
                 return enoughPLayers;
             }
@@ -60,6 +63,19 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
                 .forEach(e -> {
                     try {
                         ConnectionManager.get().getLocalView(e.getKey()).sendNotification(something);
+                    } catch (RemoteException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                });
+    }
+
+    public synchronized void notifyAllPlayers(String id, ModelUpdate something) {
+        activeUsers.entrySet()
+                .stream()
+                .filter(e -> e.getValue().equals(id))
+                .forEach(e -> {
+                    try {
+                        ConnectionManager.get().getLocalView(e.getKey()).sendUpdatedModel(something);
                     } catch (RemoteException ex) {
                         throw new RuntimeException(ex);
                     }
@@ -106,7 +122,9 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
 
     @Override
     public synchronized void pickedTiles(String username, String tilesCoordinates) throws RemoteException {
+        System.out.println("AAAAAASERVERMANAGER");
 
+        activeGames.get(username).chooseTiles(username, tilesCoordinates);
     }
 
     @Override

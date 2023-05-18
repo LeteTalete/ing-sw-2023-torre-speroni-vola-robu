@@ -42,11 +42,15 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
     }
 
     @Override
-    public void chooseTiles(String tilesChosen) {
+    public void chooseTiles(String username, String tilesChosen) {
         try {
-            remoteController.pickedTiles(this.name, tilesChosen);
+            remoteController.pickedTiles(username, tilesChosen);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public String getName() {
+        return name;
     }
 }

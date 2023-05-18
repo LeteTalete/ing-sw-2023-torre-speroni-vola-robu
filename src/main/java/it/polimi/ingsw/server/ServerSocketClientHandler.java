@@ -1,5 +1,6 @@
 package it.polimi.ingsw.server;
 
+import it.polimi.ingsw.Updates.ModelUpdate;
 import it.polimi.ingsw.network.IClientListener;
 
 import java.io.IOException;
@@ -61,5 +62,10 @@ public class ServerSocketClientHandler implements Runnable, IClientListener
     public void sendNotification(String message) throws RemoteException
     {
 
+    }
+
+    @Override
+    public void sendUpdatedModel(ModelUpdate updated) throws RemoteException {
+        //i think this has to serialize the modelupdate
     }
 }
