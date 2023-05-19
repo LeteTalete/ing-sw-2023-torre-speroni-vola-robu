@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 
 public class Game {
 
+    private String endGame;
     private Player currentPlayer;
     private Player previousPlayer;
     private String gameId;
@@ -148,14 +149,19 @@ public class Game {
             players.get(i).setGoalCard(personalGoalCards[i]);
         }
     }
-
+/*
     public void updateCouples(ArrayList<Position> choice){
         this.gameBoard.updateCouples(choice);
         gameController.notifyAllPlayers(new ModelUpdate(this));
     }
-
+*/
     public void insertTiles(int columnChosen, ArrayList<Tile> tiles){
         this.getCurrentPlayer().getMyShelf().insertTiles(columnChosen, tiles);
+        if ( endGame == null ) {
+            if (this.getCurrentPlayer().getMyShelf().checkShelfFull()) {
+                setEndGame(this.getCurrentPlayer().getNickname());
+            }
+        }
     }
 
 
@@ -205,5 +211,13 @@ public class Game {
 
     public void createGameBoard(int size) {
         gameBoard = new LivingRoom(size);
+    }
+
+    public String getEndGame() {
+        return endGame;
+    }
+
+    public void setEndGame(String endGame) {
+        this.endGame = endGame;
     }
 }
