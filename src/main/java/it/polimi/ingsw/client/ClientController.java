@@ -45,14 +45,21 @@ public class ClientController {
 
     public String setupSocket()
     {
-        ClientSocket client = new ClientSocket("127.0.0.1",1420);
         try
         {
-            client.startClient();
+            ClientSocket clientSocket = new ClientSocket("127.0.0.1",1420);
+            this.currentConnection = clientSocket;
+            clientSocket.setViewClient(currentView);
+            clientSocket.startClient();
+            String LoginSuccess = userLogin();
+            if(LoginSuccess.equals(StaticStrings.LOGIN_OK_NEW_ROOM))
+            {
+                System.out.println(StaticStrings.LOGIN_OK_NEW_ROOM);
+            }
         }
-        catch (IOException e)
+        catch (Exception e)
         {
-            System.err.println(e.getMessage());
+            return e.toString();
         }
 
         return null;

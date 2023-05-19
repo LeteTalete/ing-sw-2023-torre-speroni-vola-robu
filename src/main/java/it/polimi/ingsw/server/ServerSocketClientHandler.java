@@ -16,6 +16,8 @@ public class ServerSocketClientHandler implements Runnable, IClientListener
 {
     private Socket socket;
     private ServerManager serverManager;
+    private Scanner in;
+    private PrintWriter out;
 
     public ServerSocketClientHandler(Socket socket)
     {
@@ -27,29 +29,46 @@ public class ServerSocketClientHandler implements Runnable, IClientListener
         this.serverManager = serverManager;
     }
 
-    public void run()
+    public void openStreams()
     {
         try
         {
-            Scanner in = new Scanner(socket.getInputStream());
-            PrintWriter out = new PrintWriter(socket.getOutputStream());
-
-            String clientInput = in.nextLine();
-            //check if the nickname is not already used
-            //...
-            serverManager.login(clientInput,this);
-            out.println("from Server: " + clientInput);
-            out.flush();
-
-            //closing streams
-            in.close();
-            out.close();
-            socket.close();
+            this.in = new Scanner(socket.getInputStream());
+            this.out = new PrintWriter(socket.getOutputStream());
         }
-        catch (IOException e)
+        catch(IOException e)
         {
             System.err.println(e.getMessage());
         }
+    }
+
+    public void run()
+    {
+        openStreams();
+
+        try {
+
+
+            String clientInput = in.nextLine();
+            String response = serverManager.login(clientInput, this);
+            out.println(response);
+            out.flush();
+
+            //closing streams
+            closeStreams();
+
+            socket.close();
+        }
+        catch(IOException e)
+        {
+            System.err.println(e.getMessage());
+        }
+    }
+
+    public void closeStreams()
+    {
+        this.in.close();
+        this.out.close();
     }
 
     @Override
