@@ -23,20 +23,20 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
         activeUsers = new HashMap<String,String>();
     }
 
-    public synchronized String putInWaitingRoom(String name) throws RemoteException {
+    public synchronized String putInWaitingRoom(String name, String token) throws RemoteException {
         if(waitingRoom==null){
             System.out.println("i will create a new waiting room for you");
             return null;
         }
         else{
-            String enoughPLayers = waitingRoom.addPlayerToWaitingRoom(name);
-            activeUsers.put(name,waitingRoom.getId());
-            System.out.println("Added user "+ name + " to waiting room "+waitingRoom.getId()+" successfully!");
+            String enoughPLayers = waitingRoom.addPlayerToWaitingRoom(name, token);
+            activeUsers.put(token,waitingRoom.getId());
+            System.out.println("Added user "+ token + " to waiting room "+waitingRoom.getId()+" successfully!");
             if(enoughPLayers.equals(StaticStrings.GAME_START)){
                 //i have to create the players when creating the game
                 GameController game = new GameController(waitingRoom.getListOfPlayers(), waitingRoom.getId(), this);
                 activeGames.put(waitingRoom.getId(), game);
-                //
+
                 System.out.println("i deleted the waiting room "+waitingRoom.getId()+" and started the game!");
                 System.out.println("there are currently "+activeGames.size()+" games active!");
                 //now we need to notify all the players that the game is about to start
@@ -52,14 +52,14 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
         }
     }
 
-    public synchronized void notifySinglePlayer(String name, String message) throws RemoteException {
-        ConnectionManager.get().getLocalView(name).sendNotification(message);
+    public synchronized void notifySinglePlayer(String token, String message) throws RemoteException {
+        ConnectionManager.get().getLocalView(token).sendNotification(message);
     }
 
-    public synchronized void notifyAllPlayers(String id, String something) {
+    public synchronized void notifyAllPlayers(String token, String something) {
         activeUsers.entrySet()
                 .stream()
-                .filter(e -> e.getValue().equals(id))
+                .filter(e -> e.getValue().equals(token))
                 .forEach(e -> {
                     try {
                         ConnectionManager.get().getLocalView(e.getKey()).sendNotification(something);
@@ -82,12 +82,12 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
                 });
     }
 
-    public synchronized String createWaitingRoom (String name, int howMany){
+    public synchronized String createWaitingRoom (String name, String token, int howMany){
         //this needs to ask the player how many others we're waiting for
         Random rand = new Random();
         int id = rand.nextInt(1000);
         waitingRoom = new WaitingRoom(id, howMany);
-        waitingRoom.addPlayerToWaitingRoom(name);
+        waitingRoom.addPlayerToWaitingRoom(name, token);
         System.out.println("I created waiting room " + id + " for " + howMany + " players");
         return waitingRoom.getId();
     }
@@ -98,42 +98,58 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
         //if the game is shut down, the server will notify all the players about it
     }
 
+    public synchronized String generateToken(){
+        Random rand = new Random();
+        int id = rand.nextInt(1000);
+        String token = String.valueOf(id);
+        return token;
+    }
     //this is for rmi
+    //this should be fixed further: all of these return strings, so that the server doesn't
+    //wait on them, but they should be fixed with threads
     @Override
-    public synchronized String login(String name, IClientListener viewListener) throws RemoteException {
-        String success = ConnectionManager.get().addClientView(name, viewListener);
-        if(success.equals(StaticStrings.LOGIN_KO)){
-            return success;
+    public void login(String name, IClientListener viewListener) throws RemoteException {
+        if(ConnectionManager.get().tokenNames.containsValue(name)){
+            String dummy = viewListener.notifySuccessfulRegistration(false, name);
         }
-        ConnectionManager.get().getLocalView(name).sendNotification("Server registered you as a user");
-        String response = putInWaitingRoom(name);
-        if(response==null){
-            int num = ConnectionManager.get().getLocalView(name).askHowMany();
-            response = createWaitingRoom(name, num);
-            activeUsers.put(name, response);
-            return StaticStrings.LOGIN_OK_NEW_ROOM;
+        else{
+            String token = generateToken();
+            ConnectionManager.get().addClientView(token, name, viewListener);
+            ConnectionManager.get().getLocalView(token).notifySuccessfulRegistration(true, token);
+            String success = putInWaitingRoom(name, token);
+
+            if(success==null){
+                int num = ConnectionManager.get().getLocalView(token).askHowMany();
+                success = createWaitingRoom(name, token, num);
+                activeUsers.put(token, success);
+                success = ConnectionManager.get().getLocalView(token).sendNotification(StaticStrings.LOGIN_OK_NEW_ROOM);
+            }
+
+            if(success.equals(StaticStrings.GAME_START))
+            {
+                success = ConnectionManager.get().getLocalView(token).sendNotification(StaticStrings.GAME_START);
+            }
+
+            if(success.equals(StaticStrings.WAITING_4_START)){
+                success = ConnectionManager.get().getLocalView(token).sendNotification(StaticStrings.WAITING_4_START);
+            }
         }
-        if(response.equals(StaticStrings.GAME_START))
-        {
-            return response;
-        }
-        return StaticStrings.WAITING_4_START;
     }
 
     @Override
-    public synchronized void pickedTiles(String username, String tilesCoordinates) throws RemoteException {
+    public synchronized void pickedTiles(String token, String tilesCoordinates) throws RemoteException {
         System.out.println("AAAAAASERVERMANAGER");
 
-        activeGames.get(username).chooseTiles(username, tilesCoordinates);
+        activeGames.get(token).chooseTiles(token, tilesCoordinates);
     }
 
     @Override
-    public synchronized void rearrangeTiles(String username, String tilesOrdered) throws RemoteException {
+    public synchronized void rearrangeTiles(String token, String tilesOrdered) throws RemoteException {
 
     }
 
     @Override
-    public synchronized void selectColumn(String username, int column) throws RemoteException {
+    public synchronized void selectColumn(String token, int column) throws RemoteException {
 
     }
 

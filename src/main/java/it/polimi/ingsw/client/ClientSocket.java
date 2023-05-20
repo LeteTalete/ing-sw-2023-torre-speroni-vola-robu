@@ -24,6 +24,8 @@ public class ClientSocket implements IClientConnection
 
     public ClientSocket(String ip, int port)
     {
+        //you have to save the client controller as 'master' and call the login method using
+        //'master.userLogin()
         this.ip = ip;
         this.port = port;
     }

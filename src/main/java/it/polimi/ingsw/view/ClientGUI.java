@@ -1,6 +1,7 @@
 package it.polimi.ingsw.view;
 
 import it.polimi.ingsw.client.ClientController;
+import it.polimi.ingsw.client.CommandParsing;
 import it.polimi.ingsw.network.IClientListener;
 import it.polimi.ingsw.stati.Status;
 import it.polimi.ingsw.structures.LivingRoomView;
@@ -9,6 +10,8 @@ import it.polimi.ingsw.structures.ShelfView;
 
 public class ClientGUI implements View {
     private ClientController master;
+    private CommandParsing commPars;
+
     @Override
     public void chooseConnection() {
 
@@ -92,12 +95,18 @@ public class ClientGUI implements View {
     }
 
     @Override
-    public void setMaster(ClientController clientController) {
+    public void setMaster(ClientController clientController, CommandParsing commandParsing) {
         this.master = clientController;
+        this.commPars = commandParsing;
     }
 
     @Override
     public void askForTiles() {
+
+    }
+
+    @Override
+    public void serverSavedUsername(boolean b, String name) {
 
     }
 

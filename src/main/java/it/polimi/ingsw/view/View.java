@@ -1,6 +1,7 @@
 package it.polimi.ingsw.view;
 
 import it.polimi.ingsw.client.ClientController;
+import it.polimi.ingsw.client.CommandParsing;
 import it.polimi.ingsw.network.IClientListener;
 import it.polimi.ingsw.stati.Status;
 import it.polimi.ingsw.structures.LivingRoomView;
@@ -33,7 +34,9 @@ public interface View {
     void setMyTurn(boolean b);
     void startRun();
 
-    void setMaster(ClientController clientController);
+    void setMaster(ClientController clientController, CommandParsing commandParsing);
 
     void askForTiles();
+
+    void serverSavedUsername(boolean b, String name);
 }

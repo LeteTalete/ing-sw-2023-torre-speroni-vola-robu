@@ -8,6 +8,7 @@ public interface IClientConnection {
      void setViewClient(View view);
      void chooseTiles(String username, String tilesChosen);
 
-     String login(String name);
+     void login(String name);
 
+     void setUserToken(String token);
 }

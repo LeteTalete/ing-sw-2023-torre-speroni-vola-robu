@@ -15,17 +15,21 @@ public class ClientController {
     private boolean gameOn;
     private boolean myTurn;
     private String username;
+    private CommandParsing commPars;
     private IClientConnection currentConnection;
     private IClientListener listenerClient;
     private Registry registry;
     private IRemoteController remoteController;
+    private String userToken;
 
     //constructor
     public ClientController(View currentView) {
         this.currentView = currentView;
         this.listenerClient = currentView.getListener();
         this.username = new String();
-        currentView.setMaster(this);
+        //not sure if we need the command parsing anyway
+        this.commPars = new CommandParsing();
+        currentView.setMaster(this, commPars);
         setupConnection();
     }
 
@@ -38,7 +42,7 @@ public class ClientController {
         else if(currentView.getConnectionType().equals("SOCKET")){
             connectionStatus = setupSocket();
         }
-        if(connectionStatus!=null){
+        else if(connectionStatus!=null){
             this.currentView.displayNotification(connectionStatus);
         }
     }
@@ -47,6 +51,7 @@ public class ClientController {
     {
         try
         {
+            //you have to pass 'this' to the client socket
             ClientSocket clientSocket = new ClientSocket("127.0.0.1",1420);
             this.currentConnection = clientSocket;
             clientSocket.setViewClient(currentView);
@@ -72,30 +77,17 @@ public class ClientController {
             ClientRMI clientRMI = new ClientRMI(this, remoteController);
             this.currentConnection = clientRMI;
             clientRMI.setViewClient(currentView);
-            String LoginSuccess = userLogin();
-            if(LoginSuccess.equals(StaticStrings.LOGIN_OK_NEW_ROOM)){
-                System.out.println(StaticStrings.LOGIN_OK_NEW_ROOM);
-            }
+            userLogin();
+
         }catch(Exception e){
             return e.toString();
         }
         return null;
     }
 
-    public String userLogin () {
+    public void userLogin () {
         String name = currentView.getUsername();
-        String serverResponse = currentConnection.login(name);
-        //if there is a waiting room, the user has to be put there. if there is not, it will ask the player to
-        //choose how many players they want for the game, but this will all be done by the server
-        while(serverResponse.equals(StaticStrings.LOGIN_KO)){
-            //if the username already exists, it will ask for a new one
-            System.out.println("The username already exist!");
-            name = currentView.getUsername();
-            serverResponse = currentConnection.login(name);
-        }
-        setUsername(name);
-        currentConnection.setName(name);
-        return serverResponse;
+        currentConnection.login(name);
     }
 
     public String getUsername() {
@@ -104,9 +96,7 @@ public class ClientController {
 
 
     public void chooseTiles(String tilesChosen) {
-        System.out.println("correct "+ username);
-
-        currentConnection.chooseTiles(username, tilesChosen);
+        currentConnection.chooseTiles(userToken, tilesChosen);
     }
 
     public boolean isGameOn() {
@@ -125,7 +115,17 @@ public class ClientController {
         this.myTurn = myTurn;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void serverSavedUsername(boolean b, String token) {
+        if(b){
+            setUserToken(token);
+            currentConnection.setUserToken(token);
+        }
+        else{
+            userLogin();
+        }
+    }
+
+    public void setUserToken(String userToken) {
+        this.userToken = userToken;
     }
 }

@@ -17,6 +17,8 @@ public class ConnectionManager implements Serializable {
     the need for the need for the server to know what kind of connection the single clients are using**/
 
     Map<String, IClientListener> viewListenerMap = new HashMap<>();
+    Map<String, String> tokenNames = new HashMap<>();
+    Map<String, String> namesTokens = new HashMap<>();
     private ConnectionManager(){
 
     }
@@ -27,14 +29,17 @@ public class ConnectionManager implements Serializable {
         return instance;
     }
 
-    synchronized String addClientView(String name, IClientListener viewListener) {
-        if(viewListenerMap.get(name)==null) {
-            viewListenerMap.put(name, viewListener);
-            return StaticStrings.LOGIN_OK_NEW_ROOM;
-        }
-        return StaticStrings.LOGIN_KO;
+    synchronized String addClientView(String token, String name, IClientListener viewListener) {
+        viewListenerMap.put(token, viewListener);
+        tokenNames.put(token, name);
+        return StaticStrings.LOGIN_OK_NEW_ROOM;
     }
-    synchronized IClientListener getLocalView(String username){
-        return viewListenerMap.get(username);
+
+    synchronized IClientListener getLocalView(String token){
+        return viewListenerMap.get(token);
+    }
+
+    synchronized String getNameToken(String token){
+        return tokenNames.get(token);
     }
 }

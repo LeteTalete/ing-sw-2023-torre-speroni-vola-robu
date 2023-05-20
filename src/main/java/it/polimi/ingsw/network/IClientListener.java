@@ -10,6 +10,8 @@ public interface IClientListener extends Remote, Serializable {
     //void processLogin(String result) throws RemoteException;
     //should become event driven
     int askHowMany() throws RemoteException;
-    void sendNotification(String message) throws RemoteException;
+    String sendNotification(String message) throws RemoteException;
     void sendUpdatedModel(ModelUpdate message) throws RemoteException;
+
+    String notifySuccessfulRegistration(boolean b, String name) throws RemoteException;
 }

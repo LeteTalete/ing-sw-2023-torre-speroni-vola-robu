@@ -9,32 +9,37 @@ import java.rmi.RemoteException;
 
 
 public class ClientRMI implements IClientConnection, Remote, Serializable {
-    private String name;
+    private String username;
     private ClientController master;
     private final IRemoteController remoteController;
     private View viewClient;
+    private String userToken;
+
     public ClientRMI(ClientController clientHandler, IRemoteController rc) {
         this.master = clientHandler;
         this.remoteController = rc;
     }
 
     @Override
-    public String login(String name) {
-        String success = null;
+    public void login(String name) {
         try {
             //needs the view to implement getListener method
-            success = remoteController.login(name, viewClient.getListener());
+            remoteController.login(name, viewClient.getListener());
 
         } catch (RemoteException e) {
             viewClient.printError(e.getMessage());
         }
-        return success;
+    }
+
+    @Override
+    public void setUserToken(String token) {
+        this.userToken = token;
     }
 
 
     @Override
     public void setName(String name) {
-        this.name=name;
+        this.username=name;
     }
 
     public void setViewClient(View currentView) {
@@ -42,15 +47,20 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
     }
 
     @Override
-    public void chooseTiles(String username, String tilesChosen) {
+    public void chooseTiles(String token, String tilesChosen) {
         try {
-            remoteController.pickedTiles(username, tilesChosen);
+            System.out.println("clientrmi tiles: "+tilesChosen+" for token "+token);
+            remoteController.pickedTiles(token, tilesChosen);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
     }
 
     public String getName() {
-        return name;
+        return username;
+    }
+
+    public String getUserToken() {
+        return userToken;
     }
 }

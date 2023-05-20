@@ -17,9 +17,10 @@ public class WaitingRoom {
         this.maxPLayers = max_players;
     }
 
-    public String addPlayerToWaitingRoom(String name){
+    public String addPlayerToWaitingRoom(String name, String token){
         Player p = new Player();
         p.setNickname(name);
+        p.setTokenId(token);
         players.add(p);
         this.playersWaiting=this.playersWaiting+1;
         System.out.println("There are currently "+playersWaiting+" players ready to play:");

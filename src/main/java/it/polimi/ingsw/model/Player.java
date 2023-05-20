@@ -14,6 +14,7 @@ public class Player{
 //attributes
     private boolean chair;
     private String nickname;
+    private String tokenId;
     private boolean isPlaying;
     private Shelf shelf = new Shelf();
     private PersonalGoalCard personalGoalCard;
@@ -290,4 +291,11 @@ public class Player{
         this.score += myScore;
     }
 
+    public String getTokenId() {
+        return tokenId;
+    }
+
+    public void setTokenId(String tokenId) {
+        this.tokenId = tokenId;
+    }
 }

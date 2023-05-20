@@ -1,6 +1,7 @@
 package it.polimi.ingsw.view;
 
 import it.polimi.ingsw.client.ClientController;
+import it.polimi.ingsw.client.CommandParsing;
 import it.polimi.ingsw.network.ClientListenerTUI;
 import it.polimi.ingsw.network.IClientListener;
 import it.polimi.ingsw.server.StaticStrings;
@@ -13,6 +14,7 @@ import java.util.*;
 
 public class ClientTUI implements View{
     private ClientController master;
+    private CommandParsing commandParsing;
     private ClientListenerTUI listenerClient;
     static final String colorRESET = "\033[0m";  // Reset Changes
     static final String colorTitle = "\033[38;5;11m"; //Yellow
@@ -169,18 +171,25 @@ public class ClientTUI implements View{
 
 
     @Override
-    public void setMaster(ClientController clientController) {
+    public void setMaster(ClientController clientController, CommandParsing commandParsing) {
         this.master = clientController;
+        this.commandParsing = commandParsing;
     }
 
     @Override
     public void askForTiles() {
         chooseTiles();
-        String tileScelte = frominput.nextLine();
-        if ( checkUserInput(tileScelte) ) {
-            master.chooseTiles(tileScelte);
+        String tilesChosen = frominput.nextLine();
+        //commandParsing.elaborateInput(tileScelte);
+        if ( checkUserInput(tilesChosen) ) {
+            master.chooseTiles(tilesChosen);
         }
 
+    }
+
+    @Override
+    public void serverSavedUsername(boolean b, String token) {
+        master.serverSavedUsername(b, token);
     }
 
 

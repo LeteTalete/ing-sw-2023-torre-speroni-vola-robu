@@ -5,7 +5,6 @@ import it.polimi.ingsw.network.IClientListener;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.rmi.RemoteException;
 import java.util.Scanner;
@@ -78,13 +77,20 @@ public class ServerSocketClientHandler implements Runnable, IClientListener
     }
 
     @Override
-    public void sendNotification(String message) throws RemoteException
+    public String sendNotification(String message) throws RemoteException
     {
 
+        return message;
     }
 
     @Override
     public void sendUpdatedModel(ModelUpdate updated) throws RemoteException {
         //i think this has to serialize the modelupdate
+    }
+
+    @Override
+    public String notifySuccessfulRegistration(boolean b, String name) throws RemoteException{
+
+        return name;
     }
 }
