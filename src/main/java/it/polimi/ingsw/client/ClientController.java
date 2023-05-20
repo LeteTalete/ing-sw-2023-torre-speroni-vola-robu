@@ -56,11 +56,8 @@ public class ClientController {
             this.currentConnection = clientSocket;
             clientSocket.setViewClient(currentView);
             clientSocket.startClient();
-            String LoginSuccess = userLogin();
-            if(LoginSuccess.equals(StaticStrings.LOGIN_OK_NEW_ROOM))
-            {
-                System.out.println(StaticStrings.LOGIN_OK_NEW_ROOM);
-            }
+            userLogin();
+            //deleted the if clause to check the login response, since the server should already notify the users about it
         }
         catch (Exception e)
         {

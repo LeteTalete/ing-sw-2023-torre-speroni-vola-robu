@@ -58,9 +58,8 @@ public class ClientSocket implements IClientConnection
         try
         {
             String input = stdin.nextLine();
-            String success = null;
 
-            success = login(input);
+            login(input);
         }
         catch (NoSuchElementException e)
         {
@@ -98,7 +97,7 @@ public class ClientSocket implements IClientConnection
     }
 
     @Override
-    public String login(String name)
+    public void login(String name)
     {
         String success = null;
 
@@ -110,6 +109,10 @@ public class ClientSocket implements IClientConnection
         success = socketIn.nextLine();
         System.out.println(success);
 
-        return success;
+    }
+
+    @Override
+    public void setUserToken(String token) {
+
     }
 }

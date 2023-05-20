@@ -54,8 +54,10 @@ public class ServerSocketClientHandler implements Runnable, IClientListener
             while(!stop)
             {
                 request = in.nextLine();
-                response = serverManager.login(request, this);
-                out.println(response);
+                serverManager.login(request, this);
+                /**i commented this to avoid error while compiling, but remember to change the management of
+                // requests and responses by using specific classes Requests and Responses**/
+                //out.println(response);
                 out.flush();
             }
 
