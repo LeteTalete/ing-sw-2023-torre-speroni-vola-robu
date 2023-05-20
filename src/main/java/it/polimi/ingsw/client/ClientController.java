@@ -127,6 +127,8 @@ public class ClientController {
         }
     }
 
+    public void setUsername(String username){ this.username = username; }
+
     public void setUserToken(String userToken) {
         this.userToken = userToken;
     }
