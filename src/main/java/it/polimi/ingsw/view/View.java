@@ -14,7 +14,7 @@ public interface View {
     String getUsername();
     void displayNotification(String message);
     void GamerStatus(Status current);
-    int askAmountOfPlayers();
+    void askAmountOfPlayers();
     //choose tiles from board
     //reorder tiles
     //place tiles on shelf
@@ -38,5 +38,5 @@ public interface View {
 
     void askForTiles();
 
-    void serverSavedUsername(boolean b, String name);
+    void serverSavedUsername(String name, boolean b, String token, boolean first);
 }

@@ -4,7 +4,6 @@ import it.polimi.ingsw.client.ClientController;
 import it.polimi.ingsw.client.CommandParsing;
 import it.polimi.ingsw.network.ClientListenerTUI;
 import it.polimi.ingsw.network.IClientListener;
-import it.polimi.ingsw.server.StaticStrings;
 import it.polimi.ingsw.stati.Status;
 import it.polimi.ingsw.structures.*;
 
@@ -82,13 +81,13 @@ public class ClientTUI implements View{
     }
 
     @Override
-    public int askAmountOfPlayers() {
+    public void askAmountOfPlayers() {
         int number = 0;
         while(number==0 || number > 4){
             writeText("Insert number of players (from 2 to 4)");
             number = frominput.nextInt();
         }
-        return number;
+        master.numberOfPlayers(number);
     }
 
     public void GameTitle(){
@@ -188,8 +187,11 @@ public class ClientTUI implements View{
     }
 
     @Override
-    public void serverSavedUsername(boolean b, String token) {
-        master.serverSavedUsername(b, token);
+    public void serverSavedUsername(String name, boolean b, String token, boolean first) {
+        master.serverSavedUsername(name, b, token);
+        if(first){
+            askAmountOfPlayers();
+        }
     }
 
 

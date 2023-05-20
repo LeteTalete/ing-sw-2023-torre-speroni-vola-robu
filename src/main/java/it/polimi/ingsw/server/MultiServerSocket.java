@@ -11,48 +11,39 @@ import java.util.concurrent.Executors;
 //and create threads to handle accepted connections
 public class MultiServerSocket
 {
+    private final ServerSocket serverSocket;
+    private final ExecutorService pool;
     private int port;
     private ServerManager serverManager;
 
-    public MultiServerSocket(int port)
-    {
-        this.port = port;
-    }
-    public MultiServerSocket(int port, ServerManager serverManager)
-    {
+    public MultiServerSocket(int port, ServerManager serverManager) throws IOException {
+        serverSocket = new ServerSocket(port);
+        pool = Executors.newCachedThreadPool();
         this.port = port;
         this.serverManager = serverManager;
     }
 
     public void startServer()
     {
-        //newCachedThreadPool() is used for creating threads only when it is necessary (reuse already existing ones if it is possible)
-        ExecutorService executor = Executors.newCachedThreadPool();
-
-        ServerSocket serverSocket;
-        try
-        {
-            serverSocket = new ServerSocket(port);
-        }
-        catch(IOException e)
-        {
-            System.err.println(e.getMessage()); //port not available
-            return;
-        }
         System.out.println("Server ready");
         while(true)
         {
             try
             {
-                Socket socket = serverSocket.accept();
-                executor.submit(new ServerSocketClientHandler(socket,serverManager));
+                Socket clientSocket = serverSocket.accept();
+                System.out.println("Server accepting");
+                pool.submit(new ServerSocketClientHandler(clientSocket,serverManager));
             }
             catch (IOException e)
             {
                 break; //enter here if serverSocket get closed
             }
         }
-        executor.shutdown();
+    }
+
+    public void close() throws IOException{
+        serverSocket.close();
+        pool.shutdown();
     }
 }
 

@@ -11,4 +11,8 @@ public interface IClientConnection {
      void login(String name);
 
      void setUserToken(String token);
+
+     void setReceivedResponse(boolean b);
+
+     void numberOfPlayers(String name, String token, int number);
 }

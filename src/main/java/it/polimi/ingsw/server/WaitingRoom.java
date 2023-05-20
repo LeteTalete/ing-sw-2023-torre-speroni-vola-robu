@@ -18,6 +18,7 @@ public class WaitingRoom {
     }
 
     public String addPlayerToWaitingRoom(String name, String token){
+        System.out.println("I'm adding player "+name);
         Player p = new Player();
         p.setNickname(name);
         p.setTokenId(token);

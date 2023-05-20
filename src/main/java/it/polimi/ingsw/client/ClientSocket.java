@@ -1,42 +1,52 @@
 package it.polimi.ingsw.client;
 
+import it.polimi.ingsw.requests.Request;
+import it.polimi.ingsw.requests.WaitingRoomRequest;
+import it.polimi.ingsw.requests.loginRequest;
+import it.polimi.ingsw.responses.Response;
 import it.polimi.ingsw.view.View;
 
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.rmi.RemoteException;
-import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class ClientSocket implements IClientConnection
 {
-    private String name;
-
+    private final ClientController master;
+    private String username;
+    private String token;
     private String ip;
     private int port;
     private View viewClient;
     private Socket socket;
-    private Scanner socketIn;
-    private PrintWriter socketOut;
+    private ObjectInputStream socketIn;
+    private ObjectOutputStream socketOut;
     private Scanner stdin;
+    private Thread receiving;
+    private ResponseDecoder responseDecoder;
+    private boolean notReceivingResponse;
 
 
-    public ClientSocket(String ip, int port)
+    public ClientSocket(String ip, int port, ClientController cController)
     {
-        //you have to save the client controller as 'master' and call the login method using
-        //'master.userLogin()
         this.ip = ip;
         this.port = port;
+        this.master = cController;
+        this.notReceivingResponse = true;
     }
 
     public void openStreams()
     {
         try
         {
-            this.socketIn = new Scanner(socket.getInputStream());
-            this.socketOut = new PrintWriter(socket.getOutputStream());
-            this.stdin = new Scanner(System.in);
+            socket = new Socket(ip, port);
+            this.socketOut = new ObjectOutputStream(socket.getOutputStream());
+            this.socketIn = new ObjectInputStream(socket.getInputStream());
+            startReceiving();
+            //this.stdin = new Scanner(System.in);
         }
         catch(IOException e)
         {
@@ -44,35 +54,49 @@ public class ClientSocket implements IClientConnection
         }
     }
 
-    public void startClient() throws IOException
-    {
-        //open a socket by specifying server's ip address and listening port
-        Socket socket = new Socket(ip,port);
-        System.out.println(">> Connection established");
-        this.socket = socket;
+    private void startReceiving() {
+        receiving = new Thread(
+                () -> {
+                    Response response = null;
+                    do{
+                        System.out.println("i'm about to read a reply");
+                        response = readResponse();
+                        //if i get a response and the client controller doesn't tell me to close the connection
+                        if(response != null && !master.isToClose()){
+                            try{
+                                response.handleResponse(responseDecoder);
+                            }catch(RemoteException e){
+                                viewClient.printError(e.getMessage());
+                            }
+                        }
+                    }while(response!=null);
+                }
+        );
+        receiving.start();
 
-        //if the connection is successful i can use socket's streams to communicate with the server
-        openStreams();
-
-        System.out.println(">> Insert username");
-        try
-        {
-            String input = stdin.nextLine();
-
-            login(input);
-        }
-        catch (NoSuchElementException e)
-        {
-            System.out.println("Connection closed");
-        }
-        finally
-        {
-            closeStreams();
-            socket.close();
-        }
     }
 
-    public void closeStreams()
+    private Response readResponse() {
+        try{
+            return ((Response) socketIn.readObject());
+        }catch(ClassNotFoundException e){
+            //if the serialization went wrong or if the class doesn't exist
+            throw new RuntimeException("Class does not exist: "+ e.getMessage());
+        }catch (IOException e){
+            System.out.println("Bad formatting");
+        }
+        return null;
+    }
+
+    public void startClient()
+    {
+        openStreams();
+        System.out.println(">> Connection established");
+        //if the connection is successful i can use socket's streams to communicate with the server
+        master.userLogin();
+    }
+
+    public void closeStreams() throws IOException
     {
         //closing streams
         stdin.close();
@@ -82,7 +106,7 @@ public class ClientSocket implements IClientConnection
 
     @Override
     public void setName(String name) {
-        this.name=name;
+        this.username=name;
     }
 
     @Override
@@ -97,22 +121,61 @@ public class ClientSocket implements IClientConnection
     }
 
     @Override
-    public void login(String name)
+    public synchronized void login(String name)
     {
-        String success = null;
+        setReceivedResponse(true);
+        request(new loginRequest(name));
+        while(notReceivingResponse){
+            try{
+                //maybe this doesn't need 'this', but since it's a thread it's better to be safe
+                this.wait();
 
-        //sending nickname
-        socketOut.println(name);
-        socketOut.flush();
+            }catch (InterruptedException e){
+                viewClient.printError(e.getMessage());
+            }
+        }
 
-        //receiving response
-        success = socketIn.nextLine();
-        System.out.println(success);
+    }
 
+    private void request(Request request) {
+        try{
+            socketOut.writeObject(request);
+            //maybe this is flush() but we need to test it out
+            socketOut.reset();
+        }catch (IOException e){
+            viewClient.printError(e.getMessage());
+        }
     }
 
     @Override
-    public void setUserToken(String token) {
-
+    public void setUserToken(String tokenA) {
+        this.token = tokenA;
     }
+
+    @Override
+    public void setReceivedResponse(boolean b) {
+        notReceivingResponse = b;
+    }
+
+    @Override
+    public synchronized void numberOfPlayers(String name, String tokenA, int number) {
+        setUserToken(tokenA);
+        setName(name);
+        setReceivedResponse(true);
+        request(new WaitingRoomRequest(tokenA, name, number));
+        while(notReceivingResponse){
+            try{
+                //maybe this doesn't need 'this', but since it's a thread it's better to be safe
+                this.wait();
+
+            }catch (InterruptedException e){
+                viewClient.printError(e.getMessage());
+            }
+        }
+    }
+
+    public void setResponseDecoder(ResponseDecoder responseDecoder) {
+        this.responseDecoder = responseDecoder;
+    }
+
 }

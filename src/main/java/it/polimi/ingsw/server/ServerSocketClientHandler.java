@@ -2,12 +2,15 @@ package it.polimi.ingsw.server;
 
 import it.polimi.ingsw.Updates.ModelUpdate;
 import it.polimi.ingsw.network.IClientListener;
+import it.polimi.ingsw.requests.Request;
+import it.polimi.ingsw.responses.LoginResponse;
+import it.polimi.ingsw.responses.Response;
 
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.rmi.RemoteException;
-import java.util.Scanner;
 
 
 //this class handles the communication with the client associated to the assigned socket
@@ -15,80 +18,67 @@ public class ServerSocketClientHandler implements Runnable, IClientListener
 {
     private Socket socket;
     private ServerManager serverManager;
-    private Scanner in;
-    private PrintWriter out;
+    private ObjectInputStream in;
+    private ObjectOutputStream out;
     private boolean stop;
 
     public ServerSocketClientHandler(Socket socket)
     {
         this.socket = socket;
     }
-    public ServerSocketClientHandler(Socket socket, ServerManager serverManager)
-    {
+    public ServerSocketClientHandler(Socket socket, ServerManager serverManager) throws IOException {
         this.socket = socket;
         this.serverManager = serverManager;
+        this.in = new ObjectInputStream(socket.getInputStream());
+        this.out = new ObjectOutputStream(socket.getOutputStream());
     }
 
-    public void openStreams()
-    {
-        try
-        {
-            this.in = new Scanner(socket.getInputStream());
-            this.out = new PrintWriter(socket.getOutputStream());
-        }
-        catch(IOException e)
-        {
-            System.err.println(e.getMessage());
-        }
-    }
 
     public void run()
     {
-        openStreams();
-        stop = false;
-        String request;
-        String response;
+       do{
+           try{
+               System.out.println("i'm reading!");
+               Request request = (Request) in.readObject();
+               request.handleRequest(this, serverManager);
+           } catch (ClassNotFoundException | IOException e) {
+               String token = serverManager.getTokenFromHandler(this);
+               serverManager.disconnect(token);
+               close();
+           }
+       }while(!stop);
+    }
 
-        try
-        {
-            while(!stop)
-            {
-                request = in.nextLine();
-                serverManager.login(request, this);
-                /**i commented this to avoid error while compiling, but remember to change the management of
-                // requests and responses by using specific classes Requests and Responses**/
-                //out.println(response);
-                out.flush();
+    public void close()
+    {
+        stop = true;
+        if(out != null){
+            try{
+                out.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
+        }
+        if(in!=null){
+            try{
+                in.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
 
-            //closing streams
-            closeStreams();
-
-            //closing connection
+        try{
             socket.close();
-        }
-        catch(IOException e)
-        {
-            System.err.println(e.getMessage());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    public void closeStreams()
-    {
-        this.in.close();
-        this.out.close();
-    }
-
-    @Override
-    public int askHowMany() throws RemoteException
-    {
-        return 0;
-    }
 
     @Override
     public String sendNotification(String message) throws RemoteException
     {
-
+        //respond(new TextMessage(message));
         return message;
     }
 
@@ -99,8 +89,20 @@ public class ServerSocketClientHandler implements Runnable, IClientListener
     }
 
     @Override
-    public String notifySuccessfulRegistration(boolean b, String name) throws RemoteException{
+    public String notifySuccessfulRegistration(String name, boolean nameExistsAlready, String token, boolean first) throws RemoteException{
+        respond(new LoginResponse(name, nameExistsAlready, token, first));
+        return null;
+    }
 
-        return name;
+    private void respond(Response response) {
+        try{
+            System.out.println("i'm about to reply");
+            out.writeObject(response);
+            out.reset();
+        } catch (IOException e) {
+            if(!stop){
+                close();
+            }
+        }
     }
 }

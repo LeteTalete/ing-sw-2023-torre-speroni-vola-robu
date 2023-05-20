@@ -11,4 +11,5 @@ public class StaticStrings {
     public static final String END_TURN = "Your turn is over.";
     public static final String INVALID_MOVE = "This move is not valid! Please try again";
 
+    public static final String GAME_END_DISC = "A player disconnected! Closing the game now...";
 }

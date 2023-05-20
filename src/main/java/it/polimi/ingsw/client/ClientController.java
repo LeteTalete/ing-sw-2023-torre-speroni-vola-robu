@@ -21,6 +21,7 @@ public class ClientController {
     private Registry registry;
     private IRemoteController remoteController;
     private String userToken;
+    private boolean toCLose;
 
     //constructor
     public ClientController(View currentView) {
@@ -52,11 +53,13 @@ public class ClientController {
         try
         {
             //you have to pass 'this' to the client socket
-            ClientSocket clientSocket = new ClientSocket("127.0.0.1",1420);
+            ClientSocket clientSocket = new ClientSocket("127.0.0.1",1420, this);
             this.currentConnection = clientSocket;
             clientSocket.setViewClient(currentView);
+            ResponseDecoder responseDecoder = new ResponseDecoder(listenerClient, currentConnection);
+            clientSocket.setResponseDecoder(responseDecoder);
             clientSocket.startClient();
-            userLogin();
+
             //deleted the if clause to check the login response, since the server should already notify the users about it
         }
         catch (Exception e)
@@ -112,9 +115,11 @@ public class ClientController {
         this.myTurn = myTurn;
     }
 
-    public void serverSavedUsername(boolean b, String token) {
+    public void serverSavedUsername(String name, boolean b, String token) {
         if(b){
             setUserToken(token);
+            setUsername(name);
+            System.out.println("saved " + name + " as " + getUsername());
             currentConnection.setUserToken(token);
         }
         else{
@@ -124,5 +129,17 @@ public class ClientController {
 
     public void setUserToken(String userToken) {
         this.userToken = userToken;
+    }
+
+    public boolean isToClose() {
+        return toCLose;
+    }
+
+    public void setToCLose(boolean toCLose) {
+        this.toCLose = toCLose;
+    }
+
+    public void numberOfPlayers(int number) {
+        currentConnection.numberOfPlayers(username, userToken, number);
     }
 }

@@ -38,8 +38,8 @@ public class ClientGUI implements View {
     }
 
     @Override
-    public int askAmountOfPlayers() {
-        return 0;
+    public void askAmountOfPlayers() {
+
     }
 
     @Override
@@ -106,7 +106,7 @@ public class ClientGUI implements View {
     }
 
     @Override
-    public void serverSavedUsername(boolean b, String name) {
+    public void serverSavedUsername(String name, boolean b, String token, boolean first) {
 
     }
 

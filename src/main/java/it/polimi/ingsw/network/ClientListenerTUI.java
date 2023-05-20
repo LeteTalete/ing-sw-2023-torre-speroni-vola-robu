@@ -14,10 +14,6 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
         this.view = currentView;
     }
 
-    @Override
-    public int askHowMany() throws RemoteException {
-        return view.askAmountOfPlayers();
-    }
 
     //this will become a bunch of sendNotification methods that will resolve different types of messages
     //that way we can implement socket connections
@@ -48,14 +44,14 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
     }
 
     @Override
-    public String notifySuccessfulRegistration(boolean b, String name) throws RemoteException {
+    public String notifySuccessfulRegistration(String name, boolean b, String token, boolean first) throws RemoteException {
         if(b==true){
             view.displayNotification("Registration Successful!");
-            view.serverSavedUsername(true, name);
+            view.serverSavedUsername(name, true, token, first);
         }
         else{
             view.displayNotification("Registration failed: "+name+" already exists. Try again");
-            view.serverSavedUsername(false, name);
+            view.serverSavedUsername(name,false, token, first);
         }
         return name;
     }

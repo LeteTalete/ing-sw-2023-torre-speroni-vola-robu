@@ -56,10 +56,10 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
         ConnectionManager.get().getLocalView(token).sendNotification(message);
     }
 
-    public synchronized void notifyAllPlayers(String token, String something) {
+    public synchronized void notifyAllPlayers(String gameId, String something) {
         activeUsers.entrySet()
                 .stream()
-                .filter(e -> e.getValue().equals(token))
+                .filter(e -> e.getValue().equals(gameId))
                 .forEach(e -> {
                     try {
                         ConnectionManager.get().getLocalView(e.getKey()).sendNotification(something);
@@ -82,14 +82,20 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
                 });
     }
 
-    public synchronized String createWaitingRoom (String name, String token, int howMany){
+    public synchronized void createWaitingRoom (String name, String token, int howMany){
         //this needs to ask the player how many others we're waiting for
         Random rand = new Random();
         int id = rand.nextInt(1000);
+        System.out.println("Im about to create waiting room " + id + " for " + howMany + " players");
         waitingRoom = new WaitingRoom(id, howMany);
         waitingRoom.addPlayerToWaitingRoom(name, token);
         System.out.println("I created waiting room " + id + " for " + howMany + " players");
-        return waitingRoom.getId();
+        activeUsers.put(token, String.valueOf(id));
+        try {
+            ConnectionManager.get().getLocalView(token).sendNotification(StaticStrings.LOGIN_OK_NEW_ROOM);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public synchronized void periodicPing (){
@@ -104,34 +110,35 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
         String token = String.valueOf(id);
         return token;
     }
-    //this is for rmi
+
     //this should be fixed further: all of these return strings, so that the server doesn't
     //wait on them, but they should be fixed with threads
     @Override
     public void login(String name, IClientListener viewListener) throws RemoteException {
+        String dummy;
+        System.out.println("I received user " + name);
         if(ConnectionManager.get().tokenNames.containsValue(name)){
-            String dummy = viewListener.notifySuccessfulRegistration(false, name);
+            dummy = viewListener.notifySuccessfulRegistration(name,false, null, false);
         }
         else{
             String token = generateToken();
             ConnectionManager.get().addClientView(token, name, viewListener);
-            ConnectionManager.get().getLocalView(token).notifySuccessfulRegistration(true, token);
             String success = putInWaitingRoom(name, token);
+            System.out.println("I'm elaborating for " + name);
 
-            if(success==null){
-                int num = ConnectionManager.get().getLocalView(token).askHowMany();
-                success = createWaitingRoom(name, token, num);
-                activeUsers.put(token, success);
-                success = ConnectionManager.get().getLocalView(token).sendNotification(StaticStrings.LOGIN_OK_NEW_ROOM);
-            }
-
-            if(success.equals(StaticStrings.GAME_START))
+            if(success==null)
             {
-                success = ConnectionManager.get().getLocalView(token).sendNotification(StaticStrings.GAME_START);
+                dummy = ConnectionManager.get().getLocalView(token).notifySuccessfulRegistration(name,true, token, true);
             }
-
-            if(success.equals(StaticStrings.WAITING_4_START)){
-                success = ConnectionManager.get().getLocalView(token).sendNotification(StaticStrings.WAITING_4_START);
+            else if(success.equals(StaticStrings.GAME_START))
+            {
+                dummy = ConnectionManager.get().getLocalView(token).sendNotification(StaticStrings.GAME_START);
+            }
+            else if(success.equals(StaticStrings.WAITING_4_START)){
+                dummy = ConnectionManager.get().getLocalView(token).sendNotification(StaticStrings.WAITING_4_START);
+            }
+            else {
+                dummy = ConnectionManager.get().getLocalView(token).notifySuccessfulRegistration(name, true, token, false);
             }
         }
     }
@@ -154,4 +161,30 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
     }
 
 
+    public void disconnect(String token) {
+        ConnectionManager.get().disconnectToken(token);
+        String gameId = activeGames.get(token).getGameId();
+        //could be put in its own method notifyAllExcept
+        activeUsers.entrySet()
+                .stream()
+                .filter(e -> e.getValue().equals(gameId))
+                .filter(e -> !e.getKey().equals(token))
+                .forEach(e -> {
+                    try {
+                        ConnectionManager.get().getLocalView(e.getKey()).sendNotification(StaticStrings.GAME_END_DISC);
+                    } catch (RemoteException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                });
+    }
+
+    public String getTokenFromHandler(ServerSocketClientHandler serverSocketClientHandler) {
+        for(String token : ConnectionManager.get().viewListenerMap.keySet()){
+            if(ConnectionManager.get().viewListenerMap.get(token).equals(serverSocketClientHandler)){
+                return token;
+            }
+        }
+        return "error!";
+    }
+    //TODO closeGame(gameId)
 }

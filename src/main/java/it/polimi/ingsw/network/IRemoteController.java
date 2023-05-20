@@ -12,4 +12,5 @@ public interface IRemoteController extends Remote {
     //changes the currentPlayer, and checks if it;s the last turn
     void selectColumn (String token, int column) throws RemoteException;
 
+    void createWaitingRoom(String username, String userToken, int number) throws RemoteException;
 }
