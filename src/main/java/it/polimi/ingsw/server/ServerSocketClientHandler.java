@@ -17,6 +17,7 @@ public class ServerSocketClientHandler implements Runnable, IClientListener
     private ServerManager serverManager;
     private Scanner in;
     private PrintWriter out;
+    private boolean stop;
 
     public ServerSocketClientHandler(Socket socket)
     {
@@ -44,18 +45,24 @@ public class ServerSocketClientHandler implements Runnable, IClientListener
     public void run()
     {
         openStreams();
+        stop = false;
+        String request;
+        String response;
 
-        try {
-
-
-            String clientInput = in.nextLine();
-            String response = serverManager.login(clientInput, this);
-            out.println(response);
-            out.flush();
+        try
+        {
+            while(!stop)
+            {
+                request = in.nextLine();
+                response = serverManager.login(request, this);
+                out.println(response);
+                out.flush();
+            }
 
             //closing streams
             closeStreams();
 
+            //closing connection
             socket.close();
         }
         catch(IOException e)
@@ -84,7 +91,8 @@ public class ServerSocketClientHandler implements Runnable, IClientListener
     }
 
     @Override
-    public void sendUpdatedModel(ModelUpdate updated) throws RemoteException {
+    public void sendUpdatedModel(ModelUpdate updated) throws RemoteException
+    {
         //i think this has to serialize the modelupdate
     }
 
