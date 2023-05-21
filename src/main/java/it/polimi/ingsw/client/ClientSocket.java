@@ -1,5 +1,6 @@
 package it.polimi.ingsw.client;
 
+import it.polimi.ingsw.requests.ChooseTilesRequest;
 import it.polimi.ingsw.requests.Request;
 import it.polimi.ingsw.requests.WaitingRoomRequest;
 import it.polimi.ingsw.requests.loginRequest;
@@ -116,8 +117,20 @@ public class ClientSocket implements IClientConnection
     }
 
     @Override
-    public void chooseTiles(String name, String tilesChosen) {
-
+    public synchronized void chooseTiles(String name, String tilesChosen)
+    {
+        setReceivedResponse(true);
+        request(new ChooseTilesRequest(name, tilesChosen));
+        while(notReceivingResponse){
+            try
+            {
+                this.wait();
+            }
+            catch (InterruptedException e)
+            {
+                viewClient.printError(e.getMessage());
+            }
+        }
     }
 
     @Override
