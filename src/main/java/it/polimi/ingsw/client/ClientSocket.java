@@ -117,10 +117,10 @@ public class ClientSocket implements IClientConnection
     }
 
     @Override
-    public synchronized void chooseTiles(String name, String tilesChosen)
+    public synchronized void chooseTiles(String token, String tilesChosen)
     {
         setReceivedResponse(true);
-        request(new ChooseTilesRequest(name, tilesChosen));
+        request(new ChooseTilesRequest(token, tilesChosen));
         while(notReceivingResponse){
             try
             {

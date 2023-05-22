@@ -25,6 +25,28 @@ public class ClientExecutable {
         //client executable will run an instance of ClientRMI or ClientSocket
         //accordingly to the preferred connection
         clientController = new ClientController(clientView);
+
+        //now that the connection is set, the game can start
+        while(clientController.isGameOn())
+        {
+            while(clientController.isMyTurn())
+            {
+                //start turn
+
+                //TODO here i think that askForTiles() should return a String instead of being void so it can be passe as an argument to chooseTiles
+                //chooseTiles
+                clientView.askForTiles();
+                clientController.chooseTiles("debug");
+
+                //orderTiles
+                //...
+
+                //chooseColumn
+                //...
+
+                //end turn
+            }
+        }
     }
 
 

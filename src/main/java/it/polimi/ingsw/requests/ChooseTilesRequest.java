@@ -7,11 +7,11 @@ import java.rmi.RemoteException;
 
 public class ChooseTilesRequest extends Request
 {
-    public final String username;
+    public final String token;
     public final String tiles;
     public ChooseTilesRequest(String name, String tilesChosen)
     {
-        this.username = name;
+        this.token = name;
         this.tiles = tilesChosen;
     }
 
@@ -20,8 +20,7 @@ public class ChooseTilesRequest extends Request
     {
         try
         {
-            //TODO here i pass the username but maybe i should pass the token
-            serverManager.pickedTiles(username,tiles);
+            serverManager.pickedTiles(token,tiles);
         }
         catch (RemoteException e)
         {
