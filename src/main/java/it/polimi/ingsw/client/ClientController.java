@@ -119,7 +119,7 @@ public class ClientController {
         if(b){
             setUserToken(token);
             setUsername(name);
-            System.out.println("saved " + name + " as " + getUsername());
+            System.out.println("saved " + name + " as " + getUsername() + " token " + userToken);
             currentConnection.setUserToken(token);
         }
         else{

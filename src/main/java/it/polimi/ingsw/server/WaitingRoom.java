@@ -11,7 +11,7 @@ public class WaitingRoom {
     private ArrayList<Player> players;
     //constructor
     public WaitingRoom(int identifier, int max_players){
-        this.id = "room-" + identifier;
+        this.id = String.valueOf(identifier);
         this.playersWaiting = 0;
         players = new ArrayList<Player>();
         this.maxPLayers = max_players;

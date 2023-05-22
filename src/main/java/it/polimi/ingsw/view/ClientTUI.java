@@ -86,6 +86,7 @@ public class ClientTUI implements View{
         while(number==0 || number > 4){
             writeText("Insert number of players (from 2 to 4)");
             number = frominput.nextInt();
+            frominput.nextLine();
         }
         master.numberOfPlayers(number);
     }

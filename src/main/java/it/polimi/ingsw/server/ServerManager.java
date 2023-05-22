@@ -2,6 +2,7 @@ package it.polimi.ingsw.server;
 
 import it.polimi.ingsw.Updates.ModelUpdate;
 import it.polimi.ingsw.controller.GameController;
+import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.network.IClientListener;
 import it.polimi.ingsw.network.IRemoteController;
 
@@ -42,8 +43,7 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
                 //now we need to notify all the players that the game is about to start
 
                 notifyAllPlayers(waitingRoom.getId(), StaticStrings.GAME_START);
-
-                game.initialize();
+                // game.initialize();
 
                 waitingRoom=null;
                 return enoughPLayers;
@@ -123,21 +123,24 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
         else{
             String token = generateToken();
             ConnectionManager.get().addClientView(token, name, viewListener);
+            System.out.println("tokenS: "+ token);
             String success = putInWaitingRoom(name, token);
             System.out.println("I'm elaborating for " + name);
 
-            if(success==null)
-            {
+            if(success==null) {
+
                 dummy = ConnectionManager.get().getLocalView(token).notifySuccessfulRegistration(name,true, token, true);
-            }
-            else if(success.equals(StaticStrings.GAME_START))
-            {
+
+            } else if(success.equals(StaticStrings.GAME_START)) {
+
+                System.out.println("nameS: " + name + " tokenS: " + token);
+                dummy = ConnectionManager.get().getLocalView(token).notifySuccessfulRegistration(name, true, token, false);
                 dummy = ConnectionManager.get().getLocalView(token).sendNotification(StaticStrings.GAME_START);
-            }
-            else if(success.equals(StaticStrings.WAITING_4_START)){
-                dummy = ConnectionManager.get().getLocalView(token).sendNotification(StaticStrings.WAITING_4_START);
-            }
-            else {
+
+            } else if(success.equals(StaticStrings.GAME_WAITING)){
+                dummy = ConnectionManager.get().getLocalView(token).sendNotification(StaticStrings.GAME_WAITING);
+
+            } else {
                 dummy = ConnectionManager.get().getLocalView(token).notifySuccessfulRegistration(name, true, token, false);
             }
         }
