@@ -23,7 +23,6 @@ public class WaitingRoom {
         p.setNickname(name);
         p.setTokenId(token);
         players.add(p);
-        System.out.println("DEBUGGGGGG");
         this.playersWaiting=this.playersWaiting+1;
         System.out.println("There are currently "+playersWaiting+" players ready to play:");
         for (Player player : players) {
