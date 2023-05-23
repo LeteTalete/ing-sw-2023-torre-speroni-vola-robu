@@ -20,7 +20,7 @@ import java.util.Scanner;
 public class GameController {
     private Game model;
     private String gameId;
-    private ArrayList<Couple> choiceOfTiles;
+    private ArrayList<Position> choiceOfTiles;
     private ServerManager master;
 
     public GameController(ArrayList<Player> playersList, String id, ServerManager serverMaster) {
@@ -129,7 +129,7 @@ public class GameController {
 
     }
 
-    public ArrayList<Couple> getChoiceOfTiles() {
+    public ArrayList<Position> getChoiceOfTiles() {
         return choiceOfTiles;
     }
 

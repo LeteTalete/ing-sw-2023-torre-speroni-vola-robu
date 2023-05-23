@@ -217,24 +217,36 @@ public class Game {
         this.endGame = endGame;
     }
 
-//todo needs revision
-    public ArrayList<Couple> getChoiceOfTiles(String choiceOfTiles) {
+
+    public ArrayList<Position> getChoiceOfTiles(String choiceOfTiles) {
+        //choiceOfTiles is the string in the correct format sent by the user to select from 1 to 3 tiles from the board
+        //if those tiles can be picked, this method will return an ArrayList of the corresponding positions
+        //otherwise this method will return null so the server can send to the client an Error Message
+
         ArrayList<Position> tilesChosen = new ArrayList<>();
-        for (int i = 0; i < choiceOfTiles.length(); i++) {
-            if (i % 3 == 0) {
+
+        for (int i = 0; i < choiceOfTiles.length(); i++)
+        {
+            if (i % 3 == 0)
+            {
                 tilesChosen.add(new Position());
                 tilesChosen.get(i / 3).setX(choiceOfTiles.charAt(i) - 48);
-            } else if (( i + 1 ) % 3 != 0) {
+            }
+            else if (( i + 1 ) % 3 != 0)
+            {
                 tilesChosen.get(( i - 1 ) / 3).setY(choiceOfTiles.charAt(i) - 48);
             }
         }
-        int i = 0;
-        ArrayList<Couple> tilesToPut = new ArrayList<>();
-        for(Position p : tilesChosen){
-            tilesToPut.add(i,gameBoard.getCouple(p));
-            i++;
+
+        if(!gameBoard.checkPlayerChoice(tilesChosen))
+        {
+            //if the tilesChosen are can't be picked, the server has to send an Error message back to the client
+            //todo handle this situation
+            //DEBUG
+            System.out.println("DEBUG: those tiles can't be picked");
+            tilesChosen = null;
         }
-        gameBoard.updateCouples(tilesChosen);
-        return tilesToPut;
+
+        return tilesChosen;
     }
 }
