@@ -88,6 +88,7 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
         }
     }
 
+
     public synchronized void periodicPing (){
         //this has to send a ping to all the players in all the active games
         //if it does not catch a single pong from one player, it shuts down the entire game
@@ -185,6 +186,10 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
             }
         }
         return "error!";
+    }
+
+    public void askTilesToPlayer(String tokenId) throws RemoteException {
+        ConnectionManager.get().getLocalView(tokenId).setClientTurn();
     }
     //TODO closeGame(gameId)
 }

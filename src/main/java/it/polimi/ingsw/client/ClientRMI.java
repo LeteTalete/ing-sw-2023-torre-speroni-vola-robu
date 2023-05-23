@@ -3,7 +3,9 @@ package it.polimi.ingsw.client;
 import it.polimi.ingsw.network.IRemoteController;
 import it.polimi.ingsw.view.View;
 
+import java.io.IOException;
 import java.io.Serializable;
+import java.net.SocketException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
@@ -57,6 +59,18 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
+    }
+
+
+    @Override
+    public void setSynCheckTimer(boolean b) {
+
+    }
+
+    @Override
+    public void close() {
+        System.out.println(System.getProperty("line.separator") + "Quit.");
+        System.exit(0);
     }
 
 

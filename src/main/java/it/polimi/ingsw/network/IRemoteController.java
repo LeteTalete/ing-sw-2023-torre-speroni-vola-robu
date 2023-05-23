@@ -13,4 +13,5 @@ public interface IRemoteController extends Remote {
     void selectColumn (String token, int column) throws RemoteException;
 
     void createWaitingRoom(String username, String userToken, int number) throws RemoteException;
+
 }

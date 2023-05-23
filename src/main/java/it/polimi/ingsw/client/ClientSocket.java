@@ -191,6 +191,17 @@ public class ClientSocket implements IClientConnection
 
     }
 
+
+    @Override
+    public void setSynCheckTimer(boolean b) {
+
+    }
+
+    @Override
+    public void close() {
+
+    }
+
     public void setResponseDecoder(ResponseDecoder responseDecoder) {
         this.responseDecoder = responseDecoder;
     }

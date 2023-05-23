@@ -17,4 +17,8 @@ public interface IClientConnection {
      void numberOfPlayers(String name, String token, int number);
 
     void chooseColumn(int column);
+
+    void setSynCheckTimer(boolean b);
+
+    void close();
 }

@@ -145,4 +145,13 @@ public class ClientController {
     public void chooseColumn(int column) {
         currentConnection.chooseColumn(column);
     }
+
+    public void wake() {
+        currentConnection.setReceivedResponse(true);
+        currentConnection.setSynCheckTimer(true);
+    }
+
+    public void close() {
+        currentConnection.close();
+    }
 }

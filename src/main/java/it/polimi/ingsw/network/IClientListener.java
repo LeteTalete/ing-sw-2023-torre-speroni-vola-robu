@@ -13,4 +13,6 @@ public interface IClientListener extends Remote, Serializable {
     void sendUpdatedModel(ModelUpdate message) throws RemoteException;
 
     String notifySuccessfulRegistration(String name, boolean b, String token, boolean first) throws RemoteException;
+
+    void setClientTurn() throws RemoteException;
 }

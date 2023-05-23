@@ -39,4 +39,6 @@ public interface View {
     void askForTiles();
 
     void serverSavedUsername(String name, boolean b, String token, boolean first);
+
+    void running();
 }

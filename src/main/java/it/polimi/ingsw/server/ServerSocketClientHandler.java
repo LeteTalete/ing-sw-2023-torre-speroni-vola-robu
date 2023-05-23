@@ -98,6 +98,11 @@ public class ServerSocketClientHandler implements Runnable, IClientListener
         return null;
     }
 
+    @Override
+    public void setClientTurn() {
+
+    }
+
     private void respond(Response response) {
         try{
             out.writeObject(response);

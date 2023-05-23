@@ -18,13 +18,10 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
     //that way we can implement socket connections
     //we should probably differentiate by looking at the staticstrings: they help the client and server choose on
     //what is to be done after an action
-    //todo fix this asap
+    //todo fix this asap: instead of a list of if clauses, we can display the notification and have the server call the right
+    //method immediately
     @Override
     public String sendNotification(String message) throws RemoteException {
-        if(message.equals(StaticStrings.YOUR_TURN)){
-            view.setMyTurn(true);
-            view.displayNotification(message);
-        }
         if(message.equals(StaticStrings.END_TURN)){
             view.setMyTurn(false);
             view.displayNotification(message);
@@ -32,6 +29,8 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
         if(message.equals(StaticStrings.GAME_START)){
             view.setGameOn(true);
             view.displayNotification(message);
+            //it should start a thread i guess, somehow
+            view.running();
         }
         if(message.equals(StaticStrings.OK)){
             view.rearrangeTiles();
@@ -66,6 +65,11 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
             view.serverSavedUsername(name,false, token, first);
         }
         return name;
+    }
+
+    @Override
+    public void setClientTurn() throws RemoteException{
+        view.setMyTurn(true);
     }
 
     public void chooseTiles(String name, String tileScelte) {

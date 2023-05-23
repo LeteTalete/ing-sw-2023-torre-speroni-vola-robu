@@ -138,4 +138,11 @@ public class GameController {
     }
 
 
+    public void askTilesToPlayer(String tokenId) {
+        try {
+            master.askTilesToPlayer(tokenId);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

@@ -46,6 +46,7 @@ public class Game {
         String firstPlayer = getCurrentPlayer().getNickname();
         gameController.notifyAllPlayers("First player is: " + firstPlayer);
         gameController.notifySinglePlayer(getCurrentPlayer().getTokenId(), StaticStrings.YOUR_TURN);
+        gameController.askTilesToPlayer(getCurrentPlayer().getTokenId());
         /**has a method to start a turn, which will notify each player that it's "nickname"'s turn**/
 
         /**has a method to change turns (it could already be implemented into Game**/
