@@ -183,6 +183,9 @@ public class ClientTUI implements View{
         //commandParsing.elaborateInput(tileScelte);
         if ( checkUserInput(tilesChosen) ) {
             master.chooseTiles(tilesChosen);
+        } else {
+            System.out.println("Wrong format");
+            askForTiles();
         }
 
     }
