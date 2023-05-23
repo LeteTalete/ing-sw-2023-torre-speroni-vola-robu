@@ -34,26 +34,20 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
             activeUsers.put(token,waitingRoom.getId());
             System.out.println("Added user "+ token + " to waiting room "+waitingRoom.getId()+" successfully!");
             if(enoughPLayers.equals(StaticStrings.GAME_START)){
-                //i have to create the players when creating the game
-                GameController game = new GameController(waitingRoom.getListOfPlayers(), waitingRoom.getId(), this);
-                activeGames.put(waitingRoom.getId(), game);
 
-                System.out.println("i deleted the waiting room "+waitingRoom.getId()+" and started the game!");
-                System.out.println("there are currently "+activeGames.size()+" games active!");
-                //now we need to notify all the players that the game is about to start
 
-                notifyAllPlayers(waitingRoom.getId(), StaticStrings.GAME_START);
-                // game.initialize();
-
-                waitingRoom=null;
                 return enoughPLayers;
             }
         return waitingRoom.getId();
         }
     }
 
-    public synchronized void notifySinglePlayer(String token, String message) throws RemoteException {
-        ConnectionManager.get().getLocalView(token).sendNotification(message);
+    public void notifySinglePlayer(String token, String message){
+        try {
+            ConnectionManager.get().getLocalView(token).sendNotification(message);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public synchronized void notifyAllPlayers(String gameId, String something) {
@@ -136,6 +130,18 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
                 System.out.println("nameS: " + name + " tokenS: " + token);
                 dummy = ConnectionManager.get().getLocalView(token).notifySuccessfulRegistration(name, true, token, false);
                 dummy = ConnectionManager.get().getLocalView(token).sendNotification(StaticStrings.GAME_START);
+                //i have to create the players when creating the game
+                GameController game = new GameController(waitingRoom.getListOfPlayers(), waitingRoom.getId(), this);
+                activeGames.put(waitingRoom.getId(), game);
+
+                System.out.println("i deleted the waiting room "+waitingRoom.getId()+" and started the game!");
+                System.out.println("there are currently "+activeGames.size()+" games active!");
+                //now we need to notify all the players that the game is about to start
+
+                notifyAllPlayers(waitingRoom.getId(), StaticStrings.GAME_START);
+
+                game.initialize();
+                waitingRoom=null;
 
             } else if(success.equals(StaticStrings.GAME_WAITING)){
                 dummy = ConnectionManager.get().getLocalView(token).sendNotification(StaticStrings.GAME_WAITING);
@@ -147,11 +153,11 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
     }
 
     @Override
-    public synchronized void pickedTiles(String token, String tilesCoordinates) throws RemoteException {
+    public void pickedTiles(String token, String tilesCoordinates) throws RemoteException {
         System.out.println("AAAAAASERVERMANAGER");
         System.out.println("I received user: " + token + "  and tiles coordinates: " + tilesCoordinates);
 
-        activeGames.get(token).chooseTiles(token, tilesCoordinates);
+        activeGames.get(activeUsers.get(token)).chooseTiles(token, tilesCoordinates);
     }
 
     @Override

@@ -41,18 +41,18 @@ public class GameController {
         model.initialize();
     }
 
-    public void notifySinglePlayer(String name, String message) throws RemoteException {
-        master.notifySinglePlayer(name, message);
+    public void notifySinglePlayer(String token, String message) throws RemoteException {
+        master.notifySinglePlayer(token, message);
     }
 
     public void notifyAllPlayers(String message) {
         master.notifyAllPlayers(gameId, message);
     }
-
+/*
     public void notifyAllPlayers(ModelUpdate message) {
         master.notifyAllPlayers(gameId, message);
     }
-
+*/
 
     public void chooseTiles(String username, String userInput) throws RemoteException {
         System.out.println("AAAAAA");
@@ -70,10 +70,10 @@ public class GameController {
         }
 
         if (this.getGameBoard().checkPlayerChoice(choice)) {
-            master.notifySinglePlayer(username, StaticStrings.OK);
+            master.notifySinglePlayer(model.getCurrentPlayer().getTokenId(), StaticStrings.OK);
         }
         else{
-            master.notifySinglePlayer(username, StaticStrings.INVALID_MOVE);
+            master.notifySinglePlayer(model.getCurrentPlayer().getTokenId(), StaticStrings.INVALID_MOVE);
 
         }
         // needs else with StaticString.NO in case the choice is wrong
