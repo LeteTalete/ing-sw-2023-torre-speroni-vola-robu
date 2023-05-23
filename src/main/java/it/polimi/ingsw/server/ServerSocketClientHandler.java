@@ -5,6 +5,7 @@ import it.polimi.ingsw.network.IClientListener;
 import it.polimi.ingsw.requests.Request;
 import it.polimi.ingsw.responses.LoginResponse;
 import it.polimi.ingsw.responses.Response;
+import it.polimi.ingsw.responses.TextMessage;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

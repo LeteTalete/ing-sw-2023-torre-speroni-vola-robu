@@ -47,7 +47,6 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
     public String notifySuccessfulRegistration(String name, boolean b, String token, boolean first) throws RemoteException {
         if(b){
             view.displayNotification("Registration Successful!");
-            System.out.println("CLTUI toke: " + token + " name: " + name);
             view.serverSavedUsername(name, true, token, first);
         }
         else{
