@@ -15,4 +15,6 @@ public interface IClientConnection {
      void setReceivedResponse(boolean b);
 
      void numberOfPlayers(String name, String token, int number);
+
+    void chooseColumn(int column);
 }

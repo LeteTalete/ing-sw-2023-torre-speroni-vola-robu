@@ -10,6 +10,6 @@ public class StaticStrings {
     public static final String YOUR_TURN = "It's your turn, now!";
     public static final String END_TURN = "Your turn is over.";
     public static final String INVALID_MOVE = "This move is not valid! Please try again";
-
     public static final String GAME_END_DISC = "A player disconnected! Closing the game now...";
+    public static final String COLUMN = "Move valid, choose column";
 }

@@ -34,7 +34,6 @@ public class Deck{
     public void shuffle(){
         //this method shuffles the deck so tiles will be drawn randomly
         Collections.shuffle(tiles);
-        //TODO obliterare lete
    }
 
    public Tile draw()

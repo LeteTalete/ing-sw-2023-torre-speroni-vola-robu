@@ -60,7 +60,6 @@ public class ClientSocket implements IClientConnection
                 () -> {
                     Response response = null;
                     do{
-                        System.out.println("i'm about to read a reply");
                         response = readResponse();
                         //if i get a response and the client controller doesn't tell me to close the connection
                         if(response != null && !master.isToClose()){
@@ -185,6 +184,11 @@ public class ClientSocket implements IClientConnection
                 viewClient.printError(e.getMessage());
             }
         }
+    }
+
+    @Override
+    public void chooseColumn(int column) {
+
     }
 
     public void setResponseDecoder(ResponseDecoder responseDecoder) {

@@ -50,6 +50,15 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
         }
     }
 
+    @Override
+    public void chooseColumn(int column) {
+        try {
+            remoteController.selectColumn(userToken, column);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     @Override
     public void setName(String name) {

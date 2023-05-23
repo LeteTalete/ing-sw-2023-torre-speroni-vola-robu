@@ -4,6 +4,7 @@ import it.polimi.ingsw.Updates.ModelUpdate;
 import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.model.board.LivingRoom;
 import it.polimi.ingsw.model.cards.CommonGoalCard;
+import it.polimi.ingsw.model.enumerations.Couple;
 import it.polimi.ingsw.model.enumerations.Tile;
 import it.polimi.ingsw.server.StaticStrings;
 import it.polimi.ingsw.structures.LivingRoomView;
@@ -200,11 +201,6 @@ public class Game {
         return this.gameId;
     }
 
-    public String chooseTiles(List<Tile> tilesChosen) {
-        //it will do something, I guess
-        return null;
-    }
-
     public String placeTilesOnShelf(List<Tile> tilesChosen, int column) {
         return null;
     }
@@ -219,5 +215,26 @@ public class Game {
 
     public void setEndGame(String endGame) {
         this.endGame = endGame;
+    }
+
+//todo needs revision
+    public ArrayList<Couple> getChoiceOfTiles(String choiceOfTiles) {
+        ArrayList<Position> tilesChosen = new ArrayList<>();
+        for (int i = 0; i < choiceOfTiles.length(); i++) {
+            if (i % 3 == 0) {
+                tilesChosen.add(new Position());
+                tilesChosen.get(i / 3).setX(choiceOfTiles.charAt(i) - 48);
+            } else if (( i + 1 ) % 3 != 0) {
+                tilesChosen.get(( i - 1 ) / 3).setY(choiceOfTiles.charAt(i) - 48);
+            }
+        }
+        int i = 0;
+        ArrayList<Couple> tilesToPut = new ArrayList<>();
+        for(Position p : tilesChosen){
+            tilesToPut.add(i,gameBoard.getCouple(p));
+            i++;
+        }
+        gameBoard.updateCouples(tilesChosen);
+        return tilesToPut;
     }
 }

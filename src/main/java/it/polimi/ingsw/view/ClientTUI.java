@@ -115,7 +115,6 @@ public class ClientTUI implements View{
     @Override
     public void showShelf(ShelfView myShelf){
         DrawTui.graphicsShelf(myShelf, true, false);
-
     }
 
     @Override
@@ -132,6 +131,9 @@ public class ClientTUI implements View{
     }
     public void chooseTiles(){
         DrawTui.askWhat("Choose the tiles [Row, Column]");
+    }
+    public void rearrangeTiles(){
+        writeText("Please, choose an order for your tiles []");
     }
 
     @Override
@@ -248,5 +250,15 @@ public class ClientTUI implements View{
 
     public void setGameOn(boolean gameOn) {
         master.setGameOn(gameOn);
+    }
+
+    public void chooseColumn() {
+        writeText("Choose column [Number of column]");
+        int column = frominput.nextInt();
+        if(column > 5 || column <0 ){
+            writeText("Wrong format");
+            chooseColumn();
+        }
+        else master.chooseColumn(column);
     }
 }

@@ -7,6 +7,8 @@ import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.model.board.LivingRoom;
 import it.polimi.ingsw.model.cards.CommonGoalCard;
+import it.polimi.ingsw.model.enumerations.Couple;
+import it.polimi.ingsw.model.enumerations.Tile;
 import it.polimi.ingsw.server.ServerManager;
 import it.polimi.ingsw.server.StaticStrings;
 
@@ -18,6 +20,7 @@ import java.util.Scanner;
 public class GameController {
     private Game model;
     private String gameId;
+    private ArrayList<Couple> choiceOfTiles;
     private ServerManager master;
 
     public GameController(ArrayList<Player> playersList, String id, ServerManager serverMaster) {
@@ -55,8 +58,6 @@ public class GameController {
 */
 
     public void chooseTiles(String username, String userInput) throws RemoteException {
-        System.out.println("AAAAAA");
-
         //this needs to be rewritten asap
         ArrayList<Position> choice = new ArrayList<>();
 
@@ -68,15 +69,13 @@ public class GameController {
                 choice.get(( i - 1 ) / 3).setY(userInput.charAt(i) - 48);
             }
         }
-
         if (this.getGameBoard().checkPlayerChoice(choice)) {
+            setChoiceOfTiles(userInput);
             master.notifySinglePlayer(model.getCurrentPlayer().getTokenId(), StaticStrings.OK);
         }
         else{
             master.notifySinglePlayer(model.getCurrentPlayer().getTokenId(), StaticStrings.INVALID_MOVE);
-
         }
-        // needs else with StaticString.NO in case the choice is wrong
 
     }
 
@@ -125,19 +124,18 @@ public class GameController {
         return this.gameId;
     }
 
+    //todo
+    public void chooseColumn(String token, int column) {
 
-    // Dunno what to do with those two
-
-    /*
-    public String chooseTiles(List<Tile> tilesChosen) {
-        //it will do something, I guess
-        return null;
     }
-     */
 
-   /*
-   public String placeTilesOnShelf(List<Tile> tilesChosen, int column) {
-        return null;
+    public ArrayList<Couple> getChoiceOfTiles() {
+        return choiceOfTiles;
     }
-     */
+
+    public void setChoiceOfTiles(String choiceOfTiles) {
+        this.choiceOfTiles = model.getChoiceOfTiles(choiceOfTiles);
+    }
+
+
 }

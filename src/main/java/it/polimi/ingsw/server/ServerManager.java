@@ -34,8 +34,6 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
             activeUsers.put(token,waitingRoom.getId());
             System.out.println("Added user "+ token + " to waiting room "+waitingRoom.getId()+" successfully!");
             if(enoughPLayers.equals(StaticStrings.GAME_START)){
-
-
                 return enoughPLayers;
             }
         return waitingRoom.getId();
@@ -80,10 +78,8 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
         //this needs to ask the player how many others we're waiting for
         Random rand = new Random();
         int id = rand.nextInt(1000);
-        System.out.println("Im about to create waiting room " + id + " for " + howMany + " players");
         waitingRoom = new WaitingRoom(id, howMany);
         waitingRoom.addPlayerToWaitingRoom(name, token);
-        System.out.println("I created waiting room " + id + " for " + howMany + " players");
         activeUsers.put(token, String.valueOf(id));
         try {
             ConnectionManager.get().getLocalView(token).sendNotification(StaticStrings.LOGIN_OK_NEW_ROOM);
@@ -110,16 +106,13 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
     @Override
     public void login(String name, IClientListener viewListener) throws RemoteException {
         String dummy;
-        System.out.println("I received user " + name);
         if(ConnectionManager.get().tokenNames.containsValue(name)){
             dummy = viewListener.notifySuccessfulRegistration(name,false, null, false);
         }
         else{
             String token = generateToken();
             ConnectionManager.get().addClientView(token, name, viewListener);
-            System.out.println("tokenS: "+ token);
             String success = putInWaitingRoom(name, token);
-            System.out.println("I'm elaborating for " + name);
 
             if(success==null) {
 
@@ -127,7 +120,6 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
 
             } else if(success.equals(StaticStrings.GAME_START)) {
 
-                System.out.println("nameS: " + name + " tokenS: " + token);
                 dummy = ConnectionManager.get().getLocalView(token).notifySuccessfulRegistration(name, true, token, false);
                 dummy = ConnectionManager.get().getLocalView(token).sendNotification(StaticStrings.GAME_START);
                 //i have to create the players when creating the game
@@ -154,9 +146,7 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
 
     @Override
     public void pickedTiles(String token, String tilesCoordinates) throws RemoteException {
-        System.out.println("AAAAAASERVERMANAGER");
         System.out.println("I received user: " + token + "  and tiles coordinates: " + tilesCoordinates);
-
         activeGames.get(activeUsers.get(token)).chooseTiles(token, tilesCoordinates);
     }
 
@@ -167,7 +157,7 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
 
     @Override
     public synchronized void selectColumn(String token, int column) throws RemoteException {
-
+        activeGames.get(activeUsers.get(token)).chooseColumn(token, column);
     }
 
 

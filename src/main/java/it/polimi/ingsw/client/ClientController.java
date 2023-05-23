@@ -51,7 +51,7 @@ public class ClientController {
         try
         {
             //you have to pass 'this' to the client socket
-            ClientSocket clientSocket = new ClientSocket("127.0.0.1",1420, this);
+            ClientSocket clientSocket = new ClientSocket("93.40.62.128",1420, this);
             this.currentConnection = clientSocket;
             clientSocket.setViewClient(currentView);
             ResponseDecoder responseDecoder = new ResponseDecoder(listenerClient, currentConnection);
@@ -140,5 +140,9 @@ public class ClientController {
 
     public void numberOfPlayers(int number) {
         currentConnection.numberOfPlayers(username, userToken, number);
+    }
+
+    public void chooseColumn(int column) {
+        currentConnection.chooseColumn(column);
     }
 }

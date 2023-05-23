@@ -2,10 +2,10 @@ package it.polimi.ingsw.server;
 
 import it.polimi.ingsw.Updates.ModelUpdate;
 import it.polimi.ingsw.network.IClientListener;
+import it.polimi.ingsw.notifications.GameStart;
 import it.polimi.ingsw.requests.Request;
 import it.polimi.ingsw.responses.LoginResponse;
 import it.polimi.ingsw.responses.Response;
-import it.polimi.ingsw.responses.TextMessage;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -39,7 +39,6 @@ public class ServerSocketClientHandler implements Runnable, IClientListener
     {
        do{
            try{
-               System.out.println("i'm reading!");
                Request request = (Request) in.readObject();
                request.handleRequest(this, serverManager);
            } catch (ClassNotFoundException | IOException e) {
@@ -75,11 +74,15 @@ public class ServerSocketClientHandler implements Runnable, IClientListener
         }
     }
 
-
+//todo fix this switch case
     @Override
     public String sendNotification(String message) throws RemoteException
     {
-        //respond(new TextMessage(message));
+        switch (message){
+            case (StaticStrings.GAME_START):
+                respond(new GameStart());
+                break;
+        }
         return message;
     }
 
@@ -97,7 +100,6 @@ public class ServerSocketClientHandler implements Runnable, IClientListener
 
     private void respond(Response response) {
         try{
-            System.out.println("i'm about to reply");
             out.writeObject(response);
             out.reset();
         } catch (IOException e) {
