@@ -4,11 +4,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.model.board.Shelf;
-import it.polimi.ingsw.model.enumerations.State;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
@@ -25,11 +23,12 @@ public class CommonGoalCard extends GoalCard {
         this.ID = id;
     }
 
-    // Method typeGroupOrShape is used to sort the cards into their respective types ( Group card or Shape card )
-    // The method uses the card ID to find its respective CardType from the json file
-    // Then it initializes the card and returns it
-    // CommonGoalCard dummy is a null card, it won't be ever returned and its purpose is to eliminate the warning
-    public CommonGoalCard typeGroupOrShape(){
+    /**
+     * Method cardType is used to sort the cards into their respective types.
+     * The method uses the card ID to find its respective CardType from the json file.
+     * Then it initializes the card and returns it.
+     */
+    public CommonGoalCard cardType(){
 
         CommonGoalCard dummy = new CommonGoalCard();
         try {
@@ -45,11 +44,14 @@ public class CommonGoalCard extends GoalCard {
                 }
             }
 
-            if (cardType.equals("Group")) {
-                CG_Group card = new CG_Group(this.ID);
+            if (cardType.equals("RowCol")) {
+                CG_RowCol card = new CG_RowCol(this.ID);
                 return card;
             } else if (cardType.equals("Shape")) {
                 CG_Shape card = new CG_Shape(this.ID);
+                return card;
+            } else if (cardType.equals("Groups")) {
+                CG_Groups card = new CG_Groups(this.ID);
                 return card;
             }
 
@@ -93,5 +95,12 @@ public class CommonGoalCard extends GoalCard {
 
     public String getDescription() {
         return null;
+    }
+
+    public int getAtLeast() {
+        return 0;
+    }
+    public int getSurrounded() {
+        return 0;
     }
 }
