@@ -3,6 +3,7 @@ package it.polimi.ingsw.view;
 import it.polimi.ingsw.client.ClientController;
 import it.polimi.ingsw.client.CommandParsing;
 import it.polimi.ingsw.network.IClientListener;
+import it.polimi.ingsw.responses.Response;
 import it.polimi.ingsw.stati.Status;
 import it.polimi.ingsw.structures.LivingRoomView;
 import it.polimi.ingsw.structures.PlayerView;
@@ -23,8 +24,7 @@ public class ClientGUI implements View {
     }
 
     @Override
-    public String getUsername() {
-        return null;
+    public void getUsername() {
     }
 
     @Override
@@ -112,6 +112,21 @@ public class ClientGUI implements View {
 
     @Override
     public void running() {
+
+    }
+
+    @Override
+    public void detangleMessage(Response response) {
+
+    }
+
+    @Override
+    public void printCommands() {
+        //only for tui
+    }
+
+    @Override
+    public void changeTurn(String name) {
 
     }
 

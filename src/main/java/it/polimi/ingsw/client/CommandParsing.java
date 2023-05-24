@@ -6,13 +6,21 @@ import java.util.List;
 
 public class CommandParsing {
     private static final String TILES = "tiles";
+    private static final String HELP = "help";
     private static final String CHAT = "@";
     private static final String REARRANGE = "order";
     private static final String SHELFSHOW = "showshelf";
     private static final String COLUMN = "column";
+    private static final String NUMBER = "number";
+    private static final String USERNAME = "username";
 
     private int choiceNumber;
-    private ClientController master;
+    private final ClientController master;
+
+    public CommandParsing(ClientController master) {
+        this.master = master;
+    }
+
     public void elaborateInput(String command) {
         //note: \\s is single whitespace command
         String [] splitted = command.split("\\s");
@@ -26,36 +34,46 @@ public class CommandParsing {
     }
 
     private void executeCom(String command, List<String> args) {
-        switch(command){
-            case(TILES):
+        switch (command) {
+            case (USERNAME) ->
+                //if choosing username
+                    parseUsername(args);
+            case (TILES) -> {
                 //if choosing tiles
                 parseInteger(args);
                 executeTileCommand();
-                break;
-                
-            case(REARRANGE):
+            }
+            case (NUMBER) -> {
+                //if choosing tiles
+                parseInteger(args);
+                executeNumberOfPlayers();
+            }
+            case (REARRANGE) -> {
                 //if choosing tiles
                 parseInteger(args);
                 executeRearrangeCommand();
-                break;
-                
-            case(COLUMN):
+            }
+            case (COLUMN) -> {
                 //if choosing tiles
                 parseInteger(args);
                 executeColumnCommand();
-                break;
-                
-            case(SHELFSHOW):
-                //if choosing tiles
-                executeShelfCommand();
-                break;
-
-            case(CHAT):
-                parseUsername(args);
-                break;
             }
-        
+            case (SHELFSHOW) ->
+                //if choosing tiles
+                    executeShelfCommand();
+            case (CHAT) -> parseUsername(args);
+            case (HELP) -> master.printCommands();
+            default -> master.wrongCommand();
+        }
+
     }
+
+
+
+    private void executeNumberOfPlayers() {
+        master.numberOfPlayers(choiceNumber);
+    }
+
 
     private void executeShelfCommand() {
     }
@@ -65,7 +83,19 @@ public class CommandParsing {
     }
 
     private void parseUsername(List<String> args) {
-        
+        if(args.size()!=1){
+            System.out.println("error in parsing, try again?");
+            return;
+        }
+        try {
+            String name = (String)args.get(0);
+            master.askLogin(name);
+        }catch(NumberFormatException e){
+            //ack("ERROR: Wrong parameter");
+            //clientController.getViewClient().denyMove();
+            //choiceNumber = -1;
+            System.out.println("error: exception?");
+        }
     }
 
     private void executeRearrangeCommand() {
@@ -76,7 +106,6 @@ public class CommandParsing {
     }
 
     private void parseInteger(List<String> args) {
-        //this means we need one tile at a time, i guess
         if(args.size()!=1){
             //ack(">>>>>> ERROR: Insert one parameter");
             //clientController.getViewClient().denyMove();
@@ -86,12 +115,12 @@ public class CommandParsing {
         }
         try {
             choiceNumber =Integer.parseInt(args.get(0));
+            master.numberOfPlayers(choiceNumber);
         }catch(NumberFormatException e){
             //ack("ERROR: Wrong parameter");
             //clientController.getViewClient().denyMove();
             //choiceNumber = -1;
             System.out.println("error: exception?");
-
         }
     }
 

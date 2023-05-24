@@ -16,6 +16,8 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
     private final IRemoteController remoteController;
     private View viewClient;
     private String userToken;
+    private ResponseDecoder responseDecoder;
+    private boolean isConnected;
 
     public ClientRMI(ClientController clientHandler, IRemoteController rc) {
         this.master = clientHandler;
@@ -73,6 +75,16 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
         System.exit(0);
     }
 
+    @Override
+    public void setResponseDecoder(ResponseDecoder responseDecoder) {
+        this.responseDecoder = responseDecoder;
+    }
+
+    @Override
+    public boolean isConnected() {
+        return isConnected;
+    }
+
 
     @Override
     public void setName(String name) {
@@ -99,5 +111,9 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
 
     public String getUserToken() {
         return userToken;
+    }
+
+    public void setConnected(boolean connected) {
+        isConnected = connected;
     }
 }

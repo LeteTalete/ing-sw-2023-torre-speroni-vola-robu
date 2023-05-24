@@ -1,6 +1,8 @@
 package it.polimi.ingsw.responses;
 
+import it.polimi.ingsw.notifications.DisconnectionNotif;
 import it.polimi.ingsw.notifications.GameStart;
+import it.polimi.ingsw.notifications.NotifyOnTurn;
 
 import java.rmi.RemoteException;
 
@@ -10,4 +12,9 @@ public interface ResponseHandler {
     void handle(LoginResponse loginResponse) throws RemoteException;
 
     void handle(GameStart gameStart) throws RemoteException;
+
+    void handle(NotifyOnTurn notifyOnTurn) throws RemoteException;
+
+    void handle(DisconnectionNotif disconnectionNotif) throws RemoteException;
+
 }

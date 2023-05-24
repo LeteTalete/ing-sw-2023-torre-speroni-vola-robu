@@ -4,11 +4,10 @@ import it.polimi.ingsw.client.ClientController;
 import it.polimi.ingsw.client.CommandParsing;
 import it.polimi.ingsw.network.ClientListenerTUI;
 import it.polimi.ingsw.network.IClientListener;
+import it.polimi.ingsw.responses.Response;
 import it.polimi.ingsw.stati.Status;
 import it.polimi.ingsw.structures.*;
 
-import java.io.IOException;
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.*;
 
@@ -23,6 +22,8 @@ public class ClientTUI implements View{
     private final Integer sizeSlotTile = 3; //Tile size to be colored
     private String connectionType;
     private String command;
+    private boolean isRunning;
+    private String colorError; //todo please, make this red
 
 
     //constructor
@@ -65,13 +66,13 @@ public class ClientTUI implements View{
     }
     private String nextCommand() {
         command = frominput.nextLine();
-        if(master.isGameOn() /*and if we're not disconnected*/) {
-            master.wake();
+        if(master.isConnected() /*and if the game is on but i'm not sure about this bit*/) {
+            //master.wake();
         }
-        if (!master.isGameOn()) {
+        /*if (!master.isGameOn()) {
             printError("The game is not started yet");
             command = ERROR_COMMAND;
-        }
+        }*/
 
         return command;
     }
@@ -79,10 +80,11 @@ public class ClientTUI implements View{
         writeText("we're on");
         do {
             command = nextCommand();
+
             if (!command.equals(ERROR_COMMAND)) {
                 commandParsing.elaborateInput(command);
             }
-        } while (master.isGameOn() /*and connection is not lost*/);
+        } while (master.isConnected());
         if(master.isGameOn() /*and connection is not lost, idk*/) {
             //i don't remember what i was supposed to write here, i'm tired
         }
@@ -93,13 +95,41 @@ public class ClientTUI implements View{
     }
 
     @Override
+    public void detangleMessage(Response response) {
+        try {
+            master.detangleMessage(response);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void printCommands() {
+        /**todo write all the commands: 'help', 'username [username]', 'number [number]',
+         * 'tiles [coordinatexcoordinatey coordinatexcoordinatey ecc]', 'order [number number number]',
+         * 'column [number]', 'showshelf [username]', '@ [username]' and some others that I can't think of now**/
+    }
+
+    @Override
+    public void changeTurn(String name) {
+        master.isItMyTurn(name);
+    }
+
+    @Override
     public String getConnectionType() {
         return this.connectionType;
     }
 
-    public String getUsername(){
-        writeText("Insert username");
-        return frominput.nextLine();
+    public void getUsername(){
+        writeText("Insert username: [username 'name']");
+        if(!isRunning){
+            running();
+            setIsRunning(true);
+        }
+    }
+
+    private void setIsRunning(boolean b) {
+        this.isRunning = b;
     }
 
     @Override
@@ -114,13 +144,7 @@ public class ClientTUI implements View{
 
     @Override
     public void askAmountOfPlayers() {
-        int number = 0;
-        while(number==0 || number > 4){
-            writeText("Insert number of players (from 2 to 4)");
-            number = frominput.nextInt();
-            frominput.nextLine();
-        }
-        master.numberOfPlayers(number);
+        writeText("Insert number of players (from 2 to 4): [number '2/3/4']");
     }
 
     public void GameTitle(){
@@ -186,7 +210,7 @@ public class ClientTUI implements View{
 
     @Override
     public void printError(String message) {
-
+        writeText(message);
     }
 
     @Override
@@ -282,7 +306,6 @@ public class ClientTUI implements View{
 
     public void setGameOn(boolean gameOn) {
         master.setGameOn(gameOn);
-
     }
 
     public void chooseColumn() {
@@ -294,4 +317,5 @@ public class ClientTUI implements View{
         }
         else master.chooseColumn(column);
     }
+
 }

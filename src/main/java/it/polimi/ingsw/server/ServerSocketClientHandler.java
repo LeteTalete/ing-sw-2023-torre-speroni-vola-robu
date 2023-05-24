@@ -2,7 +2,6 @@ package it.polimi.ingsw.server;
 
 import it.polimi.ingsw.Updates.ModelUpdate;
 import it.polimi.ingsw.network.IClientListener;
-import it.polimi.ingsw.notifications.GameStart;
 import it.polimi.ingsw.requests.Request;
 import it.polimi.ingsw.responses.LoginResponse;
 import it.polimi.ingsw.responses.Response;
@@ -76,14 +75,9 @@ public class ServerSocketClientHandler implements Runnable, IClientListener
 
 //todo fix this switch case
     @Override
-    public String sendNotification(String message) throws RemoteException
+    public void sendNotification(Response response) throws RemoteException
     {
-        switch (message){
-            case (StaticStrings.GAME_START):
-                respond(new GameStart());
-                break;
-        }
-        return message;
+
     }
 
     @Override
@@ -93,13 +87,27 @@ public class ServerSocketClientHandler implements Runnable, IClientListener
     }
 
     @Override
-    public String notifySuccessfulRegistration(String name, boolean nameExistsAlready, String token, boolean first) throws RemoteException{
-        respond(new LoginResponse(name, nameExistsAlready, token, first));
-        return null;
+    public void notifySuccessfulRegistration(LoginResponse loginResponse) throws RemoteException{
+        respond(loginResponse);
     }
 
     @Override
     public void setClientTurn() {
+
+    }
+
+    @Override
+    public void setGameOn() throws RemoteException {
+
+    }
+
+    @Override
+    public void changeTurn(String name) throws RemoteException {
+
+    }
+
+    @Override
+    public void showTextNotification(String waitingRoomCreated) {
 
     }
 

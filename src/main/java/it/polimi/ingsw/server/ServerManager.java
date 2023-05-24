@@ -5,6 +5,10 @@ import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.network.IClientListener;
 import it.polimi.ingsw.network.IRemoteController;
+import it.polimi.ingsw.notifications.DisconnectionNotif;
+import it.polimi.ingsw.notifications.GameStart;
+import it.polimi.ingsw.responses.LoginResponse;
+import it.polimi.ingsw.responses.Response;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -40,21 +44,21 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
         }
     }
 
-    public void notifySinglePlayer(String token, String message){
+    public void notifySinglePlayer(String token, Response response){
         try {
-            ConnectionManager.get().getLocalView(token).sendNotification(message);
+            ConnectionManager.get().getLocalView(token).sendNotification(response);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public synchronized void notifyAllPlayers(String gameId, String something) {
+    public synchronized void notifyAllPlayers(String gameId, Response response) {
         activeUsers.entrySet()
                 .stream()
                 .filter(e -> e.getValue().equals(gameId))
                 .forEach(e -> {
                     try {
-                        ConnectionManager.get().getLocalView(e.getKey()).sendNotification(something);
+                        ConnectionManager.get().getLocalView(e.getKey()).sendNotification(response);
                     } catch (RemoteException ex) {
                         throw new RuntimeException(ex);
                     }
@@ -75,14 +79,14 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
     }
 
     public synchronized void createWaitingRoom (String name, String token, int howMany){
-        //this needs to ask the player how many others we're waiting for
         Random rand = new Random();
         int id = rand.nextInt(1000);
         waitingRoom = new WaitingRoom(id, howMany);
         waitingRoom.addPlayerToWaitingRoom(name, token);
         activeUsers.put(token, String.valueOf(id));
-        try {
-            ConnectionManager.get().getLocalView(token).sendNotification(StaticStrings.LOGIN_OK_NEW_ROOM);
+        try{
+            //todo find out why this is printed twice or sent twice to the client
+            ConnectionManager.get().getLocalView(token).showTextNotification("I created a waiting room. Waiting for other players to join...");
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
@@ -104,11 +108,12 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
 
     //this should be fixed further: all of these return strings, so that the server doesn't
     //wait on them, but they should be fixed with threads
+    //todo check on the alreadyexists attributes
     @Override
     public void login(String name, IClientListener viewListener) throws RemoteException {
-        String dummy;
         if(ConnectionManager.get().tokenNames.containsValue(name)){
-            dummy = viewListener.notifySuccessfulRegistration(name,false, null, false);
+            LoginResponse loginResponse = new LoginResponse(name, false, null, false);
+            viewListener.notifySuccessfulRegistration(loginResponse);
         }
         else{
             String token = generateToken();
@@ -116,34 +121,33 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
             String success = putInWaitingRoom(name, token);
 
             if(success==null) {
-
-                dummy = ConnectionManager.get().getLocalView(token).notifySuccessfulRegistration(name,true, token, true);
+                LoginResponse loginResponse = new LoginResponse(name, true, token, true);
+                ConnectionManager.get().getLocalView(token).notifySuccessfulRegistration(loginResponse);
 
             } else if(success.equals(StaticStrings.GAME_START)) {
+                LoginResponse loginResponse = new LoginResponse(name, true, token, false);
+                ConnectionManager.get().getLocalView(token).notifySuccessfulRegistration(loginResponse);
 
-                dummy = ConnectionManager.get().getLocalView(token).notifySuccessfulRegistration(name, true, token, false);
-                dummy = ConnectionManager.get().getLocalView(token).sendNotification(StaticStrings.GAME_START);
+                //now we need to notify all the players that the game is about to start
+                notifyAllPlayers(waitingRoom.getId(), new GameStart());
+
                 //i have to create the players when creating the game
                 GameController game = new GameController(waitingRoom.getListOfPlayers(), waitingRoom.getId(), this);
                 activeGames.put(waitingRoom.getId(), game);
 
                 System.out.println("i deleted the waiting room "+waitingRoom.getId()+" and started the game!");
                 System.out.println("there are currently "+activeGames.size()+" games active!");
-                //now we need to notify all the players that the game is about to start
-
-                notifyAllPlayers(waitingRoom.getId(), StaticStrings.GAME_START);
 
                 game.initialize();
                 waitingRoom=null;
 
-            } else if(success.equals(StaticStrings.GAME_WAITING)){
-                dummy = ConnectionManager.get().getLocalView(token).sendNotification(StaticStrings.GAME_WAITING);
-
             } else {
-                dummy = ConnectionManager.get().getLocalView(token).notifySuccessfulRegistration(name, true, token, false);
+                LoginResponse loginResponse = new LoginResponse(name, true, token, false);
+                ConnectionManager.get().getLocalView(token).notifySuccessfulRegistration(loginResponse);
             }
         }
     }
+
 
     @Override
     public void pickedTiles(String token, String tilesCoordinates) throws RemoteException {
@@ -172,7 +176,8 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
                 .filter(e -> !e.getKey().equals(token))
                 .forEach(e -> {
                     try {
-                        ConnectionManager.get().getLocalView(e.getKey()).sendNotification(StaticStrings.GAME_END_DISC);
+                        DisconnectionNotif disconnectionNotif = new DisconnectionNotif(ConnectionManager.get().getNameToken(token));
+                        ConnectionManager.get().getLocalView(e.getKey()).sendNotification(disconnectionNotif);
                     } catch (RemoteException ex) {
                         throw new RuntimeException(ex);
                     }

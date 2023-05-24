@@ -21,4 +21,8 @@ public interface IClientConnection {
     void setSynCheckTimer(boolean b);
 
     void close();
+
+    void setResponseDecoder(ResponseDecoder responseDecoder);
+
+    boolean isConnected();
 }

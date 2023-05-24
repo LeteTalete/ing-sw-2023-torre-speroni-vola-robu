@@ -9,6 +9,8 @@ import it.polimi.ingsw.model.board.LivingRoom;
 import it.polimi.ingsw.model.cards.CommonGoalCard;
 import it.polimi.ingsw.model.enumerations.Couple;
 import it.polimi.ingsw.model.enumerations.Tile;
+import it.polimi.ingsw.responses.GetTilesResponse;
+import it.polimi.ingsw.responses.Response;
 import it.polimi.ingsw.server.ServerManager;
 import it.polimi.ingsw.server.StaticStrings;
 
@@ -44,12 +46,12 @@ public class GameController {
         model.initialize();
     }
 
-    public void notifySinglePlayer(String token, String message) throws RemoteException {
-        master.notifySinglePlayer(token, message);
+    public void notifySinglePlayer(String token, Response response) throws RemoteException {
+        master.notifySinglePlayer(token, response);
     }
 
-    public void notifyAllPlayers(String message) {
-        master.notifyAllPlayers(gameId, message);
+    public void notifyAllPlayers(Response response) {
+        master.notifyAllPlayers(gameId, response);
     }
 /*
     public void notifyAllPlayers(ModelUpdate message) {
@@ -71,10 +73,10 @@ public class GameController {
         }
         if (this.getGameBoard().checkPlayerChoice(choice)) {
             setChoiceOfTiles(userInput);
-            master.notifySinglePlayer(model.getCurrentPlayer().getTokenId(), StaticStrings.OK);
+            master.notifySinglePlayer(model.getCurrentPlayer().getTokenId(), new GetTilesResponse(choice, true));
         }
         else{
-            master.notifySinglePlayer(model.getCurrentPlayer().getTokenId(), StaticStrings.INVALID_MOVE);
+            master.notifySinglePlayer(model.getCurrentPlayer().getTokenId(), new GetTilesResponse(choice, true));
         }
 
     }

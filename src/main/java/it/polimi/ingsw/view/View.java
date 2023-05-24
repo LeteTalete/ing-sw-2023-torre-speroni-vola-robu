@@ -3,6 +3,7 @@ package it.polimi.ingsw.view;
 import it.polimi.ingsw.client.ClientController;
 import it.polimi.ingsw.client.CommandParsing;
 import it.polimi.ingsw.network.IClientListener;
+import it.polimi.ingsw.responses.Response;
 import it.polimi.ingsw.stati.Status;
 import it.polimi.ingsw.structures.LivingRoomView;
 import it.polimi.ingsw.structures.PlayerView;
@@ -11,7 +12,7 @@ import it.polimi.ingsw.structures.ShelfView;
 public interface View {
     void chooseConnection();
     String getConnectionType();
-    String getUsername();
+    void getUsername();
     void displayNotification(String message);
     void GamerStatus(Status current);
     void askAmountOfPlayers();
@@ -41,4 +42,10 @@ public interface View {
     void serverSavedUsername(String name, boolean b, String token, boolean first);
 
     void running();
+
+    void detangleMessage(Response response);
+
+    void printCommands();
+
+    void changeTurn(String name);
 }

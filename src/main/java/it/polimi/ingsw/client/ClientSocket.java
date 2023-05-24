@@ -206,4 +206,9 @@ public class ClientSocket implements IClientConnection
         this.responseDecoder = responseDecoder;
     }
 
+    @Override
+    public boolean isConnected() {
+        return false;
+    }
+
 }

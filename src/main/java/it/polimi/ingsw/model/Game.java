@@ -6,6 +6,7 @@ import it.polimi.ingsw.model.board.LivingRoom;
 import it.polimi.ingsw.model.cards.CommonGoalCard;
 import it.polimi.ingsw.model.enumerations.Couple;
 import it.polimi.ingsw.model.enumerations.Tile;
+import it.polimi.ingsw.notifications.NotifyOnTurn;
 import it.polimi.ingsw.server.StaticStrings;
 import it.polimi.ingsw.structures.LivingRoomView;
 
@@ -44,8 +45,7 @@ public class Game {
         chooseFirstPlayer();
         //time to notify the players who's first
         String firstPlayer = getCurrentPlayer().getNickname();
-        gameController.notifyAllPlayers("First player is: " + firstPlayer);
-        gameController.notifySinglePlayer(getCurrentPlayer().getTokenId(), StaticStrings.YOUR_TURN);
+        gameController.notifyAllPlayers(new NotifyOnTurn(firstPlayer));
         gameController.askTilesToPlayer(getCurrentPlayer().getTokenId());
         /**has a method to start a turn, which will notify each player that it's "nickname"'s turn**/
 

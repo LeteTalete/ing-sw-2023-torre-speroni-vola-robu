@@ -2,8 +2,11 @@ package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.network.IClientListener;
 import it.polimi.ingsw.network.IRemoteController;
+import it.polimi.ingsw.responses.Response;
+import it.polimi.ingsw.server.StaticStrings;
 import it.polimi.ingsw.view.View;
 
+import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
@@ -20,6 +23,7 @@ public class ClientController {
     private IRemoteController remoteController;
     private String userToken;
     private boolean toCLose;
+    private ResponseDecoder responseDecoder;
 
     //constructor
     public ClientController(View currentView) {
@@ -27,7 +31,7 @@ public class ClientController {
         this.listenerClient = currentView.getListener();
         this.username = new String();
         //not sure if we need the command parsing anyway
-        this.commPars = new CommandParsing();
+        this.commPars = new CommandParsing(this);
         currentView.setMaster(this, commPars);
         setupConnection();
     }
@@ -55,6 +59,7 @@ public class ClientController {
             this.currentConnection = clientSocket;
             clientSocket.setViewClient(currentView);
             ResponseDecoder responseDecoder = new ResponseDecoder(listenerClient, currentConnection);
+            this.responseDecoder = responseDecoder;
             clientSocket.setResponseDecoder(responseDecoder);
             clientSocket.startClient();
 
@@ -75,6 +80,10 @@ public class ClientController {
             ClientRMI clientRMI = new ClientRMI(this, remoteController);
             this.currentConnection = clientRMI;
             clientRMI.setViewClient(currentView);
+            ResponseDecoder responseDecoder = new ResponseDecoder(listenerClient, currentConnection);
+            clientRMI.setResponseDecoder(responseDecoder);
+            this.responseDecoder = responseDecoder;
+            clientRMI.setConnected(true);
             userLogin();
 
         }catch(Exception e){
@@ -84,8 +93,7 @@ public class ClientController {
     }
 
     public void userLogin () {
-        String name = currentView.getUsername();
-        currentConnection.login(name);
+        currentView.getUsername();
     }
 
     public String getUsername() {
@@ -147,11 +155,45 @@ public class ClientController {
     }
 
     public void wake() {
-        currentConnection.setReceivedResponse(true);
         currentConnection.setSynCheckTimer(true);
     }
 
     public void close() {
         currentConnection.close();
+    }
+
+    public IClientConnection getCurrentConnection() {
+        return currentConnection;
+    }
+
+    public void detangleMessage(Response response) throws RemoteException {
+        response.handleResponse(responseDecoder);
+    }
+
+    public boolean isConnected() {
+        return currentConnection.isConnected();
+    }
+
+    public void askLogin(String s) {
+        currentConnection.login(s);
+    }
+
+    public void wrongCommand() {
+        currentView.printError("Wrong command, please type 'help' for a list of commands");
+    }
+
+    public void printCommands() {
+        currentView.printCommands();
+    }
+
+    public void isItMyTurn(String name) {
+        if(name.equals(username)){
+            setMyTurn(true);
+            currentView.displayNotification(StaticStrings.YOUR_TURN);
+        }
+        else{
+            setMyTurn(false);
+            currentView.displayNotification("It's " + name + "'s turn");
+        }
     }
 }

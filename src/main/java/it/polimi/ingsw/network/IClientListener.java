@@ -1,6 +1,8 @@
 package it.polimi.ingsw.network;
 
 import it.polimi.ingsw.Updates.ModelUpdate;
+import it.polimi.ingsw.responses.LoginResponse;
+import it.polimi.ingsw.responses.Response;
 
 import java.io.Serializable;
 import java.rmi.Remote;
@@ -9,10 +11,16 @@ import java.rmi.RemoteException;
 public interface IClientListener extends Remote, Serializable {
     //void processLogin(String result) throws RemoteException;
     //should become event driven
-    String sendNotification(String message) throws RemoteException;
+    void sendNotification(Response response) throws RemoteException;
     void sendUpdatedModel(ModelUpdate message) throws RemoteException;
 
-    String notifySuccessfulRegistration(String name, boolean b, String token, boolean first) throws RemoteException;
+    void notifySuccessfulRegistration(LoginResponse response) throws RemoteException;
 
     void setClientTurn() throws RemoteException;
+
+    void setGameOn() throws RemoteException;
+
+    void changeTurn(String currentPlayer) throws RemoteException;
+
+    void showTextNotification(String waitingRoomCreated) throws RemoteException;
 }

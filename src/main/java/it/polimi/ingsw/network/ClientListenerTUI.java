@@ -1,6 +1,9 @@
 package it.polimi.ingsw.network;
 
 import it.polimi.ingsw.Updates.ModelUpdate;
+import it.polimi.ingsw.client.ResponseDecoder;
+import it.polimi.ingsw.responses.LoginResponse;
+import it.polimi.ingsw.responses.Response;
 import it.polimi.ingsw.server.StaticStrings;
 import it.polimi.ingsw.view.ClientTUI;
 
@@ -9,6 +12,7 @@ import java.rmi.server.UnicastRemoteObject;
 
 public class ClientListenerTUI extends UnicastRemoteObject implements IClientListener {
     private transient final ClientTUI view;
+    private ResponseDecoder responseDecoder;
 
     public ClientListenerTUI(ClientTUI currentView) throws RemoteException{
         this.view = currentView;
@@ -21,16 +25,11 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
     //todo fix this asap: instead of a list of if clauses, we can display the notification and have the server call the right
     //method immediately
     @Override
-    public String sendNotification(String message) throws RemoteException {
-        if(message.equals(StaticStrings.END_TURN)){
+    public void sendNotification(Response response) throws RemoteException {
+        view.detangleMessage(response);
+        /*if(message.equals(StaticStrings.END_TURN)){
             view.setMyTurn(false);
             view.displayNotification(message);
-        }
-        if(message.equals(StaticStrings.GAME_START)){
-            view.setGameOn(true);
-            view.displayNotification(message);
-            //it should start a thread i guess, somehow
-            view.running();
         }
         if(message.equals(StaticStrings.OK)){
             view.rearrangeTiles();
@@ -41,12 +40,7 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
         else{
             view.displayNotification(message);
         }
-        //should move this method to choose tiles somewhere else?
-        //todo delete this, we need to make a separate thread for reading from input, and we don't have to ask for anything here
-        if(view.getMyTurn()){
-            view.askForTiles();
-        }
-        return message;
+        */
     }
 
     @Override
@@ -55,16 +49,15 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
     }
 
     @Override
-    public String notifySuccessfulRegistration(String name, boolean b, String token, boolean first) throws RemoteException {
-        if(b){
+    public void notifySuccessfulRegistration(LoginResponse loginResponse) throws RemoteException {
+        if(loginResponse.b){
             view.displayNotification("Registration Successful!");
-            view.serverSavedUsername(name, true, token, first);
+            view.serverSavedUsername(loginResponse.name, true, loginResponse.token, loginResponse.first);
         }
         else{
-            view.displayNotification("Registration failed: "+name+" already exists. Try again");
-            view.serverSavedUsername(name,false, token, first);
+            view.displayNotification("Registration failed: "+loginResponse.name+" already exists. Try again");
+            view.serverSavedUsername(loginResponse.name, false, loginResponse.token, loginResponse.first);
         }
-        return name;
     }
 
     @Override
@@ -72,7 +65,24 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
         view.setMyTurn(true);
     }
 
+    @Override
+    public void setGameOn() throws RemoteException {
+        view.writeText(StaticStrings.GAME_START);
+        view.setGameOn(true);
+    }
+
+    @Override
+    public void changeTurn(String name) throws RemoteException {
+        view.changeTurn(name);
+    }
+
+    @Override
+    public void showTextNotification(String waitingRoomCreated) {
+        view.displayNotification(waitingRoomCreated);
+    }
+
     public void chooseTiles(String name, String tileScelte) {
 
     }
+
 }
