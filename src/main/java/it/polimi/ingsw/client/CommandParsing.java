@@ -2,6 +2,7 @@ package it.polimi.ingsw.client;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class CommandParsing {
@@ -15,6 +16,7 @@ public class CommandParsing {
     private static final String USERNAME = "username";
 
     private int choiceNumber;
+    private String multipleChoiceNumber;
     private final ClientController master;
 
     public CommandParsing(ClientController master) {
@@ -40,17 +42,17 @@ public class CommandParsing {
                     parseUsername(args);
             case (TILES) -> {
                 //if choosing tiles
-                parseInteger(args);
+                parseMultipleInteger(args);
                 executeTileCommand();
             }
             case (NUMBER) -> {
                 //if choosing tiles
                 parseInteger(args);
-                executeNumberOfPlayers();
+                master.numberOfPlayers(choiceNumber);
             }
             case (REARRANGE) -> {
                 //if choosing tiles
-                parseInteger(args);
+                parseMultipleInteger(args);
                 executeRearrangeCommand();
             }
             case (COLUMN) -> {
@@ -67,7 +69,6 @@ public class CommandParsing {
         }
 
     }
-
 
 
     private void executeNumberOfPlayers() {
@@ -103,6 +104,7 @@ public class CommandParsing {
     }
 
     private void executeTileCommand() {
+        master.chooseTiles(multipleChoiceNumber);
     }
 
     private void parseInteger(List<String> args) {
@@ -115,11 +117,23 @@ public class CommandParsing {
         }
         try {
             choiceNumber =Integer.parseInt(args.get(0));
-            master.numberOfPlayers(choiceNumber);
         }catch(NumberFormatException e){
             //ack("ERROR: Wrong parameter");
             //clientController.getViewClient().denyMove();
             //choiceNumber = -1;
+            System.out.println("error: exception?");
+        }
+    }
+
+    private void parseMultipleInteger(List<String> args) {
+        try{
+            for(String s: args){
+                //todo fix this asap
+                String temp = String.valueOf(Integer.parseInt(s));
+                multipleChoiceNumber = multipleChoiceNumber.concat(temp);
+                System.out.println("I'm reading "+multipleChoiceNumber);
+            }
+        }catch(NumberFormatException e) {
             System.out.println("error: exception?");
         }
     }

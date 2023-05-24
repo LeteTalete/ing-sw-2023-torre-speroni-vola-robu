@@ -186,10 +186,10 @@ public class ClientTUI implements View{
         chooseTiles();
     }
     public void chooseTiles(){
-        DrawTui.askWhat("Choose the tiles [Row, Column]");
+        DrawTui.askWhat("Choose the tiles: [tiles rowcolumn(s)]");
     }
     public void rearrangeTiles(){
-        writeText("Please, choose an order for your tiles []");
+        writeText("Please, choose an order for your tiles: [order number(s)]");
     }
 
     @Override
@@ -234,18 +234,10 @@ public class ClientTUI implements View{
         this.commandParsing = commandParsing;
     }
 
+    //todo cleanup this probably isn't needed
     @Override
     public void askForTiles() {
         chooseTiles();
-        String tilesChosen = frominput.nextLine();
-        //commandParsing.elaborateInput(tileScelte);
-        if ( checkUserInput(tilesChosen) ) {
-            master.chooseTiles(tilesChosen);
-        } else {
-            System.out.println("Wrong format");
-            askForTiles();
-        }
-
     }
 
     @Override

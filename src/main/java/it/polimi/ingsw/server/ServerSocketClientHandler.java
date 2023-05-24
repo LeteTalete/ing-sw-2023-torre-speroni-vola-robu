@@ -39,7 +39,7 @@ public class ServerSocketClientHandler implements Runnable, IClientListener
        do{
            try{
                Request request = (Request) in.readObject();
-               request.handleRequest(this, serverManager);
+               //request.handleRequest(this, serverManager);
            } catch (ClassNotFoundException | IOException e) {
                String token = serverManager.getTokenFromHandler(this);
                serverManager.disconnect(token);

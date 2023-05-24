@@ -12,6 +12,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.rmi.RemoteException;
+import java.util.List;
 import java.util.Scanner;
 
 public class ClientSocket implements IClientConnection
@@ -119,7 +120,7 @@ public class ClientSocket implements IClientConnection
     public synchronized void chooseTiles(String token, String tilesChosen)
     {
         setReceivedResponse(true);
-        request(new ChooseTilesRequest(token, tilesChosen));
+        /*request(new ChooseTilesRequest(token, tilesChosen));
         while(notReceivingResponse){
             try
             {
@@ -129,7 +130,7 @@ public class ClientSocket implements IClientConnection
             {
                 viewClient.printError(e.getMessage());
             }
-        }
+        }*/
     }
 
     @Override

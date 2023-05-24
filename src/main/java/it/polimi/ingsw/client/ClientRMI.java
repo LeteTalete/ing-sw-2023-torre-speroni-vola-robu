@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.net.SocketException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.List;
 
 
 public class ClientRMI implements IClientConnection, Remote, Serializable {

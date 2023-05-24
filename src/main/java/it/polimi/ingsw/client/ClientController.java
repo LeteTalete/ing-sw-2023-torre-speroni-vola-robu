@@ -9,6 +9,7 @@ import it.polimi.ingsw.view.View;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.List;
 
 
 public class ClientController {
@@ -190,6 +191,7 @@ public class ClientController {
         if(name.equals(username)){
             setMyTurn(true);
             currentView.displayNotification(StaticStrings.YOUR_TURN);
+            currentView.askForTiles();
         }
         else{
             setMyTurn(false);

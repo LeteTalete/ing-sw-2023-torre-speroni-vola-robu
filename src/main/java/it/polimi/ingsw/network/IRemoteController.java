@@ -2,6 +2,7 @@ package it.polimi.ingsw.network;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.List;
 
 public interface IRemoteController extends Remote {
     //this is our rmi registry
