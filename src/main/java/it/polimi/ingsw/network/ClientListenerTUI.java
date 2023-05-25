@@ -42,7 +42,8 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
 
     @Override
     public void sendUpdatedModel(ModelUpdate message) throws RemoteException {
-        //view.updateModel???
+        System.out.println("wgkjergnkjjknfsekl-nfkl-m");
+        view.displayUpdatedModel(message);
     }
 
     @Override

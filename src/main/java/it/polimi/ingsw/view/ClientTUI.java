@@ -1,7 +1,9 @@
 package it.polimi.ingsw.view;
 
+import it.polimi.ingsw.Updates.ModelUpdate;
 import it.polimi.ingsw.client.ClientController;
 import it.polimi.ingsw.client.CommandParsing;
+import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.network.ClientListenerTUI;
 import it.polimi.ingsw.network.IClientListener;
 import it.polimi.ingsw.responses.Response;
@@ -13,6 +15,7 @@ import java.util.*;
 
 
 public class ClientTUI implements View{
+    private GameView gameView;
     private static final String ERROR_COMMAND = "ERROR";
     private ClientController master;
     private CommandParsing commandParsing;
@@ -47,6 +50,12 @@ public class ClientTUI implements View{
     private void setupStdInput(){
         this.frominput = new Scanner(System.in);
     }
+
+    public void displayUpdatedModel(ModelUpdate modelUpdate){
+        this.gameView = new GameView(modelUpdate);
+        System.out.println("casa");
+    }
+
     @Override
     public void chooseConnection() {
         String connection;
@@ -63,6 +72,7 @@ public class ClientTUI implements View{
         }while(!connection.equals("RMI") && !connection.equals("SOCKET"));
 
         connectionType = connection;
+
 
     }
     private String nextCommand() {

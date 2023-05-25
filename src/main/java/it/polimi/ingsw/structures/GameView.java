@@ -1,6 +1,8 @@
 package it.polimi.ingsw.structures;
 
+import it.polimi.ingsw.Updates.ModelUpdate;
 import it.polimi.ingsw.controller.GameController;
+import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.board.Shelf;
 
 import java.io.Serializable;
@@ -12,9 +14,9 @@ public class GameView implements Serializable {
 
     private LivingRoomView livingRoomView;
 
-    public GameView(GameController game){
+    public GameView(ModelUpdate game){
         this.livingRoomView = new LivingRoomView(game.getGameBoard());
-        game.getPlayers().forEach( playerView -> this.playersView.add( new PlayerView(playerView) ) );
+        game.getPlayers().forEach( player -> this.playersView.add( new PlayerView(player) ) );
     }
 
     public LivingRoomView getGameBoardView(){

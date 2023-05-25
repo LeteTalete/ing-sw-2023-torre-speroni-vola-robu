@@ -71,6 +71,7 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
                 .filter(e -> e.getValue().equals(id))
                 .forEach(e -> {
                     try {
+                        System.out.println("wgkjergnkjjknfsekl-nfkl-m");
                         ConnectionManager.get().getLocalView(e.getKey()).sendUpdatedModel(something);
                     } catch (RemoteException ex) {
                         throw new RuntimeException(ex);
@@ -153,6 +154,7 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
     public void pickedTiles(String token, List<String> tilesCoordinates) throws RemoteException {
         System.out.println("I received user: " + token + "  and tiles coordinates: " + tilesCoordinates);
         activeGames.get(activeUsers.get(token)).chooseTiles(token, tilesCoordinates);
+        System.out.println("Finished picking tiles: " + tilesCoordinates + " for token: " + token );
     }
 
     @Override
