@@ -9,6 +9,8 @@ import it.polimi.ingsw.model.board.LivingRoom;
 import it.polimi.ingsw.model.cards.CommonGoalCard;
 import it.polimi.ingsw.model.enumerations.Couple;
 import it.polimi.ingsw.model.enumerations.Tile;
+import it.polimi.ingsw.notifications.EndTurn;
+import it.polimi.ingsw.notifications.NotifyOnTurn;
 import it.polimi.ingsw.responses.GetOrderResponse;
 import it.polimi.ingsw.responses.GetTilesResponse;
 import it.polimi.ingsw.responses.MoveOk;
@@ -107,6 +109,8 @@ public class GameController {
         this.choiceOfTiles = null;
 
         master.notifySinglePlayer(token, new MoveOk(true));
+        master.notifySinglePlayer(token, new EndTurn());
+        nextTurn();
     }
 
     public void generateCGC(){

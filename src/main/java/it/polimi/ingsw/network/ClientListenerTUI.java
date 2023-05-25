@@ -2,6 +2,7 @@ package it.polimi.ingsw.network;
 
 import it.polimi.ingsw.Updates.ModelUpdate;
 import it.polimi.ingsw.client.ResponseDecoder;
+import it.polimi.ingsw.notifications.EndTurn;
 import it.polimi.ingsw.responses.*;
 import it.polimi.ingsw.server.StaticStrings;
 import it.polimi.ingsw.view.ClientTUI;
@@ -42,7 +43,6 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
 
     @Override
     public void sendUpdatedModel(ModelUpdate message) throws RemoteException {
-        System.out.println("wgkjergnkjjknfsekl-nfkl-m");
         view.displayUpdatedModel(message);
     }
 
@@ -92,6 +92,12 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
         else{
             view.displayNotification("Invalid move. Try again.");
         }
+    }
+
+    @Override
+    public void notifyEndTurn(EndTurn endTurn) throws RemoteException {
+        view.setMyTurn(false);
+        view.displayNotification("Turn ended.");
     }
 
 }

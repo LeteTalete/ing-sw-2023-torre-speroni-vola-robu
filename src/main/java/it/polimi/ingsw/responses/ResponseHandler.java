@@ -1,6 +1,7 @@
 package it.polimi.ingsw.responses;
 
 import it.polimi.ingsw.notifications.DisconnectionNotif;
+import it.polimi.ingsw.notifications.EndTurn;
 import it.polimi.ingsw.notifications.GameStart;
 import it.polimi.ingsw.notifications.NotifyOnTurn;
 
@@ -19,4 +20,6 @@ public interface ResponseHandler {
 
     void handle(MoveOk moveOk) throws RemoteException;
     void handle(GetOrderResponse getOrderResponse) throws RemoteException;
+
+    void handle(EndTurn endTurn) throws RemoteException;
 }

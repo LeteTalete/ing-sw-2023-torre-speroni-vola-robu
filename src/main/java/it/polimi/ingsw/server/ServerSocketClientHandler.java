@@ -2,6 +2,7 @@ package it.polimi.ingsw.server;
 
 import it.polimi.ingsw.Updates.ModelUpdate;
 import it.polimi.ingsw.network.IClientListener;
+import it.polimi.ingsw.notifications.EndTurn;
 import it.polimi.ingsw.requests.Request;
 import it.polimi.ingsw.responses.*;
 
@@ -119,6 +120,11 @@ public class ServerSocketClientHandler implements Runnable, IClientListener
     @Override
     public void notifyMoveOk(MoveOk moveOk) throws RemoteException {
         respond(moveOk);
+    }
+
+    @Override
+    public void notifyEndTurn(EndTurn endTurn) throws RemoteException {
+
     }
 
     private void respond(Response response) {

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.network;
 
 import it.polimi.ingsw.Updates.ModelUpdate;
+import it.polimi.ingsw.notifications.EndTurn;
 import it.polimi.ingsw.responses.*;
 
 import java.io.Serializable;
@@ -26,4 +27,6 @@ public interface IClientListener extends Remote, Serializable {
     void notifyTilesResponse(GetTilesResponse getTilesResponse) throws RemoteException;
 
     void notifyMoveOk(MoveOk moveOk) throws RemoteException;
+
+    void notifyEndTurn(EndTurn endTurn) throws RemoteException;
 }

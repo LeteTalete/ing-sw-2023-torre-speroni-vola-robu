@@ -144,7 +144,12 @@ public class ClientGUI implements View {
 
     @Override
     public void chooseColumn() {
+        //todo
+    }
 
+    @Override
+    public void chooseOrder() {
+        //todo
     }
 
 }

@@ -2,6 +2,7 @@ package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.network.IClientListener;
 import it.polimi.ingsw.notifications.DisconnectionNotif;
+import it.polimi.ingsw.notifications.EndTurn;
 import it.polimi.ingsw.notifications.GameStart;
 import it.polimi.ingsw.notifications.NotifyOnTurn;
 import it.polimi.ingsw.responses.*;
@@ -76,6 +77,15 @@ public class ResponseDecoder implements ResponseHandler {
     @Override
     public void handle(GetOrderResponse getOrderResponse) throws RemoteException {
         //todo
+    }
+
+    @Override
+    public void handle(EndTurn endTurn) throws RemoteException {
+        clientListener.notifyEndTurn(endTurn);
+        client.setReceivedResponse(false);
+        synchronized (client) {
+            client.notifyAll();
+        }
     }
 
 

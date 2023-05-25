@@ -319,13 +319,12 @@ public class ClientTUI implements View{
 
     @Override
     public void chooseColumn() {
-        writeText("Choose column:  [Number of column]");
-        int column = frominput.nextInt();
-        if(column > 5 || column <0 ){
-            writeText("Wrong format");
-            chooseColumn();
-        }
-        else master.chooseColumn(column);
+        writeText("Choose column: [column 'number']");
+    }
+
+    @Override
+    public void chooseOrder() {
+        writeText("Choose order: [order 'number(s)']");
     }
 
     public String getServerIP() {

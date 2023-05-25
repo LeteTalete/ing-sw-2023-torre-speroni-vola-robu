@@ -156,7 +156,12 @@ public class ClientController {
     }
 
     public void numberOfPlayers(int number) {
-        currentConnection.numberOfPlayers(username, userToken, number);
+        if(number < 2 || number > 4){
+            currentView.printError("Wrong number of players, please type 'help' for a list of commands");
+        }
+        else{
+            currentConnection.numberOfPlayers(username, userToken, number);
+        }
     }
 
     public void chooseColumn(int column) {
@@ -222,7 +227,10 @@ public class ClientController {
         }
         else{
             myTurn = 2;
-            currentView.displayNotification("You can now re-arrange the tiles or choose the column");
+            currentView.displayNotification("You can now re-arrange the tiles or choose the column. Here are the commands:");
+            //todo it should show commands format, not show the request
+            currentView.chooseColumn();
+            currentView.chooseOrder();
             //todo shows commands for these two actions
         }
     }

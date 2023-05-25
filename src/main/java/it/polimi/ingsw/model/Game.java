@@ -42,6 +42,7 @@ public class Game {
         startGame();
         /**once the living room is set, controller decides who's first**/
         chooseFirstPlayer();
+        //todo check why this notify breaks everything: is it the modelupdate or the notify
         gameController.notifyAllPlayers(new ModelUpdate(this));
         //time to notify the players who's first
         String firstPlayer = getCurrentPlayer().getNickname();
@@ -75,6 +76,7 @@ public class Game {
         }
         previousPlayer = currentPlayer;
         currentPlayer = players.get(next);
+        gameController.notifyAllPlayers(new NotifyOnTurn(currentPlayer.getNickname()));
     }
 
     /** Method scoreBoard ranks in descending order the players by their scores and then prints them */

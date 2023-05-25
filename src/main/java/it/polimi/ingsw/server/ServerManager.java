@@ -71,7 +71,7 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
                 .filter(e -> e.getValue().equals(id))
                 .forEach(e -> {
                     try {
-                        System.out.println("wgkjergnkjjknfsekl-nfkl-m");
+                        ConnectionManager.get().getLocalView(e.getKey()).showTextNotification("we're trying ok");
                         ConnectionManager.get().getLocalView(e.getKey()).sendUpdatedModel(something);
                     } catch (RemoteException ex) {
                         throw new RuntimeException(ex);

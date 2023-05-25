@@ -54,4 +54,6 @@ public interface View {
     String getServerIP();;
 
     void chooseColumn();
+
+    void chooseOrder();
 }

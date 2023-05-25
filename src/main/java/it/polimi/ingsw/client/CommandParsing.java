@@ -116,11 +116,18 @@ public class CommandParsing {
     }
 
     private void executeColumnCommand() {
-        master.chooseColumn(choiceNumber);
+        if(choiceNumber > 5 || choiceNumber <0 ){
+            //todo needs to be a notif to the view and to ask again for column number
+            System.out.println("Wrong format");
+        }
+        else{
+            master.chooseColumn(choiceNumber);
+        }
     }
 
     private void parseUsername(List<String> args) {
         if(args.size()!=1){
+            //todo needs to be a notif to the view
             System.out.println("error in parsing, try again?");
             return;
         }
@@ -136,10 +143,12 @@ public class CommandParsing {
     }
 
     private void executeRearrangeCommand() {
+        //todo check formatting of the request and send a notif to the view if formatting is wrong
         master.rearrangeTiles(multipleChoiceNumber);
     }
 
     private void executeTileCommand() {
+        //todo check formatting of the request and send a notif to the view if formatting is wrong
         master.chooseTiles(multipleChoiceNumber);
     }
 
