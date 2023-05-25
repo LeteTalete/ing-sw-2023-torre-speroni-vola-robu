@@ -121,7 +121,7 @@ public class Game {
 
         for ( int i = 0; i < numberOfCommonGoalCards; i++){
             CommonGoalCard dummy = new CommonGoalCard(idsOfTheCards[i]);
-            commonGoalCards.add(dummy.typeGroupOrShape());
+            commonGoalCards.add(dummy.cardType());
         }
         for ( CommonGoalCard card : commonGoalCards ) {
             if ( numOfPlayers == 2 ){

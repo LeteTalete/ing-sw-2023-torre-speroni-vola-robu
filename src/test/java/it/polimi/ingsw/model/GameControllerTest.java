@@ -8,7 +8,7 @@ import it.polimi.ingsw.model.cards.CommonGoalCard;
 import it.polimi.ingsw.model.enumerations.T_Type;
 import it.polimi.ingsw.model.enumerations.Tile;
 import org.junit.jupiter.api.Test;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
