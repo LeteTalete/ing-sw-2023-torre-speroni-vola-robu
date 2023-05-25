@@ -15,7 +15,7 @@ public class CommandParsing {
     private static final String USERNAME = "username";
 
     private int choiceNumber;
-    private String multipleChoiceNumber;
+    private List<String> multipleChoiceNumber;
     private final ClientController master;
 
     public CommandParsing(ClientController master) {
@@ -126,12 +126,7 @@ public class CommandParsing {
 
     private void parseMultipleInteger(List<String> args) {
         try{
-            for(String s: args){
-                //todo fix this asap
-                String temp = String.valueOf(Integer.parseInt(s));
-                multipleChoiceNumber = multipleChoiceNumber.concat(temp);
-                System.out.println("I'm reading "+multipleChoiceNumber);
-            }
+            multipleChoiceNumber = args;
         }catch(NumberFormatException e) {
             System.out.println("error: exception?");
         }

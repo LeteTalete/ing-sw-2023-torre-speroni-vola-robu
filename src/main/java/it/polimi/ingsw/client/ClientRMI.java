@@ -97,9 +97,8 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
     }
 
     @Override
-    public void chooseTiles(String token, String tilesChosen) {
+    public void chooseTiles(String token, List<String> tilesChosen) {
         try {
-            System.out.println("clientrmi tiles: "+tilesChosen+" for token "+token);
             remoteController.pickedTiles(token, tilesChosen);
         } catch (RemoteException e) {
             throw new RuntimeException(e);

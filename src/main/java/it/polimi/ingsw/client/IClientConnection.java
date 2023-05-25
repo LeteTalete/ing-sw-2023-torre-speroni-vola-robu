@@ -8,7 +8,7 @@ import java.util.List;
 public interface IClientConnection {
      void setName(String name);
      void setViewClient(View view);
-     void chooseTiles(String username, String tilesChosen);
+     void chooseTiles(String username, List<String> tilesChosen);
 
      void login(String name);
 

@@ -117,7 +117,7 @@ public class ClientSocket implements IClientConnection
     }
 
     @Override
-    public synchronized void chooseTiles(String token, String tilesChosen)
+    public synchronized void chooseTiles(String token, List<String> tilesChosen)
     {
         setReceivedResponse(true);
         /*request(new ChooseTilesRequest(token, tilesChosen));
@@ -151,9 +151,9 @@ public class ClientSocket implements IClientConnection
     }
 
     private void request(Request request) {
+        System.out.println("I'm sending a request");
         try{
             socketOut.writeObject(request);
-            //maybe this is flush() but we need to test it out
             socketOut.reset();
         }catch (IOException e){
             viewClient.printError(e.getMessage());

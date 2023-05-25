@@ -6,6 +6,8 @@ import it.polimi.ingsw.responses.Response;
 import it.polimi.ingsw.server.StaticStrings;
 import it.polimi.ingsw.view.View;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -38,13 +40,15 @@ public class ClientController {
 
     public void setupConnection() {
         currentView.chooseConnection();
-        currentView.askServerIP();
+        //todo uncomment this and place SIP in stead of null when initializind connections
+        //currentView.askServerIP();
+        //String SIP = currentView.getServerIP();
         String connectionStatus = "Connecting...";
         if(currentView.getConnectionType().equals("RMI")) {
-            connectionStatus = setupRMI(currentView.getServerIP());
+            connectionStatus = setupRMI(null);
         }
         else if(currentView.getConnectionType().equals("SOCKET")){
-            connectionStatus = setupSocket(currentView.getServerIP());
+            connectionStatus = setupSocket(null);
         }
         else if(connectionStatus!=null){
             this.currentView.displayNotification(connectionStatus);
@@ -76,7 +80,8 @@ public class ClientController {
 
     private String setupRMI(String serverIP) {
         try{
-            this.registry = LocateRegistry.getRegistry(serverIP,8089);
+            //TODO put serverip in host field of locateregisty
+            this.registry = LocateRegistry.getRegistry(8089);
             this.remoteController = (IRemoteController) registry.lookup("Login");
             ClientRMI clientRMI = new ClientRMI(this, remoteController);
             this.currentConnection = clientRMI;
@@ -102,7 +107,7 @@ public class ClientController {
     }
 
 
-    public void chooseTiles(String tilesChosen) {
+    public void chooseTiles(List<String> tilesChosen) {
         currentConnection.chooseTiles(userToken, tilesChosen);
     }
 

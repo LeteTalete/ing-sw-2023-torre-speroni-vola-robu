@@ -3,6 +3,8 @@ package it.polimi.ingsw.requests;
 import it.polimi.ingsw.server.ServerManager;
 import it.polimi.ingsw.server.ServerSocketClientHandler;
 
+import java.rmi.RemoteException;
+
 public class WaitingRoomRequest extends Request{
     public final String token;
     public final String name;

@@ -77,7 +77,7 @@ public class ServerSocketClientHandler implements Runnable, IClientListener
     @Override
     public void sendNotification(Response response) throws RemoteException
     {
-
+        respond(response);
     }
 
     @Override

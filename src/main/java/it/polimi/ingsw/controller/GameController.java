@@ -59,7 +59,7 @@ public class GameController {
     }
 */
 
-    public void chooseTiles(String username, String userInput) throws RemoteException {
+    public void chooseTiles(String username, List<String> userInput) throws RemoteException {
         //this needs to be rewritten asap
         ArrayList<Position> choice = new ArrayList<>();
 

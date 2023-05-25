@@ -150,7 +150,7 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
 
 
     @Override
-    public void pickedTiles(String token, String tilesCoordinates) throws RemoteException {
+    public void pickedTiles(String token, List<String> tilesCoordinates) throws RemoteException {
         System.out.println("I received user: " + token + "  and tiles coordinates: " + tilesCoordinates);
         activeGames.get(activeUsers.get(token)).chooseTiles(token, tilesCoordinates);
     }
