@@ -1,8 +1,7 @@
 package it.polimi.ingsw.network;
 
 import it.polimi.ingsw.Updates.ModelUpdate;
-import it.polimi.ingsw.responses.LoginResponse;
-import it.polimi.ingsw.responses.Response;
+import it.polimi.ingsw.responses.*;
 
 import java.io.Serializable;
 import java.rmi.Remote;
@@ -23,4 +22,10 @@ public interface IClientListener extends Remote, Serializable {
     void changeTurn(String currentPlayer) throws RemoteException;
 
     void showTextNotification(String waitingRoomCreated) throws RemoteException;
+
+    void notifyTilesResponse(GetTilesResponse getTilesResponse) throws RemoteException;
+
+    void notifyChooseColumnResponse(ChooseColumnResponse chooseColumnResponse) throws RemoteException;
+
+    void notifyMoveOk(MoveOk moveOk) throws RemoteException;
 }

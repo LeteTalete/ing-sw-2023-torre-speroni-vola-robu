@@ -17,4 +17,7 @@ public interface ResponseHandler {
 
     void handle(DisconnectionNotif disconnectionNotif) throws RemoteException;
 
+    void handle(ChooseColumnResponse chooseColumnResponse) throws RemoteException;
+
+    void handle(MoveOk moveOk) throws RemoteException;
 }

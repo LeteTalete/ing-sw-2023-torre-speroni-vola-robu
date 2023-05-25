@@ -13,6 +13,9 @@ public class CommandParsing {
     private static final String COLUMN = "column";
     private static final String NUMBER = "number";
     private static final String USERNAME = "username";
+    //for when it's the player's turn
+    private boolean isPlaying;
+    private boolean gameIsOn;
 
     private int choiceNumber;
     private List<String> multipleChoiceNumber;
@@ -40,6 +43,10 @@ public class CommandParsing {
                 //if choosing username
                     parseUsername(args);
             case (TILES) -> {
+                if (!gameIsOn && !isPlaying) {
+                    notMyTurn();
+                    break;
+                }
                 //if choosing tiles
                 parseMultipleInteger(args);
                 executeTileCommand();
@@ -50,23 +57,45 @@ public class CommandParsing {
                 master.numberOfPlayers(choiceNumber);
             }
             case (REARRANGE) -> {
+                if (!gameIsOn && !isPlaying) {
+                    notMyTurn();
+                    break;
+                }
                 //if choosing tiles
                 parseMultipleInteger(args);
                 executeRearrangeCommand();
             }
             case (COLUMN) -> {
+                if (!gameIsOn && !isPlaying) {
+                    notMyTurn();
+                    break;
+                }
                 //if choosing tiles
                 parseInteger(args);
                 executeColumnCommand();
             }
-            case (SHELFSHOW) ->
+            case (SHELFSHOW) -> {
+                if (!gameIsOn) {
+                    notMyTurn();
+                    break;
+                }
                 //if choosing tiles
-                    executeShelfCommand();
-            case (CHAT) -> parseUsername(args);
+                executeShelfCommand();
+            }
+            case (CHAT) -> {
+                if (!gameIsOn) {
+                    notMyTurn();
+                    break;
+                }
+                parseUsername(args);
+            }
             case (HELP) -> master.printCommands();
             default -> master.wrongCommand();
         }
+    }
 
+    private void notMyTurn() {
+        master.invalidNotMyTurn();
     }
 
 
@@ -127,5 +156,16 @@ public class CommandParsing {
         }
     }
 
+    public boolean isPlaying() {
+        return isPlaying;
+    }
+
+    public void setPlaying(boolean playing) {
+        isPlaying = playing;
+    }
+
+    public void setGameIsOn(boolean gameIsOn) {
+        this.gameIsOn = gameIsOn;
+    }
 }
 

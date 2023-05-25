@@ -6,8 +6,6 @@ import it.polimi.ingsw.responses.Response;
 import it.polimi.ingsw.server.StaticStrings;
 import it.polimi.ingsw.view.View;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -21,11 +19,11 @@ public class ClientController {
     private CommandParsing commPars;
     private IClientConnection currentConnection;
     private IClientListener listenerClient;
+    private ResponseDecoder responseDecoder;
     private Registry registry;
     private IRemoteController remoteController;
     private String userToken;
     private boolean toCLose;
-    private ResponseDecoder responseDecoder;
 
     //constructor
     public ClientController(View currentView) {
@@ -40,7 +38,7 @@ public class ClientController {
 
     public void setupConnection() {
         currentView.chooseConnection();
-        //todo uncomment this and place SIP in stead of null when initializind connections
+        //todo uncomment this and place SIP in stead of null when initializing connections
         //currentView.askServerIP();
         //String SIP = currentView.getServerIP();
         String connectionStatus = "Connecting...";
@@ -60,11 +58,10 @@ public class ClientController {
         try
         {
             //you have to pass 'this' to the client socket
-            ClientSocket clientSocket = new ClientSocket(serverIP,1420, this);
+            ClientSocket clientSocket = new ClientSocket("127.0.0.1",1420, this);
             this.currentConnection = clientSocket;
             clientSocket.setViewClient(currentView);
-            ResponseDecoder responseDecoder = new ResponseDecoder(listenerClient, currentConnection);
-            this.responseDecoder = responseDecoder;
+            this.responseDecoder = new ResponseDecoder(listenerClient, currentConnection);
             clientSocket.setResponseDecoder(responseDecoder);
             clientSocket.startClient();
 
@@ -86,9 +83,8 @@ public class ClientController {
             ClientRMI clientRMI = new ClientRMI(this, remoteController);
             this.currentConnection = clientRMI;
             clientRMI.setViewClient(currentView);
-            ResponseDecoder responseDecoder = new ResponseDecoder(listenerClient, currentConnection);
+            this.responseDecoder = new ResponseDecoder(listenerClient, currentConnection);
             clientRMI.setResponseDecoder(responseDecoder);
-            this.responseDecoder = responseDecoder;
             clientRMI.setConnected(true);
             userLogin();
 
@@ -117,6 +113,7 @@ public class ClientController {
 
     public void setGameOn(boolean gameOn) {
         this.gameOn = gameOn;
+        commPars.setGameIsOn(gameOn);
     }
 
     public boolean isMyTurn() {
@@ -125,6 +122,7 @@ public class ClientController {
 
     public void setMyTurn(boolean myTurn) {
         this.myTurn = myTurn;
+        commPars.setPlaying(myTurn);
     }
 
     public void serverSavedUsername(String name, boolean b, String token) {
@@ -206,5 +204,9 @@ public class ClientController {
 
     public void rearrangeTiles(List<String> multipleChoiceNumber) {
         currentConnection.rearrangeTiles(userToken, multipleChoiceNumber);
+    }
+
+    public void invalidNotMyTurn() {
+        currentView.displayNotification("It's not your turn, yet!");
     }
 }

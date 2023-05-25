@@ -2,8 +2,7 @@ package it.polimi.ingsw.network;
 
 import it.polimi.ingsw.Updates.ModelUpdate;
 import it.polimi.ingsw.client.ResponseDecoder;
-import it.polimi.ingsw.responses.LoginResponse;
-import it.polimi.ingsw.responses.Response;
+import it.polimi.ingsw.responses.*;
 import it.polimi.ingsw.server.StaticStrings;
 import it.polimi.ingsw.view.ClientTUI;
 
@@ -12,8 +11,6 @@ import java.rmi.server.UnicastRemoteObject;
 
 public class ClientListenerTUI extends UnicastRemoteObject implements IClientListener {
     private transient final ClientTUI view;
-    private ResponseDecoder responseDecoder;
-
     public ClientListenerTUI(ClientTUI currentView) throws RemoteException{
         this.view = currentView;
     }
@@ -26,6 +23,7 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
     //method immediately
     @Override
     public void sendNotification(Response response) throws RemoteException {
+        System.out.println("I'm about to elaborate");
         view.detangleMessage(response);
         /*if(message.equals(StaticStrings.END_TURN)){
             view.setMyTurn(false);
@@ -79,6 +77,37 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
     @Override
     public void showTextNotification(String waitingRoomCreated) {
         view.displayNotification(waitingRoomCreated);
+    }
+
+    @Override
+    public void notifyTilesResponse(GetTilesResponse getTilesResponse) throws RemoteException {
+
+
+    }
+
+    @Override
+    public void notifyChooseColumnResponse(ChooseColumnResponse chooseColumnResponse) throws RemoteException {
+        if(chooseColumnResponse.isMoveOk()){
+            view.displayNotification("Column chosen successfully.");
+        }
+        else{
+            view.displayNotification("Invalid choice of column.");
+            if(chooseColumnResponse.getOptional() != null)
+            {
+                view.displayNotification(chooseColumnResponse.getOptional());
+            }
+            view.displayNotification("Try again.");
+        }
+    }
+
+    @Override
+    public void notifyMoveOk(MoveOk moveOk) throws RemoteException {
+        if(moveOk.isMoveOk()){
+            view.displayNotification("Move successful! Proceed.");
+        }
+        else{
+            view.displayNotification("Invalid move. Try again.");
+        }
     }
 
     public void chooseTiles(String name, String tileScelte) {

@@ -1,17 +1,16 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.Updates.ModelUpdate;
 import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.model.board.LivingRoom;
 import it.polimi.ingsw.model.cards.CommonGoalCard;
-import it.polimi.ingsw.model.enumerations.Couple;
 import it.polimi.ingsw.model.enumerations.Tile;
 import it.polimi.ingsw.notifications.NotifyOnTurn;
-import it.polimi.ingsw.server.StaticStrings;
-import it.polimi.ingsw.structures.LivingRoomView;
 
 import java.rmi.RemoteException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 public class Game {

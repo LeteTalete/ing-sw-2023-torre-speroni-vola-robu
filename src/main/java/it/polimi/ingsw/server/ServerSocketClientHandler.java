@@ -3,8 +3,7 @@ package it.polimi.ingsw.server;
 import it.polimi.ingsw.Updates.ModelUpdate;
 import it.polimi.ingsw.network.IClientListener;
 import it.polimi.ingsw.requests.Request;
-import it.polimi.ingsw.responses.LoginResponse;
-import it.polimi.ingsw.responses.Response;
+import it.polimi.ingsw.responses.*;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -93,21 +92,36 @@ public class ServerSocketClientHandler implements Runnable, IClientListener
 
     @Override
     public void setClientTurn() {
-
+        //only for clientListener of view
     }
 
     @Override
     public void setGameOn() throws RemoteException {
-
+        //only for clientListener of view
     }
 
     @Override
     public void changeTurn(String name) throws RemoteException {
-
+        //only for clientListener of view
     }
 
     @Override
     public void showTextNotification(String waitingRoomCreated) {
+        //only for clientListener of view
+    }
+
+    @Override
+    public void notifyTilesResponse(GetTilesResponse getTilesResponse) throws RemoteException {
+        //only for clientListener of view
+    }
+
+    @Override
+    public void notifyChooseColumnResponse(ChooseColumnResponse chooseColumnResponse) throws RemoteException {
+        //only for clientListener of view
+    }
+
+    @Override
+    public void notifyMoveOk(MoveOk moveOk) throws RemoteException {
 
     }
 

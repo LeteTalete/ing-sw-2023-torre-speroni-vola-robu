@@ -9,11 +9,9 @@ import java.util.List;
 
 public class GetTilesResponse implements Response {
     private final ArrayList<Position> tilesChosen;
-    private final boolean moveOk;
 
-    public GetTilesResponse(ArrayList<Position> tilesChosen, boolean moveOk){
+    public GetTilesResponse(ArrayList<Position> tilesChosen){
         this.tilesChosen = tilesChosen;
-        this.moveOk = moveOk;
     }
     @Override
     public void handleResponse(ResponseHandler responseHandler) throws RemoteException {
@@ -23,4 +21,5 @@ public class GetTilesResponse implements Response {
     public ArrayList<Position> getTilesChosen() {
         return tilesChosen;
     }
+
 }

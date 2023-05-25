@@ -10,6 +10,7 @@ import it.polimi.ingsw.model.cards.CommonGoalCard;
 import it.polimi.ingsw.model.enumerations.Couple;
 import it.polimi.ingsw.model.enumerations.Tile;
 import it.polimi.ingsw.responses.GetTilesResponse;
+import it.polimi.ingsw.responses.MoveOk;
 import it.polimi.ingsw.responses.Response;
 import it.polimi.ingsw.server.ServerManager;
 import it.polimi.ingsw.server.StaticStrings;
@@ -67,14 +68,13 @@ public class GameController {
         {
             choice.add(new Position(s.charAt(0)-48,s.charAt(1)-48));
         }
-
         if (model.getCurrentPlayer().getMyShelf().checkEnoughSpace(choice) && this.getGameBoard().checkPlayerChoice(choice)) {
             this.choiceOfTiles = choice;
-            master.notifySinglePlayer(token, new GetTilesResponse(choice, true));
+            master.notifySinglePlayer(token, new MoveOk(true));
+            master.notifySinglePlayer(token, new GetTilesResponse(choice));
         }
         else{
-            //todo why is the second parameter of getTileResponse set as true?
-            master.notifySinglePlayer(token, new GetTilesResponse(choice, true));
+            master.notifySinglePlayer(token, new MoveOk(false));
         }
     }
 
@@ -88,8 +88,7 @@ public class GameController {
             tiles.set(i,this.choiceOfTiles.get(order.get(i).charAt(0)-48-1));
         }
         this.choiceOfTiles = tiles;
-
-        master.notifySinglePlayer(token, new GetTilesResponse(tiles, true));
+        master.notifySinglePlayer(token, new MoveOk(true));
     }
 
     //todo

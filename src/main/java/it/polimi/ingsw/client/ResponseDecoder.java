@@ -17,9 +17,14 @@ public class ResponseDecoder implements ResponseHandler {
         this.client = clientC;
     }
 
+    //todo these tiles need to be passed to the client's view to help the user visualize what's going on
     @Override
     public void handle(GetTilesResponse getTilesResponse) throws RemoteException {
-
+        //clientListener.notifyTilesResponse(getTilesResponse);
+        client.setReceivedResponse(false);
+        synchronized (client) {
+            client.notifyAll();
+        }
     }
 
     @Override
@@ -55,6 +60,24 @@ public class ResponseDecoder implements ResponseHandler {
     @Override
     public void handle(DisconnectionNotif disconnectionNotif) throws RemoteException {
 
+    }
+
+    @Override
+    public void handle(ChooseColumnResponse chooseColumnResponse) throws RemoteException {
+        clientListener.notifyChooseColumnResponse(chooseColumnResponse);
+        client.setReceivedResponse(false);
+        synchronized (client) {
+            client.notifyAll();
+        }
+    }
+
+    @Override
+    public void handle(MoveOk moveOk) throws RemoteException {
+        clientListener.notifyMoveOk(moveOk);
+        client.setReceivedResponse(false);
+        synchronized (client) {
+            client.notifyAll();
+        }
     }
 
 
