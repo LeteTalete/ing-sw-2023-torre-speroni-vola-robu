@@ -21,7 +21,7 @@ public class Player{
     private int score = 0;
     private boolean endGame;
 
-    private ArrayList<Position> tilesChoosen;
+    private ArrayList<Position> tilesChosen;
 
 //methods
     public ArrayList<Position> chooseTiles(LivingRoom livingroom){

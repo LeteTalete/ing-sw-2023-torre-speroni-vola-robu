@@ -73,11 +73,30 @@ public class GameController {
             master.notifySinglePlayer(token, new GetTilesResponse(choice, true));
         }
         else{
+            //todo why is the second parameter of getTileResponse set as true?
             master.notifySinglePlayer(token, new GetTilesResponse(choice, true));
         }
-
     }
 
+    //todo review this method
+    public void chooseOrder(String token, ArrayList<String> order)
+    {
+        ArrayList<Position> tiles = (ArrayList<Position>) this.choiceOfTiles.clone();
+
+        for(int i=0; i<order.size(); i++)
+        {
+            tiles.set(i,this.choiceOfTiles.get(order.get(i).charAt(0)-48-1));
+        }
+        this.choiceOfTiles = tiles;
+
+        master.notifySinglePlayer(token, new GetTilesResponse(tiles, true));
+    }
+
+    //todo
+    public void chooseColumn(String token, int column)
+    {
+
+    }
 
     public void generateCGC(){
         model.generateCGC(model.getPlayers().size());
@@ -121,12 +140,6 @@ public class GameController {
     }
     public String getGameId(){
         return this.gameId;
-    }
-
-    //todo
-    public void chooseColumn(String token, int column)
-    {
-
     }
 
     public ArrayList<Position> getChoiceOfTiles() {
