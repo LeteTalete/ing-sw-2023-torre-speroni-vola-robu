@@ -144,4 +144,7 @@ public class GameController {
             throw new RuntimeException(e);
         }
     }
+
+    public void rearrangeTiles(String token, List<String> tilesOrdered) {
+    }
 }

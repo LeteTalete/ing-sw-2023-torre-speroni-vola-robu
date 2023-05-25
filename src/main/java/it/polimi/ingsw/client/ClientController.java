@@ -203,4 +203,8 @@ public class ClientController {
             currentView.displayNotification("It's " + name + "'s turn");
         }
     }
+
+    public void rearrangeTiles(List<String> multipleChoiceNumber) {
+        currentConnection.rearrangeTiles(userToken, multipleChoiceNumber);
+    }
 }

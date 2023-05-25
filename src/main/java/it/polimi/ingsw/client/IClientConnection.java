@@ -27,4 +27,6 @@ public interface IClientConnection {
     void setResponseDecoder(ResponseDecoder responseDecoder);
 
     boolean isConnected();
+
+    void rearrangeTiles(String userToken, List<String> multipleChoiceNumber);
 }

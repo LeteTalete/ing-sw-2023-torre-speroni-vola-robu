@@ -22,6 +22,4 @@ public class loginRequest extends Request {
             System.out.println(e.getMessage());
         }
     }
-
-
 }

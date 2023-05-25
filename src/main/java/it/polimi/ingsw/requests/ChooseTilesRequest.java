@@ -10,8 +10,8 @@ import java.util.List;
 public class ChooseTilesRequest extends Request
 {
     public final String token;
-    public final String tiles;
-    public ChooseTilesRequest(String name, String tilesChosen)
+    public final List<String> tiles;
+    public ChooseTilesRequest(String name, List<String> tilesChosen)
     {
         this.token = name;
         this.tiles = tilesChosen;

@@ -156,8 +156,8 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
     }
 
     @Override
-    public synchronized void rearrangeTiles(String token, String tilesOrdered) throws RemoteException {
-
+    public synchronized void rearrangeTiles(String token, List<String> tilesOrdered) throws RemoteException {
+        activeGames.get(activeUsers.get(token)).rearrangeTiles(token, tilesOrdered);
     }
 
     @Override

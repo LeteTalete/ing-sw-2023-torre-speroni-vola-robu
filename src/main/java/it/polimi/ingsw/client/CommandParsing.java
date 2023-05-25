@@ -70,16 +70,11 @@ public class CommandParsing {
     }
 
 
-    private void executeNumberOfPlayers() {
-        master.numberOfPlayers(choiceNumber);
-    }
-
-
     private void executeShelfCommand() {
     }
 
     private void executeColumnCommand() {
-        
+        master.chooseColumn(choiceNumber);
     }
 
     private void parseUsername(List<String> args) {
@@ -99,7 +94,7 @@ public class CommandParsing {
     }
 
     private void executeRearrangeCommand() {
-        
+        master.rearrangeTiles(multipleChoiceNumber);
     }
 
     private void executeTileCommand() {

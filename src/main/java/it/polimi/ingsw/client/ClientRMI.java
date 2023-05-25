@@ -86,6 +86,15 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
         return isConnected;
     }
 
+    @Override
+    public void rearrangeTiles(String userToken, List<String> multipleChoiceNumber) {
+        try {
+            remoteController.rearrangeTiles(userToken, multipleChoiceNumber);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     @Override
     public void setName(String name) {

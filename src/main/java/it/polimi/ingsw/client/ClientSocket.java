@@ -1,9 +1,6 @@
 package it.polimi.ingsw.client;
 
-import it.polimi.ingsw.requests.ChooseTilesRequest;
-import it.polimi.ingsw.requests.Request;
-import it.polimi.ingsw.requests.WaitingRoomRequest;
-import it.polimi.ingsw.requests.loginRequest;
+import it.polimi.ingsw.requests.*;
 import it.polimi.ingsw.responses.Response;
 import it.polimi.ingsw.view.View;
 
@@ -120,7 +117,7 @@ public class ClientSocket implements IClientConnection
     public synchronized void chooseTiles(String token, List<String> tilesChosen)
     {
         setReceivedResponse(true);
-        /*request(new ChooseTilesRequest(token, tilesChosen));
+        request(new ChooseTilesRequest(token, tilesChosen));
         while(notReceivingResponse){
             try
             {
@@ -130,7 +127,7 @@ public class ClientSocket implements IClientConnection
             {
                 viewClient.printError(e.getMessage());
             }
-        }*/
+        }
     }
 
     @Override
@@ -147,7 +144,6 @@ public class ClientSocket implements IClientConnection
                 viewClient.printError(e.getMessage());
             }
         }
-
     }
 
     private void request(Request request) {
@@ -189,7 +185,17 @@ public class ClientSocket implements IClientConnection
 
     @Override
     public void chooseColumn(int column) {
+        setReceivedResponse(true);
+        request(new ColumnRequest(token, column));
+        while(notReceivingResponse){
+            try{
+                //maybe this doesn't need 'this', but since it's a thread it's better to be safe
+                this.wait();
 
+            }catch (InterruptedException e){
+                viewClient.printError(e.getMessage());
+            }
+        }
     }
 
 
@@ -210,6 +216,21 @@ public class ClientSocket implements IClientConnection
     @Override
     public boolean isConnected() {
         return false;
+    }
+
+    @Override
+    public void rearrangeTiles(String userToken, List<String> multipleChoiceNumber) {
+        setReceivedResponse(true);
+        request(new RearrangeTilesRequest(userToken, multipleChoiceNumber));
+        while(notReceivingResponse){
+            try{
+                //maybe this doesn't need 'this', but since it's a thread it's better to be safe
+                this.wait();
+
+            }catch (InterruptedException e){
+                viewClient.printError(e.getMessage());
+            }
+        }
     }
 
 }
