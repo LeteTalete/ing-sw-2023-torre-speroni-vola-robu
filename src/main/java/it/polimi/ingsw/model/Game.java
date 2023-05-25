@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.Updates.ModelUpdate;
 import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.model.board.LivingRoom;
 import it.polimi.ingsw.model.cards.CommonGoalCard;
@@ -39,9 +40,10 @@ public class Game {
         // create and setup board (we're assuming this all happens in the next instruction)
         this.gameBoard = new LivingRoom(numOfPlayers);
         System.out.println(("I've created a living room board!"));
-
+        startGame();
         /**once the living room is set, controller decides who's first**/
         chooseFirstPlayer();
+        gameController.notifyAllPlayers(new ModelUpdate(this));
         //time to notify the players who's first
         String firstPlayer = getCurrentPlayer().getNickname();
         gameController.notifyAllPlayers(new NotifyOnTurn(firstPlayer));
@@ -49,8 +51,6 @@ public class Game {
         /**has a method to start a turn, which will notify each player that it's "nickname"'s turn**/
 
         /**has a method to change turns (it could already be implemented into Game**/
-
-
 
     }
 
@@ -91,7 +91,6 @@ public class Game {
     public void startGame(){
         generateCGC(players.size());
         generatePGC(players);
-        chooseFirstPlayer();
     }
 
     public void endGame(){
