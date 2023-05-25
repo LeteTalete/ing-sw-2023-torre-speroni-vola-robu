@@ -59,24 +59,21 @@ public class GameController {
     }
 */
 
-    public void chooseTiles(String username, List<String> userInput) throws RemoteException {
-        //this needs to be rewritten asap
+    public void chooseTiles(String token, List<String> userInput) throws RemoteException
+    {
         ArrayList<Position> choice = new ArrayList<>();
 
-        for (int i = 0; i < userInput.length(); i++) {
-            if (i % 3 == 0) {
-                choice.add(new Position());
-                choice.get(i / 3).setX(userInput.charAt(i) - 48);
-            } else if (( i + 1 ) % 3 != 0) {
-                choice.get(( i - 1 ) / 3).setY(userInput.charAt(i) - 48);
-            }
+        for(String s : userInput)
+        {
+            choice.add(new Position(s.charAt(0)-48,s.charAt(1)-48));
         }
+
         if (this.getGameBoard().checkPlayerChoice(choice)) {
-            setChoiceOfTiles(userInput);
-            master.notifySinglePlayer(model.getCurrentPlayer().getTokenId(), new GetTilesResponse(choice, true));
+            this.choiceOfTiles = choice;
+            master.notifySinglePlayer(token, new GetTilesResponse(choice, true));
         }
         else{
-            master.notifySinglePlayer(model.getCurrentPlayer().getTokenId(), new GetTilesResponse(choice, true));
+            master.notifySinglePlayer(token, new GetTilesResponse(choice, true));
         }
 
     }
