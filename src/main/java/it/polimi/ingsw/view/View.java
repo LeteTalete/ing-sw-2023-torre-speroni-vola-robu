@@ -48,4 +48,8 @@ public interface View {
     void printCommands();
 
     void changeTurn(String name);
+
+    void askServerIP();
+
+    String getServerIP();
 }

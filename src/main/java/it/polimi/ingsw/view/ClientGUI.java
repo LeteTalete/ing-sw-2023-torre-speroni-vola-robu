@@ -12,6 +12,7 @@ import it.polimi.ingsw.structures.ShelfView;
 public class ClientGUI implements View {
     private ClientController master;
     private CommandParsing commPars;
+    private String ServerIP;
 
     @Override
     public void chooseConnection() {
@@ -128,6 +129,16 @@ public class ClientGUI implements View {
     @Override
     public void changeTurn(String name) {
 
+    }
+
+    @Override
+    public void askServerIP() {
+        
+    }
+
+    @Override
+    public String getServerIP() {
+        return ServerIP;
     }
 
 }

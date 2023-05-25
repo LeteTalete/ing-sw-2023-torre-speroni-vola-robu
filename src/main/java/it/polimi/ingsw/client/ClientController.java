@@ -11,7 +11,6 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.List;
 
-
 public class ClientController {
     private View currentView;
     private boolean gameOn;
@@ -39,24 +38,25 @@ public class ClientController {
 
     public void setupConnection() {
         currentView.chooseConnection();
+        currentView.askServerIP();
         String connectionStatus = "Connecting...";
         if(currentView.getConnectionType().equals("RMI")) {
-            connectionStatus = setupRMI();
+            connectionStatus = setupRMI(currentView.getServerIP());
         }
         else if(currentView.getConnectionType().equals("SOCKET")){
-            connectionStatus = setupSocket();
+            connectionStatus = setupSocket(currentView.getServerIP());
         }
         else if(connectionStatus!=null){
             this.currentView.displayNotification(connectionStatus);
         }
     }
 
-    public String setupSocket()
+    public String setupSocket(String serverIP)
     {
         try
         {
             //you have to pass 'this' to the client socket
-            ClientSocket clientSocket = new ClientSocket("93.40.62.128",1420, this);
+            ClientSocket clientSocket = new ClientSocket(serverIP,1420, this);
             this.currentConnection = clientSocket;
             clientSocket.setViewClient(currentView);
             ResponseDecoder responseDecoder = new ResponseDecoder(listenerClient, currentConnection);
@@ -74,9 +74,9 @@ public class ClientController {
         return null;
     }
 
-    private String setupRMI() {
+    private String setupRMI(String serverIP) {
         try{
-            this.registry = LocateRegistry.getRegistry(8089);
+            this.registry = LocateRegistry.getRegistry(serverIP,8089);
             this.remoteController = (IRemoteController) registry.lookup("Login");
             ClientRMI clientRMI = new ClientRMI(this, remoteController);
             this.currentConnection = clientRMI;

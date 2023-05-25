@@ -24,6 +24,7 @@ public class ClientTUI implements View{
     private String command;
     private boolean isRunning;
     private String colorError; //todo please, make this red
+    private String ServerIP;
 
 
     //constructor
@@ -113,6 +114,12 @@ public class ClientTUI implements View{
     @Override
     public void changeTurn(String name) {
         master.isItMyTurn(name);
+    }
+
+    @Override
+    public void askServerIP() {
+        writeText("Insert server IP: ['xxx.xxx.xxx.xxx']");
+        ServerIP = frominput.nextLine();
     }
 
     @Override
@@ -310,4 +317,11 @@ public class ClientTUI implements View{
         else master.chooseColumn(column);
     }
 
+    public String getServerIP() {
+        return ServerIP;
+    }
+
+    public void setServerIP(String serverIP) {
+        ServerIP = serverIP;
+    }
 }
