@@ -19,7 +19,7 @@ public class ResponseDecoder implements ResponseHandler {
 
     @Override
     public void handle(GetTilesResponse getTilesResponse) throws RemoteException {
-
+    //todo
     }
 
     @Override
@@ -55,6 +55,11 @@ public class ResponseDecoder implements ResponseHandler {
     @Override
     public void handle(DisconnectionNotif disconnectionNotif) throws RemoteException {
 
+    }
+
+    @Override
+    public void handle(GetOrderResponse getOrderResponse) throws RemoteException {
+        //todo
     }
 
 

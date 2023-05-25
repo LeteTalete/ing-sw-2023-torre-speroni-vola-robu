@@ -105,7 +105,7 @@ public class GameController {
 
         this.choiceOfTiles = null;
 
-        //todo send a notify to all players
+        //todo send a notify the player
     }
 
     public void generateCGC(){

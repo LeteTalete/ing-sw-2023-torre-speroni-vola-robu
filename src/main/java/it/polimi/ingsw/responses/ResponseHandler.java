@@ -17,4 +17,5 @@ public interface ResponseHandler {
 
     void handle(DisconnectionNotif disconnectionNotif) throws RemoteException;
 
+    void handle(GetOrderResponse getOrderResponse) throws RemoteException;
 }
