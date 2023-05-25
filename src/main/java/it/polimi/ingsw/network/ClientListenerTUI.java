@@ -85,20 +85,7 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
 
     }
 
-    @Override
-    public void notifyChooseColumnResponse(ChooseColumnResponse chooseColumnResponse) throws RemoteException {
-        if(chooseColumnResponse.isMoveOk()){
-            view.displayNotification("Column chosen successfully.");
-        }
-        else{
-            view.displayNotification("Invalid choice of column.");
-            if(chooseColumnResponse.getOptional() != null)
-            {
-                view.displayNotification(chooseColumnResponse.getOptional());
-            }
-            view.displayNotification("Try again.");
-        }
-    }
+
 
     @Override
     public void notifyMoveOk(MoveOk moveOk) throws RemoteException {

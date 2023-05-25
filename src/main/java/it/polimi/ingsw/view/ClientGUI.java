@@ -141,4 +141,10 @@ public class ClientGUI implements View {
         return ServerIP;
     }
 
+
+    @Override
+    public void chooseColumn() {
+
+    }
+
 }

@@ -5,9 +5,10 @@ import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.board.LivingRoom;
 import it.polimi.ingsw.model.cards.CommonGoalCard;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class ModelUpdate {
+public class ModelUpdate implements Serializable{
     private LivingRoom gameBoard;
     private List<Player> players;
     private String endGame;

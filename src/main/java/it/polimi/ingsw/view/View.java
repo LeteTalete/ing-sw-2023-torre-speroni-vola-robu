@@ -51,5 +51,7 @@ public interface View {
 
     void askServerIP();
 
-    String getServerIP();
+    String getServerIP();;
+
+    void chooseColumn();
 }

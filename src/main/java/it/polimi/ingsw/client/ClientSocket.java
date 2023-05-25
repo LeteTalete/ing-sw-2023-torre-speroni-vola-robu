@@ -1,5 +1,6 @@
 package it.polimi.ingsw.client;
 
+import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.requests.*;
 import it.polimi.ingsw.responses.Response;
 import it.polimi.ingsw.view.View;
@@ -9,6 +10,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -231,6 +233,11 @@ public class ClientSocket implements IClientConnection
                 viewClient.printError(e.getMessage());
             }
         }
+    }
+
+    @Override
+    public void passTiles(ArrayList<Position> tilesChosen) {
+        master.passTiles(tilesChosen);
     }
 
 }

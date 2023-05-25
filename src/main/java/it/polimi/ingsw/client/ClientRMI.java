@@ -1,13 +1,13 @@
 package it.polimi.ingsw.client;
 
+import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.network.IRemoteController;
 import it.polimi.ingsw.view.View;
 
-import java.io.IOException;
 import java.io.Serializable;
-import java.net.SocketException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -93,6 +93,11 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public void passTiles(ArrayList<Position> tilesChosen) {
+        master.passTiles(tilesChosen);
     }
 
 

@@ -256,7 +256,7 @@ public class ClientTUI implements View{
     }
 
 
-    public boolean getMyTurn() {
+    public int getMyTurn() {
         return master.isMyTurn();
     }
 
@@ -307,6 +307,7 @@ public class ClientTUI implements View{
         master.setGameOn(gameOn);
     }
 
+    @Override
     public void chooseColumn() {
         writeText("Choose column [Number of column]");
         int column = frominput.nextInt();
@@ -320,6 +321,7 @@ public class ClientTUI implements View{
     public String getServerIP() {
         return ServerIP;
     }
+
 
     public void setServerIP(String serverIP) {
         ServerIP = serverIP;

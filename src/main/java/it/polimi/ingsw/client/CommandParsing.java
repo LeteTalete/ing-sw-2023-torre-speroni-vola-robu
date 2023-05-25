@@ -13,6 +13,7 @@ public class CommandParsing {
     private static final String COLUMN = "column";
     private static final String NUMBER = "number";
     private static final String USERNAME = "username";
+    private static final String BACK = "back";
     //for when it's the player's turn
     private boolean isPlaying;
     private boolean gameIsOn;
@@ -50,6 +51,14 @@ public class CommandParsing {
                 //if choosing tiles
                 parseMultipleInteger(args);
                 executeTileCommand();
+            }
+            case (BACK) -> {
+                if (!gameIsOn && !isPlaying) {
+                    notMyTurn();
+                    break;
+                }
+                //if user wants to go back
+                masterGoBack();
             }
             case (NUMBER) -> {
                 //if choosing tiles
@@ -92,6 +101,10 @@ public class CommandParsing {
             case (HELP) -> master.printCommands();
             default -> master.wrongCommand();
         }
+    }
+
+    private void masterGoBack() {
+        /*todo, sends a notification to the server that the client wants to go back and...does something with the model & view, i guess*/
     }
 
     private void notMyTurn() {

@@ -25,7 +25,5 @@ public interface IClientListener extends Remote, Serializable {
 
     void notifyTilesResponse(GetTilesResponse getTilesResponse) throws RemoteException;
 
-    void notifyChooseColumnResponse(ChooseColumnResponse chooseColumnResponse) throws RemoteException;
-
     void notifyMoveOk(MoveOk moveOk) throws RemoteException;
 }

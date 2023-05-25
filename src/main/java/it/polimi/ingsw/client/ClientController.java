@@ -1,5 +1,6 @@
 package it.polimi.ingsw.client;
 
+import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.network.IClientListener;
 import it.polimi.ingsw.network.IRemoteController;
 import it.polimi.ingsw.responses.Response;
@@ -9,12 +10,13 @@ import it.polimi.ingsw.view.View;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ClientController {
     private View currentView;
     private boolean gameOn;
-    private boolean myTurn;
+    private int myTurn;
     private String username;
     private CommandParsing commPars;
     private IClientConnection currentConnection;
@@ -116,13 +118,16 @@ public class ClientController {
         commPars.setGameIsOn(gameOn);
     }
 
-    public boolean isMyTurn() {
+    public int isMyTurn() {
         return myTurn;
     }
 
-    public void setMyTurn(boolean myTurn) {
-        this.myTurn = myTurn;
-        commPars.setPlaying(myTurn);
+    public void setMyTurn(boolean turn) {
+        if(turn)
+            this.myTurn = 1;
+        else
+            this.myTurn = 0;
+        commPars.setPlaying(turn);
     }
 
     public void serverSavedUsername(String name, boolean b, String token) {
@@ -208,5 +213,17 @@ public class ClientController {
 
     public void invalidNotMyTurn() {
         currentView.displayNotification("It's not your turn, yet!");
+    }
+
+    public void passTiles(ArrayList<Position> tilesChosen) {
+        if(tilesChosen.size()==1){
+            myTurn = 3;
+            currentView.chooseColumn();
+        }
+        else{
+            myTurn = 2;
+            currentView.displayNotification("You can now re-arrange the tiles or choose the column");
+            //todo shows commands for these two actions
+        }
     }
 }

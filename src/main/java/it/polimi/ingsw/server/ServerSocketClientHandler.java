@@ -92,37 +92,33 @@ public class ServerSocketClientHandler implements Runnable, IClientListener
 
     @Override
     public void setClientTurn() {
-        //only for clientListener of view
+        //todo
     }
 
     @Override
     public void setGameOn() throws RemoteException {
-        //only for clientListener of view
+        //todo
     }
 
     @Override
     public void changeTurn(String name) throws RemoteException {
-        //only for clientListener of view
+        //todo
     }
 
     @Override
     public void showTextNotification(String waitingRoomCreated) {
-        //only for clientListener of view
+        //todo
     }
 
     @Override
     public void notifyTilesResponse(GetTilesResponse getTilesResponse) throws RemoteException {
-        //only for clientListener of view
+        //todo
     }
 
-    @Override
-    public void notifyChooseColumnResponse(ChooseColumnResponse chooseColumnResponse) throws RemoteException {
-        //only for clientListener of view
-    }
 
     @Override
     public void notifyMoveOk(MoveOk moveOk) throws RemoteException {
-
+        respond(moveOk);
     }
 
     private void respond(Response response) {
