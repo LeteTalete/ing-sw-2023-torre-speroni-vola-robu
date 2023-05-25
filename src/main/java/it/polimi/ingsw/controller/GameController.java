@@ -68,7 +68,7 @@ public class GameController {
             choice.add(new Position(s.charAt(0)-48,s.charAt(1)-48));
         }
 
-        if (this.getGameBoard().checkPlayerChoice(choice)) {
+        if (model.getCurrentPlayer().getMyShelf().checkEnoughSpace(choice) && this.getGameBoard().checkPlayerChoice(choice)) {
             this.choiceOfTiles = choice;
             master.notifySinglePlayer(token, new GetTilesResponse(choice, true));
         }
@@ -124,7 +124,8 @@ public class GameController {
     }
 
     //todo
-    public void chooseColumn(String token, int column) {
+    public void chooseColumn(String token, int column)
+    {
 
     }
 

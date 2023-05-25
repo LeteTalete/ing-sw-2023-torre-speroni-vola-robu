@@ -75,6 +75,12 @@ public class Shelf {
         return false;
     }
 
+    public boolean checkEnoughSpace(ArrayList<Position> choice)
+    {
+        if(getMaxFree(5) < choice.size()) return false;
+        else return true;
+    }
+
     public void setFreeSlots(int row, int column)
     {
         this.shelfsMatrix[row][column].setTile(null);
