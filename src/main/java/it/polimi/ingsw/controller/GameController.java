@@ -78,7 +78,6 @@ public class GameController {
         }
     }
 
-    //todo review this method
     public void chooseOrder(String token, ArrayList<String> order)
     {
         ArrayList<Position> tiles = (ArrayList<Position>) this.choiceOfTiles.clone();
@@ -88,13 +87,26 @@ public class GameController {
             tiles.set(i,this.choiceOfTiles.get(order.get(i).charAt(0)-48-1));
         }
         this.choiceOfTiles = tiles;
+
+        //master.notifySinglePlayer(token, new GetTilesResponse(tiles, true));
+        //todo send a notify to the player
         master.notifySinglePlayer(token, new MoveOk(true));
     }
 
-    //todo
     public void chooseColumn(String token, int column)
     {
+        ArrayList<Tile> tiles = new ArrayList<>();
 
+        for(int i=0;i<this.choiceOfTiles.size();i++)
+        {
+            tiles.add(model.getGameBoard().getCouple(this.choiceOfTiles.get(i)).getTile());
+        }
+        model.getCurrentPlayer().getMyShelf().insertTiles(column,tiles);
+        model.getGameBoard().updateCouples(this.choiceOfTiles);
+
+        this.choiceOfTiles = null;
+
+        //todo send a notify the player
     }
 
     public void generateCGC(){

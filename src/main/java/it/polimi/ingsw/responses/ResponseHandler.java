@@ -20,4 +20,5 @@ public interface ResponseHandler {
     void handle(ChooseColumnResponse chooseColumnResponse) throws RemoteException;
 
     void handle(MoveOk moveOk) throws RemoteException;
+    void handle(GetOrderResponse getOrderResponse) throws RemoteException;
 }

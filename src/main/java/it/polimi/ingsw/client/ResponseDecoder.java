@@ -25,6 +25,7 @@ public class ResponseDecoder implements ResponseHandler {
         synchronized (client) {
             client.notifyAll();
         }
+    //todo
     }
 
     @Override
@@ -78,6 +79,11 @@ public class ResponseDecoder implements ResponseHandler {
         synchronized (client) {
             client.notifyAll();
         }
+    }
+
+    @Override
+    public void handle(GetOrderResponse getOrderResponse) throws RemoteException {
+        //todo
     }
 
 
