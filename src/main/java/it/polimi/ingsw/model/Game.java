@@ -15,7 +15,6 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 public class Game {
-
     private String endGame;
     private Player currentPlayer;
     private Player previousPlayer;

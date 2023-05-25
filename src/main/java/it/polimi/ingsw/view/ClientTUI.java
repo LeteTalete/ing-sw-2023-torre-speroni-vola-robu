@@ -309,7 +309,7 @@ public class ClientTUI implements View{
 
     @Override
     public void chooseColumn() {
-        writeText("Choose column [Number of column]");
+        writeText("Choose column:  [Number of column]");
         int column = frominput.nextInt();
         if(column > 5 || column <0 ){
             writeText("Wrong format");

@@ -23,7 +23,6 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
     //method immediately
     @Override
     public void sendNotification(Response response) throws RemoteException {
-        System.out.println("I'm about to elaborate");
         view.detangleMessage(response);
         /*if(message.equals(StaticStrings.END_TURN)){
             view.setMyTurn(false);
@@ -82,23 +81,16 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
     @Override
     public void notifyTilesResponse(GetTilesResponse getTilesResponse) throws RemoteException {
 
-
     }
-
-
 
     @Override
     public void notifyMoveOk(MoveOk moveOk) throws RemoteException {
         if(moveOk.isMoveOk()){
-            view.displayNotification("Move successful! Proceed.");
+            view.displayNotification("Move successful!");
         }
         else{
             view.displayNotification("Invalid move. Try again.");
         }
-    }
-
-    public void chooseTiles(String name, String tileScelte) {
-
     }
 
 }

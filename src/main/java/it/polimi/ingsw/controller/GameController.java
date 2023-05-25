@@ -79,7 +79,7 @@ public class GameController {
         }
     }
 
-    public void chooseOrder(String token, ArrayList<String> order)
+    public void rearrangeTiles(String token, List<String> order)
     {
         ArrayList<Position> tiles = (ArrayList<Position>) this.choiceOfTiles.clone();
 
@@ -170,6 +170,7 @@ public class GameController {
         }
     }
 
-    public void rearrangeTiles(String token, List<String> tilesOrdered) {
+    public void notifyAllPlayers(ModelUpdate modelUpdate) {
+        master.notifyAllPlayers(gameId, modelUpdate);
     }
 }
