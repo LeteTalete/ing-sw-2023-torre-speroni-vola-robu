@@ -16,12 +16,12 @@ public class CommandParsing {
     private static final String REARRANGE = "order";
     private static final String SHELFSHOW = "showshelf";
     private static final String COLUMN = "column";
-    private static final String NUMBER = "number";
-    private static final String USERNAME = "username";
     private static final String BACK = "back";
     //for when it's the player's turn
     private boolean isPlaying;
     private boolean gameIsOn;
+    private boolean initializingName;
+    private boolean initializingRoom;
 
     private int choiceNumber;
     private List<String> multipleChoiceNumber;
@@ -30,9 +30,25 @@ public class CommandParsing {
 
     public CommandParsing(ClientController master) {
         this.master = master;
+        initializingName = true;
+        initializingRoom = false;
     }
 
     public void elaborateInput(String command) {
+        if(initializingName) {
+            //if asking for name
+            master.askLogin(choice);
+            initializingRoom= true;
+            return;
+        }
+        if(initializingRoom){
+            //if choosing tiles
+            choiceNumber= Integer.parseInt(command);
+            fileLog.debug("choice number is " + choiceNumber);
+            master.numberOfPlayers(choiceNumber);
+            initializingRoom = false;
+            return;
+        }
         //note: \\s is single whitespace command
         String [] splitted = command.split("\\s");
         List<String> args = new ArrayList<>();
@@ -46,11 +62,6 @@ public class CommandParsing {
 
     private void executeCom(String command, List<String> args) {
         switch (command) {
-            case (USERNAME) -> {
-                //if choosing username
-                parseUsername(args);
-                master.askLogin(choice);
-            }
             case (TILES) -> {
                 if (!isPlaying) {
                     notMyTurn();
@@ -67,12 +78,6 @@ public class CommandParsing {
                 }
                 //if user wants to go back
                 masterGoBack();
-            }
-            case (NUMBER) -> {
-                //if choosing tiles
-                parseInteger(args);
-                fileLog.debug("choice number is " + choiceNumber);
-                master.numberOfPlayers(choiceNumber);
             }
             case (REARRANGE) -> {
                 if (!isPlaying) {

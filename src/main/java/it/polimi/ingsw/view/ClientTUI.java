@@ -163,7 +163,7 @@ public class ClientTUI implements View{
     }
 
     public void getUsername(){
-        writeText("Insert username: [username 'name']");
+        writeText("Insert username: ");
         if(!isRunning){
             running();
             setIsRunning(true);
@@ -187,7 +187,7 @@ public class ClientTUI implements View{
 
     @Override
     public void askAmountOfPlayers() {
-        writeText("Insert number of players (from 2 to 4): [number '2/3/4']");
+        writeText("Insert number of players (from 2 to 4):");
     }
 
     public void GameTitle(){
