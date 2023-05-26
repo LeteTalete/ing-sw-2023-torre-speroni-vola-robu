@@ -82,7 +82,7 @@ public class GameController {
 
     public void rearrangeTiles(String token, List<String> order)
     {
-        if(this.choiceOfTiles.size() == order.size())
+        if(this.choiceOfTiles != null && this.choiceOfTiles.size() == order.size())
         {
             ArrayList<Position> tiles = (ArrayList<Position>) this.choiceOfTiles.clone();
 
@@ -103,7 +103,7 @@ public class GameController {
 
     public void chooseColumn(String token, int column)
     {
-        if(this.choiceOfTiles.size() <= model.getCurrentPlayer().getMyShelf().getMaxFree(column))
+        if(this.choiceOfTiles != null && this.choiceOfTiles.size() <= model.getCurrentPlayer().getMyShelf().getMaxFree(column))
         {
             ArrayList<Tile> tiles = new ArrayList<>();
             for(int i=0;i<this.choiceOfTiles.size();i++)
