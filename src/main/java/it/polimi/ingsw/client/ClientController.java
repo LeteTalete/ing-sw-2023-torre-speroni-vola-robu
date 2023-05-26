@@ -3,6 +3,7 @@ package it.polimi.ingsw.client;
 import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.network.IClientListener;
 import it.polimi.ingsw.network.IRemoteController;
+import it.polimi.ingsw.notifications.ChatMessage;
 import it.polimi.ingsw.responses.Response;
 import it.polimi.ingsw.server.StaticStrings;
 import it.polimi.ingsw.view.View;
@@ -44,7 +45,7 @@ public class ClientController {
 
     public void setupConnection() {
         currentView.chooseConnection();
-        //todo uncomment this and place SIP in stead of null when initializing connections
+        //todo uncomment this and place SIP instead of null when initializing connections
         //currentView.askServerIP();
         //String SIP = currentView.getServerIP();
         String connectionStatus = "Connecting...";
@@ -242,5 +243,13 @@ public class ClientController {
             currentView.chooseColumn();
             currentView.chooseOrder();
         }
+    }
+
+    public void gameNotStarted() {
+        currentView.displayNotification("The game has not started yet, please wait for the other players to join");
+    }
+
+    public void sendChat(String choice, String toString) {
+        currentConnection.sendChat(new ChatMessage(username, toString, choice));
     }
 }

@@ -2,10 +2,7 @@ package it.polimi.ingsw.server;
 
 import it.polimi.ingsw.Updates.ModelUpdate;
 import it.polimi.ingsw.network.IClientListener;
-import it.polimi.ingsw.notifications.CommonGoalGained;
-import it.polimi.ingsw.notifications.EndTurn;
-import it.polimi.ingsw.notifications.GameEnd;
-import it.polimi.ingsw.notifications.LastTurn;
+import it.polimi.ingsw.notifications.*;
 import it.polimi.ingsw.requests.Request;
 import it.polimi.ingsw.responses.*;
 import org.apache.logging.log4j.LogManager;
@@ -143,6 +140,11 @@ public class ServerSocketClientHandler implements Runnable, IClientListener
     @Override
     public void notifyCommonGoalGained(CommonGoalGained commonGoalGained) throws RemoteException {
         respond(commonGoalGained);
+    }
+
+    @Override
+    public void notifyChatMessage(ChatMessage chatMessage) throws RemoteException {
+        respond(chatMessage);
     }
 
     private void respond(Response response) {

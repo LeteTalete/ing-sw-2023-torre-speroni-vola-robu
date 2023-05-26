@@ -33,6 +33,7 @@ public class ConnectionManager implements Serializable {
     synchronized String addClientView(String token, String name, IClientListener viewListener) {
         viewListenerMap.put(token, viewListener);
         tokenNames.put(token, name);
+        namesTokens.put(name, token);
         return StaticStrings.LOGIN_OK_NEW_ROOM;
     }
 

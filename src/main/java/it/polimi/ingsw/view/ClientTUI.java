@@ -175,6 +175,7 @@ public class ClientTUI implements View{
 
     @Override
     public void displayNotification(String message) {
+        fileLog.debug("displayNotification: " + message);
         writeText(message);
     }
     //gamerstatus has a status as an argument

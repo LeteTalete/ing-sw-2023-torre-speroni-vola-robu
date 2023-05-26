@@ -2,10 +2,7 @@ package it.polimi.ingsw.network;
 
 import it.polimi.ingsw.Updates.ModelUpdate;
 import it.polimi.ingsw.client.ResponseDecoder;
-import it.polimi.ingsw.notifications.CommonGoalGained;
-import it.polimi.ingsw.notifications.EndTurn;
-import it.polimi.ingsw.notifications.GameEnd;
-import it.polimi.ingsw.notifications.LastTurn;
+import it.polimi.ingsw.notifications.*;
 import it.polimi.ingsw.responses.*;
 import it.polimi.ingsw.server.StaticStrings;
 import it.polimi.ingsw.view.ClientTUI;
@@ -35,7 +32,7 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
     @Override
     public void notifySuccessfulRegistration(LoginResponse loginResponse) throws RemoteException {
         if(loginResponse.b){
-            view.displayNotification("Registration Successful!");
+            view.displayNotification("Registration Successful! Waiting for other players to join...");
             view.serverSavedUsername(loginResponse.name, true, loginResponse.token, loginResponse.first);
         }
         else{
@@ -98,6 +95,11 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
     @Override
     public void notifyCommonGoalGained(CommonGoalGained commonGoalGained) throws RemoteException {
         view.displayNotification(commonGoalGained.getName() + " gained Common Goal Card " + commonGoalGained.getCard() + "!");
+    }
+
+    @Override
+    public void notifyChatMessage(ChatMessage chatMessage) throws RemoteException {
+        view.displayNotification("@" + chatMessage.getSender() + ": " + chatMessage.getMessage());
     }
 
 }

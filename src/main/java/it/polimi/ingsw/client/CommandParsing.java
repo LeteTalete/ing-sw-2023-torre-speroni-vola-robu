@@ -1,5 +1,6 @@
 package it.polimi.ingsw.client;
 
+import it.polimi.ingsw.notifications.ChatMessage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -24,6 +25,7 @@ public class CommandParsing {
 
     private int choiceNumber;
     private List<String> multipleChoiceNumber;
+    private String choice;
     private final ClientController master;
 
     public CommandParsing(ClientController master) {
@@ -44,11 +46,13 @@ public class CommandParsing {
 
     private void executeCom(String command, List<String> args) {
         switch (command) {
-            case (USERNAME) ->
+            case (USERNAME) -> {
                 //if choosing username
-                    parseUsername(args);
+                parseUsername(args);
+                master.askLogin(choice);
+            }
             case (TILES) -> {
-                if (!gameIsOn && !isPlaying) {
+                if (!isPlaying) {
                     notMyTurn();
                     break;
                 }
@@ -57,7 +61,7 @@ public class CommandParsing {
                 executeTileCommand();
             }
             case (BACK) -> {
-                if (!gameIsOn && !isPlaying) {
+                if (!isPlaying) {
                     notMyTurn();
                     break;
                 }
@@ -70,7 +74,7 @@ public class CommandParsing {
                 master.numberOfPlayers(choiceNumber);
             }
             case (REARRANGE) -> {
-                if (!gameIsOn && !isPlaying) {
+                if (!isPlaying) {
                     notMyTurn();
                     break;
                 }
@@ -79,7 +83,7 @@ public class CommandParsing {
                 executeRearrangeCommand();
             }
             case (COLUMN) -> {
-                if (!gameIsOn && !isPlaying) {
+                if (!isPlaying) {
                     notMyTurn();
                     break;
                 }
@@ -89,7 +93,7 @@ public class CommandParsing {
             }
             case (SHELFSHOW) -> {
                 if (!gameIsOn) {
-                    notMyTurn();
+                    master.gameNotStarted();
                     break;
                 }
                 //if choosing tiles
@@ -97,14 +101,29 @@ public class CommandParsing {
             }
             case (CHAT) -> {
                 if (!gameIsOn) {
-                    notMyTurn();
+                    master.gameNotStarted();
                     break;
                 }
                 parseUsername(args);
+                args.remove(0);
+                parseChat(args);
             }
             case (HELP) -> master.printCommands();
             default -> master.wrongCommand();
         }
+    }
+
+    private void parseChat(List<String> args) {
+        if(args.size() < 1){
+            master.errorFormat();
+            return;
+        }
+        StringBuilder message = new StringBuilder();
+        for(String s : args){
+            message.append(s).append(" ");
+        }
+        fileLog.info("sending message " + message.toString() + " to " + choice);
+        master.sendChat(choice, message.toString());
     }
 
     private void masterGoBack() {
@@ -129,13 +148,9 @@ public class CommandParsing {
     }
 
     private void parseUsername(List<String> args) {
-        if(args.size()!=1){
-            master.errorFormat();
-            return;
-        }
+        //todo this could mean i can put an username with two or more words, but only the first will be parsed
         try {
-            String name = (String)args.get(0);
-            master.askLogin(name);
+            choice = args.get(0);
         }catch(NumberFormatException e){
             //ack("ERROR: Wrong parameter");
             //clientController.getViewClient().denyMove();

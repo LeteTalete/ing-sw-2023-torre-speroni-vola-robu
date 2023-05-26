@@ -112,6 +112,15 @@ public class ResponseDecoder implements ResponseHandler {
         }
     }
 
+    @Override
+    public void handle(ChatMessage chatMessage) throws RemoteException {
+        clientListener.notifyChatMessage(chatMessage);
+        client.setReceivedResponse(false);
+        synchronized (client) {
+            client.notifyAll();
+        }
+    }
+
 
     public void handle(Response response) {
 

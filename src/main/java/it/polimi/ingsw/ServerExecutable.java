@@ -19,6 +19,7 @@ public class ServerExecutable {
         //fileLog.error("Server started");
         try {
             ServerManager serverManager = new ServerManager();
+            //System.setProperty("java.rmi.server.hostname","192.168.43.75");
             Registry registry = LocateRegistry.createRegistry(8089);
             registry.rebind("Login", serverManager);
             fileLog.info("Successfully created an Rmi registry");

@@ -2,9 +2,9 @@ package it.polimi.ingsw.server;
 
 import it.polimi.ingsw.Updates.ModelUpdate;
 import it.polimi.ingsw.controller.GameController;
-import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.network.IClientListener;
 import it.polimi.ingsw.network.IRemoteController;
+import it.polimi.ingsw.notifications.ChatMessage;
 import it.polimi.ingsw.notifications.DisconnectionNotif;
 import it.polimi.ingsw.notifications.GameStart;
 import it.polimi.ingsw.responses.LoginResponse;
@@ -95,6 +95,29 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
         }
     }
 
+    @Override
+    public void sendChat(ChatMessage message) throws RemoteException {
+        fileLog.info("Received a chat message from "+message.getSender()+" to "+message.getReceiver()+": "+message.getMessage());
+        String senderToken = ConnectionManager.get().namesTokens.get(message.getSender());
+        if(message.getReceiver().equals("all")){
+            activeUsers.entrySet()
+                    .stream()
+                    .filter(e -> e.getValue().equals(activeUsers.get(senderToken)))
+                    .forEach(e -> {
+                        try {
+                            ConnectionManager.get().getLocalView(e.getKey()).notifyChatMessage(message);
+                        } catch (RemoteException ex) {
+                            fileLog.error(ex.getMessage());
+                        }
+                    });
+        }
+        else{
+            String receiverToken = ConnectionManager.get().namesTokens.get(message.getReceiver());
+            ConnectionManager.get().getLocalView(receiverToken).notifyChatMessage(message);
+        }
+
+    }
+
 
     public synchronized void periodicPing (){
         //this has to send a ping to all the players in all the active games
@@ -128,8 +151,8 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
                 ConnectionManager.get().getLocalView(token).notifySuccessfulRegistration(loginResponse);
 
             } else if(success.equals(StaticStrings.GAME_START)) {
-                LoginResponse loginResponse = new LoginResponse(name, true, token, false);
-                ConnectionManager.get().getLocalView(token).notifySuccessfulRegistration(loginResponse);
+                //LoginResponse loginResponse = new LoginResponse(name, true, token, false);
+                //ConnectionManager.get().getLocalView(token).notifySuccessfulRegistration(loginResponse);
 
                 //now we need to notify all the players that the game is about to start
                 notifyAllPlayers(waitingRoom.getId(), new GameStart());
