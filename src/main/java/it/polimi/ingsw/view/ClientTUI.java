@@ -57,6 +57,7 @@ public class ClientTUI implements View{
         //todo check this
         this.gameView = new GameView(modelUpdate);
 
+        clearConsole();
         PlayerView mine = gameView.getPlayersView().stream()
                 .filter(p -> p.getNickname().equals(master.getUsername())).findFirst().orElse(null);
         showBoardPlayer(mine, gameView.getGameBoardView());
@@ -73,6 +74,10 @@ public class ClientTUI implements View{
         System.out.println( "Common goal card 2: " + gameView.getCommonGoalCards().get(1).getDescription());
         System.out.println( "Points still available: " + gameView.getCommonGoalCards().get(1).getPoints().pop() + "\n");
 
+    }
+
+    public static void clearConsole() {
+        System.out.print("\033\143");
     }
 
     @Override

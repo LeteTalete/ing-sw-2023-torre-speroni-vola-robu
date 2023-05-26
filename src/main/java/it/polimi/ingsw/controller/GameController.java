@@ -123,10 +123,10 @@ public class GameController {
     }
 
     public void nextTurn(String token){
-        if ( model.getEndGame() != null && model.getEndGame().equals(model.getCurrentPlayer().getNickname()) && model.getPreviousPlayer().getChair() ){
+        master.notifySinglePlayer(token, new EndTurn());
+        if ( model.getEndGame() != null && model.getPreviousPlayer().getChair() ){
             model.gameHasEnded();
         } else {
-            master.notifySinglePlayer(token, new EndTurn());
             model.nextTurn();
         }
     }
