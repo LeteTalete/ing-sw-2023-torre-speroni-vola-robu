@@ -1,6 +1,8 @@
 package it.polimi.ingsw.model.enumerations;
 
-public enum T_Type {
+import java.io.Serializable;
+
+public enum T_Type implements Serializable {
     CAT,
     PLANT,
     FRAME,

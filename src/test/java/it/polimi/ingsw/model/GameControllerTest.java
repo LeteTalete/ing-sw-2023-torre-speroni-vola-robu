@@ -2,13 +2,13 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.model.board.Shelf;
-import it.polimi.ingsw.model.cards.CG_Group;
+import it.polimi.ingsw.model.cards.CG_RowCol;
 import it.polimi.ingsw.model.cards.CG_Shape;
 import it.polimi.ingsw.model.cards.CommonGoalCard;
 import it.polimi.ingsw.model.enumerations.T_Type;
 import it.polimi.ingsw.model.enumerations.Tile;
 import org.junit.jupiter.api.Test;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
@@ -19,11 +19,18 @@ public class GameControllerTest {
     /** Test generateCGCTest randomly chooses 2 CGCs from the 12 cards of the game and prints their parameters */
     @Test
     public void generateCGCTest() {
-        GameController game = new GameController();
+        ArrayList<Player> players = new ArrayList<>();
+        Integer gameid = 0;
+        int num = 4;
+        for ( int i = 0; i < num; i++){
+            players.add(new Player());
+        }
+
+        GameController game = new GameController(players,gameid.toString());
         assertNotNull(game);
         int i = 0;
         int j;
-        game.generateCGC(4);
+        game.generateCGC();
         assertNotNull(game.getCommonGoalCards());
 
         for (CommonGoalCard card : game.getCommonGoalCards()) {
@@ -40,6 +47,8 @@ public class GameControllerTest {
                 System.out.println("Number of Occurrences: " + card.getNumOfOccurrences());
                 assertNotNull(card.getDiffType());
                 System.out.println("Different type: " + card.getDiffType());
+                assertNotNull(card.getSurrounded());
+                System.out.println("Surrounded: " + card.getSurrounded());
                 assertNotNull(card.getStairs());
                 System.out.println("Stairs: " + card.getStairs());
                 assertNotNull(card.getDescription());
@@ -70,7 +79,7 @@ public class GameControllerTest {
                 System.out.println();
                 System.out.println();
 
-            } else if ( card.getType().equals("Group") ) {
+            } else if ( card.getType().equals("RowCol") ) {
 
                 i++;
                 System.out.println("Common goal card n°: " + i);
@@ -103,6 +112,36 @@ public class GameControllerTest {
                 }
                 System.out.println();
                 System.out.println();
+
+            } else if ( card.getType().equals("Groups") ) {
+                i++;
+                System.out.println("Common goal card n°: " + i);
+                assertNotNull(card.getID());
+                System.out.println("Card ID: " + card.getID());
+                assertNotNull(card.getType());
+                System.out.println("Card Type: " + card.getType());
+                assertNotNull(card.getNumOfOccurrences());
+                System.out.println("Number of Occurrences: " + card.getNumOfOccurrences());
+                assertNotNull(card.getAtLeast());
+                System.out.println("At Least: " + card.getAtLeast());
+                assertNotNull(card.getDescription());
+                System.out.println("Description: " + card.getDescription());
+                assertEquals(2, card.getPoints().get(0).intValue());
+                assertEquals(4, card.getPoints().get(1).intValue());
+                assertEquals(6, card.getPoints().get(2).intValue());
+                assertEquals(8, card.getPoints().get(3).intValue());
+                System.out.print("Points: ");
+                int size = card.getPoints().size();
+                for (int m = 0; m < size; m++) {
+                    if ( m == size - 1 ) {
+                        System.out.print(card.getPoints().pop());
+                    } else {
+                        System.out.print(card.getPoints().pop() + ", ");
+                    }
+                }
+                System.out.println();
+                System.out.println();
+
             }
         }
     }
@@ -120,7 +159,7 @@ public class GameControllerTest {
 
         List<CommonGoalCard> commonGoalCards = new ArrayList<>();
         commonGoalCards.add(new CG_Shape(1));
-        commonGoalCards.add(new CG_Group(9));
+        commonGoalCards.add(new CG_RowCol(9));
         for ( CommonGoalCard card : commonGoalCards ) {
             card.getPoints().push(2);
             card.getPoints().push(4);

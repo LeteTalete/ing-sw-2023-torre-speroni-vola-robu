@@ -2,21 +2,20 @@ package it.polimi.ingsw.model.cards;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polimi.ingsw.model.board.LivingRoom;
 import it.polimi.ingsw.model.board.Shelf;
 import it.polimi.ingsw.model.enumerations.Couple;
 import it.polimi.ingsw.model.enumerations.State;
 import it.polimi.ingsw.model.enumerations.T_Type;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
 
-public class CG_Group extends CommonGoalCard {
+public class CG_RowCol extends CommonGoalCard implements Serializable {
     private int ID;
     private Stack<Integer> points;
 
@@ -27,19 +26,26 @@ public class CG_Group extends CommonGoalCard {
     private int vertical;
     private String description;
 
-    /** The constructor given the card ID as a parameter retrieves the card's type from the json
-     * file "CommonGoalCards.json"
+    /**
+     * Constructor for CG_RowCol saves the CGC parameters given the card ID.
      *
-     * @param id - card ID
+     * @param id - Card ID used to identify the card.
+     * type - The card's type.
+     * numOfOccurrences - Specifies how many occurrences of the same shape are needed to satisfy the card conditions.
+     * diffUpTo - Given a row or a column it specifies the maximum number of different tile types inside it.
+     * horizontal - When set to 1 it means the card asks for rows.
+     * vertical - When set to 1 it means the card asks for columns.
+     * description - The card description.
      */
-    public CG_Group(int id) {
+    public CG_RowCol(int id) {
 
         try {
             ObjectMapper mapper = new ObjectMapper();
-            InputStream inputStream = CG_Group.class.getClassLoader().getResourceAsStream("JSON/CommonGoalCards.json");
+            InputStream inputStream = CG_RowCol.class.getClassLoader().getResourceAsStream("JSON/CommonGoalCards.json");
             JsonNode rootNode = mapper.readTree(inputStream);
 
             this.ID = id;
+            this.points = new Stack<>();
 
             for (JsonNode cardNode : rootNode) {
                 int cardId = cardNode.get("id").asInt();
@@ -51,7 +57,6 @@ public class CG_Group extends CommonGoalCard {
                     this.horizontal = cardNode.get("horizontal").asInt();
                     this.vertical = cardNode.get("vertical").asInt();
                     this.description = cardNode.get("description").asText();
-                    this.points = new Stack<>();
                     break;
                 }
             }
@@ -64,12 +69,11 @@ public class CG_Group extends CommonGoalCard {
     }
 
     /**
-     * Method checkConditions overrides checkConditions in class CommonGoalCards
-     * This method is called upon a common goal card and takes as param the shelf of the current player
-     * It checks if the card's conditions are met inside the player's shelf
-     *
-     * @param shelf - The shelf of the current player
-     * @return - If the card's conditions have been met it returns 1 else 0
+     * Method checkConditions overrides checkConditions in class CommonGoalCards.
+     * This method is called upon a common goal card and takes as param the shelf of the current player.
+     * It checks if the card's conditions are met inside the player's shelf.
+     * @param shelf - The shelf of the current player.
+     * @return - If the card's conditions have been met it returns 1 else 0.
      */
     @Override
     public int checkConditions(Shelf shelf){
@@ -79,7 +83,7 @@ public class CG_Group extends CommonGoalCard {
         // conditions have already been met inside the player's shelf.
         List<T_Type> typesInside = new ArrayList<>(); // This list keeps track of all the tile types that have been found
         // inside the current column/row.
-        int flag = 0; // // This flag is set to 1 when one of the couples inside the column/row has the same tile type
+        int flag; // // This flag is set to 1 when one of the couples inside the column/row has the same tile type
         // of one of the tile types in typesInside.
         int found = 0; // When the card requirements are met we set this flag to 1.
         int count = 0; // Keeps track of all the columns/rows that have satisfied the card requirements.
@@ -89,9 +93,9 @@ public class CG_Group extends CommonGoalCard {
         if ( !cardsAlreadyChecked.contains(this.ID) ) {
 
             if (this.vertical == 1) {
-                for (int i = 0; i < shelf.COLUMNS; i++) {
+                for (int i = 0; i < Shelf.COLUMNS; i++) {
                     typesInside.clear(); // typesInside gets reset before checking each column.
-                    for (int j = 0; j < shelf.ROWS; j++) {
+                    for (int j = 0; j < Shelf.ROWS; j++) {
                         notFull = 0; // Reset.
                         flag = 0; // Reset.
                         if (!shelfsMatrix[j][i].getState().equals(State.EMPTY)) {
@@ -128,9 +132,9 @@ public class CG_Group extends CommonGoalCard {
             }
 
             if (this.horizontal == 1) {
-                for (int i = 0; i < shelf.ROWS; i++) {
+                for (int i = 0; i < Shelf.ROWS; i++) {
                     typesInside.clear(); // typesInside gets reset before checking each row.
-                    for (int j = 0; j < shelf.COLUMNS; j++) {
+                    for (int j = 0; j < Shelf.COLUMNS; j++) {
                         notFull = 0; // Reset.
                         flag = 0; // Reset.
                         if (!shelfsMatrix[i][j].getState().equals(State.EMPTY)) {

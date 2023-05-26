@@ -1,318 +1,358 @@
 package it.polimi.ingsw.model.cards;
 
-import it.polimi.ingsw.model.Deck;
 import it.polimi.ingsw.model.board.Shelf;
-import it.polimi.ingsw.model.enumerations.Couple;
-import it.polimi.ingsw.model.enumerations.State;
 import it.polimi.ingsw.model.enumerations.T_Type;
 import it.polimi.ingsw.model.enumerations.Tile;
+
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import java.util.ArrayList;
+
 
 public class CGC6Test {
 
-    /** Test createCardTest creates an instance of CGC6 and checks if all parameters are correct */
+    /**
+     * Test createCardTest creates an instance of CGC6 and checks if all parameters are correct.
+     */
     @Test
     public void createCardTest(){
-        CG_Shape CGC6 = new CG_Shape(6);
+        CG_Groups CGC6 = new CG_Groups(6);
+        System.out.println(CGC6.getDescription());
         assertEquals(6, CGC6.getID());
-        assertEquals("Shape", CGC6.getType());
+        assertEquals("Groups", CGC6.getType());
         assertEquals(4, CGC6.getNumOfOccurrences());
-        assertEquals(1, CGC6.getDiffType());
-        assertEquals(0, CGC6.getStairs());
-
-        assertEquals(0, CGC6.getPositions().get(0).get(0).getX());
-        assertEquals(0, CGC6.getPositions().get(0).get(0).getY());
-        assertEquals(0, CGC6.getPositions().get(0).get(1).getX());
-        assertEquals(1, CGC6.getPositions().get(0).get(1).getY());
-        assertEquals(0, CGC6.getPositions().get(0).get(2).getX());
-        assertEquals(2, CGC6.getPositions().get(0).get(2).getY());
-        assertEquals(0, CGC6.getPositions().get(0).get(3).getX());
-        assertEquals(3, CGC6.getPositions().get(0).get(3).getY());
-
-        assertEquals(0, CGC6.getPositions().get(1).get(0).getX());
-        assertEquals(0, CGC6.getPositions().get(1).get(0).getY());
-        assertEquals(1, CGC6.getPositions().get(1).get(1).getX());
-        assertEquals(0, CGC6.getPositions().get(1).get(1).getY());
-        assertEquals(2, CGC6.getPositions().get(1).get(2).getX());
-        assertEquals(0, CGC6.getPositions().get(1).get(2).getY());
-        assertEquals(3, CGC6.getPositions().get(1).get(3).getX());
-        assertEquals(0, CGC6.getPositions().get(1).get(3).getY());
+        assertEquals(4, CGC6.getAtLeast());
+        assertEquals("Four groups each containing at least 4 tiles of the same type (not necessarily in the depicted shape).\nThe tiles of one group can be different from those of another group.", CGC6.getDescription());
 
     }
 
-    /** Test emptyShelfTest checks that the card is not accepted when the shelf is empty */
+    /**
+     * Test emptyShelfTest checks that the card is not accepted when the shelf is empty.
+     */
     @Test
     public void emptyShelfTest(){
         Shelf shelf = new Shelf();
-        CG_Shape CGC6 = new CG_Shape(6);
+        CG_Groups CGC6 = new CG_Groups(6);
 
         System.out.println("emptyShelfTest");
         shelf.printShelf();
         System.out.println();
 
+        assertTrue(shelf.getCardsAlreadyChecked().isEmpty());
         assertEquals(0, CGC6.checkConditions(shelf));
+        assertFalse(shelf.getCardsAlreadyChecked().contains(CGC6.getID()));
     }
 
-    /** Test fourOccTest1 checks if four 1x4 rectangles with different tile type are correctly identified */
+    /**
+     * Test fourOccTest1 checks if 4 groups each with exactly 4 elements are correctly identified.
+     */
     @Test
     public void fourOccTest1(){
-
         Shelf shelf = new Shelf();
-        CG_Shape CGC6 = new CG_Shape(6);
+        ArrayList<Tile> tiles = new ArrayList<>();
+        CG_Groups CGC6 = new CG_Groups(6);
 
-        for (int i = 0; i < shelf.ROWS; i++) {
-            for (int j = 0; j < shelf.COLUMNS; j++) {
-                if ( j == 0  && i != shelf.ROWS - 5 && i != shelf.ROWS - 6 ) {
-                    Tile tile = new Tile(T_Type.CAT, 3);
-                    Couple couple0 = new Couple(tile);
-                    shelf.setCoordinate(i, j, couple0);
-                } else if (j == 1  && i != shelf.ROWS - 5 && i != shelf.ROWS - 6 ) {
-                    Tile tile = new Tile(T_Type.TROPHY, 3);
-                    Couple couple0 = new Couple(tile);
-                    shelf.setCoordinate(i, j, couple0);
-                } else if ( j == 2  && i != shelf.ROWS - 5 && i != shelf.ROWS - 6 ) {
-                    Tile tile = new Tile(T_Type.PLANT, 3);
-                    Couple couple0 = new Couple(tile);
-                    shelf.setCoordinate(i, j, couple0);
-                } else if ( j == 3  && i != shelf.ROWS - 5 && i != shelf.ROWS - 6 ) {
-                    Tile tile = new Tile(T_Type.FRAME, 3);
-                    Couple couple0 = new Couple(tile);
-                    shelf.setCoordinate(i, j, couple0);
-                }
-            }
-        }
+        tiles.add(new Tile(T_Type.CAT,1));
+        tiles.add(new Tile(T_Type.CAT,1));
+        tiles.add(new Tile(T_Type.CAT,1));
+        tiles.add(new Tile(T_Type.CAT,1));
+        shelf.insertTiles(0, tiles);
+
+        tiles.clear();
+        tiles.add(new Tile(T_Type.TROPHY, 1));
+        tiles.add(new Tile(T_Type.TROPHY, 1));
+        tiles.add(new Tile(T_Type.TROPHY, 1));
+        tiles.add(new Tile(T_Type.TROPHY, 1));
+        shelf.insertTiles(1, tiles);
+
+        tiles.clear();
+        tiles.add(new Tile(T_Type.PLANT, 1));
+        tiles.add(new Tile(T_Type.PLANT, 1));
+        tiles.add(new Tile(T_Type.PLANT, 1));
+        tiles.add(new Tile(T_Type.PLANT, 1));
+        shelf.insertTiles(2, tiles);
+
+        tiles.clear();
+        tiles.add(new Tile(T_Type.FRAME, 1));
+        tiles.add(new Tile(T_Type.FRAME, 1));
+        tiles.add(new Tile(T_Type.FRAME, 1));
+        tiles.add(new Tile(T_Type.FRAME, 1));
+        shelf.insertTiles(3, tiles);
 
         System.out.println("fourOccTest1");
         shelf.printShelf();
         System.out.println();
 
+        assertTrue(shelf.getCardsAlreadyChecked().isEmpty());
         assertEquals(1, CGC6.checkConditions(shelf));
+        assertTrue(shelf.getCardsAlreadyChecked().contains(CGC6.getID()));
+        assertEquals(0, CGC6.checkConditions(shelf));
     }
 
-    /** Test fourOccTest2 checks if four 1x4 rectangles are correctly identified when:
-     * 1. All of them have a different tile type from the others
-     * 2. Three of them are vertically placed but one is horizontal */
+    /**
+     * Test fourOccTest2 checks if 4 groups reach with a different tile type from the others and each with at least 4
+     * elements are correctly identified.
+     */
     @Test
     public void fourOccTest2(){
-
         Shelf shelf = new Shelf();
-        CG_Shape CGC6 = new CG_Shape(6);
+        ArrayList<Tile> tiles = new ArrayList<>();
+        CG_Groups CGC6 = new CG_Groups(6);
 
+        tiles.add(new Tile(T_Type.BOOK, 1));
+        tiles.add(new Tile(T_Type.CAT,1));
+        tiles.add(new Tile(T_Type.CAT,1));
+        tiles.add(new Tile(T_Type.CAT,1));
+        tiles.add(new Tile(T_Type.CAT,1));
+        shelf.insertTiles(0, tiles);
 
-        for (int i = 0; i < shelf.ROWS; i++) {
-            for (int j = 0; j < shelf.COLUMNS; j++) {
-                if ( j == 0  && i != shelf.ROWS - 1 && i != shelf.ROWS - 6 ) {
-                    Tile tile = new Tile(T_Type.CAT, 3);
-                    Couple couple0 = new Couple(tile);
-                    shelf.setCoordinate(i, j, couple0);
-                } else if (j == 1  && i != shelf.ROWS - 1 && i != shelf.ROWS - 6 ) {
-                    Tile tile = new Tile(T_Type.TROPHY, 3);
-                    Couple couple0 = new Couple(tile);
-                    shelf.setCoordinate(i, j, couple0);
-                } else if ( j == 2  && i != shelf.ROWS - 1 && i != shelf.ROWS - 6 ) {
-                    Tile tile = new Tile(T_Type.PLANT, 3);
-                    Couple couple0 = new Couple(tile);
-                    shelf.setCoordinate(i, j, couple0);
-                } else if ( i == shelf.ROWS - 1 && j != 4 ) {
-                    Tile tile = new Tile(T_Type.BOOK, 3);
-                    Couple couple0 = new Couple(tile);
-                    shelf.setCoordinate(i, j, couple0);
-                }
-            }
-        }
+        tiles.clear();
+        tiles.add(new Tile(T_Type.BOOK, 1));
+        tiles.add(new Tile(T_Type.CAT,1));
+        tiles.add(new Tile(T_Type.CAT,1));
+        tiles.add(new Tile(T_Type.CAT,1));
+        tiles.add(new Tile(T_Type.CAT,1));
+        shelf.insertTiles(1, tiles);
+
+        tiles.clear();
+        tiles.add(new Tile(T_Type.BOOK, 1));
+        tiles.add(new Tile(T_Type.PLANT, 1));
+        tiles.add(new Tile(T_Type.PLANT, 1));
+        tiles.add(new Tile(T_Type.GAMES, 1));
+        tiles.add(new Tile(T_Type.TROPHY, 1));
+        shelf.insertTiles(2, tiles);
+
+        tiles.clear();
+        tiles.add(new Tile(T_Type.BOOK, 1));
+        tiles.add(new Tile(T_Type.BOOK, 1));
+        tiles.add(new Tile(T_Type.PLANT, 1));
+        tiles.add(new Tile(T_Type.TROPHY, 1));
+        tiles.add(new Tile(T_Type.TROPHY, 1));
+        shelf.insertTiles(3, tiles);
+
+        tiles.clear();
+        tiles.add(new Tile(T_Type.BOOK, 1));
+        tiles.add(new Tile(T_Type.BOOK, 1));
+        tiles.add(new Tile(T_Type.PLANT, 1));
+        tiles.add(new Tile(T_Type.TROPHY, 1));
+        tiles.add(new Tile(T_Type.TROPHY, 1));
+        shelf.insertTiles(4, tiles);
 
         System.out.println("fourOccTest2");
         shelf.printShelf();
         System.out.println();
 
+        assertTrue(shelf.getCardsAlreadyChecked().isEmpty());
         assertEquals(1, CGC6.checkConditions(shelf));
+        assertTrue(shelf.getCardsAlreadyChecked().contains(CGC6.getID()));
+        assertEquals(0, CGC6.checkConditions(shelf));
     }
 
-
-    /** Test fourOccTest3 checks if four 1x4 rectangles are correctly identified when:
-     * 1. All of them have the same tile type */
+    /**
+     * Test fourOccTest3 checks if 4 groups regardless of their tile type each with at least 4 elements are correctly identified.
+     */
     @Test
     public void fourOccTest3(){
-
         Shelf shelf = new Shelf();
-        CG_Shape CGC6 = new CG_Shape(6);
+        ArrayList<Tile> tiles = new ArrayList<>();
+        CG_Groups CGC6 = new CG_Groups(6);
 
-        for (int i = 0; i < shelf.ROWS; i++) {
-            for (int j = 0; j < shelf.COLUMNS; j++) {
-                Tile tile = new Tile(T_Type.CAT, 3);
-                Couple couple0 = new Couple(tile);
-                if ( j == 0  && i != shelf.ROWS - 5 && i != shelf.ROWS - 6 ) {
-                    shelf.setCoordinate(i, j, couple0);
-                } else if (j == 1  && i != shelf.ROWS - 5 && i != shelf.ROWS - 6 ) {
-                    shelf.setCoordinate(i, j, couple0);
-                } else if ( j == 2  && i != shelf.ROWS - 5 && i != shelf.ROWS - 6 ) {
-                    shelf.setCoordinate(i, j, couple0);
-                } else if ( j == 3  && i != shelf.ROWS - 5 && i != shelf.ROWS - 6 ) {
-                    shelf.setCoordinate(i, j, couple0);
-                }
-            }
-        }
+        tiles.add(new Tile(T_Type.BOOK, 1));
+        tiles.add(new Tile(T_Type.CAT,1));
+        tiles.add(new Tile(T_Type.CAT,1));
+        tiles.add(new Tile(T_Type.CAT,1));
+        tiles.add(new Tile(T_Type.CAT,1));
+        shelf.insertTiles(0, tiles);
 
+        tiles.clear();
+        tiles.add(new Tile(T_Type.BOOK, 1));
+        tiles.add(new Tile(T_Type.CAT,1));
+        tiles.add(new Tile(T_Type.CAT,1));
+        tiles.add(new Tile(T_Type.CAT,1));
+        tiles.add(new Tile(T_Type.CAT,1));
+        shelf.insertTiles(1, tiles);
+
+        tiles.clear();
+        tiles.add(new Tile(T_Type.BOOK, 1));
+        tiles.add(new Tile(T_Type.PLANT, 1));
+        tiles.add(new Tile(T_Type.PLANT, 1));
+        tiles.add(new Tile(T_Type.GAMES, 1));
+        tiles.add(new Tile(T_Type.BOOK, 1));
+        shelf.insertTiles(2, tiles);
+
+        tiles.clear();
+        tiles.add(new Tile(T_Type.BOOK, 1));
+        tiles.add(new Tile(T_Type.BOOK, 1));
+        tiles.add(new Tile(T_Type.PLANT, 1));
+        tiles.add(new Tile(T_Type.BOOK, 1));
+        tiles.add(new Tile(T_Type.BOOK, 1));
+        shelf.insertTiles(3, tiles);
+
+        tiles.clear();
+        tiles.add(new Tile(T_Type.BOOK, 1));
+        tiles.add(new Tile(T_Type.BOOK, 1));
+        tiles.add(new Tile(T_Type.PLANT, 1));
+        tiles.add(new Tile(T_Type.BOOK, 1));
+        tiles.add(new Tile(T_Type.BOOK, 1));
+        shelf.insertTiles(4, tiles);
 
         System.out.println("fourOccTest3");
         shelf.printShelf();
         System.out.println();
 
+        assertTrue(shelf.getCardsAlreadyChecked().isEmpty());
         assertEquals(1, CGC6.checkConditions(shelf));
+        assertTrue(shelf.getCardsAlreadyChecked().contains(CGC6.getID()));
+        assertEquals(0, CGC6.checkConditions(shelf));
     }
 
-    /** Test fourOccTest4 checks if four 1x4 rectangles are correctly identified when:
-     * 1. All of them have a different tile type from the others
-     * 2. Three of them are horizontally placed but one is vertical */
-    @Test
-    public void fourOccTest4(){
-
-        Shelf shelf = new Shelf();
-        CG_Shape CGC6 = new CG_Shape(6);
-
-        for (int i = 0; i < shelf.ROWS; i++) {
-            for (int j = 0; j < shelf.COLUMNS; j++) {
-                if ( i == shelf.ROWS - 1 && j != shelf.COLUMNS - 1 ) {
-                    Tile tile = new Tile(T_Type.CAT, 3);
-                    Couple couple0 = new Couple(tile);
-                    shelf.setCoordinate(i, j, couple0);
-                } else if ( i == shelf.ROWS - 2 && j != shelf.COLUMNS - 1 ) {
-                    Tile tile = new Tile(T_Type.TROPHY, 3);
-                    Couple couple0 = new Couple(tile);
-                    shelf.setCoordinate(i, j, couple0);
-                } else if ( i == shelf.ROWS - 3 && j != shelf.COLUMNS - 1 ) {
-                    Tile tile = new Tile(T_Type.PLANT, 3);
-                    Couple couple0 = new Couple(tile);
-                    shelf.setCoordinate(i, j, couple0);
-                }  else if ( j == 4 && i != shelf.ROWS - 5 && i != shelf.ROWS - 6) {
-                    Tile tile = new Tile(T_Type.BOOK, 3);
-                    Couple couple0 = new Couple(tile);
-                    shelf.setCoordinate(i, j, couple0);
-                }
-            }
-        }
-
-        System.out.println("fourOccTest4");
-        shelf.printShelf();
-        System.out.println();
-
-        assertEquals(1, CGC6.checkConditions(shelf));
-    }
-
-    /** Test failTest1 checks if checkConditions returns 0 when:
-     * 1. There are 4 occurrences of 1x4 rectangles
-     * 2. Two of them have the same tile type and are overlapping by one square (it counts only once)
-     * */
+    /**
+     * Test failTest1 checks if checkConditions returns 0 when there are 3 groups with exactly 4 elements and one group
+     * with 3 elements.
+     */
     @Test
     public void failTest1(){
-
         Shelf shelf = new Shelf();
-        CG_Shape CGC6 = new CG_Shape(6);
+        ArrayList<Tile> tiles = new ArrayList<>();
+        CG_Groups CGC6 = new CG_Groups(6);
 
-        for (int i = 0; i < shelf.ROWS; i++) {
-            for (int j = 0; j < shelf.COLUMNS; j++) {
-                if ( j == 0  && i != shelf.ROWS - 1 && i != shelf.ROWS - 6 ) {
-                    Tile tile = new Tile(T_Type.CAT, 3);
-                    Couple couple0 = new Couple(tile);
-                    shelf.setCoordinate(i, j, couple0);
-                } else if (j == 1  && i != shelf.ROWS - 1 && i != shelf.ROWS - 6 ) {
-                    Tile tile = new Tile(T_Type.TROPHY, 3);
-                    Couple couple0 = new Couple(tile);
-                    shelf.setCoordinate(i, j, couple0);
-                } else if ( j == 2  && i != shelf.ROWS - 1 && i != shelf.ROWS - 6 && i != shelf.ROWS - 5) {
-                    Tile tile = new Tile(T_Type.PLANT, 3);
-                    Couple couple0 = new Couple(tile);
-                    shelf.setCoordinate(i, j, couple0);
-                } else if ( j == 3 && i != shelf.ROWS - 6 && i != shelf.ROWS - 5) {
-                    Tile tile = new Tile(T_Type.BOOK, 3);
-                    Couple couple0 = new Couple(tile);
-                    shelf.setCoordinate(i, j, couple0);
-                } else if ( i == shelf.ROWS - 1 && j != 4 ) {
-                    Tile tile = new Tile(T_Type.BOOK, 3);
-                    Couple couple0 = new Couple(tile);
-                    shelf.setCoordinate(i, j, couple0);
-                }
-            }
-        }
+        tiles.add(new Tile(T_Type.BOOK, 1));
+        tiles.add(new Tile(T_Type.CAT,1));
+        tiles.add(new Tile(T_Type.CAT,1));
+        tiles.add(new Tile(T_Type.CAT,1));
+        tiles.add(new Tile(T_Type.CAT,1));
+        shelf.insertTiles(0, tiles);
+
+        tiles.clear();
+        tiles.add(new Tile(T_Type.BOOK, 1));
+        tiles.add(new Tile(T_Type.TROPHY, 1));
+        tiles.add(new Tile(T_Type.TROPHY, 1));
+        tiles.add(new Tile(T_Type.TROPHY, 1));
+        tiles.add(new Tile(T_Type.TROPHY, 1));
+        shelf.insertTiles(1, tiles);
+
+        tiles.clear();
+        tiles.add(new Tile(T_Type.BOOK, 1));
+        tiles.add(new Tile(T_Type.PLANT, 1));
+        tiles.add(new Tile(T_Type.PLANT, 1));
+        tiles.add(new Tile(T_Type.PLANT, 1));
+        shelf.insertTiles(2, tiles);
+
+        tiles.clear();
+        tiles.add(new Tile(T_Type.BOOK, 1));
+        shelf.insertTiles(3, tiles);
 
         System.out.println("failTest1");
         shelf.printShelf();
         System.out.println();
 
+        assertTrue(shelf.getCardsAlreadyChecked().isEmpty());
         assertEquals(0, CGC6.checkConditions(shelf));
+        assertFalse(shelf.getCardsAlreadyChecked().contains(CGC6.getID()));
     }
 
-    /** Test failTest2 checks if checkConditions returns 0 when:
-     *  1. Only three 1x4 rectangles are inside the shelf */
+    /**
+     * Test failTest2 checks if checkConditions returns 0 when there are 3 groups with at least 4 elements and one group
+     * with only one element.
+     */
     @Test
     public void failTest2(){
-
         Shelf shelf = new Shelf();
-        CG_Shape CGC6 = new CG_Shape(6);
+        ArrayList<Tile> tiles = new ArrayList<>();
+        CG_Groups CGC6 = new CG_Groups(6);
 
-        for (int i = 0; i < shelf.ROWS; i++) {
-            for (int j = 0; j < shelf.COLUMNS; j++) {
-                if ( j == 0  && i != shelf.ROWS - 5 && i != shelf.ROWS - 6 ) {
-                    Tile tile = new Tile(T_Type.CAT, 3);
-                    Couple couple0 = new Couple(tile);
-                    shelf.setCoordinate(i, j, couple0);
-                } else if (j == 1  && i != shelf.ROWS - 5 && i != shelf.ROWS - 6 ) {
-                    Tile tile = new Tile(T_Type.TROPHY, 3);
-                    Couple couple0 = new Couple(tile);
-                    shelf.setCoordinate(i, j, couple0);
-                } else if ( j == 2  && i != shelf.ROWS - 5 && i != shelf.ROWS - 6 ) {
-                    Tile tile = new Tile(T_Type.PLANT, 3);
-                    Couple couple0 = new Couple(tile);
-                    shelf.setCoordinate(i, j, couple0);
-                }
-            }
-        }
+        tiles.add(new Tile(T_Type.BOOK, 1));
+        tiles.add(new Tile(T_Type.CAT,1));
+        tiles.add(new Tile(T_Type.CAT,1));
+        tiles.add(new Tile(T_Type.CAT,1));
+        tiles.add(new Tile(T_Type.CAT,1));
+        shelf.insertTiles(0, tiles);
+
+        tiles.clear();
+        tiles.add(new Tile(T_Type.BOOK, 1));
+        tiles.add(new Tile(T_Type.CAT,1));
+        tiles.add(new Tile(T_Type.CAT,1));
+        tiles.add(new Tile(T_Type.CAT,1));
+        tiles.add(new Tile(T_Type.CAT,1));
+        shelf.insertTiles(1, tiles);
+
+        tiles.clear();
+        tiles.add(new Tile(T_Type.BOOK, 1));
+        tiles.add(new Tile(T_Type.PLANT, 1));
+        tiles.add(new Tile(T_Type.PLANT, 1));
+        tiles.add(new Tile(T_Type.GAMES, 1));
+        shelf.insertTiles(2, tiles);
+
+        tiles.clear();
+        tiles.add(new Tile(T_Type.BOOK, 1));
+        tiles.add(new Tile(T_Type.BOOK, 1));
+        tiles.add(new Tile(T_Type.PLANT, 1));
+        shelf.insertTiles(3, tiles);
+
+        tiles.clear();
+        tiles.add(new Tile(T_Type.BOOK, 1));
+        tiles.add(new Tile(T_Type.BOOK, 1));
+        tiles.add(new Tile(T_Type.PLANT, 1));
+        shelf.insertTiles(4, tiles);
 
         System.out.println("failTest2");
         shelf.printShelf();
         System.out.println();
 
+        assertTrue(shelf.getCardsAlreadyChecked().isEmpty());
         assertEquals(0, CGC6.checkConditions(shelf));
+        assertFalse(shelf.getCardsAlreadyChecked().contains(CGC6.getID()));
     }
 
-    /** Test failTest3 checks if checkConditions returns 0 when:
-     * 1. There are 4 occurrences of 1x4 rectangles
-     * 2. Two of them have the same tile type and are overlapping by one square (it counts only once)
-     * */
+    /**
+     * Test failTest3 checks if checkConditions returns 0 when there are only 3 groups with at least 4 elements.
+     */
     @Test
     public void failTest3(){
-
         Shelf shelf = new Shelf();
-        CG_Shape CGC6 = new CG_Shape(6);
+        ArrayList<Tile> tiles = new ArrayList<>();
+        CG_Groups CGC6 = new CG_Groups(6);
 
-        for (int i = 0; i < shelf.ROWS; i++) {
-            for (int j = 0; j < shelf.COLUMNS; j++) {
-                if ( i == shelf.ROWS - 1 && j != shelf.COLUMNS - 1 ) {
-                    Tile tile = new Tile(T_Type.CAT, 3);
-                    Couple couple0 = new Couple(tile);
-                    shelf.setCoordinate(i, j, couple0);
-                } else if ( i == shelf.ROWS - 2 && j != shelf.COLUMNS - 1 ) {
-                    Tile tile = new Tile(T_Type.TROPHY, 3);
-                    Couple couple0 = new Couple(tile);
-                    shelf.setCoordinate(i, j, couple0);
-                } else if ( i == shelf.ROWS - 3 && j != shelf.COLUMNS - 1 && j != 0 ) {
-                    Tile tile = new Tile(T_Type.BOOK, 3);
-                    Couple couple0 = new Couple(tile);
-                    shelf.setCoordinate(i, j, couple0);
-                }  else if ( j == 4 && i != shelf.ROWS - 5 && i != shelf.ROWS - 6) {
-                    Tile tile = new Tile(T_Type.BOOK, 3);
-                    Couple couple0 = new Couple(tile);
-                    shelf.setCoordinate(i, j, couple0);
-                }
-            }
-        }
+        tiles.add(new Tile(T_Type.BOOK, 1));
+        tiles.add(new Tile(T_Type.CAT,1));
+        tiles.add(new Tile(T_Type.CAT,1));
+        tiles.add(new Tile(T_Type.CAT,1));
+        tiles.add(new Tile(T_Type.CAT,1));
+        shelf.insertTiles(0, tiles);
+
+        tiles.clear();
+        tiles.add(new Tile(T_Type.BOOK, 1));
+        tiles.add(new Tile(T_Type.CAT,1));
+        tiles.add(new Tile(T_Type.CAT,1));
+        tiles.add(new Tile(T_Type.CAT,1));
+        tiles.add(new Tile(T_Type.CAT,1));
+        shelf.insertTiles(1, tiles);
+
+        tiles.clear();
+        tiles.add(new Tile(T_Type.BOOK, 1));
+        tiles.add(new Tile(T_Type.PLANT, 1));
+        tiles.add(new Tile(T_Type.PLANT, 1));
+        shelf.insertTiles(2, tiles);
+
+        tiles.clear();
+        tiles.add(new Tile(T_Type.BOOK, 1));
+        tiles.add(new Tile(T_Type.BOOK, 1));
+        tiles.add(new Tile(T_Type.PLANT, 1));
+        shelf.insertTiles(3, tiles);
+
+        tiles.clear();
+        tiles.add(new Tile(T_Type.BOOK, 1));
+        tiles.add(new Tile(T_Type.BOOK, 1));
+        tiles.add(new Tile(T_Type.PLANT, 1));
+        shelf.insertTiles(4, tiles);
 
         System.out.println("failTest3");
         shelf.printShelf();
         System.out.println();
 
+        assertTrue(shelf.getCardsAlreadyChecked().isEmpty());
         assertEquals(0, CGC6.checkConditions(shelf));
+        assertFalse(shelf.getCardsAlreadyChecked().contains(CGC6.getID()));
     }
 }

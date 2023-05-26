@@ -1,195 +1,217 @@
 package it.polimi.ingsw.controller;
 
-import it.polimi.ingsw.model.board.LivingRoom;
+import it.polimi.ingsw.Updates.ModelUpdate;
+import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
+import it.polimi.ingsw.model.Position;
+import it.polimi.ingsw.model.board.LivingRoom;
 import it.polimi.ingsw.model.cards.CommonGoalCard;
-import it.polimi.ingsw.model.cards.PersonalGoalCard;
 import it.polimi.ingsw.model.enumerations.Tile;
+import it.polimi.ingsw.notifications.CommonGoalGained;
+import it.polimi.ingsw.notifications.EndTurn;
+import it.polimi.ingsw.responses.GetOrderResponse;
+import it.polimi.ingsw.responses.GetTilesResponse;
+import it.polimi.ingsw.responses.MoveOk;
+import it.polimi.ingsw.responses.Response;
+import it.polimi.ingsw.server.ServerManager;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
+import java.rmi.RemoteException;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Random;
-import java.util.stream.Collectors;
 
 public class GameController {
-    private Player currentPlayer;
-    private Player previousPlayer;
+    private static Logger fileLog = LogManager.getRootLogger();
+    private Game model;
     private String gameId;
-    private static String ViewInterface;
-    private static GameController game;
-    private ArrayList<Player> players;
-    private int numOfPlayers;
-    private LivingRoom gameBoard;
-    private List<CommonGoalCard> commonGoalCards;
-    private static Player player;//what was this for?
-    //constructor
-    public GameController(ArrayList<Player> playersList, String id) {
-        players = playersList;
-        numOfPlayers = players.size();
+    private ArrayList<Position> choiceOfTiles;
+    private ServerManager master;
+
+    public GameController(ArrayList<Player> playersList, String id, ServerManager serverMaster) {
+        model = new Game(id, this);
+        model.setPlayers(playersList);
+        model.setNumOfPlayers(playersList.size());
         gameId = id;
-        gameBoard = new LivingRoom(players.size());
+        model.createGameBoard(playersList.size());
+        master = serverMaster;
     }
 
-    public GameController() {
+    public GameController(ArrayList<Player> playersList, String id) {
+        model = new Game(id, this);
+        model.setPlayers(playersList);
+        model.setNumOfPlayers(playersList.size());
+        gameId = id;
+        model.createGameBoard(playersList.size());
     }
 
-    public void main() {
-        System.out.println("I've created a game and here are the players:");
-        for (Player player : players) {
-            System.out.println(player.getNickname());
+    public void initialize() throws RemoteException {
+        model.initialize();
+    }
+
+    public void notifySinglePlayer(String token, Response response) throws RemoteException {
+        master.notifySinglePlayer(token, response);
+    }
+
+    public void notifyAllPlayers(Response response) {
+        master.notifyAllPlayers(gameId, response);
+    }
+/*
+    public void notifyAllPlayers(ModelUpdate message) {
+        master.notifyAllPlayers(gameId, message);
+    }
+*/
+
+    public void chooseTiles(String token, List<String> userInput) throws RemoteException
+    {
+        ArrayList<Position> choice = new ArrayList<>();
+
+        for(String s : userInput)
+        {
+            choice.add(new Position(s.charAt(0)-48,s.charAt(1)-48));
         }
-        /**we need the server to pass the number of players and the list of players to the gameController, somehow**/
-        // create and setup board (we're assuming this all happens in the next instruction)
-         this.gameBoard = new LivingRoom(numOfPlayers);
-
-        /**once the living room is set, controller decides who's first**/
-        chooseFirstPlayer();
-
-
-        /**has a method to start a turn, which will notify each player that it's "nickname"'s turn**/
-
-        /**has a method to change turns (it could already be implemented into Game**/
-
-
-
+        if (model.getCurrentPlayer().getMyShelf().checkEnoughSpace(choice) && this.getGameBoard().checkPlayerChoice(choice)) {
+            this.choiceOfTiles = choice;
+            master.notifySinglePlayer(token, new GetTilesResponse(choice));
+            master.notifySinglePlayer(token, new MoveOk(true));
+        }
+        else{
+            master.notifySinglePlayer(token, new MoveOk(false));
+        }
     }
 
-    /** Method chooseFirstPlayer randomly chooses the first player and gives it the chair */
-    public void chooseFirstPlayer(){
-        this.currentPlayer = players.get(new Random().nextInt(numOfPlayers));
-        this.currentPlayer.setChair();
+    public void rearrangeTiles(String token, List<String> order)
+    {
+        ArrayList<Position> tiles = (ArrayList<Position>) this.choiceOfTiles.clone();
+
+        for(int i=0; i<order.size(); i++)
+        {
+            tiles.set(i,this.choiceOfTiles.get(order.get(i).charAt(0)-48-1));
+        }
+        this.choiceOfTiles = tiles;
+
+        master.notifySinglePlayer(token, new GetOrderResponse(tiles, true));
+        master.notifySinglePlayer(token, new MoveOk(true));
     }
 
-    /** Method nextTurn passes to the next turn by saving the current player in previousPlayer and then
-     *  changing currentPlayer to the next one on the list
-     *  If the current player is the last on the list then it starts back from the first */
-    public void nextTurn(){
-        int next = 0;
-        for(int i = 0; i < numOfPlayers; i++) {
-            if(players.get(i).equals(currentPlayer)) {
-                next = i + 1;
-                break;
+    public void chooseColumn(String token, int column)
+    {
+        ArrayList<Tile> tiles = new ArrayList<>();
+
+        for(int i=0;i<this.choiceOfTiles.size();i++)
+        {
+            tiles.add(model.getGameBoard().getCouple(this.choiceOfTiles.get(i)).getTile());
+        }
+        master.notifySinglePlayer(token, new MoveOk(true));
+
+        updateGame(token,column,tiles);
+    }
+
+    public void updateGame(String token, int column, ArrayList<Tile> tiles){
+
+        insertTilesInShelf(column, tiles);
+        checkCGCs();
+        updateBoardCouples();
+
+        nextTurn(token);
+    }
+
+    public void nextTurn(String token){
+        master.notifySinglePlayer(token, new EndTurn());
+        if ( model.getEndGame() != null && model.getPreviousPlayer().getChair() ){
+            model.gameHasEnded();
+        } else {
+            model.nextTurn();
+        }
+    }
+
+    public void checkCGCs(){
+
+        for (CommonGoalCard card : model.getCommonGoalCards() ) {
+            if ( card.checkConditions(model.getCurrentPlayer().getMyShelf()) == 1 ) {
+                int points = card.getPoints().pop();
+                model.getCurrentPlayer().setScore(points);
+                master.notifyAllPlayers(gameId, new CommonGoalGained(model.getCurrentPlayer().getNickname(), card.getID()));
+                fileLog.info(model.getCurrentPlayer().getNickname() + " has received " + points + " points from CGC " + card.getID());
             }
         }
-        if(next == numOfPlayers) {
-            next = 0;
-        }
-        previousPlayer = currentPlayer;
-        currentPlayer = players.get(next);
     }
 
-    /** Method scoreBoard ranks in descending order the players by their scores and then prints them */
-    public void scoreBoard(ArrayList<Player> ps){
-        List<Player> ranking;
-        ranking = ps.stream().sorted(Comparator.comparing(Player::getScore).reversed()).collect(Collectors.toList());
-        for ( Player player : ranking ){
-            System.out.println( player.getNickname() + "'s score is: " + player.getScore());
+    public void insertTilesInShelf(int column, ArrayList<Tile> tiles){
+        model.getCurrentPlayer().getMyShelf().insertTiles(column,tiles);
+
+        if ( model.getCurrentPlayer().getMyShelf().checkShelfFull() ){
+            model.setEndGame(model.getCurrentPlayer().getNickname());
+        }
+    }
+    public void updateBoardCouples(){
+        model.getGameBoard().updateCouples(this.choiceOfTiles);
+        this.choiceOfTiles = null;
+
+        if ( model.getGameBoard().checkForRefill() ){
+            model.getGameBoard().refill();
         }
     }
 
-    /** Method startGame initializes CGCs, PGCs and chooses the first player */
+    public void generateCGC(){
+        model.generateCGC(model.getPlayers().size());
+    }
+
     public void startGame(){
-        generateCGC(players.size());
-        generatePGC(players);
-        chooseFirstPlayer();
+        model.startGame();
     }
-
-    public void endGame(){
-        //make one last round with the remaining players and then calculates score and shows the scoreboard
-        calculateScore();
-        scoreBoard(players);
-    }
-
-    /** Method calculateScore calculates the score of each player at the end of the game */
     public void calculateScore(){
-        for ( Player player : players ){
-            player.setScore(player.getMyShelf().additionalPoints() + player.getGoalCard().scorePersonalGoalCard(player.getMyShelf()));
-        }
+        model.calculateScore();
     }
-
-    /** Method generateCGC generates and returns an ArrayList containing CommonGoalCard objects
-     * Those will be the cards that will be used in the game
-     * First it generates 2 different random numbers from 0 to 11
-     * (inside the code it's from 0 to 12 because the upper bound is exclusive)
-     * Then it iterates for how many cards are needed and adds the cards to the ArrayList
-     */
-    public void generateCGC(int numOfPlayers){
-        commonGoalCards = new ArrayList<>();
-        int numberOfCommonGoalCards = 2; // Change this number if you want to use more cards
-        int[] idsOfTheCards = new Random().ints(0, 12).distinct().limit(numberOfCommonGoalCards).toArray();
-
-        for ( int i = 0; i < numberOfCommonGoalCards; i++){
-            CommonGoalCard dummy = new CommonGoalCard(idsOfTheCards[i]);
-            commonGoalCards.add(dummy.typeGroupOrShape());
-        }
-        for ( CommonGoalCard card : commonGoalCards ) {
-            if ( numOfPlayers == 2 ){
-                card.getPoints().push(4);
-                card.getPoints().push(8);
-            } else if ( numOfPlayers == 3) {
-                card.getPoints().push(4);
-                card.getPoints().push(6);
-                card.getPoints().push(8);
-            } else if ( numOfPlayers == 4 ) {
-                card.getPoints().push(2);
-                card.getPoints().push(4);
-                card.getPoints().push(6);
-                card.getPoints().push(8);
-            }
-        }
+    public void scoreBoard(){
+        model.scoreBoard(model.getPlayers());
     }
-
-    /** Method generatePGC generates as many ints (all random and different) as there are players.
-     * Then it assigns a personal goal card to each player
-     * @param players - The Arraylist of players
-     */
-    public void generatePGC(ArrayList<Player> players){
-        int[] personalGoalCards = new Random().ints(1, 13).distinct().limit(players.size()).toArray();
-
-        for ( int i = 0; i < players.size() ; i++){
-            players.get(i).setGoalCard(personalGoalCards[i]);
-        }
-    }
-
     public void setCurrentPlayer(Player currentPlayer) {
-        this.currentPlayer = currentPlayer;
+        model.setCurrentPlayer(currentPlayer);
     }
     public Player getCurrentPlayer(){
-        return this.currentPlayer;
+        return model.getCurrentPlayer();
     }
 
     public void setPreviousPlayer(Player previousPlayerPlayer) {
-        this.previousPlayer = currentPlayer;
+        model.setPreviousPlayer(model.getCurrentPlayer());
     }
     public Player getPreviousPlayer(){
-        return this.previousPlayer;
+        return model.getPreviousPlayer();
     }
     public void setNumOfPlayers(int num){
-        this.numOfPlayers = num;
+       model.setNumOfPlayers(num);
     }
     public LivingRoom getGameBoard(){
-        return this.gameBoard;
+        return model.getGameBoard();
     }
-    public List<CommonGoalCard> getCommonGoalCards() { return  this.commonGoalCards; }
+    public List<CommonGoalCard> getCommonGoalCards() { return  model.getCommonGoalCards(); }
 
     public ArrayList<Player> getPlayers(){
-        return this.players;
-    }
-
-    public void setPlayersView(ArrayList<Player> players) {
-        this.players = players;
+        return model.getPlayers();
     }
     public String getGameId(){
         return this.gameId;
     }
 
-    public String chooseTiles(List<Tile> tilesChosen) {
-        //it will do something, I guess
-        return null;
+    public ArrayList<Position> getChoiceOfTiles() {
+        return choiceOfTiles;
     }
 
-    public String placeTilesOnShelf(List<Tile> tilesChosen, int column) {
-        return null;
+    public void setChoiceOfTiles(String choiceOfTiles) {
+        this.choiceOfTiles = model.getChoiceOfTiles(choiceOfTiles);
+    }
+
+
+    public void askTilesToPlayer(String tokenId) {
+        try {
+            master.askTilesToPlayer(tokenId);
+        } catch (RemoteException e) {
+            fileLog.error(e.getMessage());
+        }
+    }
+
+    public void notifyAllPlayers(ModelUpdate modelUpdate) {
+        master.notifyAllPlayers(gameId, modelUpdate);
     }
 }

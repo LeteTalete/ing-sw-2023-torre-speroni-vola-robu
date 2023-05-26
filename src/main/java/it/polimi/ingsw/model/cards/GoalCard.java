@@ -1,4 +1,6 @@
 package it.polimi.ingsw.model.cards;
 
-public abstract class GoalCard{
+import java.io.Serializable;
+
+public abstract class GoalCard implements Serializable {
 }

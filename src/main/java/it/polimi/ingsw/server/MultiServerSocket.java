@@ -1,5 +1,8 @@
 package it.polimi.ingsw.server;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -9,44 +12,43 @@ import java.util.concurrent.Executors;
 
 //this is the principal class of server socket which only instantiate the ServerSocket, execute accept(),
 //and create threads to handle accepted connections
-public class MultiServerSocket
-{
-    private int port;
+public class MultiServerSocket {
+    private static Logger fileLog = LogManager.getRootLogger();
 
-    public MultiServerSocket(int port)
-    {
+    private final ServerSocket serverSocket;
+    private final ExecutorService pool;
+    private int port;
+    private ServerManager serverManager;
+
+    public MultiServerSocket(int port, ServerManager serverManager) throws IOException {
+        serverSocket = new ServerSocket(port);
+        pool = Executors.newCachedThreadPool();
         this.port = port;
+        this.serverManager = serverManager;
     }
 
     public void startServer()
     {
-        //newCachedThreadPool() is used for creating threads only when it is necessary (reuse already existing ones if it is possible)
-        ExecutorService executor = Executors.newCachedThreadPool();
-
-        ServerSocket serverSocket;
-        try
-        {
-            serverSocket = new ServerSocket(port);
-        }
-        catch(IOException e)
-        {
-            System.err.println(e.getMessage()); //port not available
-            return;
-        }
-        System.out.println("Server ready");
+        fileLog.info("Socket server started on port "+port);
         while(true)
         {
             try
             {
-                Socket socket = serverSocket.accept();
-                executor.submit(new ServerSocketClientHandler(socket));
+                Socket clientSocket = serverSocket.accept();
+                fileLog.info("Server accepting from "+clientSocket.getInetAddress());
+                pool.submit(new ServerSocketClientHandler(clientSocket,serverManager));
             }
             catch (IOException e)
             {
+                fileLog.error(e.getMessage());
                 break; //enter here if serverSocket get closed
             }
         }
-        executor.shutdown();
+    }
+
+    public void close() throws IOException{
+        serverSocket.close();
+        pool.shutdown();
     }
 }
 

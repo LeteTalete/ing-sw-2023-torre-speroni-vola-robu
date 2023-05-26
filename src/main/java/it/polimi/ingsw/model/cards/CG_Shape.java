@@ -1,4 +1,5 @@
 package it.polimi.ingsw.model.cards;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.model.Position;
@@ -6,30 +7,34 @@ import it.polimi.ingsw.model.board.Shelf;
 import it.polimi.ingsw.model.enumerations.State;
 import it.polimi.ingsw.model.enumerations.T_Type;
 
-
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-public class CG_Shape extends CommonGoalCard {
+public class CG_Shape extends CommonGoalCard implements Serializable {
     private int ID;
     private Stack<Integer> points;
     private String type;
     private List<List<Position>> positions;
     private int numOfOccurrences;
     private int diffType;
+    private int surrounded;
     private int stairs;
     private String description;
 
     /**
      * Constructor for CG_Shape saves the CGC parameters given the card ID.
-     * id - Card ID used to identify the card.
-     * type - Shape or Group. In this case Shape.
+     *
+     * @param id - Card ID used to identify the card.
+     * type - The card's type.
      * numOfOccurrences - Specifies how many occurrences of the same shape are needed to satisfy the card conditions.
-     * diffType - When set to 0 all the shape's occurrences must be of the same tile type.
+     * diffType - When set to 0 all shape's occurrences must be of the same tile type.
      *            When set to 1 each of the shape's occurrences can be of a different tile type from the others.
+     * surrounded - When set to 0 neighbour tiles to the shape occurrence can share the same tile type with it.
+     *              When set to 1 neighbour tiles to the shape occurrence must have a different tile type from it.
      * stairs - Default 0. If set to 1 it identifies the 12th CGC on the rulebook.
      * description - The card description.
      * coordinates - This set of coordinates identifies the shape itself that the card requires.
@@ -53,6 +58,7 @@ public class CG_Shape extends CommonGoalCard {
                     this.type = cardNode.get("type").asText();
                     this.numOfOccurrences = cardNode.get("numOfOccurrences").asInt();
                     this.diffType = cardNode.get("diffType").asInt();
+                    this.surrounded = cardNode.get("surrounded").asInt();
                     this.stairs = cardNode.get("stairs").asInt();
                     this.description = cardNode.get("description").asText();
 
@@ -99,20 +105,25 @@ public class CG_Shape extends CommonGoalCard {
 
                 for (List<Position> singleShape : this.positions) {
 
-                    for (int i = 0; i < Shelf.ROWS ; i++) {
-                        for (int j = 0; j < Shelf.COLUMNS ; j++) {
+                    for (int i = 0; i < Shelf.ROWS && found != 1; i++) {
+                        for (int j = 0; j < Shelf.COLUMNS; j++) {
                             if (!shelf.getShelfsMatrix()[i][j].getState().equals(State.EMPTY) && shelf.getShelfsMatrix()[i][j].getTile().getTileType().equals(tile)) {
-                                if (shapeFinder(shelf, singleShape, i, j) == 1) {
-                                    addShape(allOccPos, singleShape, i, j);
+                                if ( shapeFinder(shelf, singleShape, i, j) && requirementsCheck(shelf, allOccPos, singleShape, i, j) ) {
+                                    found = 1;
+                                    break;
                                 }
                             }
                         }
                     }
+                    if (found == 1) {
+                        break;
+                    }
                 }
-
-                if (requirementsCheck(allOccPos) == 1) {
-                    found = 1;
+                if (found == 1) {
                     break;
+                }
+                if (this.diffType == 0) {
+                    allOccPos.clear();
                 }
             }
         }
@@ -125,6 +136,7 @@ public class CG_Shape extends CommonGoalCard {
         }
     }
 
+
     /**
      * Method shapeFinder is called upon all eligible couples inside the shelf.
      * It adds the coordinates inside singleShape to the ones of the couple which the method was called upon.
@@ -135,7 +147,7 @@ public class CG_Shape extends CommonGoalCard {
      * @param j - Current couple x coordinate.
      * @return - The method returns 1 if the shape is found, 0 otherwise.
      */
-    public int shapeFinder(Shelf shelf, List<Position> singleShape, int i, int j){
+    public boolean shapeFinder(Shelf shelf, List<Position> singleShape, int i, int j){
 
         for (Position position : singleShape) {
             int rowCheck = i + position.getY();
@@ -144,166 +156,190 @@ public class CG_Shape extends CommonGoalCard {
             if (rowCheck < Shelf.ROWS && columnCheck < Shelf.COLUMNS && rowCheck >= 0 && columnCheck >= 0 ) {
                 if (this.stairs != 1) {
                     if (shelf.getShelfsMatrix()[rowCheck][columnCheck].getState().equals(State.EMPTY) || !shelf.getShelfsMatrix()[i][j].getTile().getTileType().equals(shelf.getShelfsMatrix()[rowCheck][columnCheck].getTile().getTileType())) {
-                        return 0;
+                        return false;
                     }
                 } else {
                     if (rowCheck >= 1) {
                         if (shelf.getShelfsMatrix()[rowCheck][columnCheck].getState().equals(State.EMPTY) || !( shelf.getShelfsMatrix()[rowCheck - 1][columnCheck].getState().equals(State.EMPTY) )) {
-                            return 0;
+                            return false;
                         }
                     } else {
-                        return 0;
+                        return false;
                     }
                 }
             } else {
-                return 0;
+                return false;
             }
         }
-        return 1;
+        return true;
     }
 
     /**
-     * Method duplicateDeleter searches allOccPos and deletes all shape's occurrences that overlap inside the shelf.
-     * Let 'size' be the number of cells that a shape occupies inside the shelf.
-     * Starting to delete from the shapes that completely overlap with others (num of cells that overlap == size) it then
-     * decreases and keeps deleting the shapes that overlap with all cells but one (size - 1) and so on until it stops
-     * before size reaches 0. At the end allOccPos will contain only shapes that don't overlap inside the shelf.
-     * @param allOccPos - List of Lists of Positions where each list identifies a shape occurrence inside the shelf.
+     * Method surroundCheck checks if any of the neighbour tiles of the current shape occurrence inside the shelf
+     * share the same tile type with the shape occurrence.
+     * @param shelf - The shelf of the current player.
+     * @param dummy - A list of coordinates that represents the current shape's positions inside the shelf.
+     * @return - The method returns true if none of the neighbour tiles have the same tile type of the shape, false otherwise.
      */
-    public void duplicateDeleter(List<List<Position>> allOccPos) {
+    public boolean surroundCheck(Shelf shelf,List<Position> dummy){
 
-        int count;
-        List<Position> singleShapeToRemove = new ArrayList<>();
-        int size = this.positions.get(0).size();
+        for( Position position : dummy ){
 
-        while (size != 0) {
-            for (int i = 0; i < allOccPos.size(); i++) {
-                for (List<Position> singleShape1 : allOccPos) {
-                    count = 0;
-                    for (List<Position> singleShape2 : allOccPos) {
-                        if (!singleShape1.equals(singleShape2)) {
-                            for (Position position1 : singleShape1) {
-                                for (Position position2 : singleShape2) {
-                                    if (position1.getY() == position2.getY() && position1.getX() == position2.getX()) {
-                                        count++;
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                        if (count == size) {
-                            break;
-                        }
+            /*
+            if ( position.getY() - 1 >= 0 && position.getX() - 1 >= 0 && position.getY() - 1 < Shelf.ROWS && position.getX() - 1 < Shelf.COLUMNS ) {
+                if ( !shelf.getShelfsMatrix()[position.getY() - 1][position.getX() - 1].getState().equals(State.EMPTY) &&
+                        shelf.getShelfsMatrix()[dummy.get(0).getY()][dummy.get(0).getX()].getTile().getTileType()
+                                .equals(shelf.getShelfsMatrix()[position.getY() - 1][position.getX() - 1].getTile().getTileType())) {
+                    if ( !dummy.stream().anyMatch(o -> ( o.getX() == position.getX() - 1 ) && ( o.getY() == position.getY() - 1 )) ) {
+                        return false;
                     }
-                    if (count == size) {
-                        singleShapeToRemove = singleShape1;
-                        break;
-                    }
-                }
-                if ( !singleShapeToRemove.isEmpty() ) {
-                    allOccPos.remove(singleShapeToRemove);
-                    singleShapeToRemove.clear();
+
                 }
             }
-            size--;
+            */
+
+            if ( position.getY() - 1 >= 0 && position.getX() >= 0 && position.getY() - 1 < Shelf.ROWS && position.getX() < Shelf.COLUMNS ) {
+                if ( !shelf.getShelfsMatrix()[position.getY() - 1][position.getX()].getState().equals(State.EMPTY) &&
+                        shelf.getShelfsMatrix()[dummy.get(0).getY()][dummy.get(0).getX()].getTile().getTileType()
+                                .equals(shelf.getShelfsMatrix()[position.getY() - 1][position.getX()].getTile().getTileType())) {
+                    if (dummy.stream().noneMatch(o -> ( o.getX() == position.getX()) && ( o.getY() == position.getY() - 1 ))) {
+                        return false;
+                    }
+
+                }
+            }
+
+            /*
+            if ( position.getY() - 1 >= 0 && position.getX() + 1 >= 0 && position.getY() - 1 < Shelf.ROWS && position.getX() + 1 < Shelf.COLUMNS ) {
+                if ( !shelf.getShelfsMatrix()[position.getY() - 1][position.getX() + 1].getState().equals(State.EMPTY) &&
+                        shelf.getShelfsMatrix()[dummy.get(0).getY()][dummy.get(0).getX()].getTile().getTileType()
+                                .equals(shelf.getShelfsMatrix()[position.getY() - 1][position.getX() + 1].getTile().getTileType())) {
+                    if ( !dummy.stream().anyMatch(o -> ( o.getX() == position.getX() + 1 ) && ( o.getY() == position.getY() - 1 )) ) {
+                        return false;
+                    }
+
+                }
+            }
+             */
+
+            if ( position.getY() >= 0 && position.getX() + 1 >= 0 && position.getY() < Shelf.ROWS && position.getX() + 1 < Shelf.COLUMNS ) {
+                if ( !shelf.getShelfsMatrix()[position.getY()][position.getX() + 1].getState().equals(State.EMPTY) &&
+                        shelf.getShelfsMatrix()[dummy.get(0).getY()][dummy.get(0).getX()].getTile().getTileType()
+                                .equals(shelf.getShelfsMatrix()[position.getY()][position.getX() + 1].getTile().getTileType())) {
+                    if (dummy.stream().noneMatch(o -> ( o.getX() == position.getX() + 1 ) && ( o.getY() == position.getY() ))) {
+                        return false;
+                    }
+
+                }
+            }
+
+            /*
+            if ( position.getY() + 1 >= 0 && position.getX() + 1 >= 0 && position.getY() + 1 < Shelf.ROWS && position.getX() + 1 < Shelf.COLUMNS ) {
+                if ( !shelf.getShelfsMatrix()[position.getY() + 1][position.getX() + 1].getState().equals(State.EMPTY) &&
+                        shelf.getShelfsMatrix()[dummy.get(0).getY()][dummy.get(0).getX()].getTile().getTileType()
+                                    .equals(shelf.getShelfsMatrix()[position.getY() + 1][position.getX() + 1].getTile().getTileType())) {
+                    if ( !dummy.stream().anyMatch(o -> ( o.getX() == position.getX() + 1 ) && ( o.getY() == position.getY() + 1 )) ) {
+                        return false;
+                    }
+
+                }
+            }
+            */
+
+            if ( position.getY() + 1 >= 0 && position.getX() >= 0 && position.getY() + 1 < Shelf.ROWS && position.getX() < Shelf.COLUMNS ) {
+                if ( !shelf.getShelfsMatrix()[position.getY() + 1][position.getX()].getState().equals(State.EMPTY) &&
+                        shelf.getShelfsMatrix()[dummy.get(0).getY()][dummy.get(0).getX()].getTile().getTileType()
+                                .equals(shelf.getShelfsMatrix()[position.getY() + 1][position.getX()].getTile().getTileType())) {
+                    if (dummy.stream().noneMatch(o -> ( o.getX() == position.getX() ) && ( o.getY() == position.getY() + 1 ))) {
+                        return false;
+                    }
+
+                }
+            }
+
+            /*
+            if ( position.getY() + 1 >= 0 && position.getX() - 1 >= 0 && position.getY() + 1 < Shelf.ROWS && position.getX() - 1< Shelf.COLUMNS ) {
+                if ( !shelf.getShelfsMatrix()[position.getY() + 1][position.getX() - 1].getState().equals(State.EMPTY) &&
+                        shelf.getShelfsMatrix()[dummy.get(0).getY()][dummy.get(0).getX()].getTile().getTileType()
+                                    .equals(shelf.getShelfsMatrix()[position.getY() + 1][position.getX() - 1].getTile().getTileType())) {
+                    if ( !dummy.stream().anyMatch(o -> ( o.getX() == position.getX() - 1 ) && ( o.getY() == position.getY() + 1 )) ) {
+                        return false;
+                    }
+
+                }
+            }
+            */
+
+            if ( position.getY() >= 0 && position.getX() - 1 >= 0 && position.getY() < Shelf.ROWS && position.getX() - 1 < Shelf.COLUMNS ) {
+                if ( !shelf.getShelfsMatrix()[position.getY()][position.getX() - 1].getState().equals(State.EMPTY) &&
+                        shelf.getShelfsMatrix()[dummy.get(0).getY()][dummy.get(0).getX()].getTile().getTileType()
+                                .equals(shelf.getShelfsMatrix()[position.getY()][position.getX() - 1].getTile().getTileType())) {
+                    if (dummy.stream().noneMatch(o -> (( o.getX() == position.getX() - 1 ) && ( o.getY() == position.getY() )) )) {
+                        return false;
+                    }
+
+                }
+            }
+
         }
+
+        return true;
     }
 
     /**
-     * Method occAdjuster fixes miscounts. When a card allows a shape to be rotated it may happen that duplicateDeleter
-     * wrongfully deletes a shape occurrence inside allOccPos (this is due to the order in which shapes are saved
-     * inside allOccPos). After duplicateDeleter method occAdjuster compares the shapes inside allOccPosCopy
-     * to the ones in allOccPos, if a shape inside allOccPosCopy doesn't overlap with any shape occurrence in allOccPos
-     * than that shape can be readded to allOccPos.
-     * @param allOccPos - List of non overlapping shapes inside the shelf.
-     * @param allOccPosCopy - Copy of allOccPos before duplicateDeleter is called.
-     */
-    public void occAdjuster(List<List<Position>> allOccPos, List<List<Position>> allOccPosCopy ){
-
-        if ( this.positions.size() > 1 ) {
-            for (List<Position> singleShape1 : allOccPosCopy) {
-                int count = 0;
-                for (List<Position> singleShape2 : allOccPos) {
-                    for (Position position1 : singleShape1) {
-                        for (Position position2 : singleShape2) {
-                            if (position1.getY() == position2.getY() && position1.getX() == position2.getX()) {
-                                count++;
-                                break;
-                            }
-                        }
-                    }
-                }
-                if (count == 0) {
-                    allOccPos.add(singleShape1);
-                }
-            }
-        }
-
-    }
-
-    /**
-     * Method requirementsCheck sorts the logic. Most notably when diffType == 0 if the card requirements have not been
-     * met for the current tile type then allOccPoss is cleared. If diffType == 1 then allOccPos is preserved as all
-     * shape occurrences can have a different tile type from the others.
+     * Method requirementsCheck sorts the logic.
+     * @param shelf - The player's shelf.
      * @param allOccPos - List of Lists of Positions where each list identifies a shape occurrence inside the shelf.
+     * @param singleShape - A list of coordinates that identifies a shape.
+     * @param i - Current couple y coordinate.
+     * @param j - Current couple x coordinate.
      * @return - The method returns 1 if the card requirements have been met, 0 otherwise.
      */
-    public int requirementsCheck(List<List<Position>> allOccPos){
+    public boolean requirementsCheck(Shelf shelf, List<List<Position>> allOccPos, List<Position> singleShape, int i, int j) {
 
-        if (this.numOfOccurrences == 1) {
-            if (allOccPos.size() >= 1) {
-                return 1;
+        // To allow an easier check in method surroundCheck a dummy is created.
+        // This dummy saves the current shape's positions inside the shelf.
+        List<Position> dummy = saveShape(singleShape, i, j);
+
+        if ( this.numOfOccurrences == 1 ) {
+            if ( this.surrounded == 0 ) {
+                return true;
+            } else {
+                if ( surroundCheck(shelf, dummy) ){
+                    return true;
+                }
             }
+
         } else {
-            if (diffType == 0) {
-                List<List<Position>> allOccPosCopy = cloneList(allOccPos);
-                duplicateDeleter(allOccPos);
-                occAdjuster(allOccPos, allOccPosCopy);
-                if (allOccPos.size() == this.numOfOccurrences) {
-                    return 1;
-                } else {
-                    allOccPos.clear();
-                }
-            } else if (diffType == 1) {
-                List<List<Position>> allOccPosCopy = cloneList(allOccPos);
-                duplicateDeleter(allOccPos);
-                occAdjuster(allOccPos, allOccPosCopy);
-                if (allOccPos.size() == this.numOfOccurrences) {
-                    return 1;
-                }
+
+            if (this.surrounded == 1 && surroundCheck(shelf, dummy)) {
+                allOccPos.add(dummy);
+            } else if (this.surrounded == 0) {
+                allOccPos.add(dummy);
+            }
+
+            if (allOccPos.size() >= this.numOfOccurrences) {
+                return true;
             }
         }
-        return 0;
+
+        return false;
     }
 
     /**
-     * Method addShape is an auxiliary method used to add a shape occurrence in allOccPos.
+     * Method savShape is an auxiliary method used to save a shape occurrence.
      * The shape coordinates (positions) saved are the ones that the shape has inside the shelf.
-     * @param allOccPos - List of Lists of Positions where each list identifies a shape occurrence inside the shelf.
      * @param singleShape -  A list of coordinates (positions) that identifies a shape.
      * @param i - Current couple y coordinate.
      * @param j - Current couple x coordinate.
      */
-    public void addShape(List<List<Position>> allOccPos, List<Position> singleShape, int i, int j){
+    public List<Position> saveShape(List<Position> singleShape, int i, int j){
 
         List<Position> dummy = new ArrayList<>();
         for (Position position : singleShape) {
             dummy.add(new Position(position.getX() + j, position.getY() + i));
         }
-        allOccPos.add(dummy);
-    }
-
-    /**
-     * Method cloneList is an auxiliary method used to make a deep copy of allOccPos before duplicateDeleter is called.
-     * @param allOccPos - List of shapes that might be overlapping inside the shelf.
-     * @return - It returns a deep copy of allOccPos.
-     */
-    public List<List<Position>> cloneList(List<List<Position>> allOccPos){
-        List<List<Position>> allOccPosCopy = new ArrayList<>();
-        for( List<Position> sublist : allOccPos) {
-            allOccPosCopy.add(new ArrayList<>(sublist));
-        }
-        return allOccPosCopy;
+        return dummy;
     }
 
     public int getID() {
@@ -330,6 +366,9 @@ public class CG_Shape extends CommonGoalCard {
     }
     public String getDescription() {
         return description;
+    }
+    public int getSurrounded() {
+        return surrounded;
     }
 }
 

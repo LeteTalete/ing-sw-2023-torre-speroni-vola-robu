@@ -1,51 +1,158 @@
 package it.polimi.ingsw.server;
 
+import it.polimi.ingsw.Updates.ModelUpdate;
+import it.polimi.ingsw.network.IClientListener;
+import it.polimi.ingsw.notifications.CommonGoalGained;
+import it.polimi.ingsw.notifications.EndTurn;
+import it.polimi.ingsw.notifications.GameEnd;
+import it.polimi.ingsw.notifications.LastTurn;
+import it.polimi.ingsw.requests.Request;
+import it.polimi.ingsw.responses.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.ServerSocket;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.Scanner;
+import java.rmi.RemoteException;
 
 
 //this class handles the communication with the client associated to the assigned socket
-public class ServerSocketClientHandler implements Runnable
+public class ServerSocketClientHandler implements Runnable, IClientListener
 {
+    private static Logger fileLog = LogManager.getRootLogger();
     private Socket socket;
+    private ServerManager serverManager;
+    private ObjectInputStream in;
+    private ObjectOutputStream out;
+    private boolean stop;
 
     public ServerSocketClientHandler(Socket socket)
     {
         this.socket = socket;
     }
+    public ServerSocketClientHandler(Socket socket, ServerManager serverManager) throws IOException {
+        this.socket = socket;
+        this.serverManager = serverManager;
+        this.in = new ObjectInputStream(socket.getInputStream());
+        this.out = new ObjectOutputStream(socket.getOutputStream());
+    }
+
 
     public void run()
     {
-        try
-        {
-            Scanner in = new Scanner(socket.getInputStream());
-            PrintWriter out = new PrintWriter(socket.getOutputStream());
+       do{
+           try{
+               Request request = (Request) in.readObject();
+               //request.handleRequest(this, serverManager);
+           } catch (ClassNotFoundException | IOException e) {
+               fileLog.error(e.getMessage());
+               String token = serverManager.getTokenFromHandler(this);
+               serverManager.disconnect(token);
+               close();
+           }
+       }while(!stop);
+    }
 
-            //leggo e scrivo nella connessione finche non ricevo "quit" (DEBUG)
-            String debug = "q";
-            while(!debug.equals("quit"))
-            {
-                String line = in.nextLine();
-                System.out.println("Client sent: " + line);
-                if(line.equals("quit")) break;
-                else
-                {
-                    out.println("from Server: " + line);
-                    out.flush();
-                }
+    public void close()
+    {
+        stop = true;
+        if(out != null){
+            try{
+                out.close();
+            } catch (IOException e) {
+                fileLog.error(e.getMessage());
             }
-
-            //closing streams
-            in.close();
-            out.close();
-            socket.close();
         }
-        catch (IOException e)
-        {
-            System.err.println(e.getMessage());
+        if(in!=null){
+            try{
+                in.close();
+            } catch (IOException e) {
+                fileLog.error(e.getMessage());
+            }
+        }
+
+        try{
+            socket.close();
+        } catch (IOException e) {
+            fileLog.error(e.getMessage());
+        }
+    }
+
+//todo fix this switch case
+    @Override
+    public void sendNotification(Response response) throws RemoteException
+    {
+        respond(response);
+    }
+
+    @Override
+    public void sendUpdatedModel(ModelUpdate updated) throws RemoteException
+    {
+        //todo
+    }
+
+    @Override
+    public void notifySuccessfulRegistration(LoginResponse loginResponse) throws RemoteException{
+        respond(loginResponse);
+    }
+
+    @Override
+    public void setClientTurn() {
+        //todo
+    }
+
+    @Override
+    public void setGameOn() throws RemoteException {
+        //todo
+    }
+
+    @Override
+    public void changeTurn(String name) throws RemoteException {
+        //todo
+    }
+
+    @Override
+    public void showTextNotification(String waitingRoomCreated) {
+        //todo
+    }
+
+
+
+    @Override
+    public void notifyMoveOk(MoveOk moveOk) throws RemoteException {
+        respond(moveOk);
+    }
+
+    @Override
+    public void notifyEndTurn(EndTurn endTurn) throws RemoteException {
+        respond(endTurn);
+    }
+
+    @Override
+    public void notifyGameEnd(GameEnd gameEnd) throws RemoteException {
+        respond(gameEnd);
+    }
+
+    @Override
+    public void notifyLastTurn(LastTurn lastTurn) throws RemoteException {
+        respond(lastTurn);
+    }
+
+    @Override
+    public void notifyCommonGoalGained(CommonGoalGained commonGoalGained) throws RemoteException {
+        respond(commonGoalGained);
+    }
+
+    private void respond(Response response) {
+        try{
+            out.writeObject(response);
+            out.reset();
+        } catch (IOException e) {
+            if(!stop){
+                close();
+            }
         }
     }
 }

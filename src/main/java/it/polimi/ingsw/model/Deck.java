@@ -3,12 +3,13 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.model.enumerations.T_Type;
 import it.polimi.ingsw.model.enumerations.Tile;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.Stack;
 
 
 
-public class Deck{
+public class Deck implements Serializable {
 
     public static final int size = 132;
     public static final int tileKind = 6;
@@ -34,7 +35,6 @@ public class Deck{
     public void shuffle(){
         //this method shuffles the deck so tiles will be drawn randomly
         Collections.shuffle(tiles);
-        //TODO obliterare lete
    }
 
    public Tile draw()

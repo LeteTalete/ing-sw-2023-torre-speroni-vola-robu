@@ -25,6 +25,7 @@ public class ClientExecutable {
         //client executable will run an instance of ClientRMI or ClientSocket
         //accordingly to the preferred connection
         clientController = new ClientController(clientView);
+
     }
 
 
