@@ -99,7 +99,7 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
 
     @Override
     public void notifyChatMessage(ChatMessage chatMessage) throws RemoteException {
-        view.displayNotification("@" + chatMessage.getSender() + ": " + chatMessage.getMessage());
+        view.displayChatNotification("@" + chatMessage.getSender() + ": " + chatMessage.getMessage());
     }
 
 }

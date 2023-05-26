@@ -338,4 +338,8 @@ public class ClientTUI implements View{
     public void setServerIP(String serverIP) {
         ServerIP = serverIP;
     }
+
+    public void displayChatNotification(String s) {
+        //todo
+    }
 }
