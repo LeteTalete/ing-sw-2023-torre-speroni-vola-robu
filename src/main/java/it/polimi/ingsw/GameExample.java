@@ -97,7 +97,7 @@ public class GameExample {
             if ( endGame == 1 && game.getPreviousPlayer().getChair() ){
                 break;
             } else {
-                game.nextTurn();
+                game.nextTurn("lol");
             }
 
             System.out.println();

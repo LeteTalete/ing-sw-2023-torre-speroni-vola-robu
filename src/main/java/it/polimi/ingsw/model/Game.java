@@ -76,7 +76,10 @@ public class Game {
         }
         previousPlayer = currentPlayer;
         currentPlayer = players.get(next);
+
+        gameController.notifyAllPlayers(new ModelUpdate(this));
         gameController.notifyAllPlayers(new NotifyOnTurn(currentPlayer.getNickname()));
+
     }
 
     /** Method scoreBoard ranks in descending order the players by their scores and then prints them */
@@ -94,16 +97,19 @@ public class Game {
         generatePGC(players);
     }
 
-    public void endGame(){
-        //make one last round with the remaining players and then calculates score and shows the scoreboard
+    public void gameHasEnded(){
         calculateScore();
-        scoreBoard(players);
+        scoreBoard(players); // remember this scoreboard is printed only on the server
+        // TODO: needs a notifyAllplayers that says "The game has ended" and tells the clients to print the scoreboard
     }
 
     /** Method calculateScore calculates the score of each player at the end of the game */
     public void calculateScore(){
         for ( Player player : players ){
             player.setScore(player.getMyShelf().additionalPoints() + player.getGoalCard().scorePersonalGoalCard(player.getMyShelf()));
+            if (endGame.equals(player.getNickname())){
+                player.setScore(1);
+            }
         }
     }
 

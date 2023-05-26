@@ -53,7 +53,18 @@ public class ClientTUI implements View{
 
     public void displayUpdatedModel(ModelUpdate modelUpdate){
         this.gameView = new GameView(modelUpdate);
-        System.out.println("casa");
+
+        // TODO: this is obviously bad, needs a method that finds the correct view
+        if ( (gameView.getPlayersView().size() >= 2 ) && gameView.getPlayersView().get(0).getNickname().equals(master.getUsername()) ){
+            showBoardPlayer(gameView.getPlayersView().get(0), gameView.getGameBoardView());
+        } else if( (gameView.getPlayersView().size() >= 2 ) && gameView.getPlayersView().get(1).getNickname().equals(master.getUsername()) ) {
+            showBoardPlayer(gameView.getPlayersView().get(1), gameView.getGameBoardView());
+        } else if( (gameView.getPlayersView().size() >= 3 ) && gameView.getPlayersView().get(2).getNickname().equals(master.getUsername()) ) {
+            showBoardPlayer(gameView.getPlayersView().get(2), gameView.getGameBoardView());
+        } else if( (gameView.getPlayersView().size() == 4 ) && gameView.getPlayersView().get(3).getNickname().equals(master.getUsername()) ) {
+            showBoardPlayer(gameView.getPlayersView().get(3), gameView.getGameBoardView());
+        }
+
     }
 
     @Override
@@ -200,7 +211,6 @@ public class ClientTUI implements View{
         String livingRoomP = DrawTui.graphicsLivingRoom(livingRoomView, false, true);  //livingRoom of Player
         String shelfP = DrawTui.graphicsShelf(playerBoardView.getShelf(), true, true);
         DrawTui.printlnString(DrawTui.mergerString(livingRoomP, shelfP, true, false, false));
-        chooseTiles();
     }
     public void chooseTiles(){
         DrawTui.askWhat("Choose the tiles: [tiles rowcolumn(s)]");

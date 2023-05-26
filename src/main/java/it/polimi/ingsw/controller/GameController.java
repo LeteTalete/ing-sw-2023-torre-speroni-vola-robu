@@ -1,27 +1,22 @@
 package it.polimi.ingsw.controller;
 
-import it.polimi.ingsw.Exceptions.InvalidChoiceFormatException;
 import it.polimi.ingsw.Updates.ModelUpdate;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.model.board.LivingRoom;
 import it.polimi.ingsw.model.cards.CommonGoalCard;
-import it.polimi.ingsw.model.enumerations.Couple;
 import it.polimi.ingsw.model.enumerations.Tile;
 import it.polimi.ingsw.notifications.EndTurn;
-import it.polimi.ingsw.notifications.NotifyOnTurn;
 import it.polimi.ingsw.responses.GetOrderResponse;
 import it.polimi.ingsw.responses.GetTilesResponse;
 import it.polimi.ingsw.responses.MoveOk;
 import it.polimi.ingsw.responses.Response;
 import it.polimi.ingsw.server.ServerManager;
-import it.polimi.ingsw.server.StaticStrings;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class GameController {
     private Game model;
@@ -103,14 +98,56 @@ public class GameController {
         {
             tiles.add(model.getGameBoard().getCouple(this.choiceOfTiles.get(i)).getTile());
         }
-        model.getCurrentPlayer().getMyShelf().insertTiles(column,tiles);
-        model.getGameBoard().updateCouples(this.choiceOfTiles);
+        master.notifySinglePlayer(token, new MoveOk(true));
 
+        updateGame(token,column,tiles);
+    }
+
+    public void updateGame(String token, int column, ArrayList<Tile> tiles){
+
+        insertTilesInShelf(column, tiles);
+        checkCGCs();
+        updateBoardCouples();
+
+        nextTurn(token);
+    }
+
+    public void nextTurn(String token){
+
+        if ( model.getEndGame() != null && model.getEndGame().equals(model.getCurrentPlayer().getNickname()) && model.getPreviousPlayer().getChair() ){
+            model.gameHasEnded();
+        } else {
+            master.notifySinglePlayer(token, new EndTurn());
+            model.nextTurn();
+        }
+    }
+
+    public void checkCGCs(){
+
+        for (CommonGoalCard card : model.getCommonGoalCards() ) {
+            if ( card.checkConditions(model.getCurrentPlayer().getMyShelf()) == 1 ) {
+                int points = card.getPoints().pop();
+                model.getCurrentPlayer().setScore(points);
+                // TODO: needs a notifyAllPlayers that says "X player has received Y points from CGC ID"
+                // System.out.println(game.getCurrentPlayer().getNickname() + " has received " + points + " points from CGC " + card.getID());
+            }
+        }
+    }
+
+    public void insertTilesInShelf(int column, ArrayList<Tile> tiles){
+        model.getCurrentPlayer().getMyShelf().insertTiles(column,tiles);
+
+        if ( model.getCurrentPlayer().getMyShelf().checkShelfFull() ){
+            model.setEndGame(model.getCurrentPlayer().getNickname());
+        }
+    }
+    public void updateBoardCouples(){
+        model.getGameBoard().updateCouples(this.choiceOfTiles);
         this.choiceOfTiles = null;
 
-        master.notifySinglePlayer(token, new MoveOk(true));
-        master.notifySinglePlayer(token, new EndTurn());
-        nextTurn();
+        if ( model.getGameBoard().checkForRefill() ){
+            model.getGameBoard().refill();
+        }
     }
 
     public void generateCGC(){
@@ -119,9 +156,6 @@ public class GameController {
 
     public void startGame(){
         model.startGame();
-    }
-    public void nextTurn(){
-        model.nextTurn();
     }
     public void calculateScore(){
         model.calculateScore();
