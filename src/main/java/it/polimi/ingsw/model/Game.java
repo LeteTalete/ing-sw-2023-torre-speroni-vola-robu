@@ -5,6 +5,8 @@ import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.model.board.LivingRoom;
 import it.polimi.ingsw.model.cards.CommonGoalCard;
 import it.polimi.ingsw.model.enumerations.Tile;
+import it.polimi.ingsw.notifications.GameEnd;
+import it.polimi.ingsw.notifications.LastTurn;
 import it.polimi.ingsw.notifications.NotifyOnTurn;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,7 +23,7 @@ public class Game {
     private String endGame;
     private Player currentPlayer;
     private Player previousPlayer;
-    private String gameId;
+    private final String gameId;
     private static GameController gameController;
     private ArrayList<Player> players;
     private int numOfPlayers;
@@ -30,7 +32,7 @@ public class Game {
 
     public Game(String id, GameController gameC){
         this.gameId = id;
-        this.gameController = gameC;
+        gameController = gameC;
     }
 
     public void initialize() throws RemoteException {
@@ -47,7 +49,7 @@ public class Game {
         chooseFirstPlayer();
         //todo check why this notify breaks everything: is it the modelupdate or the notify
         gameController.notifyAllPlayers(new ModelUpdate(this));
-        //time to notify the players who's first
+        /**the game then chooses a first player and notifies everyone**/
         String firstPlayer = getCurrentPlayer().getNickname();
         gameController.notifyAllPlayers(new NotifyOnTurn(firstPlayer));
         gameController.askTilesToPlayer(getCurrentPlayer().getTokenId());
@@ -103,7 +105,8 @@ public class Game {
     public void gameHasEnded(){
         calculateScore();
         scoreBoard(players); // remember this scoreboard is printed only on the server
-        // TODO: needs a notifyAllplayers that says "The game has ended" and tells the clients to print the scoreboard
+        gameController.notifyAllPlayers(new ModelUpdate(this));
+        gameController.notifyAllPlayers(new GameEnd());
     }
 
     /** Method calculateScore calculates the score of each player at the end of the game */
@@ -170,6 +173,7 @@ public class Game {
         if ( endGame == null ) {
             if (this.getCurrentPlayer().getMyShelf().checkShelfFull()) {
                 setEndGame(this.getCurrentPlayer().getNickname());
+                gameController.notifyAllPlayers(new LastTurn(this.getCurrentPlayer().getNickname()));
             }
         }
     }

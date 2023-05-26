@@ -1,10 +1,7 @@
 package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.network.IClientListener;
-import it.polimi.ingsw.notifications.DisconnectionNotif;
-import it.polimi.ingsw.notifications.EndTurn;
-import it.polimi.ingsw.notifications.GameStart;
-import it.polimi.ingsw.notifications.NotifyOnTurn;
+import it.polimi.ingsw.notifications.*;
 import it.polimi.ingsw.responses.*;
 
 import java.rmi.RemoteException;
@@ -82,6 +79,33 @@ public class ResponseDecoder implements ResponseHandler {
     @Override
     public void handle(EndTurn endTurn) throws RemoteException {
         clientListener.notifyEndTurn(endTurn);
+        client.setReceivedResponse(false);
+        synchronized (client) {
+            client.notifyAll();
+        }
+    }
+
+    @Override
+    public void handle(GameEnd gameEnd) throws RemoteException {
+        clientListener.notifyGameEnd(gameEnd);
+        client.setReceivedResponse(false);
+        synchronized (client) {
+            client.notifyAll();
+        }
+    }
+
+    @Override
+    public void handle(LastTurn lastTurn) throws RemoteException {
+        clientListener.notifyLastTurn(lastTurn);
+        client.setReceivedResponse(false);
+        synchronized (client) {
+            client.notifyAll();
+        }
+    }
+
+    @Override
+    public void handle(CommonGoalGained commonGoalGained) throws RemoteException {
+        clientListener.notifyCommonGoalGained(commonGoalGained);
         client.setReceivedResponse(false);
         synchronized (client) {
             client.notifyAll();

@@ -145,7 +145,13 @@ public class CommandParsing {
     }
 
     private void executeRearrangeCommand() {
-        //todo check formatting of the request and send a notif to the view if formatting is wrong
+        //todo fix this
+        for(String s : multipleChoiceNumber){
+            if(!s.equals("1") || !s.equals("2") || !s.equals("3")){
+                master.errorFormat();
+                return;
+            }
+        }
         master.rearrangeTiles(multipleChoiceNumber);
     }
 
@@ -198,6 +204,8 @@ public class CommandParsing {
     }
     public boolean checkTilesFormat(String s)
     {
+        //todo adapt this to a string of a single coordinate
+
         //user input should be like this: "02" or "38 45" or "54 11 64"
         //from 1 to 3 couples of int separated by a space
         //there cannot be duplicated couples

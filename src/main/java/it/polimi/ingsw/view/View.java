@@ -56,4 +56,8 @@ public interface View {
     void chooseColumn();
 
     void chooseOrder();
+
+    void nextAction();
+
+    void showEndResult();
 }

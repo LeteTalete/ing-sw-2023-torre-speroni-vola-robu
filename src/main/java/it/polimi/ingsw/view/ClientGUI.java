@@ -152,4 +152,14 @@ public class ClientGUI implements View {
         //todo
     }
 
+    @Override
+    public void nextAction() {
+
+    }
+
+    @Override
+    public void showEndResult() {
+        //todo
+    }
+
 }

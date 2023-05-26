@@ -314,6 +314,16 @@ public class ClientTUI implements View{
         writeText("Choose order: [order 'number(s)']");
     }
 
+    @Override
+    public void nextAction() {
+        master.nextAction();
+    }
+
+    @Override
+    public void showEndResult() {
+        //todo
+    }
+
     public String getServerIP() {
         return ServerIP;
     }

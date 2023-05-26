@@ -75,7 +75,7 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
 
     @Override
     public void close() {
-        System.out.println(System.getProperty("line.separator") + "Quit.");
+        fileLog.info(System.getProperty("line.separator") + "Closing RMI connection..." );
         System.exit(0);
     }
 

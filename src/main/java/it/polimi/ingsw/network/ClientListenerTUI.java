@@ -2,7 +2,10 @@ package it.polimi.ingsw.network;
 
 import it.polimi.ingsw.Updates.ModelUpdate;
 import it.polimi.ingsw.client.ResponseDecoder;
+import it.polimi.ingsw.notifications.CommonGoalGained;
 import it.polimi.ingsw.notifications.EndTurn;
+import it.polimi.ingsw.notifications.GameEnd;
+import it.polimi.ingsw.notifications.LastTurn;
 import it.polimi.ingsw.responses.*;
 import it.polimi.ingsw.server.StaticStrings;
 import it.polimi.ingsw.view.ClientTUI;
@@ -18,27 +21,10 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
 
     //this will become a bunch of sendNotification methods that will resolve different types of messages
     //that way we can implement socket connections
-    //we should probably differentiate by looking at the staticstrings: they help the client and server choose on
-    //what is to be done after an action
-    //todo fix this asap: instead of a list of if clauses, we can display the notification and have the server call the right
-    //method immediately
+
     @Override
     public void sendNotification(Response response) throws RemoteException {
         view.detangleMessage(response);
-        /*if(message.equals(StaticStrings.END_TURN)){
-            view.setMyTurn(false);
-            view.displayNotification(message);
-        }
-        if(message.equals(StaticStrings.OK)){
-            view.rearrangeTiles();
-        }
-        if(message.equals(StaticStrings.COLUMN)){
-            view.chooseColumn();
-        }
-        else{
-            view.displayNotification(message);
-        }
-        */
     }
 
     @Override
@@ -79,14 +65,11 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
         view.displayNotification(waitingRoomCreated);
     }
 
-    @Override
-    public void notifyTilesResponse(GetTilesResponse getTilesResponse) throws RemoteException {
-
-    }
 
     @Override
     public void notifyMoveOk(MoveOk moveOk) throws RemoteException {
         if(moveOk.isMoveOk()){
+            view.nextAction();
             view.displayNotification("Move successful!");
         }
         else{
@@ -98,6 +81,23 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
     public void notifyEndTurn(EndTurn endTurn) throws RemoteException {
         view.setMyTurn(false);
         view.displayNotification("Turn ended.");
+    }
+
+    @Override
+    public void notifyGameEnd(GameEnd gameEnd) throws RemoteException {
+        view.setMyTurn(false);
+        view.setGameOn(false);
+        view.showEndResult();
+    }
+
+    @Override
+    public void notifyLastTurn(LastTurn lastTurn) throws RemoteException {
+        view.displayNotification(lastTurn.getName() + "completed their Shelfie. Last round starts now!");
+    }
+
+    @Override
+    public void notifyCommonGoalGained(CommonGoalGained commonGoalGained) throws RemoteException {
+        view.displayNotification(commonGoalGained.getName() + " gained Common Goal Card " + commonGoalGained.getCard() + "!");
     }
 
 }

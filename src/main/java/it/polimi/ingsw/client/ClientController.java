@@ -222,19 +222,25 @@ public class ClientController {
     public void passTiles(ArrayList<Position> tilesChosen) {
         if(tilesChosen.size()==1){
             myTurn = 3;
-            currentView.chooseColumn();
         }
         else{
             myTurn = 2;
-            currentView.displayNotification("You can now re-arrange the tiles or choose the column. Here are the commands:");
-            //todo it should show commands format, not show the request
-            currentView.chooseColumn();
-            currentView.chooseOrder();
-            //todo shows commands for these two actions
         }
     }
 
     public void errorFormat() {
         currentView.printError("Wrong format, please try again or type 'help' for a list of commands");
+    }
+
+    public void nextAction() {
+        if(myTurn == 3){
+            currentView.chooseColumn();
+        }
+        else if(myTurn == 2){
+            currentView.displayNotification("You can now re-arrange the tiles or choose the column. Here are the commands:");
+            //todo it should show commands format, not show the request
+            currentView.chooseColumn();
+            currentView.chooseOrder();
+        }
     }
 }

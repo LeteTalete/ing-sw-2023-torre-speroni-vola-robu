@@ -7,6 +7,7 @@ import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.model.board.LivingRoom;
 import it.polimi.ingsw.model.cards.CommonGoalCard;
 import it.polimi.ingsw.model.enumerations.Tile;
+import it.polimi.ingsw.notifications.CommonGoalGained;
 import it.polimi.ingsw.notifications.EndTurn;
 import it.polimi.ingsw.responses.GetOrderResponse;
 import it.polimi.ingsw.responses.GetTilesResponse;
@@ -71,8 +72,8 @@ public class GameController {
         }
         if (model.getCurrentPlayer().getMyShelf().checkEnoughSpace(choice) && this.getGameBoard().checkPlayerChoice(choice)) {
             this.choiceOfTiles = choice;
-            master.notifySinglePlayer(token, new MoveOk(true));
             master.notifySinglePlayer(token, new GetTilesResponse(choice));
+            master.notifySinglePlayer(token, new MoveOk(true));
         }
         else{
             master.notifySinglePlayer(token, new MoveOk(false));
@@ -116,7 +117,6 @@ public class GameController {
     }
 
     public void nextTurn(String token){
-
         if ( model.getEndGame() != null && model.getEndGame().equals(model.getCurrentPlayer().getNickname()) && model.getPreviousPlayer().getChair() ){
             model.gameHasEnded();
         } else {
@@ -131,8 +131,8 @@ public class GameController {
             if ( card.checkConditions(model.getCurrentPlayer().getMyShelf()) == 1 ) {
                 int points = card.getPoints().pop();
                 model.getCurrentPlayer().setScore(points);
-                // TODO: needs a notifyAllPlayers that says "X player has received Y points from CGC ID"
-                // System.out.println(game.getCurrentPlayer().getNickname() + " has received " + points + " points from CGC " + card.getID());
+                master.notifyAllPlayers(gameId, new CommonGoalGained(model.getCurrentPlayer().getNickname(), card.getID()));
+                fileLog.info(model.getCurrentPlayer().getNickname() + " has received " + points + " points from CGC " + card.getID());
             }
         }
     }
