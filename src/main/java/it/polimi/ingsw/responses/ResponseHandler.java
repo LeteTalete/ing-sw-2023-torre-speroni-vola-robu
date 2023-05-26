@@ -27,4 +27,8 @@ public interface ResponseHandler {
     void handle(CommonGoalGained commonGoalGained) throws RemoteException;
 
     void handle(ChatMessage chatMessage) throws RemoteException;
+
+    void handle(TextNotification textNotification) throws RemoteException;
+
+    void handle(ModelUpdateNotification modelUpdateNotification) throws RemoteException;
 }

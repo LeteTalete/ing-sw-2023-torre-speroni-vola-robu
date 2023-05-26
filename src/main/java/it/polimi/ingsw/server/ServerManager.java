@@ -219,9 +219,5 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
         }
         return "error!";
     }
-
-    public void askTilesToPlayer(String tokenId) throws RemoteException {
-        ConnectionManager.get().getLocalView(tokenId).setClientTurn();
-    }
     //TODO closeGame(gameId)
 }

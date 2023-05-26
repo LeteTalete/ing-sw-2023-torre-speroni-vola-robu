@@ -34,6 +34,7 @@ public class ServerSocketClientHandler implements Runnable, IClientListener
         this.serverManager = serverManager;
         this.in = new ObjectInputStream(socket.getInputStream());
         this.out = new ObjectOutputStream(socket.getOutputStream());
+        this.stop = false;
     }
 
 
@@ -42,7 +43,7 @@ public class ServerSocketClientHandler implements Runnable, IClientListener
        do{
            try{
                Request request = (Request) in.readObject();
-               //request.handleRequest(this, serverManager);
+               request.handleRequest(this, serverManager);
            } catch (ClassNotFoundException | IOException e) {
                fileLog.error(e.getMessage());
                String token = serverManager.getTokenFromHandler(this);
@@ -87,7 +88,7 @@ public class ServerSocketClientHandler implements Runnable, IClientListener
     @Override
     public void sendUpdatedModel(ModelUpdate updated) throws RemoteException
     {
-        //todo
+        respond(new ModelUpdateNotification(updated));
     }
 
     @Override
@@ -96,23 +97,18 @@ public class ServerSocketClientHandler implements Runnable, IClientListener
     }
 
     @Override
-    public void setClientTurn() {
-        //todo
-    }
-
-    @Override
     public void setGameOn() throws RemoteException {
-        //todo
+        //only for rmi?
     }
 
     @Override
     public void changeTurn(String name) throws RemoteException {
-        //todo
+        respond(new NotifyOnTurn(name));
     }
 
     @Override
     public void showTextNotification(String waitingRoomCreated) {
-        //todo
+        respond(new TextNotification(waitingRoomCreated));
     }
 
 
@@ -145,6 +141,11 @@ public class ServerSocketClientHandler implements Runnable, IClientListener
     @Override
     public void notifyChatMessage(ChatMessage chatMessage) throws RemoteException {
         respond(chatMessage);
+    }
+
+    @Override
+    public void updateModel(ModelUpdateNotification modelUpdateNotification) throws RemoteException {
+        //idk
     }
 
     private void respond(Response response) {

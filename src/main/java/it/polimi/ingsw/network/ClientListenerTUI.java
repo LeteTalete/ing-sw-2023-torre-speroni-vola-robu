@@ -42,11 +42,6 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
     }
 
     @Override
-    public void setClientTurn() throws RemoteException{
-        view.setMyTurn(true);
-    }
-
-    @Override
     public void setGameOn() throws RemoteException {
         view.writeText(StaticStrings.GAME_START);
         view.setGameOn(true);
@@ -100,6 +95,11 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
     @Override
     public void notifyChatMessage(ChatMessage chatMessage) throws RemoteException {
         view.displayChatNotification("@" + chatMessage.getSender() + ": " + chatMessage.getMessage());
+    }
+
+    @Override
+    public void updateModel(ModelUpdateNotification modelUpdateNotification) throws RemoteException {
+        view.displayUpdatedModel(modelUpdateNotification.getUpdate());
     }
 
 }

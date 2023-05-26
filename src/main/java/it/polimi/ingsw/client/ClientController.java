@@ -18,7 +18,7 @@ import java.util.List;
 
 public class ClientController {
     private static Logger fileLog = LogManager.getRootLogger();
-
+    private static String HOSTNAME = "ingsw.server.hostname";
     private View currentView;
     private boolean gameOn;
     private int myTurn;
@@ -50,10 +50,10 @@ public class ClientController {
         //String SIP = currentView.getServerIP();
         String connectionStatus = "Connecting...";
         if(currentView.getConnectionType().equals("RMI")) {
-            connectionStatus = setupRMI(null);
+            connectionStatus = setupRMI(System.getProperty(HOSTNAME));
         }
         else if(currentView.getConnectionType().equals("SOCKET")){
-            connectionStatus = setupSocket(null);
+            connectionStatus = setupSocket(System.getProperty(HOSTNAME));
         }
         else if(connectionStatus!=null){
             this.currentView.displayNotification(connectionStatus);
@@ -63,7 +63,7 @@ public class ClientController {
     public String setupSocket(String serverIP) {
         try {
             //you have to pass 'this' to the client socket
-            ClientSocket clientSocket = new ClientSocket("127.0.0.1", 1420, this);
+            ClientSocket clientSocket = new ClientSocket(serverIP, 8899, this);
             this.currentConnection = clientSocket;
             clientSocket.setViewClient(currentView);
             this.responseDecoder = new ResponseDecoder(listenerClient, currentConnection);
@@ -80,7 +80,7 @@ public class ClientController {
     private String setupRMI(String serverIP) {
         try{
             //TODO put serverip in host field of locateregisty
-            this.registry = LocateRegistry.getRegistry(8089);
+            this.registry = LocateRegistry.getRegistry(serverIP,8089);
             this.remoteController = (IRemoteController) registry.lookup("Login");
             ClientRMI clientRMI = new ClientRMI(this, remoteController);
             this.currentConnection = clientRMI;
@@ -156,6 +156,7 @@ public class ClientController {
     }
 
     public void numberOfPlayers(int number) {
+        fileLog.debug("number of players: " + number);
         if(number < 2 || number > 4){
             currentView.printError("Wrong number of players, please type 'help' for a list of commands");
         }

@@ -121,6 +121,24 @@ public class ResponseDecoder implements ResponseHandler {
         }
     }
 
+    @Override
+    public void handle(TextNotification textNotification) throws RemoteException {
+        clientListener.showTextNotification(textNotification.getMessage());
+        client.setReceivedResponse(false);
+        synchronized (client) {
+            client.notifyAll();
+        }
+    }
+
+    @Override
+    public void handle(ModelUpdateNotification modelUpdateNotification) throws RemoteException {
+        clientListener.updateModel(modelUpdateNotification);
+        client.setReceivedResponse(false);
+        synchronized (client) {
+            client.notifyAll();
+        }
+    }
+
 
     public void handle(Response response) {
 

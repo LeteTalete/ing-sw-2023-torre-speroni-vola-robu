@@ -16,8 +16,6 @@ public interface IClientListener extends Remote, Serializable {
 
     void notifySuccessfulRegistration(LoginResponse response) throws RemoteException;
 
-    void setClientTurn() throws RemoteException;
-
     void setGameOn() throws RemoteException;
 
     void changeTurn(String currentPlayer) throws RemoteException;
@@ -35,4 +33,6 @@ public interface IClientListener extends Remote, Serializable {
     void notifyCommonGoalGained(CommonGoalGained commonGoalGained) throws RemoteException;
 
     void notifyChatMessage(ChatMessage chatMessage) throws RemoteException;
+
+    void updateModel(ModelUpdateNotification modelUpdateNotification) throws RemoteException;
 }

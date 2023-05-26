@@ -7,8 +7,8 @@ public class LoginResponse implements Response {
     public final String name;
     public final boolean b;
     public final boolean first;
-    public LoginResponse(String username, boolean alreadyExists, String tokenGiven, boolean f){
-        this.b = alreadyExists;
+    public LoginResponse(String username, boolean isValid, String tokenGiven, boolean f){
+        this.b = isValid;
         this.token = tokenGiven;
         this.name = username;
         this.first = f;

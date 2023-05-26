@@ -29,14 +29,15 @@ public class ClientSocket implements IClientConnection
     private View viewClient;
     private Socket socket;
     private ObjectInputStream socketIn;
-    private ObjectOutputStream socketOut;
+    private  ObjectOutputStream socketOut;
     private Scanner stdin;
+    private boolean amIconnected;
     private Thread receiving;
     private ResponseDecoder responseDecoder;
     private boolean notReceivingResponse;
 
 
-    public ClientSocket(String ip, int port, ClientController cController)
+    public ClientSocket(String ip, int port, ClientController cController) throws IOException
     {
         this.ip = ip;
         this.port = port;
@@ -51,8 +52,8 @@ public class ClientSocket implements IClientConnection
             socket = new Socket(ip, port);
             this.socketOut = new ObjectOutputStream(socket.getOutputStream());
             this.socketIn = new ObjectInputStream(socket.getInputStream());
+            amIconnected= true;
             startReceiving();
-            //this.stdin = new Scanner(System.in);
         }
         catch(IOException e)
         {
@@ -88,7 +89,7 @@ public class ClientSocket implements IClientConnection
             //if the serialization went wrong or if the class doesn't exist
             fileLog.error(e.getMessage());
         }catch (IOException e){
-            fileLog.error(e.getMessage());
+            fileLog.error(e);
         }
         return null;
     }
@@ -175,9 +176,11 @@ public class ClientSocket implements IClientConnection
 
     @Override
     public synchronized void numberOfPlayers(String name, String tokenA, int number) {
+        fileLog.debug("numberOfPlayers");
         setUserToken(tokenA);
         setName(name);
         setReceivedResponse(true);
+        fileLog.debug("Sending request for waiting room");
         request(new WaitingRoomRequest(tokenA, name, number));
         while(notReceivingResponse){
             try{
@@ -222,7 +225,7 @@ public class ClientSocket implements IClientConnection
 
     @Override
     public boolean isConnected() {
-        return false;
+        return amIconnected;
     }
 
     @Override

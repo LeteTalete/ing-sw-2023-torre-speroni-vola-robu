@@ -71,6 +71,7 @@ public class CommandParsing {
             case (NUMBER) -> {
                 //if choosing tiles
                 parseInteger(args);
+                fileLog.debug("choice number is " + choiceNumber);
                 master.numberOfPlayers(choiceNumber);
             }
             case (REARRANGE) -> {
@@ -99,17 +100,23 @@ public class CommandParsing {
                 //if choosing tiles
                 executeShelfCommand();
             }
-            case (CHAT) -> {
-                if (!gameIsOn) {
-                    master.gameNotStarted();
-                    break;
-                }
-                parseUsername(args);
-                args.remove(0);
-                parseChat(args);
-            }
             case (HELP) -> master.printCommands();
-            default -> master.wrongCommand();
+            default -> {
+                if(command.startsWith("@")) {
+                    if (!gameIsOn) {
+                        master.gameNotStarted();
+                        break;
+                    }
+                    parseUsername(args);
+                    args.remove(0);
+                    parseChat(args);
+                }
+                else{
+                    master.wrongCommand();
+                }
+
+            }
+
         }
     }
 

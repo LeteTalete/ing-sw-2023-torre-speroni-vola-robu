@@ -215,15 +215,6 @@ public class GameController {
         this.choiceOfTiles = model.getChoiceOfTiles(choiceOfTiles);
     }
 
-
-    public void askTilesToPlayer(String tokenId) {
-        try {
-            master.askTilesToPlayer(tokenId);
-        } catch (RemoteException e) {
-            fileLog.error(e.getMessage());
-        }
-    }
-
     public void notifyAllPlayers(ModelUpdate modelUpdate) {
         master.notifyAllPlayers(gameId, modelUpdate);
     }
