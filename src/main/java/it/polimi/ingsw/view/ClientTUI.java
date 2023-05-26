@@ -52,22 +52,12 @@ public class ClientTUI implements View{
     }
 
     public void displayUpdatedModel(ModelUpdate modelUpdate){
+        //todo check this
         this.gameView = new GameView(modelUpdate);
+        PlayerView mine = gameView.getPlayersView().stream()
+                .filter(p -> p.getNickname().equals(master.getUsername())).findFirst().orElse(null);
+        showBoardPlayer(mine, gameView.getGameBoardView());
 
-        // TODO: this is obviously bad, needs a method that finds the correct view
-        if ( (gameView.getPlayersView().size() >= 2 ) && gameView.getPlayersView().get(0).getNickname().equals(master.getUsername()) ){
-            showBoardPlayer(gameView.getPlayersView().get(0), gameView.getGameBoardView());
-            System.out.println(DrawTui.setStringPCG(gameView.getPlayersView().get(0).getPersonalGoalCard().getPositionTilePC(), 5, true, false));
-        } else if( (gameView.getPlayersView().size() >= 2 ) && gameView.getPlayersView().get(1).getNickname().equals(master.getUsername()) ) {
-            showBoardPlayer(gameView.getPlayersView().get(1), gameView.getGameBoardView());
-            System.out.println(DrawTui.setStringPCG(gameView.getPlayersView().get(1).getPersonalGoalCard().getPositionTilePC(), 5, true, false));
-        } else if( (gameView.getPlayersView().size() >= 3 ) && gameView.getPlayersView().get(2).getNickname().equals(master.getUsername()) ) {
-            showBoardPlayer(gameView.getPlayersView().get(2), gameView.getGameBoardView());
-            System.out.println(DrawTui.setStringPCG(gameView.getPlayersView().get(2).getPersonalGoalCard().getPositionTilePC(), 5, true, false));
-        } else if( (gameView.getPlayersView().size() == 4 ) && gameView.getPlayersView().get(3).getNickname().equals(master.getUsername()) ) {
-            showBoardPlayer(gameView.getPlayersView().get(3), gameView.getGameBoardView());
-            System.out.println(DrawTui.setStringPCG(gameView.getPlayersView().get(3).getPersonalGoalCard().getPositionTilePC(), 5, true, false));
-        }
         if ( gameView.getEndGame() == null ) {
             System.out.println("EndGame token still available." + "\n");
         } else {
