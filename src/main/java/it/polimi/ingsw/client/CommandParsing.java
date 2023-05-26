@@ -145,7 +145,6 @@ public class CommandParsing {
     }
 
     private void executeRearrangeCommand() {
-        //todo fix this
         for(String s : multipleChoiceNumber){
             if(!s.equals("1") && !s.equals("2") && !s.equals("3")){
                 master.errorFormat();
