@@ -3,6 +3,8 @@ package it.polimi.ingsw.client;
 import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.network.IRemoteController;
 import it.polimi.ingsw.view.View;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.Serializable;
 import java.rmi.Remote;
@@ -12,6 +14,7 @@ import java.util.List;
 
 
 public class ClientRMI implements IClientConnection, Remote, Serializable {
+    private static Logger fileLog = LogManager.getRootLogger();
     private String username;
     private ClientController master;
     private final IRemoteController remoteController;
@@ -32,7 +35,7 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
             remoteController.login(name, viewClient.getListener());
 
         } catch (RemoteException e) {
-            viewClient.printError(e.getMessage());
+            fileLog.error(e.getMessage());
         }
     }
 
@@ -51,6 +54,7 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
         try {
             remoteController.createWaitingRoom(name, userToken, number);
         } catch (RemoteException e) {
+            fileLog.error(e.getMessage());
             throw new RuntimeException(e);
         }
     }
@@ -60,8 +64,7 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
         try {
             remoteController.selectColumn(userToken, column);
         } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
+            fileLog.error(e.getMessage());        }
     }
 
 
@@ -91,7 +94,7 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
         try {
             remoteController.rearrangeTiles(userToken, multipleChoiceNumber);
         } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            fileLog.error(e.getMessage());
         }
     }
 
@@ -115,7 +118,7 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
         try {
             remoteController.pickedTiles(token, tilesChosen);
         } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            fileLog.error(e.getMessage());
         }
     }
 

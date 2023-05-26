@@ -5,6 +5,8 @@ import it.polimi.ingsw.network.IClientListener;
 import it.polimi.ingsw.notifications.EndTurn;
 import it.polimi.ingsw.requests.Request;
 import it.polimi.ingsw.responses.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -16,6 +18,7 @@ import java.rmi.RemoteException;
 //this class handles the communication with the client associated to the assigned socket
 public class ServerSocketClientHandler implements Runnable, IClientListener
 {
+    private static Logger fileLog = LogManager.getRootLogger();
     private Socket socket;
     private ServerManager serverManager;
     private ObjectInputStream in;
@@ -41,6 +44,7 @@ public class ServerSocketClientHandler implements Runnable, IClientListener
                Request request = (Request) in.readObject();
                //request.handleRequest(this, serverManager);
            } catch (ClassNotFoundException | IOException e) {
+               fileLog.error(e.getMessage());
                String token = serverManager.getTokenFromHandler(this);
                serverManager.disconnect(token);
                close();
@@ -55,21 +59,21 @@ public class ServerSocketClientHandler implements Runnable, IClientListener
             try{
                 out.close();
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                fileLog.error(e.getMessage());
             }
         }
         if(in!=null){
             try{
                 in.close();
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                fileLog.error(e.getMessage());
             }
         }
 
         try{
             socket.close();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            fileLog.error(e.getMessage());
         }
     }
 

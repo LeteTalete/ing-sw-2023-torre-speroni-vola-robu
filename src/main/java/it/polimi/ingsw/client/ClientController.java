@@ -6,6 +6,8 @@ import it.polimi.ingsw.network.IRemoteController;
 import it.polimi.ingsw.responses.Response;
 import it.polimi.ingsw.server.StaticStrings;
 import it.polimi.ingsw.view.View;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -14,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClientController {
+    private static Logger fileLog = LogManager.getRootLogger();
+
     private View currentView;
     private boolean gameOn;
     private int myTurn;
@@ -55,12 +59,10 @@ public class ClientController {
         }
     }
 
-    public String setupSocket(String serverIP)
-    {
-        try
-        {
+    public String setupSocket(String serverIP) {
+        try {
             //you have to pass 'this' to the client socket
-            ClientSocket clientSocket = new ClientSocket("127.0.0.1",1420, this);
+            ClientSocket clientSocket = new ClientSocket("127.0.0.1", 1420, this);
             this.currentConnection = clientSocket;
             clientSocket.setViewClient(currentView);
             this.responseDecoder = new ResponseDecoder(listenerClient, currentConnection);
@@ -68,12 +70,9 @@ public class ClientController {
             clientSocket.startClient();
 
             //deleted the if clause to check the login response, since the server should already notify the users about it
+        } catch (Exception e) {
+            fileLog.error(e.getMessage());
         }
-        catch (Exception e)
-        {
-            return e.toString();
-        }
-
         return null;
     }
 
@@ -91,7 +90,7 @@ public class ClientController {
             userLogin();
 
         }catch(Exception e){
-            return e.toString();
+            fileLog.error(e.getMessage());
         }
         return null;
     }
@@ -233,5 +232,9 @@ public class ClientController {
             currentView.chooseOrder();
             //todo shows commands for these two actions
         }
+    }
+
+    public void errorFormat() {
+        currentView.printError("Wrong format, please try again or type 'help' for a list of commands");
     }
 }

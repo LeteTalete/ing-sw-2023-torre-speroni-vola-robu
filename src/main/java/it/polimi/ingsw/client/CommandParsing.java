@@ -1,10 +1,14 @@
 package it.polimi.ingsw.client;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class CommandParsing {
+    private static Logger fileLog = LogManager.getRootLogger();
     private static final String TILES = "tiles";
     private static final String HELP = "help";
     private static final String CHAT = "@";
@@ -117,8 +121,7 @@ public class CommandParsing {
 
     private void executeColumnCommand() {
         if(choiceNumber > 5 || choiceNumber <0 ){
-            //todo needs to be a notif to the view and to ask again for column number
-            System.out.println("Wrong format");
+            master.errorFormat();
         }
         else{
             master.chooseColumn(choiceNumber);
@@ -127,8 +130,7 @@ public class CommandParsing {
 
     private void parseUsername(List<String> args) {
         if(args.size()!=1){
-            //todo needs to be a notif to the view
-            System.out.println("error in parsing, try again?");
+            master.errorFormat();
             return;
         }
         try {
@@ -138,7 +140,7 @@ public class CommandParsing {
             //ack("ERROR: Wrong parameter");
             //clientController.getViewClient().denyMove();
             //choiceNumber = -1;
-            System.out.println("error: exception?");
+            fileLog.error(e.getMessage());
         }
     }
 
@@ -157,7 +159,7 @@ public class CommandParsing {
             //ack(">>>>>> ERROR: Insert one parameter");
             //clientController.getViewClient().denyMove();
             //choiceNumber = -1;
-            System.out.println("error in parsing?");
+            master.errorFormat();
             return;
         }
         try {
@@ -166,7 +168,7 @@ public class CommandParsing {
             //ack("ERROR: Wrong parameter");
             //clientController.getViewClient().denyMove();
             //choiceNumber = -1;
-            System.out.println("error: exception?");
+            fileLog.error(e.getMessage());
         }
     }
 
@@ -174,7 +176,7 @@ public class CommandParsing {
         try{
             multipleChoiceNumber = args;
         }catch(NumberFormatException e) {
-            System.out.println("error: exception?");
+            fileLog.error(e.getMessage());
         }
     }
 

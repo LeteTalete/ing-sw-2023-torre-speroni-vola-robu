@@ -9,12 +9,16 @@ import it.polimi.ingsw.notifications.DisconnectionNotif;
 import it.polimi.ingsw.notifications.GameStart;
 import it.polimi.ingsw.responses.LoginResponse;
 import it.polimi.ingsw.responses.Response;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 
 public class ServerManager extends UnicastRemoteObject implements IRemoteController {
+    private static Logger fileLog = LogManager.getRootLogger();
+
     private Map<String, GameController> activeGames;
     private WaitingRoom waitingRoom;
     //network manager: to instantiate RMI and socket
@@ -30,13 +34,13 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
 
     public synchronized String putInWaitingRoom(String name, String token) throws RemoteException {
         if(waitingRoom==null){
-            System.out.println("i will create a new waiting room for you");
+            fileLog.info("No waiting room found... I'm going to create one");
             return null;
         }
         else{
             String enoughPLayers = waitingRoom.addPlayerToWaitingRoom(name, token);
             activeUsers.put(token,waitingRoom.getId());
-            System.out.println("Added user "+ token + " to waiting room "+waitingRoom.getId()+" successfully!");
+            fileLog.info("Added user "+ token + " to waiting room "+waitingRoom.getId()+" successfully!");
             if(enoughPLayers.equals(StaticStrings.GAME_START)){
                 return enoughPLayers;
             }
@@ -48,7 +52,7 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
         try {
             ConnectionManager.get().getLocalView(token).sendNotification(response);
         } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            fileLog.error(e.getMessage());
         }
     }
 
@@ -60,7 +64,7 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
                     try {
                         ConnectionManager.get().getLocalView(e.getKey()).sendNotification(response);
                     } catch (RemoteException ex) {
-                        throw new RuntimeException(ex);
+                        fileLog.error(ex.getMessage());
                     }
                 });
     }
@@ -73,7 +77,7 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
                     try {
                         ConnectionManager.get().getLocalView(e.getKey()).sendUpdatedModel(something);
                     } catch (RemoteException ex) {
-                        throw new RuntimeException(ex);
+                        fileLog.error(ex.getMessage());
                     }
                 });
     }
@@ -85,10 +89,9 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
         waitingRoom.addPlayerToWaitingRoom(name, token);
         activeUsers.put(token, String.valueOf(id));
         try{
-            //todo find out why this is printed twice or sent twice to the client
             ConnectionManager.get().getLocalView(token).showTextNotification("I created a waiting room. Waiting for other players to join...");
         } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            fileLog.error(e.getMessage());
         }
     }
 
@@ -135,8 +138,8 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
                 GameController game = new GameController(waitingRoom.getListOfPlayers(), waitingRoom.getId(), this);
                 activeGames.put(waitingRoom.getId(), game);
 
-                System.out.println("i deleted the waiting room "+waitingRoom.getId()+" and started the game!");
-                System.out.println("there are currently "+activeGames.size()+" games active!");
+                fileLog.info("I created a new game with id: " + waitingRoom.getId() + "and started the game!");
+                fileLog.info("The players are: " + waitingRoom.getListOfPlayers());
 
                 game.initialize();
                 waitingRoom=null;
@@ -151,9 +154,9 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
 
     @Override
     public void pickedTiles(String token, List<String> tilesCoordinates) throws RemoteException {
-        System.out.println("I received user: " + token + "  and tiles coordinates: " + tilesCoordinates);
+        fileLog.info("I received user: " + token + "  and tiles coordinates: " + tilesCoordinates);
         activeGames.get(activeUsers.get(token)).chooseTiles(token, tilesCoordinates);
-        System.out.println("Finished picking tiles: " + tilesCoordinates + " for token: " + token );
+        fileLog.info("Finished picking tiles: " + tilesCoordinates + " for token: " + token );
     }
 
     @Override
@@ -180,7 +183,7 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
                         DisconnectionNotif disconnectionNotif = new DisconnectionNotif(ConnectionManager.get().getNameToken(token));
                         ConnectionManager.get().getLocalView(e.getKey()).sendNotification(disconnectionNotif);
                     } catch (RemoteException ex) {
-                        throw new RuntimeException(ex);
+                        fileLog.error(ex.getMessage());
                     }
                 });
     }

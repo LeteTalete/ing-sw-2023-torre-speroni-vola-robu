@@ -4,6 +4,8 @@ import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.requests.*;
 import it.polimi.ingsw.responses.Response;
 import it.polimi.ingsw.view.View;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -16,6 +18,8 @@ import java.util.Scanner;
 
 public class ClientSocket implements IClientConnection
 {
+    private static Logger fileLog = LogManager.getRootLogger();
+
     private final ClientController master;
     private String username;
     private String token;
@@ -51,7 +55,7 @@ public class ClientSocket implements IClientConnection
         }
         catch(IOException e)
         {
-            System.err.println(e.getMessage());
+            fileLog.error(e.getMessage());
         }
     }
 
@@ -66,7 +70,7 @@ public class ClientSocket implements IClientConnection
                             try{
                                 response.handleResponse(responseDecoder);
                             }catch(RemoteException e){
-                                viewClient.printError(e.getMessage());
+                                fileLog.error(e.getMessage());
                             }
                         }
                     }while(response!=null);
@@ -81,9 +85,9 @@ public class ClientSocket implements IClientConnection
             return ((Response) socketIn.readObject());
         }catch(ClassNotFoundException e){
             //if the serialization went wrong or if the class doesn't exist
-            throw new RuntimeException("Class does not exist: "+ e.getMessage());
+            fileLog.error(e.getMessage());
         }catch (IOException e){
-            System.out.println("Bad formatting");
+            fileLog.error(e.getMessage());
         }
         return null;
     }
@@ -127,7 +131,7 @@ public class ClientSocket implements IClientConnection
             }
             catch (InterruptedException e)
             {
-                viewClient.printError(e.getMessage());
+                fileLog.error(e.getMessage());
             }
         }
     }
@@ -143,7 +147,7 @@ public class ClientSocket implements IClientConnection
                 this.wait();
 
             }catch (InterruptedException e){
-                viewClient.printError(e.getMessage());
+                fileLog.error(e.getMessage());
             }
         }
     }
@@ -154,7 +158,7 @@ public class ClientSocket implements IClientConnection
             socketOut.writeObject(request);
             socketOut.reset();
         }catch (IOException e){
-            viewClient.printError(e.getMessage());
+            fileLog.error(e.getMessage());
         }
     }
 
@@ -180,7 +184,7 @@ public class ClientSocket implements IClientConnection
                 this.wait();
 
             }catch (InterruptedException e){
-                viewClient.printError(e.getMessage());
+                fileLog.error(e.getMessage());
             }
         }
     }
@@ -195,7 +199,7 @@ public class ClientSocket implements IClientConnection
                 this.wait();
 
             }catch (InterruptedException e){
-                viewClient.printError(e.getMessage());
+                fileLog.error(e.getMessage());
             }
         }
     }
@@ -230,7 +234,7 @@ public class ClientSocket implements IClientConnection
                 this.wait();
 
             }catch (InterruptedException e){
-                viewClient.printError(e.getMessage());
+                fileLog.error(e.getMessage());
             }
         }
     }

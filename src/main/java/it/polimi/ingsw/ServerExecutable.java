@@ -13,18 +13,21 @@ public class ServerExecutable {
 
     private static Logger fileLog = LogManager.getRootLogger();
     public static void main(String[] args) {
-        fileLog.debug("Server started");
+        //fileLog.debug("Server started");
         fileLog.info("Server started");
-        fileLog.warn("Server started");
-        fileLog.error("Server started");
+        //fileLog.warn("Server started");
+        //fileLog.error("Server started");
         try {
             ServerManager serverManager = new ServerManager();
             Registry registry = LocateRegistry.createRegistry(8089);
             registry.rebind("Login", serverManager);
+            fileLog.info("Successfully created an Rmi registry");
+
 
             //Socket
             MultiServerSocket server = new MultiServerSocket(1420, serverManager);
             server.startServer();
+            fileLog.info("Successfully created a Socket server");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

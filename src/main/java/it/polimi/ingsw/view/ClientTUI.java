@@ -9,12 +9,15 @@ import it.polimi.ingsw.network.IClientListener;
 import it.polimi.ingsw.responses.Response;
 import it.polimi.ingsw.stati.Status;
 import it.polimi.ingsw.structures.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.rmi.RemoteException;
 import java.util.*;
 
 
 public class ClientTUI implements View{
+    private static Logger fileLog = LogManager.getRootLogger();
     private GameView gameView;
     private static final String ERROR_COMMAND = "ERROR";
     private ClientController master;
@@ -102,7 +105,7 @@ public class ClientTUI implements View{
         return command;
     }
     public void running() {
-        writeText("we're on");
+        fileLog.info("ClientTUI running");
         do {
             command = nextCommand();
 
@@ -124,7 +127,7 @@ public class ClientTUI implements View{
         try {
             master.detangleMessage(response);
         } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            fileLog.error(e.getMessage());
         }
     }
 
@@ -219,7 +222,7 @@ public class ClientTUI implements View{
         DrawTui.askWhat("Choose the tiles: [tiles rowcolumn(s)]");
     }
     public void rearrangeTiles(){
-        writeText("Please, choose an order for your tiles: [order number(s)]");
+        writeText("Choose an order for your tiles: [order number(s)]");
     }
 
     @Override
