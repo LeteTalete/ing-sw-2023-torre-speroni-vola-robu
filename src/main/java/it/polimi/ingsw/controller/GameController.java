@@ -96,15 +96,21 @@ public class GameController {
 
     public void chooseColumn(String token, int column)
     {
-        ArrayList<Tile> tiles = new ArrayList<>();
-
-        for(int i=0;i<this.choiceOfTiles.size();i++)
+        if(this.choiceOfTiles.size() <= model.getCurrentPlayer().getMyShelf().getMaxFree(column))
         {
-            tiles.add(model.getGameBoard().getCouple(this.choiceOfTiles.get(i)).getTile());
-        }
-        master.notifySinglePlayer(token, new MoveOk(true));
+            ArrayList<Tile> tiles = new ArrayList<>();
+            for(int i=0;i<this.choiceOfTiles.size();i++)
+            {
+                tiles.add(model.getGameBoard().getCouple(this.choiceOfTiles.get(i)).getTile());
+            }
+            master.notifySinglePlayer(token, new MoveOk(true));
 
-        updateGame(token,column,tiles);
+            updateGame(token,column,tiles);
+        }
+        else
+        {
+            master.notifySinglePlayer(token, new MoveOk(false));
+        }
     }
 
     public void updateGame(String token, int column, ArrayList<Tile> tiles){
