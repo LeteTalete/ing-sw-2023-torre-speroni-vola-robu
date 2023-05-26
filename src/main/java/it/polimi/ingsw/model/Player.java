@@ -7,22 +7,26 @@ import it.polimi.ingsw.model.cards.PersonalGoalCard;
 import it.polimi.ingsw.model.enumerations.Tile;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Player{
+public class Player implements Serializable {
 //attributes
     private boolean chair;
     private String nickname;
     private String tokenId;
     private boolean isPlaying;
-    private Shelf shelf = new Shelf();
+    private Shelf shelf;
     private PersonalGoalCard personalGoalCard;
     private int score = 0;
     private boolean endGame;
 
     private ArrayList<Position> tilesChosen;
 
+    public Player(){
+        this.shelf = new Shelf();
+    }
 //methods
     public ArrayList<Position> chooseTiles(LivingRoom livingroom){
         //this method will ask the player to insert the coordinates of the tiles he wants to pick up

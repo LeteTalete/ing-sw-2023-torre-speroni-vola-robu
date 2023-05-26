@@ -5,10 +5,11 @@ import it.polimi.ingsw.model.enumerations.Couple;
 import it.polimi.ingsw.model.enumerations.State;
 import it.polimi.ingsw.model.enumerations.Tile;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Shelf {
+public class Shelf implements Serializable {
     public static final int ROWS = 6;
     public static final int COLUMNS = 5;
     private Couple[][] shelfsMatrix;

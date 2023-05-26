@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import it.polimi.ingsw.model.board.Shelf;
@@ -12,7 +13,7 @@ import it.polimi.ingsw.model.enumerations.State;
 import it.polimi.ingsw.model.enumerations.T_Type;
 
 
-public class PersonalGoalCard extends GoalCard {
+public class PersonalGoalCard extends GoalCard implements Serializable {
 
     private int numPGC;
     private ArrayList<String> positionTilePGC; //Location of personal goal card tiles

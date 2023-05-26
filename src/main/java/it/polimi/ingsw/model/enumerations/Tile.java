@@ -1,6 +1,8 @@
 package it.polimi.ingsw.model.enumerations;
 
-public class Tile {
+import java.io.Serializable;
+
+public class Tile implements Serializable {
     private T_Type tileType;
     private int figure;
 

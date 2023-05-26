@@ -1,6 +1,8 @@
 package it.polimi.ingsw.model.enumerations;
 
-public class Couple {
+import java.io.Serializable;
+
+public class Couple implements Serializable {
     private Tile tile;
 
     private State state;

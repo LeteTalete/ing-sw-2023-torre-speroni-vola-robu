@@ -1,6 +1,8 @@
 package it.polimi.ingsw.model.enumerations;
 
-public enum State {
+import java.io.Serializable;
+
+public enum State implements Serializable {
     EMPTY,
     EMPTY_AND_UNUSABLE, //abbiamo deciso di toglierlo
     INVALID,

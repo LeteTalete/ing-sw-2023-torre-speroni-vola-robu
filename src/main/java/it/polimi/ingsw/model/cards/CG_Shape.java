@@ -9,11 +9,12 @@ import it.polimi.ingsw.model.enumerations.T_Type;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-public class CG_Shape extends CommonGoalCard {
+public class CG_Shape extends CommonGoalCard implements Serializable {
     private int ID;
     private Stack<Integer> points;
     private String type;

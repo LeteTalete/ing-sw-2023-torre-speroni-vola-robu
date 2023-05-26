@@ -7,10 +7,11 @@ import it.polimi.ingsw.model.board.Shelf;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Stack;
 
-public class CommonGoalCard extends GoalCard {
+public class CommonGoalCard extends GoalCard implements Serializable {
     private int ID;
     private String description;
     private Stack<Integer> points;
