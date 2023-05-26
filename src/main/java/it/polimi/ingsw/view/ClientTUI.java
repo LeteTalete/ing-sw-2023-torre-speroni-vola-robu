@@ -57,13 +57,19 @@ public class ClientTUI implements View{
         // TODO: this is obviously bad, needs a method that finds the correct view
         if ( (gameView.getPlayersView().size() >= 2 ) && gameView.getPlayersView().get(0).getNickname().equals(master.getUsername()) ){
             showBoardPlayer(gameView.getPlayersView().get(0), gameView.getGameBoardView());
+            System.out.println(DrawTui.setStringPCG(gameView.getPlayersView().get(0).getPersonalGoalCard().getPositionTilePC(), 5, true, false));
         } else if( (gameView.getPlayersView().size() >= 2 ) && gameView.getPlayersView().get(1).getNickname().equals(master.getUsername()) ) {
             showBoardPlayer(gameView.getPlayersView().get(1), gameView.getGameBoardView());
+            System.out.println(DrawTui.setStringPCG(gameView.getPlayersView().get(1).getPersonalGoalCard().getPositionTilePC(), 5, true, false));
         } else if( (gameView.getPlayersView().size() >= 3 ) && gameView.getPlayersView().get(2).getNickname().equals(master.getUsername()) ) {
             showBoardPlayer(gameView.getPlayersView().get(2), gameView.getGameBoardView());
+            System.out.println(DrawTui.setStringPCG(gameView.getPlayersView().get(2).getPersonalGoalCard().getPositionTilePC(), 5, true, false));
         } else if( (gameView.getPlayersView().size() == 4 ) && gameView.getPlayersView().get(3).getNickname().equals(master.getUsername()) ) {
             showBoardPlayer(gameView.getPlayersView().get(3), gameView.getGameBoardView());
+            System.out.println(DrawTui.setStringPCG(gameView.getPlayersView().get(3).getPersonalGoalCard().getPositionTilePC(), 5, true, false));
         }
+        System.out.println( "Common goal card 1: " + gameView.getCommonGoalCards().get(0).getDescription() + "\n");
+        System.out.println( "Common goal card 2: " + gameView.getCommonGoalCards().get(1).getDescription() + "\n");
 
     }
 
