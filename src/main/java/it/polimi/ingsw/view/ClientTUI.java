@@ -101,7 +101,6 @@ public class ClientTUI implements View{
     }
     private String nextCommand() {
         command = frominput.nextLine();
-        fileLog.debug("Command: " + command);
         if(master.isConnected() /*and if the game is on but i'm not sure about this bit*/) {
             //master.wake();
         }

@@ -71,9 +71,8 @@ public class ClientController {
             clientSocket.setResponseDecoder(responseDecoder);
             clientSocket.startClient();
 
-            //deleted the if clause to check the login response, since the server should already notify the users about it
         } catch (Exception e) {
-            fileLog.error(e.getMessage());
+            fileLog.error(e);
         }
         return null;
     }

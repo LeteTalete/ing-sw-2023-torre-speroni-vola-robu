@@ -99,9 +99,9 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
     @Override
     public void sendChat(ChatMessageRequest messageRequest) throws RemoteException {
         fileLog.info("Received a chat message from "+messageRequest.getSender()+" to "+messageRequest.getReceiver()+": "+messageRequest.getMessage());
-        ChatMessage message = new ChatMessage(messageRequest.getSender(), messageRequest.getReceiver(), messageRequest.getMessage());
+        ChatMessage message = new ChatMessage(messageRequest.getSender(), messageRequest.getMessage());
         String senderToken = ConnectionManager.get().namesTokens.get(message.getSender());
-        if(message.getReceiver().equals("all")){
+        if(messageRequest.getReceiver().equals("all")){
             activeUsers.entrySet()
                     .stream()
                     .filter(e -> e.getValue().equals(activeUsers.get(senderToken)))
@@ -114,7 +114,7 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
                     });
         }
         else{
-            String receiverToken = ConnectionManager.get().namesTokens.get(message.getReceiver());
+            String receiverToken = ConnectionManager.get().namesTokens.get(messageRequest.getReceiver());
             ConnectionManager.get().getLocalView(receiverToken).notifyChatMessage(message);
         }
 

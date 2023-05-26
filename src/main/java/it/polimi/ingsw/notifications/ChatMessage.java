@@ -8,12 +8,10 @@ import java.rmi.RemoteException;
 public class ChatMessage implements Response {
     private final String sender;
     private final String message;
-    private final String receiver;
 
-    public ChatMessage(String s, String m, String r) {
+    public ChatMessage(String s, String m) {
         this.sender = s;
         this.message = m;
-        this.receiver = r;
     }
 
     @Override
@@ -29,7 +27,4 @@ public class ChatMessage implements Response {
         return message;
     }
 
-    public String getReceiver() {
-        return receiver;
-    }
 }
