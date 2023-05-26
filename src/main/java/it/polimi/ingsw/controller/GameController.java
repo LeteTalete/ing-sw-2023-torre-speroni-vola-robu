@@ -82,16 +82,23 @@ public class GameController {
 
     public void rearrangeTiles(String token, List<String> order)
     {
-        ArrayList<Position> tiles = (ArrayList<Position>) this.choiceOfTiles.clone();
-
-        for(int i=0; i<order.size(); i++)
+        if(this.choiceOfTiles.size() == order.size())
         {
-            tiles.set(i,this.choiceOfTiles.get(order.get(i).charAt(0)-48-1));
-        }
-        this.choiceOfTiles = tiles;
+            ArrayList<Position> tiles = (ArrayList<Position>) this.choiceOfTiles.clone();
 
-        master.notifySinglePlayer(token, new GetOrderResponse(tiles, true));
-        master.notifySinglePlayer(token, new MoveOk(true));
+            for(int i=0; i<order.size(); i++)
+            {
+                tiles.set(i,this.choiceOfTiles.get(order.get(i).charAt(0)-48-1));
+            }
+            this.choiceOfTiles = tiles;
+
+            master.notifySinglePlayer(token, new GetOrderResponse(tiles, true));
+            master.notifySinglePlayer(token, new MoveOk(true));
+        }
+        else
+        {
+            master.notifySinglePlayer(token, new MoveOk(false));
+        }
     }
 
     public void chooseColumn(String token, int column)
