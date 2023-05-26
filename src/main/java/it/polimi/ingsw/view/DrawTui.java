@@ -30,6 +30,7 @@ public class DrawTui {
     static final String startLine = "  "; //è la parte di inizio di ogni riga di testo
     static final String dividNum = "#"; //dividLine  mi serve per dividere i parametri dell'altezza e lunghezza di una stringa da fondere con un'altra
     static final Integer sizeSlotTile = 3; //Tile size to be colored è meglio che sia dispari
+    static final String slotTile = stringRepeat(empty, sizeSlotTile);
     private static ArrayList<String> stringCGC = new ArrayList<>();
     private final static PrintStream print = new PrintStream(System.out, true, StandardCharsets.UTF_8);
     private final static Scanner scanner = new Scanner(System.in);
@@ -96,17 +97,17 @@ public class DrawTui {
         } else {
             T_Type typeTile = tile.getTile().getTileType();
             if(typeTile == T_Type.GAMES) {
-                return colorTileG + " G " + colorRESET;
+                return colorTileG + slotTile + colorRESET;
             } else if (typeTile == T_Type.CAT) {
-                return colorTileC + " C " + colorRESET;
+                return colorTileC + slotTile + colorRESET;
             } else if (typeTile == T_Type.BOOK) {
-                return colorTileB + " B " + colorRESET;
+                return colorTileB + slotTile + colorRESET;
             } else if (typeTile == T_Type.PLANT) {
-                return colorTileP + " P " + colorRESET;
+                return colorTileP + slotTile + colorRESET;
             } else if (typeTile == T_Type.TROPHY) {
-                return colorTileT + " T " + colorRESET;
+                return colorTileT + slotTile + colorRESET;
             } else {
-                return colorTileF + " F " + colorRESET;
+                return colorTileF + slotTile + colorRESET;
             }
         }
     }
@@ -327,6 +328,7 @@ public class DrawTui {
         return string;
     }
 
+
     //lenMaxColumn: rappresenta il numero di colonne che compongono la personalGoalCard
     //positionTilePCG: rappresenta il numero di tile
 
@@ -373,17 +375,17 @@ public class DrawTui {
                     pcg.append(stringRepeat(tileEmty, positionTile - oldPosT));
 
                     if (Objects.equals(tilesInRow[index + 1], "G")) {
-                        pcg.append(colorTileG + " G " + colorRESET);
+                        pcg.append(colorTileG + slotTile + colorRESET);
                     } else if (Objects.equals(tilesInRow[index + 1],"P")) {
-                        pcg.append(colorTileP + " P " + colorRESET);
+                        pcg.append(colorTileP + slotTile + colorRESET);
                     } else if (Objects.equals(tilesInRow[index + 1],"C")) {
-                        pcg.append(colorTileC + " C " + colorRESET);
+                        pcg.append(colorTileC + slotTile + colorRESET);
                     } else if (Objects.equals(tilesInRow[index + 1],"F")) {
-                        pcg.append(colorTileF + " F " + colorRESET);
+                        pcg.append(colorTileF + slotTile + colorRESET);
                     } else if (Objects.equals(tilesInRow[index + 1],"T"))  {
-                        pcg.append(colorTileT + " T " + colorRESET);
+                        pcg.append(colorTileT + slotTile + colorRESET);
                     } else {
-                        pcg.append(colorTileB + " B " + colorRESET);
+                        pcg.append(colorTileB + slotTile + colorRESET);
                     }
                     oldPosT = positionTile + 1;
                     ++heightPCG;
@@ -408,5 +410,31 @@ public class DrawTui {
     private static String stringRepeat(String text, int repeatNum){
         return text.repeat(repeatNum);
     }
+
+
+    //si usa all'inizio quando inizia il gioco
+    public static void printTitle(){
+        printlnString("\n" + "\033[38;5;11m" +
+                """                       
+                               #           #                                ######       ####                   ##        ######\n
+                             ##          ##                               ###    ##     ##   #                  ##      ##     ##\n
+                            ###         ###                                ##     ##   ##                       ##     ##        \n
+                           ####       ####    ####       ##                ##    #    ##             #####      ##    ###       #      #####\n
+                           ## ##     ## ##   ## ##      ####                ##       ##    ###     ###    ##    ##   #######   ###   ###    ##\n
+                           ##  ##   ##  ##       ##    ## ##         #       ##     ##   ##  ##   ##    ###     ##    ###      ##   ##    ###\n
+                          ##    ## ##    ##      ##   ##   ##       ##        ##    ## ##    ##   ######     #  ##    ##       ##   ######     #\n
+                         ###     ###     ###    ##  ##      ##       ###     ###    ###     ## #   ##       ##  ## #  ##       ##    ##       ##\n
+                       ####      #        ####   ####       ##         ######      ##      ####     ########    ###   ##      ####    ########\n
+                                                            ##                                                        ## \n
+                                                           ##                                                         ##\n
+                                                #         ##                                                         ##\n
+                                                 ##     ###                                                         #\n
+                                                   #####\n
+                   """ + colorRESET
+        );
+        printlnString("+++++++++++++++++++++++++++++++++++++++++++[ START GAME ]+++++++++++++++++++++++++++++++++++++++++++");
+    }
+
+
 
 }
