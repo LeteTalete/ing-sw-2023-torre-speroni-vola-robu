@@ -56,9 +56,12 @@ public class ClientTUI implements View{
     public void displayUpdatedModel(ModelUpdate modelUpdate){
         //todo check this
         this.gameView = new GameView(modelUpdate);
+
         PlayerView mine = gameView.getPlayersView().stream()
                 .filter(p -> p.getNickname().equals(master.getUsername())).findFirst().orElse(null);
         showBoardPlayer(mine, gameView.getGameBoardView());
+        System.out.println(DrawTui.setStringPCG(gameView.getPlayersView().stream()
+                .filter(p -> p.getNickname().equals(master.getUsername())).findFirst().orElse(null).getPersonalGoalCard().getPositionTilePC(), 5, true, false));
 
         if ( gameView.getEndGame() == null ) {
             System.out.println("EndGame token still available." + "\n");
