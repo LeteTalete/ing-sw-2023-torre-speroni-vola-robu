@@ -7,6 +7,7 @@ import it.polimi.ingsw.network.IRemoteController;
 import it.polimi.ingsw.notifications.ChatMessage;
 import it.polimi.ingsw.notifications.DisconnectionNotif;
 import it.polimi.ingsw.notifications.GameStart;
+import it.polimi.ingsw.requests.ChatMessageRequest;
 import it.polimi.ingsw.responses.LoginResponse;
 import it.polimi.ingsw.responses.Response;
 import org.apache.logging.log4j.LogManager;
@@ -96,8 +97,9 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
     }
 
     @Override
-    public void sendChat(ChatMessage message) throws RemoteException {
-        fileLog.info("Received a chat message from "+message.getSender()+" to "+message.getReceiver()+": "+message.getMessage());
+    public void sendChat(ChatMessageRequest messageRequest) throws RemoteException {
+        fileLog.info("Received a chat message from "+messageRequest.getSender()+" to "+messageRequest.getReceiver()+": "+messageRequest.getMessage());
+        ChatMessage message = new ChatMessage(messageRequest.getSender(), messageRequest.getReceiver(), messageRequest.getMessage());
         String senderToken = ConnectionManager.get().namesTokens.get(message.getSender());
         if(message.getReceiver().equals("all")){
             activeUsers.entrySet()
@@ -151,8 +153,8 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
                 ConnectionManager.get().getLocalView(token).notifySuccessfulRegistration(loginResponse);
 
             } else if(success.equals(StaticStrings.GAME_START)) {
-                //LoginResponse loginResponse = new LoginResponse(name, true, token, false);
-                //ConnectionManager.get().getLocalView(token).notifySuccessfulRegistration(loginResponse);
+                LoginResponse loginResponse = new LoginResponse(name, true, token, false);
+                ConnectionManager.get().getLocalView(token).notifySuccessfulRegistration(loginResponse);
 
                 //now we need to notify all the players that the game is about to start
                 notifyAllPlayers(waitingRoom.getId(), new GameStart());

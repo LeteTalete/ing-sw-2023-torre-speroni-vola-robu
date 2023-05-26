@@ -249,8 +249,19 @@ public class ClientSocket implements IClientConnection
     }
 
     @Override
-    public void sendChat(ChatMessage message) {
-        //todo
+    public void sendChat(ChatMessageRequest message) {
+        setReceivedResponse(true);
+        request(message);
+        while(notReceivingResponse){
+            try{
+                //maybe this doesn't need 'this', but since it's a thread it's better to be safe
+                this.wait();
+
+            }catch (InterruptedException e){
+                fileLog.error(e.getMessage());
+            }
+        }
     }
+
 
 }

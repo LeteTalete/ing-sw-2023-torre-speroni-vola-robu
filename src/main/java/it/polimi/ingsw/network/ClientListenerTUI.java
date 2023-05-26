@@ -32,7 +32,7 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
     @Override
     public void notifySuccessfulRegistration(LoginResponse loginResponse) throws RemoteException {
         if(loginResponse.b){
-            view.displayNotification("Registration Successful! Waiting for other players to join...");
+            view.displayNotification("Registration Successful!");
             view.serverSavedUsername(loginResponse.name, true, loginResponse.token, loginResponse.first);
         }
         else{

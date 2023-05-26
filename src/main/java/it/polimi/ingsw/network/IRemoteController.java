@@ -1,6 +1,7 @@
 package it.polimi.ingsw.network;
 
 import it.polimi.ingsw.notifications.ChatMessage;
+import it.polimi.ingsw.requests.ChatMessageRequest;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -17,5 +18,5 @@ public interface IRemoteController extends Remote {
 
     void createWaitingRoom(String username, String userToken, int number) throws RemoteException;
 
-    void sendChat(ChatMessage message) throws RemoteException;
+    void sendChat(ChatMessageRequest message) throws RemoteException;
 }

@@ -12,7 +12,7 @@ public class CommandParsing {
     private static Logger fileLog = LogManager.getRootLogger();
     private static final String TILES = "tiles";
     private static final String HELP = "help";
-    private static final String CHAT = "@";
+    //private static final String CHAT = "@";
     private static final String REARRANGE = "order";
     private static final String SHELFSHOW = "showshelf";
     private static final String COLUMN = "column";
@@ -107,8 +107,7 @@ public class CommandParsing {
                         master.gameNotStarted();
                         break;
                     }
-                    parseUsername(args);
-                    args.remove(0);
+                    choice = command.substring(1);
                     parseChat(args);
                 }
                 else{
