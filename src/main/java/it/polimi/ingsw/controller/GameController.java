@@ -13,12 +13,15 @@ import it.polimi.ingsw.responses.GetTilesResponse;
 import it.polimi.ingsw.responses.MoveOk;
 import it.polimi.ingsw.responses.Response;
 import it.polimi.ingsw.server.ServerManager;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class GameController {
+    private static Logger fileLog = LogManager.getRootLogger();
     private Game model;
     private String gameId;
     private ArrayList<Position> choiceOfTiles;
@@ -204,7 +207,7 @@ public class GameController {
         try {
             master.askTilesToPlayer(tokenId);
         } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            fileLog.error(e.getMessage());
         }
     }
 

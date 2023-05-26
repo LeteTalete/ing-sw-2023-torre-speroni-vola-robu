@@ -6,6 +6,8 @@ import it.polimi.ingsw.model.board.LivingRoom;
 import it.polimi.ingsw.model.cards.CommonGoalCard;
 import it.polimi.ingsw.model.enumerations.Tile;
 import it.polimi.ingsw.notifications.NotifyOnTurn;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -15,6 +17,7 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 public class Game {
+    private static Logger fileLog = LogManager.getRootLogger();
     private String endGame;
     private Player currentPlayer;
     private Player previousPlayer;
@@ -31,14 +34,14 @@ public class Game {
     }
 
     public void initialize() throws RemoteException {
-        System.out.println("I've created a game and here are the players:");
+        fileLog.info("Initializing game " + gameId + "with players: ");
         for (Player player : players) {
-            System.out.println(player.getNickname());
+            fileLog.info(player.getNickname());
         }
         /**we need the server to pass the number of players and the list of players to the gameController, somehow**/
         // create and setup board (we're assuming this all happens in the next instruction)
         this.gameBoard = new LivingRoom(numOfPlayers);
-        System.out.println(("I've created a living room board!"));
+        fileLog.info("I've created a living room board!");
         startGame();
         /**once the living room is set, controller decides who's first**/
         chooseFirstPlayer();
@@ -87,7 +90,7 @@ public class Game {
         List<Player> ranking;
         ranking = ps.stream().sorted(Comparator.comparing(Player::getScore).reversed()).collect(Collectors.toList());
         for ( Player player : ranking ){
-            System.out.println( player.getNickname() + "'s score is: " + player.getScore());
+            fileLog.info( player.getNickname() + "'s score is: " + player.getScore());
         }
     }
 
@@ -249,7 +252,7 @@ public class Game {
             //if the tilesChosen are can't be picked, the server has to send an Error message back to the client
             //todo handle this situation
             //DEBUG
-            System.out.println("DEBUG: those tiles can't be picked");
+            fileLog.debug("DEBUG: those tiles can't be picked");
             tilesChosen = null;
         }
 

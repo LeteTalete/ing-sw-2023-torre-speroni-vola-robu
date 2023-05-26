@@ -3,7 +3,6 @@ package it.polimi.ingsw.view;
 import it.polimi.ingsw.Updates.ModelUpdate;
 import it.polimi.ingsw.client.ClientController;
 import it.polimi.ingsw.client.CommandParsing;
-import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.network.ClientListenerTUI;
 import it.polimi.ingsw.network.IClientListener;
 import it.polimi.ingsw.responses.Response;
@@ -286,38 +285,7 @@ public class ClientTUI implements View{
         return master.isMyTurn();
     }
 
-    public boolean checkUserInput(String s)
-    {
-        //user input should be like this: "02" or "38 45" or "54 11 64"
-        //from 1 to 3 couples of int separated by a space
-        //there cannot be duplicated couples
-        //9 is not allowed (index out of bounds)
-        //note: ASCII: '0' = 48 ... '9' = 57
-        //note: 'space' = 32
-        int l = s.length();
 
-
-        if(l!=2 && l!=5 && l!=8) return false;
-        if(l > 5)
-        {
-            if(s.charAt(5) != 32) return false;
-            if(s.charAt(6) < 48 || s.charAt(6) > 56) return false;
-            if(s.charAt(7) < 48 || s.charAt(7) > 56) return false;
-            if((s.charAt(0) == s.charAt(6) && s.charAt(1) == s.charAt(7))
-                    || (s.charAt(3) == s.charAt(6) && s.charAt(4) == s.charAt(7)))  return false;
-        }
-
-        if(l > 2)
-        {
-            if(s.charAt(2) != 32) return false;
-            if(s.charAt(3) < 48 || s.charAt(3) > 56) return false;
-            if(s.charAt(4) < 48 || s.charAt(4) > 56) return false;
-            if(s.charAt(0) == s.charAt(3) && s.charAt(1) == s.charAt(4))  return false;
-        }
-        if(s.charAt(0) < 48 || s.charAt(0) > 56) return false;
-        if(s.charAt(1) < 48 || s.charAt(1) > 56) return false;
-        return true;
-    }
 
     //this should be some kind of run that only gets lines and parses them
     public void playing() {
