@@ -68,8 +68,15 @@ public class ClientTUI implements View{
             showBoardPlayer(gameView.getPlayersView().get(3), gameView.getGameBoardView());
             System.out.println(DrawTui.setStringPCG(gameView.getPlayersView().get(3).getPersonalGoalCard().getPositionTilePC(), 5, true, false));
         }
-        System.out.println( "Common goal card 1: " + gameView.getCommonGoalCards().get(0).getDescription() + "\n");
-        System.out.println( "Common goal card 2: " + gameView.getCommonGoalCards().get(1).getDescription() + "\n");
+        if ( gameView.getEndGame() == null ) {
+            System.out.println("EndGame token still available." + "\n");
+        } else {
+            System.out.println("EndGame token taken by: " + gameView.getEndGame() + "\n");
+        }
+        System.out.println( "Common goal card 1: " + gameView.getCommonGoalCards().get(0).getDescription());
+        System.out.println( "Points still available: " + gameView.getCommonGoalCards().get(0).getPoints().pop() + "\n");
+        System.out.println( "Common goal card 2: " + gameView.getCommonGoalCards().get(1).getDescription());
+        System.out.println( "Points still available: " + gameView.getCommonGoalCards().get(1).getPoints().pop() + "\n");
 
     }
 

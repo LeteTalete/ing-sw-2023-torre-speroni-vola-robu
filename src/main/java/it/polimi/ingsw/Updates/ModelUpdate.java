@@ -13,6 +13,7 @@ public class ModelUpdate implements Serializable{
     private List<Player> players;
     private String endGame;
     private List<CommonGoalCard> commonGoalCards;
+
     public ModelUpdate(Game model){
         this.gameBoard = model.getGameBoard();
         this.players = model.getPlayers();
