@@ -37,8 +37,9 @@ public class CommandParsing {
     public void elaborateInput(String command) {
         if(initializingName) {
             //if asking for name
-            master.askLogin(choice);
+            master.askLogin(command);
             initializingRoom= true;
+            initializingName = false;
             return;
         }
         if(initializingRoom){
