@@ -228,6 +228,7 @@ public class CommandParsing {
 
     public void setGameIsOn(boolean gameIsOn) {
         this.gameIsOn = gameIsOn;
+        this.initializingRoom = false;
     }
     public boolean checkTilesFormat(String s)
     {
