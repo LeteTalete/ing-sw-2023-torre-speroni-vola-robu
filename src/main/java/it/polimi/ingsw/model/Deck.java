@@ -14,10 +14,11 @@ public class Deck implements Serializable {
     public static final int size = 132;
     public static final int tileKind = 6;
 
-    private Stack<Tile> tiles = new Stack<Tile>();
+    private Stack<Tile> tiles;
 
     public Deck()
     {
+        tiles = new Stack<>();
         int count = 1;
         for(int i=0; i<size/tileKind;i++)
         {
@@ -30,6 +31,10 @@ public class Deck implements Serializable {
             if(count > 3) count = 1;
         }
         this.shuffle();
+    }
+
+    public Stack<Tile> getTiles() {
+        return tiles;
     }
 
     public void shuffle(){

@@ -13,8 +13,6 @@ import java.util.Stack;
 
 public class CommonGoalCard extends GoalCard implements Serializable {
     private int ID;
-    private String description;
-    private Stack<Integer> points;
 
 
     public CommonGoalCard(){
@@ -46,14 +44,11 @@ public class CommonGoalCard extends GoalCard implements Serializable {
             }
 
             if (cardType.equals("RowCol")) {
-                CG_RowCol card = new CG_RowCol(this.ID);
-                return card;
+                return new CG_RowCol(this.ID);
             } else if (cardType.equals("Shape")) {
-                CG_Shape card = new CG_Shape(this.ID);
-                return card;
+                return new CG_Shape(this.ID);
             } else if (cardType.equals("Groups")) {
-                CG_Groups card = new CG_Groups(this.ID);
-                return card;
+                return new CG_Groups(this.ID);
             }
 
         } catch (IOException e) {

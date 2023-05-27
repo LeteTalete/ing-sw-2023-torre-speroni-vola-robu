@@ -1,24 +1,18 @@
 package it.polimi.ingsw.model.board;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import it.polimi.ingsw.model.Deck;
 import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.model.enumerations.Couple;
 import it.polimi.ingsw.model.enumerations.State;
 import it.polimi.ingsw.model.enumerations.Tile;
-import it.polimi.ingsw.model.Deck;
 
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 
 
 public class LivingRoom implements Serializable {
@@ -38,7 +32,7 @@ public class LivingRoom implements Serializable {
         board[p.getX()][p.getY()].setTile(t);
         board[p.getX()][p.getY()].setState(s);
     }
-    public Deck getDeck() { return this.deck; }
+
 
     public boolean checkPlayerChoice(ArrayList<Position> choice)
     {
@@ -227,7 +221,7 @@ public class LivingRoom implements Serializable {
         }
     }
 
-    public LivingRoom(int numberofplayers) {
+    public LivingRoom(int numberOfPlayers) {
 
         try {
             ObjectMapper mapper = new ObjectMapper();
@@ -249,10 +243,10 @@ public class LivingRoom implements Serializable {
                     } else if (jsonMatrixCopy[i][j] == 2) {
                         Couple couple = new Couple(deck.draw());
                         this.board[i][j] = couple;
-                    } else if (( jsonMatrixCopy[i][j] == 3 ) && ( numberofplayers >= 3 )) {
+                    } else if (( jsonMatrixCopy[i][j] == 3 ) && ( numberOfPlayers >= 3 )) {
                         Couple couple = new Couple(deck.draw());
                         this.board[i][j] = couple;
-                    } else if (( jsonMatrixCopy[i][j] == 4 ) && ( numberofplayers == 4 )) {
+                    } else if (( jsonMatrixCopy[i][j] == 4 ) && ( numberOfPlayers == 4 )) {
                         Couple couple = new Couple(deck.draw());
                         this.board[i][j] = couple;
                     } else { // If a space is not INVALID and doesn't meet any of the requirements then it set to EMPTY_AND_UNUSABLE (rework needed)

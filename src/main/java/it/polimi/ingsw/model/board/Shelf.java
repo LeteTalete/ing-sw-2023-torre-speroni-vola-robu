@@ -16,9 +16,11 @@ public class Shelf implements Serializable {
     private int freeSlots[];
     private List<Integer> cardsAlreadyChecked;
 
-    /**this method inserts the chosen tiles into the player's shelf.
-    the first tile to be inserted is at the end of the list, while the last tile to be inserted
-    is the first tile of the list**/
+    /**
+     * this method inserts the chosen tiles into the player's shelf.
+     * the first tile to be inserted is at the end of the list, while the last tile to be inserted
+     * is the first tile of the list
+     */
     public void insertTiles(int col, ArrayList<Tile> toInsert)
     {
         boolean flag;
@@ -38,9 +40,6 @@ public class Shelf implements Serializable {
         }
 
     }
-    //getMaxFree takes as an argument the number of column in which we want to count the empty spaces
-    //if numberColumn > 4 it means we're about to check all the columns and find the max of empty
-    //slots in the entirety of our array
 
 
     public int getFreeCol(int nCol) {
@@ -54,19 +53,23 @@ public class Shelf implements Serializable {
         return output;
     }
 
+    /**
+     * getMaxFree takes as an argument the number of column in which we want to count the empty spaces
+     * if numberColumn > 4 it means we're about to check all the columns and find the max of empty
+     * slots in the entirety of our array
+     */
     public int getMaxFree(int numberColumns){
         int maximum = 0;
-        if(numberColumns > 4)
-        {
-            for(int i=0; i<COLUMNS; i++){
-                if(getFreeCol(i)>maximum)
-                maximum = getFreeCol(i);
+        if(numberColumns > 4) {
+            for(int i=0; i<COLUMNS; i++) {
+                if(getFreeCol(i)>maximum) {
+                    maximum = getFreeCol(i);
+                }
             }
-        }
-        else
-        {
+        } else {
             maximum = getFreeCol(numberColumns);
         }
+
         return maximum;
     }
 

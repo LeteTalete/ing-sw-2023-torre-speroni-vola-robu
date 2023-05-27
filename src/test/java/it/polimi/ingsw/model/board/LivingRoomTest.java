@@ -1,32 +1,35 @@
 package it.polimi.ingsw.model.board;
+
 import it.polimi.ingsw.model.Deck;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.model.enumerations.Couple;
 import it.polimi.ingsw.model.enumerations.State;
 import it.polimi.ingsw.model.enumerations.T_Type;
 import it.polimi.ingsw.model.enumerations.Tile;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
-import static org.junit.Assert.*;
 
-
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Random;
+
 
 public class LivingRoomTest {
-    private Couple[][] testBoard;
-    private int numberofplayers = 3; // Possible values 2 - 3 - 4
 
-    // Method readLivingRoomFromJson tests if the json file is read correctly, if the Matrix is the correct size
-    // and if deck is initialized
-    // Then it tests if every cell has the correct state and tile
+    /**
+     * Method readLivingRoomFromJson tests if the json file is read correctly, if the Matrix is the correct size
+     * and if deck is initialized.
+     * Then it tests if every cell has the correct state and if the tile is null or not.
+     */
     @Test
     public void readLivingRoomFromJson() {
+        Couple[][] testBoard;
+        int numOfPlayers = new Random().nextInt(2,5);
+
         try {
             ObjectMapper mapper = new ObjectMapper();
             InputStream inputStream = LivingRoom.class.getClassLoader().getResourceAsStream("JSON/LivingRoom.json");
@@ -38,7 +41,7 @@ public class LivingRoomTest {
             assertEquals(9, jsonMatrixCopy.length);
             assertEquals(9, jsonMatrixCopy[0].length);
 
-            this.testBoard = new Couple[jsonMatrixCopy.length][jsonMatrixCopy[0].length];
+            testBoard = new Couple[jsonMatrixCopy.length][jsonMatrixCopy[0].length];
             Deck deck = new Deck();
             int emptyUnusableCheck;
 
@@ -50,50 +53,43 @@ public class LivingRoomTest {
                     if (jsonMatrixCopy[i][j] == 0) {
                         emptyUnusableCheck = 1;
                         Couple couple = new Couple(emptyUnusableCheck);
-                        this.testBoard[i][j] = couple;
+                        testBoard[i][j] = couple;
 
-                        assertEquals(State.INVALID, this.testBoard[i][j].getState());
-                        assertNull(this.testBoard[i][j].getTile());
+                        assertEquals(State.INVALID, testBoard[i][j].getState());
+                        assertNull(testBoard[i][j].getTile());
 
                     } else if (jsonMatrixCopy[i][j] == 2) {
                         Couple couple = new Couple(deck.draw());
-                        this.testBoard[i][j] = couple;
+                        testBoard[i][j] = couple;
 
-                        assertEquals(State.PICKABLE, this.testBoard[i][j].getState());
-                        assertNotNull(this.testBoard[i][j].getTile());
+                        assertEquals(State.PICKABLE, testBoard[i][j].getState());
+                        assertNotNull(testBoard[i][j].getTile());
 
 
-                    } else if (( jsonMatrixCopy[i][j] == 3 ) && ( numberofplayers >= 3 )) {
+                    } else if (( jsonMatrixCopy[i][j] == 3 ) && ( numOfPlayers >= 3 )) {
                         Couple couple = new Couple(deck.draw());
-                        this.testBoard[i][j] = couple;
+                        testBoard[i][j] = couple;
 
-                        assertEquals(State.PICKABLE, this.testBoard[i][j].getState());
-                        assertNotNull(this.testBoard[i][j].getTile());
+                        assertEquals(State.PICKABLE, testBoard[i][j].getState());
+                        assertNotNull(testBoard[i][j].getTile());
 
 
-                    } else if (( jsonMatrixCopy[i][j] == 4 ) && ( numberofplayers == 4 )) {
+                    } else if (( jsonMatrixCopy[i][j] == 4 ) && ( numOfPlayers == 4 )) {
                         Couple couple = new Couple(deck.draw());
-                        this.testBoard[i][j] = couple;
+                        testBoard[i][j] = couple;
 
-                        assertEquals(State.PICKABLE, this.testBoard[i][j].getState());
-                        assertNotNull(this.testBoard[i][j].getTile());
+                        assertEquals(State.PICKABLE, testBoard[i][j].getState());
+                        assertNotNull(testBoard[i][j].getTile());
 
 
                     } else { // If a space is not INVALID and doesn't meet any of the requirements then it set to EMPTY_AND_UNUSABLE (rework needed)
                         emptyUnusableCheck = 0;
                         Couple couple = new Couple(emptyUnusableCheck);
-                        this.testBoard[i][j] = couple;
+                        testBoard[i][j] = couple;
 
-                        assertEquals(State.EMPTY_AND_UNUSABLE, this.testBoard[i][j].getState());
-                        assertNull(this.testBoard[i][j].getTile());
+                        assertEquals(State.EMPTY_AND_UNUSABLE, testBoard[i][j].getState());
+                        assertNull(testBoard[i][j].getTile());
 
-                    }
-
-                    // Remove this "if - else" and every System.out if you don't want to print testBoard
-                    if (this.testBoard[i][j].getTile() != null) {
-                        System.out.print( jsonMatrixCopy[i][j] + " " + this.testBoard[i][j].getState() + " " + this.testBoard[i][j].getTile().getTileType() + ", ");
-                    } else {
-                        System.out.print( jsonMatrixCopy[i][j] + " " + this.testBoard[i][j].getState() + ", ");
                     }
                 }
 
@@ -107,6 +103,7 @@ public class LivingRoomTest {
 
     }
 
+
     @Test
     public void checkPlayerChoiceTest()
     {
@@ -114,7 +111,7 @@ public class LivingRoomTest {
 
         l.printBoard();
 
-        ArrayList<Position> choice = new ArrayList<Position>();
+        ArrayList<Position> choice = new ArrayList<>();
         choice.add(new Position(0,0));
 
         assertFalse(l.checkPlayerChoice(choice));
@@ -178,6 +175,57 @@ public class LivingRoomTest {
         assertTrue(l.checkForRefill());
         l.setCouple(new Position(5,6),new Tile(T_Type.CAT,1),State.PICKABLE);
         assertFalse(l.checkForRefill());
+    }
+
+    /**
+     * Method refillTest tests if refill method correctly refills the board.
+     */
+    @Test
+    public void refillTest()
+    {
+        LivingRoom livingRoom = new LivingRoom(4);
+
+        assertFalse(livingRoom.checkForRefill());
+        livingRoom.clearBoard();
+        livingRoom.printBoard();
+        assertTrue(livingRoom.checkForRefill());
+        livingRoom.refill();
+        livingRoom.printBoard();
+        assertFalse(livingRoom.checkForRefill());
+    }
+
+    /**
+     * Method updateCouplesTest tests if updateCouples correctly deletes the couples from the board.
+     */
+    @Test
+    public void updateCouplesTest(){
+        LivingRoom livingRoom = new LivingRoom(4);
+
+        livingRoom.setCouple(new Position(4,4),new Tile(T_Type.CAT,1),State.PICKABLE);
+        assertEquals(State.PICKABLE,livingRoom.getCouple(new Position(4,4)).getState());
+        assertEquals(T_Type.CAT,livingRoom.getCouple(new Position(4,4)).getTile().getTileType());
+
+        livingRoom.setCouple(new Position(4,5),new Tile(T_Type.CAT,1),State.PICKABLE);
+        assertEquals(State.PICKABLE,livingRoom.getCouple(new Position(4,5)).getState());
+        assertEquals(T_Type.CAT,livingRoom.getCouple(new Position(4,5)).getTile().getTileType());
+
+        livingRoom.setCouple(new Position(4,6),new Tile(T_Type.CAT,1),State.PICKABLE);
+        assertEquals(State.PICKABLE,livingRoom.getCouple(new Position(4,6)).getState());
+        assertEquals(T_Type.CAT,livingRoom.getCouple(new Position(4,6)).getTile().getTileType());
+
+        livingRoom.printBoard();
+
+        ArrayList<Position> choice = new ArrayList<>();
+        choice.add(new Position(4,4));
+        choice.add(new Position(4,5));
+        choice.add(new Position(4,6));
+        livingRoom.updateCouples(choice);
+
+        livingRoom.printBoard();
+
+        assertEquals(State.EMPTY,livingRoom.getCouple(new Position(4,4)).getState());
+        assertEquals(State.EMPTY,livingRoom.getCouple(new Position(4,5)).getState());
+        assertEquals(State.EMPTY,livingRoom.getCouple(new Position(4,6)).getState());
     }
 }
 

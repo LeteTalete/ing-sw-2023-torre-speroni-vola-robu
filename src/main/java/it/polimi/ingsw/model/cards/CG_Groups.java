@@ -71,8 +71,8 @@ public class CG_Groups extends CommonGoalCard implements Serializable {
 
         int x, y;
         ArrayList<Position> group;
-        ArrayList<ArrayList<Position>> groups = new ArrayList<ArrayList<Position>>();
-        ArrayList<Couple> visited = new ArrayList<Couple>();
+        ArrayList<ArrayList<Position>> groups = new ArrayList<>();
+        ArrayList<Couple> visited = new ArrayList<>();
 
         if (!shelf.getCardsAlreadyChecked().contains(this.ID)) {
 
@@ -139,6 +139,7 @@ public class CG_Groups extends CommonGoalCard implements Serializable {
 
     }
 
+    @Override
     public int getID() {
         return this.ID;
     }
@@ -151,9 +152,12 @@ public class CG_Groups extends CommonGoalCard implements Serializable {
     public String getType() {
         return type;
     }
+
+    @Override
     public int getAtLeast() {
         return atLeast;
     }
+    @Override
     public int getNumOfOccurrences() {
         return this.numOfOccurrences;
     }
