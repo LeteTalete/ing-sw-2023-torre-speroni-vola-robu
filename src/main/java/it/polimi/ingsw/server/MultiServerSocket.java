@@ -27,7 +27,7 @@ public class MultiServerSocket {
         this.serverManager = serverManager;
     }
 
-    public void startServer()
+    public void run()
     {
         fileLog.info("Socket server started on port "+port);
         while(true)

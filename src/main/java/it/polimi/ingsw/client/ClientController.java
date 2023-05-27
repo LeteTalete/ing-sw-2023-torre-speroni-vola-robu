@@ -3,6 +3,8 @@ package it.polimi.ingsw.client;
 import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.network.IClientListener;
 import it.polimi.ingsw.network.IRemoteController;
+import it.polimi.ingsw.notifications.ChatMessage;
+import it.polimi.ingsw.requests.ChatMessageRequest;
 import it.polimi.ingsw.responses.Response;
 import it.polimi.ingsw.server.StaticStrings;
 import it.polimi.ingsw.view.View;
@@ -17,7 +19,7 @@ import java.util.List;
 
 public class ClientController {
     private static Logger fileLog = LogManager.getRootLogger();
-
+    private static String HOSTNAME = "ingsw.server.hostname";
     private View currentView;
     private boolean gameOn;
     private int myTurn;
@@ -44,15 +46,15 @@ public class ClientController {
 
     public void setupConnection() {
         currentView.chooseConnection();
-        //todo uncomment this and place SIP in stead of null when initializing connections
+        //todo uncomment this and place SIP instead of null when initializing connections
         //currentView.askServerIP();
         //String SIP = currentView.getServerIP();
         String connectionStatus = "Connecting...";
         if(currentView.getConnectionType().equals("RMI")) {
-            connectionStatus = setupRMI(null);
+            connectionStatus = setupRMI(System.getProperty(HOSTNAME));
         }
         else if(currentView.getConnectionType().equals("SOCKET")){
-            connectionStatus = setupSocket(null);
+            connectionStatus = setupSocket(System.getProperty(HOSTNAME));
         }
         else if(connectionStatus!=null){
             this.currentView.displayNotification(connectionStatus);
@@ -62,16 +64,15 @@ public class ClientController {
     public String setupSocket(String serverIP) {
         try {
             //you have to pass 'this' to the client socket
-            ClientSocket clientSocket = new ClientSocket("127.0.0.1", 1420, this);
+            ClientSocket clientSocket = new ClientSocket(serverIP, 8899, this);
             this.currentConnection = clientSocket;
             clientSocket.setViewClient(currentView);
             this.responseDecoder = new ResponseDecoder(listenerClient, currentConnection);
             clientSocket.setResponseDecoder(responseDecoder);
             clientSocket.startClient();
 
-            //deleted the if clause to check the login response, since the server should already notify the users about it
         } catch (Exception e) {
-            fileLog.error(e.getMessage());
+            fileLog.error(e);
         }
         return null;
     }
@@ -79,7 +80,7 @@ public class ClientController {
     private String setupRMI(String serverIP) {
         try{
             //TODO put serverip in host field of locateregisty
-            this.registry = LocateRegistry.getRegistry(8089);
+            this.registry = LocateRegistry.getRegistry(serverIP,8089);
             this.remoteController = (IRemoteController) registry.lookup("Login");
             ClientRMI clientRMI = new ClientRMI(this, remoteController);
             this.currentConnection = clientRMI;
@@ -155,6 +156,7 @@ public class ClientController {
     }
 
     public void numberOfPlayers(int number) {
+        fileLog.debug("number of players: " + number);
         if(number < 2 || number > 4){
             currentView.printError("Wrong number of players, please type 'help' for a list of commands");
         }
@@ -242,5 +244,13 @@ public class ClientController {
             currentView.chooseColumn();
             currentView.chooseOrder();
         }
+    }
+
+    public void gameNotStarted() {
+        currentView.displayNotification("The game has not started yet, please wait for the other players to join");
+    }
+
+    public void sendChat(String choice, String toString) {
+        currentConnection.sendChat(new ChatMessageRequest(username, toString, choice));
     }
 }

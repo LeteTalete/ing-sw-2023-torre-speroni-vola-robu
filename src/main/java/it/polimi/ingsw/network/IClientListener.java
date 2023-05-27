@@ -1,10 +1,7 @@
 package it.polimi.ingsw.network;
 
 import it.polimi.ingsw.Updates.ModelUpdate;
-import it.polimi.ingsw.notifications.CommonGoalGained;
-import it.polimi.ingsw.notifications.EndTurn;
-import it.polimi.ingsw.notifications.GameEnd;
-import it.polimi.ingsw.notifications.LastTurn;
+import it.polimi.ingsw.notifications.*;
 import it.polimi.ingsw.responses.*;
 
 import java.io.Serializable;
@@ -18,8 +15,6 @@ public interface IClientListener extends Remote, Serializable {
     void sendUpdatedModel(ModelUpdate message) throws RemoteException;
 
     void notifySuccessfulRegistration(LoginResponse response) throws RemoteException;
-
-    void setClientTurn() throws RemoteException;
 
     void setGameOn() throws RemoteException;
 
@@ -36,4 +31,8 @@ public interface IClientListener extends Remote, Serializable {
     void notifyLastTurn(LastTurn lastTurn) throws RemoteException;
 
     void notifyCommonGoalGained(CommonGoalGained commonGoalGained) throws RemoteException;
+
+    void notifyChatMessage(ChatMessage chatMessage) throws RemoteException;
+
+    void updateModel(ModelUpdateNotification modelUpdateNotification) throws RemoteException;
 }

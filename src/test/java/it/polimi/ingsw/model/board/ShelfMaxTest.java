@@ -1,16 +1,16 @@
 package it.polimi.ingsw.model.board;
 
+import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.model.enumerations.Couple;
 import it.polimi.ingsw.model.enumerations.State;
 import it.polimi.ingsw.model.enumerations.T_Type;
 import it.polimi.ingsw.model.enumerations.Tile;
+
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
-import static org.junit.jupiter.api.Assertions.*;
 
 class ShelfMaxTest {
 
@@ -18,40 +18,74 @@ class ShelfMaxTest {
 
     private Couple dummy;
 
-    /** Test randomInsertTilesTest fills a shelf using random generated hands (an arraylist filled with tiles)
-     *  Each hand's size ranges from 1 to 3
-     *  Each tile's tile type and image is randomly chosen
+    /**
+     * Test insertTilesTest checks if the tiles are inserted correctly in the shelf.
      */
     @Test
-    void randomInsertTilesTest(){
-
+    public void insertTilesTest(){
         Shelf shelf = new Shelf();
         ArrayList<Tile> hand = new ArrayList<>();
-        int handSize;
-        int randomColumn;
-        T_Type[] values = T_Type.values();
-        int size = values.length;
-
-        while( !shelf.checkShelfFull() ){
-            randomColumn =  new Random().nextInt(5);
-            handSize = new Random().nextInt(3) + 1;
-
-            for (int i = 0; i < handSize ; i++) {
-                Random random = new Random();
-                int rand = new Random().nextInt(3);
-                hand.add(new Tile(values[random.nextInt(size)], rand));
-            }
-            assertNotNull(hand);
-            if ( hand.size() <= shelf.getMaxFree(randomColumn) ) {
-                shelf.insertTiles(randomColumn, hand);
-            }
-            hand.clear();
-        }
-        assertTrue(shelf.checkShelfFull());
+        hand.add(new Tile(T_Type.CAT,1));
+        hand.add(new Tile(T_Type.BOOK,2));
+        hand.add(new Tile(T_Type.TROPHY,3));
+        shelf.insertTiles(0,hand);
         shelf.printShelf();
 
+        assertEquals(shelf.getCouple(new Position(5,0)).getTile().getTileType(),T_Type.CAT);
+        assertEquals(shelf.getCouple(new Position(4,0)).getTile().getTileType(),T_Type.BOOK);
+        assertEquals(shelf.getCouple(new Position(3,0)).getTile().getTileType(),T_Type.TROPHY);
     }
 
+    /**
+     * Test checkEnoughSpaceTest checks if the shelf has enough space to insert the tiles.
+     */
+    @Test
+    public void checkEnoughSpaceTest(){
+        Shelf shelf = new Shelf();
+        ArrayList<Tile> hand = new ArrayList<>();
+
+        hand.add(new Tile(T_Type.CAT,1));
+        hand.add(new Tile(T_Type.BOOK,1));
+        hand.add(new Tile(T_Type.TROPHY,1));
+        hand.add(new Tile(T_Type.PLANT,1));
+        hand.add(new Tile(T_Type.CAT,1));
+        shelf.insertTiles(0,hand);
+        shelf.insertTiles(1,hand);
+        shelf.insertTiles(2,hand);
+        shelf.insertTiles(3,hand);
+        shelf.insertTiles(4,hand);
+        shelf.printShelf();
+
+        ArrayList<Position> choice = new ArrayList<>();
+        choice.add(new Position(4,4));
+        assertTrue(shelf.checkEnoughSpace(choice));
+
+        choice.add(new Position(4,3));
+        assertFalse(shelf.checkEnoughSpace(choice));
+
+        choice.add(new Position(4,2));
+        assertFalse(shelf.checkEnoughSpace(choice));
+
+        shelf.setFreeSlots(1,0);
+        shelf.setFreeSlots(2,0);
+        shelf.printShelf();
+        assertTrue(shelf.checkEnoughSpace(choice));
+    }
+
+    /**
+     * Test setCoordinateTest checks if the tile is inserted in the correct position.
+     */
+    @Test
+    public void setCoordinateTest(){
+        Tile tile = new Tile(T_Type.CAT,1);
+        Couple couple = new Couple(tile);
+
+        Shelf shelf = new Shelf();
+        shelf.setCoordinate(5,0,couple);
+        shelf.printShelf();
+
+        assertEquals(shelf.getCouple(new Position(5,0)).getTile().getTileType(),T_Type.CAT);
+    }
 
     @Test
     void testMaxFree() {
@@ -66,7 +100,7 @@ class ShelfMaxTest {
     }
 
     @Test
-    void testShelfFull() {
+    void checkShelfFullTest() {
         s = new Shelf();
         dummy = new Couple();
         dummy.setState(State.PICKED);
@@ -75,7 +109,7 @@ class ShelfMaxTest {
                 s.getShelfsMatrix()[i][j] = dummy;
             }
         }
-        assertEquals(0,s.getMaxFree(5));
+        assertTrue(s.checkShelfFull());
     }
 
     @Test

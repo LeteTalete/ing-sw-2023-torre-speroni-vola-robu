@@ -115,7 +115,7 @@ public class ClientTUI implements View{
         fileLog.info("ClientTUI running");
         do {
             command = nextCommand();
-
+            fileLog.debug("Command: " + command);
             if (!command.equals(ERROR_COMMAND)) {
                 commandParsing.elaborateInput(command);
             }
@@ -162,7 +162,7 @@ public class ClientTUI implements View{
     }
 
     public void getUsername(){
-        writeText("Insert username: [username 'name']");
+        writeText("Insert username: ");
         if(!isRunning){
             running();
             setIsRunning(true);
@@ -175,6 +175,7 @@ public class ClientTUI implements View{
 
     @Override
     public void displayNotification(String message) {
+        fileLog.debug("displayNotification: " + message);
         writeText(message);
     }
     //gamerstatus has a status as an argument
@@ -185,7 +186,7 @@ public class ClientTUI implements View{
 
     @Override
     public void askAmountOfPlayers() {
-        writeText("Insert number of players (from 2 to 4): [number '2/3/4']");
+        writeText("Insert number of players (from 2 to 4):");
     }
 
     public void GameTitle(){
@@ -336,5 +337,9 @@ public class ClientTUI implements View{
 
     public void setServerIP(String serverIP) {
         ServerIP = serverIP;
+    }
+
+    public void displayChatNotification(String s) {
+        //todo
     }
 }

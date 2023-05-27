@@ -2,10 +2,7 @@ package it.polimi.ingsw.network;
 
 import it.polimi.ingsw.Updates.ModelUpdate;
 import it.polimi.ingsw.client.ResponseDecoder;
-import it.polimi.ingsw.notifications.CommonGoalGained;
-import it.polimi.ingsw.notifications.EndTurn;
-import it.polimi.ingsw.notifications.GameEnd;
-import it.polimi.ingsw.notifications.LastTurn;
+import it.polimi.ingsw.notifications.*;
 import it.polimi.ingsw.responses.*;
 import it.polimi.ingsw.server.StaticStrings;
 import it.polimi.ingsw.view.ClientTUI;
@@ -42,11 +39,6 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
             view.displayNotification("Registration failed: "+loginResponse.name+" already exists. Try again");
             view.serverSavedUsername(loginResponse.name, false, loginResponse.token, loginResponse.first);
         }
-    }
-
-    @Override
-    public void setClientTurn() throws RemoteException{
-        view.setMyTurn(true);
     }
 
     @Override
@@ -98,6 +90,16 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
     @Override
     public void notifyCommonGoalGained(CommonGoalGained commonGoalGained) throws RemoteException {
         view.displayNotification(commonGoalGained.getName() + " gained Common Goal Card " + commonGoalGained.getCard() + "!");
+    }
+
+    @Override
+    public void notifyChatMessage(ChatMessage chatMessage) throws RemoteException {
+        view.displayChatNotification("@" + chatMessage.getSender() + ": " + chatMessage.getMessage());
+    }
+
+    @Override
+    public void updateModel(ModelUpdateNotification modelUpdateNotification) throws RemoteException {
+        view.displayUpdatedModel(modelUpdateNotification.getUpdate());
     }
 
 }

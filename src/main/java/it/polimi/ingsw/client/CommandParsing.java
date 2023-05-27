@@ -1,5 +1,6 @@
 package it.polimi.ingsw.client;
 
+import it.polimi.ingsw.notifications.ChatMessage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -11,26 +12,45 @@ public class CommandParsing {
     private static Logger fileLog = LogManager.getRootLogger();
     private static final String TILES = "tiles";
     private static final String HELP = "help";
-    private static final String CHAT = "@";
+    //private static final String CHAT = "@";
     private static final String REARRANGE = "order";
     private static final String SHELFSHOW = "showshelf";
     private static final String COLUMN = "column";
-    private static final String NUMBER = "number";
-    private static final String USERNAME = "username";
     private static final String BACK = "back";
     //for when it's the player's turn
     private boolean isPlaying;
     private boolean gameIsOn;
+    private boolean initializingName;
+    private boolean initializingRoom;
 
     private int choiceNumber;
     private List<String> multipleChoiceNumber;
+    private String choice;
     private final ClientController master;
 
     public CommandParsing(ClientController master) {
         this.master = master;
+        initializingName = true;
+        initializingRoom = false;
     }
 
     public void elaborateInput(String command) {
+        if(initializingName) {
+            //if asking for name
+            master.askLogin(command);
+            initializingRoom= true;
+            initializingName = false;
+            return;
+        }
+        if(initializingRoom){
+            //if choosing tiles
+            if(command.length() > 1 || command.charAt(0) < 50 || command.charAt(0) > 52) return;
+            choiceNumber= Integer.parseInt(command);
+            fileLog.debug("choice number is " + choiceNumber);
+            master.numberOfPlayers(choiceNumber);
+            initializingRoom = false;
+            return;
+        }
         //note: \\s is single whitespace command
         String [] splitted = command.split("\\s");
         List<String> args = new ArrayList<>();
@@ -44,11 +64,8 @@ public class CommandParsing {
 
     private void executeCom(String command, List<String> args) {
         switch (command) {
-            case (USERNAME) ->
-                //if choosing username
-                    parseUsername(args);
             case (TILES) -> {
-                if (!gameIsOn && !isPlaying) {
+                if (!isPlaying) {
                     notMyTurn();
                     break;
                 }
@@ -57,20 +74,15 @@ public class CommandParsing {
                 executeTileCommand();
             }
             case (BACK) -> {
-                if (!gameIsOn && !isPlaying) {
+                if (!isPlaying) {
                     notMyTurn();
                     break;
                 }
                 //if user wants to go back
                 masterGoBack();
             }
-            case (NUMBER) -> {
-                //if choosing tiles
-                parseInteger(args);
-                master.numberOfPlayers(choiceNumber);
-            }
             case (REARRANGE) -> {
-                if (!gameIsOn && !isPlaying) {
+                if (!isPlaying) {
                     notMyTurn();
                     break;
                 }
@@ -79,7 +91,7 @@ public class CommandParsing {
                 executeRearrangeCommand();
             }
             case (COLUMN) -> {
-                if (!gameIsOn && !isPlaying) {
+                if (!isPlaying) {
                     notMyTurn();
                     break;
                 }
@@ -89,22 +101,42 @@ public class CommandParsing {
             }
             case (SHELFSHOW) -> {
                 if (!gameIsOn) {
-                    notMyTurn();
+                    master.gameNotStarted();
                     break;
                 }
                 //if choosing tiles
                 executeShelfCommand();
             }
-            case (CHAT) -> {
-                if (!gameIsOn) {
-                    notMyTurn();
-                    break;
-                }
-                parseUsername(args);
-            }
             case (HELP) -> master.printCommands();
-            default -> master.wrongCommand();
+            default -> {
+                if(command.startsWith("@")) {
+                    if (!gameIsOn) {
+                        master.gameNotStarted();
+                        break;
+                    }
+                    choice = command.substring(1);
+                    parseChat(args);
+                }
+                else{
+                    master.wrongCommand();
+                }
+
+            }
+
         }
+    }
+
+    private void parseChat(List<String> args) {
+        if(args.size() < 1){
+            master.errorFormat();
+            return;
+        }
+        StringBuilder message = new StringBuilder();
+        for(String s : args){
+            message.append(s).append(" ");
+        }
+        fileLog.info("sending message " + message.toString() + " to " + choice);
+        master.sendChat(choice, message.toString());
     }
 
     private void masterGoBack() {
@@ -129,13 +161,9 @@ public class CommandParsing {
     }
 
     private void parseUsername(List<String> args) {
-        if(args.size()!=1){
-            master.errorFormat();
-            return;
-        }
+        //todo this could mean i can put an username with two or more words, but only the first will be parsed
         try {
-            String name = (String)args.get(0);
-            master.askLogin(name);
+            choice = args.get(0);
         }catch(NumberFormatException e){
             //ack("ERROR: Wrong parameter");
             //clientController.getViewClient().denyMove();

@@ -2,11 +2,12 @@ package it.polimi.ingsw.server;
 
 import it.polimi.ingsw.Updates.ModelUpdate;
 import it.polimi.ingsw.controller.GameController;
-import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.network.IClientListener;
 import it.polimi.ingsw.network.IRemoteController;
+import it.polimi.ingsw.notifications.ChatMessage;
 import it.polimi.ingsw.notifications.DisconnectionNotif;
 import it.polimi.ingsw.notifications.GameStart;
+import it.polimi.ingsw.requests.ChatMessageRequest;
 import it.polimi.ingsw.responses.LoginResponse;
 import it.polimi.ingsw.responses.Response;
 import org.apache.logging.log4j.LogManager;
@@ -93,6 +94,30 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
         } catch (RemoteException e) {
             fileLog.error(e.getMessage());
         }
+    }
+
+    @Override
+    public void sendChat(ChatMessageRequest messageRequest) throws RemoteException {
+        fileLog.info("Received a chat message from "+messageRequest.getSender()+" to "+messageRequest.getReceiver()+": "+messageRequest.getMessage());
+        ChatMessage message = new ChatMessage(messageRequest.getSender(), messageRequest.getMessage());
+        String senderToken = ConnectionManager.get().namesTokens.get(message.getSender());
+        if(messageRequest.getReceiver().equals("all")){
+            activeUsers.entrySet()
+                    .stream()
+                    .filter(e -> e.getValue().equals(activeUsers.get(senderToken)))
+                    .forEach(e -> {
+                        try {
+                            ConnectionManager.get().getLocalView(e.getKey()).notifyChatMessage(message);
+                        } catch (RemoteException ex) {
+                            fileLog.error(ex.getMessage());
+                        }
+                    });
+        }
+        else{
+            String receiverToken = ConnectionManager.get().namesTokens.get(messageRequest.getReceiver());
+            ConnectionManager.get().getLocalView(receiverToken).notifyChatMessage(message);
+        }
+
     }
 
 
@@ -195,10 +220,6 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
             }
         }
         return "error!";
-    }
-
-    public void askTilesToPlayer(String tokenId) throws RemoteException {
-        ConnectionManager.get().getLocalView(tokenId).setClientTurn();
     }
     //TODO closeGame(gameId)
 }
