@@ -38,11 +38,20 @@ public class CommandParsing {
         if(initializingName) {
             //if asking for name
             master.askLogin(command);
-            initializingRoom= true;
-            initializingName = false;
+            if ( master.getUsername() != null) {
+                if ( master.isGameOn() ) {
+                    initializingRoom = false;
+                } else {
+                    // todo: if there is already a waiting room open then this boolean should be set to false, else true
+                        initializingRoom = true;
+                }
+                initializingName = false;
+            } else if ( master.getUsername() == null ) {
+                initializingRoom = false;
+                initializingName = true;
+            }
             return;
-        }
-        if(initializingRoom){
+        } else if(initializingRoom){
             //if choosing tiles
             if(command.length() > 1 || command.charAt(0) < 50 || command.charAt(0) > 52) return;
             choiceNumber= Integer.parseInt(command);

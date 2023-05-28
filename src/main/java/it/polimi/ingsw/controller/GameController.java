@@ -151,12 +151,9 @@ public class GameController {
     }
 
     public void insertTilesInShelf(int column, ArrayList<Tile> tiles){
-        model.getCurrentPlayer().getMyShelf().insertTiles(column,tiles);
-
-        if ( model.getCurrentPlayer().getMyShelf().checkShelfFull() ){
-            model.setEndGame(model.getCurrentPlayer().getNickname());
-        }
+        model.insertTiles(column,tiles);
     }
+
     public void updateBoardCouples(){
         model.getGameBoard().updateCouples(this.choiceOfTiles);
         this.choiceOfTiles = null;
