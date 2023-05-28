@@ -130,11 +130,12 @@ public class ClientController {
         commPars.setPlaying(turn);
     }
 
-    public void serverSavedUsername(String name, boolean b, String token) {
+    public void serverSavedUsername(String name, boolean b, String token, boolean first) {
         if(b){
             setUserToken(token);
             setUsername(name);
             currentConnection.setUserToken(token);
+            commPars.setFirst(first);
         }
         else{
             userLogin();

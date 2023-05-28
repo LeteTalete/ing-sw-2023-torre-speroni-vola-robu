@@ -27,6 +27,7 @@ public class CommandParsing {
     private List<String> multipleChoiceNumber;
     private String choice;
     private final ClientController master;
+    private boolean first;
 
     public CommandParsing(ClientController master) {
         this.master = master;
@@ -42,8 +43,11 @@ public class CommandParsing {
                 if ( master.isGameOn() ) {
                     initializingRoom = false;
                 } else {
-                    // todo: if there is already a waiting room open then this boolean should be set to false, else true
+                    if (first) {
                         initializingRoom = true;
+                    } else {
+                        initializingRoom = false;
+                    }
                 }
                 initializingName = false;
             } else if ( master.getUsername() == null ) {
@@ -272,6 +276,10 @@ public class CommandParsing {
         if(s.charAt(0) < 48 || s.charAt(0) > 56) return false;
         if(s.charAt(1) < 48 || s.charAt(1) > 56) return false;
         return true;
+    }
+
+    public void setFirst(boolean b) {
+        this.first = b;
     }
 }
 

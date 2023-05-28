@@ -283,7 +283,7 @@ public class ClientTUI implements View{
 
     @Override
     public void serverSavedUsername(String name, boolean b, String token, boolean first) {
-        master.serverSavedUsername(name, b, token);
+        master.serverSavedUsername(name, b, token, first);
         if(first){
             askAmountOfPlayers();
         }
