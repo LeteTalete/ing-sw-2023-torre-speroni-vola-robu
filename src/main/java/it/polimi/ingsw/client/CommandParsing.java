@@ -40,6 +40,7 @@ public class CommandParsing {
             //if asking for name
             master.askLogin(command);
             if ( master.getUsername() != null) {
+                initializingName = false;
                 if ( master.isGameOn() ) {
                     initializingRoom = false;
                 } else {
@@ -49,12 +50,13 @@ public class CommandParsing {
                         initializingRoom = false;
                     }
                 }
-                initializingName = false;
+
             } else if ( master.getUsername() == null ) {
                 initializingRoom = false;
                 initializingName = true;
             }
             return;
+
         } else if(initializingRoom){
             //if choosing tiles
             if(command.length() > 1 || command.charAt(0) < 50 || command.charAt(0) > 52) return;
@@ -241,7 +243,6 @@ public class CommandParsing {
 
     public void setGameIsOn(boolean gameIsOn) {
         this.gameIsOn = gameIsOn;
-        this.initializingRoom = false;
     }
     public boolean checkTilesFormat(String s)
     {
