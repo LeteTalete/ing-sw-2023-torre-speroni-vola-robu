@@ -22,7 +22,7 @@ public interface IClientListener extends Remote, Serializable {
 
     void showTextNotification(String waitingRoomCreated) throws RemoteException;
 
-    void notifyMoveOk(MoveOk moveOk) throws RemoteException;
+    void notifyColumnOk(ColumnOk moveOk) throws RemoteException;
 
     void notifyEndTurn(EndTurn endTurn) throws RemoteException;
 
@@ -35,4 +35,8 @@ public interface IClientListener extends Remote, Serializable {
     void notifyChatMessage(ChatMessage chatMessage) throws RemoteException;
 
     void updateModel(ModelUpdateNotification modelUpdateNotification) throws RemoteException;
+
+    void notifyRearrangeOk(RearrangeOk rearrangeOk) throws RemoteException;
+
+    void notifyTilesOk(TilesOk tilesOk) throws RemoteException;
 }

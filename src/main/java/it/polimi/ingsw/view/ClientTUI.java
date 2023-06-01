@@ -121,9 +121,11 @@ public class ClientTUI implements View{
             }
         } while (master.isConnected());
         if(master.isGameOn() /*and connection is not lost, idk*/) {
+            fileLog.debug("entered an if and is stuck");
             //i don't remember what i was supposed to write here, i'm tired
         }
         else {
+            fileLog.debug("ClientTUI stopped");
             master.close();
         }
 
@@ -321,8 +323,8 @@ public class ClientTUI implements View{
     }
 
     @Override
-    public void nextAction() {
-        master.nextAction();
+    public void nextAction(int num) {
+        master.nextAction(num);
     }
 
     @Override
@@ -341,5 +343,6 @@ public class ClientTUI implements View{
 
     public void displayChatNotification(String s) {
         //todo
+        writeText(s);
     }
 }

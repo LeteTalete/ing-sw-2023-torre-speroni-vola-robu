@@ -9,10 +9,7 @@ import it.polimi.ingsw.model.cards.CommonGoalCard;
 import it.polimi.ingsw.model.enumerations.Tile;
 import it.polimi.ingsw.notifications.CommonGoalGained;
 import it.polimi.ingsw.notifications.EndTurn;
-import it.polimi.ingsw.responses.GetOrderResponse;
-import it.polimi.ingsw.responses.GetTilesResponse;
-import it.polimi.ingsw.responses.MoveOk;
-import it.polimi.ingsw.responses.Response;
+import it.polimi.ingsw.responses.*;
 import it.polimi.ingsw.server.ServerManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -73,10 +70,10 @@ public class GameController {
         if (model.getCurrentPlayer().getMyShelf().checkEnoughSpace(choice) && this.getGameBoard().checkPlayerChoice(choice)) {
             this.choiceOfTiles = choice;
             master.notifySinglePlayer(token, new GetTilesResponse(choice));
-            master.notifySinglePlayer(token, new MoveOk(true));
+            master.notifySinglePlayer(token, new TilesOk(true));
         }
         else{
-            master.notifySinglePlayer(token, new MoveOk(false));
+            master.notifySinglePlayer(token, new TilesOk(false));
         }
     }
 
@@ -84,7 +81,7 @@ public class GameController {
     {
         if(this.choiceOfTiles != null && this.choiceOfTiles.size() == order.size())
         {
-            ArrayList<Position> tiles = (ArrayList<Position>) this.choiceOfTiles.clone();
+            ArrayList<Position> tiles = new ArrayList<>(this.choiceOfTiles);
 
             for(int i=0; i<order.size(); i++)
             {
@@ -92,12 +89,11 @@ public class GameController {
             }
             this.choiceOfTiles = tiles;
 
-            master.notifySinglePlayer(token, new GetOrderResponse(tiles, true));
-            master.notifySinglePlayer(token, new MoveOk(true));
+            master.notifySinglePlayer(token, new RearrangeOk(true));
         }
         else
         {
-            master.notifySinglePlayer(token, new MoveOk(false));
+            master.notifySinglePlayer(token, new RearrangeOk(false));
         }
     }
 
@@ -110,13 +106,14 @@ public class GameController {
             {
                 tiles.add(model.getGameBoard().getCouple(this.choiceOfTiles.get(i)).getTile());
             }
-            master.notifySinglePlayer(token, new MoveOk(true));
+            fileLog.debug("i'm in choose column and i'm about to notify player: "+token+" about the move ok");
+            master.notifySinglePlayer(token, new ColumnOk(true));
 
             updateGame(token,column,tiles);
         }
         else
         {
-            master.notifySinglePlayer(token, new MoveOk(false));
+            master.notifySinglePlayer(token, new ColumnOk(false));
         }
     }
 

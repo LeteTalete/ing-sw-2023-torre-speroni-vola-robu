@@ -3,10 +3,14 @@ package it.polimi.ingsw.client;
 import it.polimi.ingsw.network.IClientListener;
 import it.polimi.ingsw.notifications.*;
 import it.polimi.ingsw.responses.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.rmi.RemoteException;
 
 public class ResponseDecoder implements ResponseHandler {
+    private static Logger fileLog = LogManager.getRootLogger();
+
     private final IClientListener clientListener;
     private final IClientConnection client;
 
@@ -63,18 +67,15 @@ public class ResponseDecoder implements ResponseHandler {
 
 
     @Override
-    public void handle(MoveOk moveOk) throws RemoteException {
-        clientListener.notifyMoveOk(moveOk);
+    public void handle(ColumnOk moveOk) throws RemoteException {
+        clientListener.notifyColumnOk(moveOk);
         client.setReceivedResponse(false);
         synchronized (client) {
+            fileLog.debug("columnok received and set notreceivedresponse to false");
             client.notifyAll();
         }
     }
 
-    @Override
-    public void handle(GetOrderResponse getOrderResponse) throws RemoteException {
-        //todo
-    }
 
     @Override
     public void handle(EndTurn endTurn) throws RemoteException {
@@ -135,6 +136,27 @@ public class ResponseDecoder implements ResponseHandler {
         clientListener.updateModel(modelUpdateNotification);
         client.setReceivedResponse(false);
         synchronized (client) {
+            client.notifyAll();
+        }
+    }
+
+    @Override
+    public void handle(RearrangeOk rearrangeOk) throws RemoteException {
+        clientListener.notifyRearrangeOk(rearrangeOk);
+        client.setReceivedResponse(false);
+        fileLog.debug("rearrangeok received and set notreceivedresponse to false");
+        synchronized (client) {
+            client.notifyAll();
+        }
+    }
+
+    @Override
+    public void handle(TilesOk tilesOk) throws RemoteException {
+        clientListener.notifyTilesOk(tilesOk);
+        client.setReceivedResponse(false);
+        synchronized (client) {
+            fileLog.debug("TilesOk received and set notreceivedresponse to false");
+
             client.notifyAll();
         }
     }

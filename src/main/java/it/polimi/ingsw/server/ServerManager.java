@@ -52,12 +52,14 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
     public void notifySinglePlayer(String token, Response response){
         try {
             ConnectionManager.get().getLocalView(token).sendNotification(response);
+            fileLog.debug("i'm notifying single player");
         } catch (RemoteException e) {
             fileLog.error(e.getMessage());
         }
     }
 
     public synchronized void notifyAllPlayers(String gameId, Response response) {
+        fileLog.debug("i'm about to notify all players");
         activeUsers.entrySet()
                 .stream()
                 .filter(e -> e.getValue().equals(gameId))

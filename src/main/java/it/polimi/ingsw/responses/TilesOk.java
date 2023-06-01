@@ -2,10 +2,10 @@ package it.polimi.ingsw.responses;
 
 import java.rmi.RemoteException;
 
-public class MoveOk implements Response {
+public class TilesOk implements Response {
     private final boolean moveOk;
 
-    public MoveOk(boolean moveOk) {
+    public TilesOk(boolean moveOk) {
         this.moveOk = moveOk;
     }
 
@@ -18,3 +18,4 @@ public class MoveOk implements Response {
         return moveOk;
     }
 }
+

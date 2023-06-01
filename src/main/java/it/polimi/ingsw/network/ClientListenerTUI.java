@@ -59,10 +59,10 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
 
 
     @Override
-    public void notifyMoveOk(MoveOk moveOk) throws RemoteException {
+    public void notifyColumnOk(ColumnOk moveOk) throws RemoteException {
         if(moveOk.isMoveOk()){
-            view.nextAction();
-            view.displayNotification("Move successful!");
+            view.nextAction(3);
+            view.displayNotification("Choice of column successful!");
         }
         else{
             view.displayNotification("Invalid move. Try again.");
@@ -100,6 +100,28 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
     @Override
     public void updateModel(ModelUpdateNotification modelUpdateNotification) throws RemoteException {
         view.displayUpdatedModel(modelUpdateNotification.getUpdate());
+    }
+
+    @Override
+    public void notifyRearrangeOk(RearrangeOk rearrangeOk) throws RemoteException {
+        if(rearrangeOk.isMoveOk()){
+            view.nextAction(3);
+            view.displayNotification("Rearrange successful!");
+        }
+        else{
+            view.displayNotification("Invalid move. Try again.");
+        }
+    }
+
+    @Override
+    public void notifyTilesOk(TilesOk tilesOk) throws RemoteException {
+        if(tilesOk.isMoveOk()){
+            view.nextAction(2);
+            view.displayNotification("Choice of tiles successful!");
+        }
+        else{
+            view.displayNotification("Invalid move. Try again.");
+        }
     }
 
 }

@@ -153,7 +153,7 @@ public class ClientGUI implements View {
     }
 
     @Override
-    public void nextAction() {
+    public void nextAction(int num) {
 
     }
 

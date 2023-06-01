@@ -136,6 +136,7 @@ public class ClientController {
             setUsername(name);
             currentConnection.setUserToken(token);
             commPars.setFirst(first);
+            setToCLose(false);
         }
         else{
             userLogin();
@@ -235,16 +236,18 @@ public class ClientController {
         currentView.printError("Wrong format, please try again or type 'help' for a list of commands");
     }
 
-    public void nextAction() {
-        if(myTurn == 3){
-            currentView.chooseColumn();
-        }
-        else if(myTurn == 2){
+    public void nextAction(int num) {
+        if(num==2){
             currentView.displayNotification("You can now re-arrange the tiles or choose the column. Here are the commands:");
             //todo it should show commands format, not show the request
             currentView.chooseColumn();
             currentView.chooseOrder();
+            setMyTurn(true);
         }
+        else if(num==3){
+            currentView.chooseColumn();
+        }
+
     }
 
     public void gameNotStarted() {

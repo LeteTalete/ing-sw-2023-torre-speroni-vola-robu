@@ -78,7 +78,6 @@ public class ServerSocketClientHandler implements Runnable, IClientListener
         }
     }
 
-//todo fix this switch case
     @Override
     public void sendNotification(Response response) throws RemoteException
     {
@@ -114,7 +113,7 @@ public class ServerSocketClientHandler implements Runnable, IClientListener
 
 
     @Override
-    public void notifyMoveOk(MoveOk moveOk) throws RemoteException {
+    public void notifyColumnOk(ColumnOk moveOk) throws RemoteException {
         respond(moveOk);
     }
 
@@ -146,6 +145,16 @@ public class ServerSocketClientHandler implements Runnable, IClientListener
     @Override
     public void updateModel(ModelUpdateNotification modelUpdateNotification) throws RemoteException {
         //idk
+    }
+
+    @Override
+    public void notifyRearrangeOk(RearrangeOk rearrangeOk) throws RemoteException {
+        respond(rearrangeOk);
+    }
+
+    @Override
+    public void notifyTilesOk(TilesOk tilesOk) throws RemoteException {
+        respond(tilesOk);
     }
 
     private void respond(Response response) {

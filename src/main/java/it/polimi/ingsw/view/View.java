@@ -57,7 +57,7 @@ public interface View {
 
     void chooseOrder();
 
-    void nextAction();
+    void nextAction(int num);
 
     void showEndResult();
 }

@@ -136,6 +136,7 @@ public class ClientSocket implements IClientConnection
                 fileLog.error(e.getMessage());
             }
         }
+        fileLog.debug("I received a response on choose tiles");
     }
 
     @Override
@@ -147,11 +148,11 @@ public class ClientSocket implements IClientConnection
             try{
                 //maybe this doesn't need 'this', but since it's a thread it's better to be safe
                 this.wait();
-
             }catch (InterruptedException e){
                 fileLog.error(e.getMessage());
             }
         }
+        fileLog.debug("I received a response on login");
     }
 
     private void request(Request request) {
@@ -186,11 +187,11 @@ public class ClientSocket implements IClientConnection
             try{
                 //maybe this doesn't need 'this', but since it's a thread it's better to be safe
                 this.wait();
-
             }catch (InterruptedException e){
                 fileLog.error(e.getMessage());
             }
         }
+        fileLog.debug("I received a response on number of player");
     }
 
     @Override
@@ -201,11 +202,11 @@ public class ClientSocket implements IClientConnection
             try{
                 //maybe this doesn't need 'this', but since it's a thread it's better to be safe
                 this.wait();
-
             }catch (InterruptedException e){
                 fileLog.error(e.getMessage());
             }
         }
+        fileLog.debug("I received a response on choose column");
     }
 
 
@@ -236,11 +237,11 @@ public class ClientSocket implements IClientConnection
             try{
                 //maybe this doesn't need 'this', but since it's a thread it's better to be safe
                 this.wait();
-
             }catch (InterruptedException e){
                 fileLog.error(e.getMessage());
             }
         }
+        fileLog.debug("I received a response on rearrange tiles");
     }
 
     @Override
@@ -252,15 +253,6 @@ public class ClientSocket implements IClientConnection
     public void sendChat(ChatMessageRequest message) {
         setReceivedResponse(true);
         request(message);
-        while(notReceivingResponse){
-            try{
-                //maybe this doesn't need 'this', but since it's a thread it's better to be safe
-                this.wait();
-
-            }catch (InterruptedException e){
-                fileLog.error(e.getMessage());
-            }
-        }
     }
 
 

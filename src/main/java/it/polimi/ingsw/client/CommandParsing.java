@@ -1,6 +1,5 @@
 package it.polimi.ingsw.client;
 
-import it.polimi.ingsw.notifications.ChatMessage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -12,7 +11,6 @@ public class CommandParsing {
     private static Logger fileLog = LogManager.getRootLogger();
     private static final String TILES = "tiles";
     private static final String HELP = "help";
-    //private static final String CHAT = "@";
     private static final String REARRANGE = "order";
     private static final String SHELFSHOW = "showshelf";
     private static final String COLUMN = "column";
@@ -88,6 +86,7 @@ public class CommandParsing {
                 parseMultipleInteger(args);
                 executeTileCommand();
             }
+            //todo check if this is needed
             case (BACK) -> {
                 if (!isPlaying) {
                     notMyTurn();
@@ -226,6 +225,10 @@ public class CommandParsing {
     }
 
     private void parseMultipleInteger(List<String> args) {
+        if(args.size() < 1){
+            master.errorFormat();
+            return;
+        }
         try{
             multipleChoiceNumber = args;
         }catch(NumberFormatException e) {
