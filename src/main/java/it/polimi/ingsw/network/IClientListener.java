@@ -14,7 +14,7 @@ public interface IClientListener extends Remote, Serializable {
     void sendNotification(Response response) throws RemoteException;
     void sendUpdatedModel(ModelUpdate message) throws RemoteException;
 
-    void notifySuccessfulRegistration(LoginResponse response) throws RemoteException;
+    void notifySuccessfulRegistration(String name, boolean b, String token, boolean first) throws RemoteException;
 
     void setGameOn() throws RemoteException;
 
@@ -22,9 +22,9 @@ public interface IClientListener extends Remote, Serializable {
 
     void showTextNotification(String waitingRoomCreated) throws RemoteException;
 
-    void notifyColumnOk(ColumnOk moveOk) throws RemoteException;
+    void notifyColumnOk(boolean ok) throws RemoteException;
 
-    void notifyEndTurn(EndTurn endTurn) throws RemoteException;
+    void notifyEndTurn() throws RemoteException;
 
     void notifyGameEnd(GameEnd gameEnd) throws RemoteException;
 
@@ -32,11 +32,17 @@ public interface IClientListener extends Remote, Serializable {
 
     void notifyCommonGoalGained(CommonGoalGained commonGoalGained) throws RemoteException;
 
-    void notifyChatMessage(ChatMessage chatMessage) throws RemoteException;
+    void notifyChatMessage(String sender, String message) throws RemoteException;
 
     void updateModel(ModelUpdateNotification modelUpdateNotification) throws RemoteException;
 
-    void notifyRearrangeOk(RearrangeOk rearrangeOk) throws RemoteException;
+    void notifyRearrangeOk(boolean ok) throws RemoteException;
 
-    void notifyTilesOk(TilesOk tilesOk) throws RemoteException;
+    void notifyTilesOk(boolean ok) throws RemoteException;
+
+    void notifyGameStart() throws RemoteException;
+
+    void notifyStartTurn(String currentPlayer) throws RemoteException;
+
+
 }

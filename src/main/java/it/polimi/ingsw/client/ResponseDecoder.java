@@ -37,7 +37,7 @@ public class ResponseDecoder implements ResponseHandler {
 
     @Override
     public void handle(LoginResponse loginResponse) throws RemoteException {
-        clientListener.notifySuccessfulRegistration(loginResponse);
+        clientListener.notifySuccessfulRegistration(loginResponse.name, loginResponse.b, loginResponse.token, loginResponse.first);
         client.setReceivedResponse(false);
         synchronized (client) {
             client.notifyAll();
@@ -68,7 +68,7 @@ public class ResponseDecoder implements ResponseHandler {
 
     @Override
     public void handle(ColumnOk moveOk) throws RemoteException {
-        clientListener.notifyColumnOk(moveOk);
+        clientListener.notifyColumnOk(moveOk.isMoveOk());
         client.setReceivedResponse(false);
         synchronized (client) {
             fileLog.debug("columnok received and set notreceivedresponse to false");
@@ -79,7 +79,8 @@ public class ResponseDecoder implements ResponseHandler {
 
     @Override
     public void handle(EndTurn endTurn) throws RemoteException {
-        clientListener.notifyEndTurn(endTurn);
+        //todo change this so that it doesn`t pass the object to the clientlistener
+        clientListener.notifyEndTurn();
         client.setReceivedResponse(false);
         synchronized (client) {
             client.notifyAll();
@@ -88,6 +89,7 @@ public class ResponseDecoder implements ResponseHandler {
 
     @Override
     public void handle(GameEnd gameEnd) throws RemoteException {
+        //todo change this so that it doesn`t pass the object to the clientlistener
         clientListener.notifyGameEnd(gameEnd);
         client.setReceivedResponse(false);
         synchronized (client) {
@@ -97,6 +99,7 @@ public class ResponseDecoder implements ResponseHandler {
 
     @Override
     public void handle(LastTurn lastTurn) throws RemoteException {
+        //todo change this so that it doesn`t pass the object to the clientlistener
         clientListener.notifyLastTurn(lastTurn);
         client.setReceivedResponse(false);
         synchronized (client) {
@@ -106,6 +109,7 @@ public class ResponseDecoder implements ResponseHandler {
 
     @Override
     public void handle(CommonGoalGained commonGoalGained) throws RemoteException {
+        //todo change this so that it doesn`t pass the object to the clientlistener
         clientListener.notifyCommonGoalGained(commonGoalGained);
         client.setReceivedResponse(false);
         synchronized (client) {
@@ -115,7 +119,7 @@ public class ResponseDecoder implements ResponseHandler {
 
     @Override
     public void handle(ChatMessage chatMessage) throws RemoteException {
-        clientListener.notifyChatMessage(chatMessage);
+        clientListener.notifyChatMessage(chatMessage.getSender(), chatMessage.getMessage());
         client.setReceivedResponse(false);
         synchronized (client) {
             client.notifyAll();
@@ -133,6 +137,7 @@ public class ResponseDecoder implements ResponseHandler {
 
     @Override
     public void handle(ModelUpdateNotification modelUpdateNotification) throws RemoteException {
+        //todo change this so that it doesn`t pass the object to the clientlistener
         clientListener.updateModel(modelUpdateNotification);
         client.setReceivedResponse(false);
         synchronized (client) {
@@ -142,7 +147,7 @@ public class ResponseDecoder implements ResponseHandler {
 
     @Override
     public void handle(RearrangeOk rearrangeOk) throws RemoteException {
-        clientListener.notifyRearrangeOk(rearrangeOk);
+        clientListener.notifyRearrangeOk(rearrangeOk.isMoveOk());
         client.setReceivedResponse(false);
         fileLog.debug("rearrangeok received and set notreceivedresponse to false");
         synchronized (client) {
@@ -152,7 +157,7 @@ public class ResponseDecoder implements ResponseHandler {
 
     @Override
     public void handle(TilesOk tilesOk) throws RemoteException {
-        clientListener.notifyTilesOk(tilesOk);
+        clientListener.notifyTilesOk(tilesOk.isMoveOk());
         client.setReceivedResponse(false);
         synchronized (client) {
             fileLog.debug("TilesOk received and set notreceivedresponse to false");

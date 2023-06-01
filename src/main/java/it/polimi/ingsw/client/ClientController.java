@@ -3,8 +3,6 @@ package it.polimi.ingsw.client;
 import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.network.IClientListener;
 import it.polimi.ingsw.network.IRemoteController;
-import it.polimi.ingsw.notifications.ChatMessage;
-import it.polimi.ingsw.requests.ChatMessageRequest;
 import it.polimi.ingsw.responses.Response;
 import it.polimi.ingsw.server.StaticStrings;
 import it.polimi.ingsw.view.View;
@@ -255,6 +253,10 @@ public class ClientController {
     }
 
     public void sendChat(String choice, String toString) {
-        currentConnection.sendChat(new ChatMessageRequest(username, toString, choice));
+        currentConnection.sendChat(username, toString, choice);
     }
+
+
+
+
 }

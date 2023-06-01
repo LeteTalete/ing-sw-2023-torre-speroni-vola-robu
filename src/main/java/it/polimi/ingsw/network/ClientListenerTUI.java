@@ -16,9 +16,7 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
         this.view = currentView;
     }
 
-    //this will become a bunch of sendNotification methods that will resolve different types of messages
-    //that way we can implement socket connections
-
+   //this is wrong todo needs to be deleted
     @Override
     public void sendNotification(Response response) throws RemoteException {
         view.detangleMessage(response);
@@ -30,14 +28,14 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
     }
 
     @Override
-    public void notifySuccessfulRegistration(LoginResponse loginResponse) throws RemoteException {
-        if(loginResponse.b){
+    public void notifySuccessfulRegistration(String name, boolean b, String token, boolean first) throws RemoteException {
+        if(b){
             view.displayNotification("Registration Successful!");
-            view.serverSavedUsername(loginResponse.name, true, loginResponse.token, loginResponse.first);
+            view.serverSavedUsername(name, true, token, first);
         }
         else{
-            view.displayNotification("Registration failed: "+loginResponse.name+" already exists. Try again");
-            view.serverSavedUsername(loginResponse.name, false, loginResponse.token, loginResponse.first);
+            view.displayNotification("Registration failed: "+name+" already exists. Try again");
+            view.serverSavedUsername(name, false, token, first);
         }
     }
 
@@ -53,14 +51,14 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
     }
 
     @Override
-    public void showTextNotification(String waitingRoomCreated) {
-        view.displayNotification(waitingRoomCreated);
+    public void showTextNotification(String message) throws RemoteException {
+        view.displayNotification(message);
     }
 
 
     @Override
-    public void notifyColumnOk(ColumnOk moveOk) throws RemoteException {
-        if(moveOk.isMoveOk()){
+    public void notifyColumnOk(boolean ok) throws RemoteException {
+        if(ok){
             view.nextAction(3);
             view.displayNotification("Choice of column successful!");
         }
@@ -70,7 +68,7 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
     }
 
     @Override
-    public void notifyEndTurn(EndTurn endTurn) throws RemoteException {
+    public void notifyEndTurn() throws RemoteException {
         view.setMyTurn(false);
         view.displayNotification("Turn ended.");
     }
@@ -93,8 +91,8 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
     }
 
     @Override
-    public void notifyChatMessage(ChatMessage chatMessage) throws RemoteException {
-        view.displayChatNotification("@" + chatMessage.getSender() + ": " + chatMessage.getMessage());
+    public void notifyChatMessage(String sender, String message) throws RemoteException {
+        view.displayChatNotification("@" + sender + ": " + message);
     }
 
     @Override
@@ -103,8 +101,8 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
     }
 
     @Override
-    public void notifyRearrangeOk(RearrangeOk rearrangeOk) throws RemoteException {
-        if(rearrangeOk.isMoveOk()){
+    public void notifyRearrangeOk(boolean ok) throws RemoteException {
+        if(ok){
             view.nextAction(3);
             view.displayNotification("Rearrange successful!");
         }
@@ -114,14 +112,24 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
     }
 
     @Override
-    public void notifyTilesOk(TilesOk tilesOk) throws RemoteException {
-        if(tilesOk.isMoveOk()){
+    public void notifyTilesOk(boolean ok) throws RemoteException {
+        if(ok){
             view.nextAction(2);
             view.displayNotification("Choice of tiles successful!");
         }
         else{
             view.displayNotification("Invalid move. Try again.");
         }
+    }
+
+    @Override
+    public void notifyGameStart() throws RemoteException {
+        view.displayNotification("Game started!");
+    }
+
+    @Override
+    public void notifyStartTurn(String currentPlayer) throws RemoteException {
+        view.changeTurn(currentPlayer);
     }
 
 }

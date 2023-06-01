@@ -8,6 +8,7 @@ import java.util.Map;
 
 public class ConnectionManager implements Serializable {
     private static ConnectionManager instance;
+    Map<String, ViewProxy> viewsProxy;
     //we create two maps to keep track of the active clients and their Listeners
     //it's important for these to be maps, so that the search is made easier with the usage of
     //a client's username as a key. The servercontroller will have a map with clients' username as keys and the
@@ -17,6 +18,8 @@ public class ConnectionManager implements Serializable {
     the need for the need for the server to know what kind of connection the single clients are using**/
 //tokens and listeners
     Map<String, IClientListener> viewListenerMap = new HashMap<>();
+    //tokens and proxies
+    Map<String, ViewProxy> viewProxyMap = new HashMap<>();
     //tokens and usernames
     Map<String, String> tokenNames = new HashMap<>();
     Map<String, String> namesTokens = new HashMap<>();
@@ -52,5 +55,9 @@ public class ConnectionManager implements Serializable {
         tokenNames.remove(token);
         //TODO close the socket connection too
         //the server manager will notify the other players in the game after the client is disconnected
+    }
+
+    public IClientListener getViewProxy(String token) {
+        return viewListenerMap.get(token);
     }
 }

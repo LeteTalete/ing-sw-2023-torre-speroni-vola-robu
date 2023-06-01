@@ -91,8 +91,8 @@ public class ServerSocketClientHandler implements Runnable, IClientListener
     }
 
     @Override
-    public void notifySuccessfulRegistration(LoginResponse loginResponse) throws RemoteException{
-        respond(loginResponse);
+    public void notifySuccessfulRegistration(String name, boolean b, String token, boolean first) throws RemoteException{
+        respond(new LoginResponse(name, b, token, first));
     }
 
     @Override
@@ -113,13 +113,13 @@ public class ServerSocketClientHandler implements Runnable, IClientListener
 
 
     @Override
-    public void notifyColumnOk(ColumnOk moveOk) throws RemoteException {
-        respond(moveOk);
+    public void notifyColumnOk(boolean ok) throws RemoteException {
+        respond(new ColumnOk(ok));
     }
 
     @Override
-    public void notifyEndTurn(EndTurn endTurn) throws RemoteException {
-        respond(endTurn);
+    public void notifyEndTurn() throws RemoteException {
+        respond(new EndTurn());
     }
 
     @Override
@@ -138,23 +138,33 @@ public class ServerSocketClientHandler implements Runnable, IClientListener
     }
 
     @Override
-    public void notifyChatMessage(ChatMessage chatMessage) throws RemoteException {
-        respond(chatMessage);
+    public void notifyChatMessage(String sender, String message) throws RemoteException {
+        respond(new ChatMessage(sender, message));
     }
 
     @Override
     public void updateModel(ModelUpdateNotification modelUpdateNotification) throws RemoteException {
-        //idk
+        //todo
     }
 
     @Override
-    public void notifyRearrangeOk(RearrangeOk rearrangeOk) throws RemoteException {
-        respond(rearrangeOk);
+    public void notifyRearrangeOk(boolean ok) throws RemoteException {
+        respond(new RearrangeOk(ok));
     }
 
     @Override
-    public void notifyTilesOk(TilesOk tilesOk) throws RemoteException {
-        respond(tilesOk);
+    public void notifyTilesOk(boolean ok) throws RemoteException {
+        respond(new TilesOk(ok));
+    }
+
+    @Override
+    public void notifyGameStart() throws RemoteException {
+        respond(new GameStart());
+    }
+
+    @Override
+    public void notifyStartTurn(String currentPlayer) throws RemoteException {
+        respond(new NotifyOnTurn(currentPlayer));
     }
 
     private void respond(Response response) {

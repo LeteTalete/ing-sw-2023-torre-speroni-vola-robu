@@ -33,7 +33,7 @@ public class ChatMessageRequest extends Request {
     @Override
     public void handleRequest(ServerSocketClientHandler socketClientHandler, ServerManager serverManager) {
         try {
-            serverManager.sendChat(this);
+            serverManager.sendChat(sender, message, receiver);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }

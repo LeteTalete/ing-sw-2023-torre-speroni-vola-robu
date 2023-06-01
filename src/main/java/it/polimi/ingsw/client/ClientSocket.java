@@ -1,7 +1,6 @@
 package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.model.Position;
-import it.polimi.ingsw.notifications.ChatMessage;
 import it.polimi.ingsw.requests.*;
 import it.polimi.ingsw.responses.Response;
 import it.polimi.ingsw.view.View;
@@ -250,10 +249,11 @@ public class ClientSocket implements IClientConnection
     }
 
     @Override
-    public void sendChat(ChatMessageRequest message) {
+    public void sendChat(String username, String toString, String choice) {
         setReceivedResponse(true);
-        request(message);
+        request(new ChatMessageRequest(username, toString, choice));
     }
+
 
 
 }

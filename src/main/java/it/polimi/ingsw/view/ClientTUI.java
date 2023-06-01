@@ -229,7 +229,7 @@ public class ClientTUI implements View{
         DrawTui.printlnString(DrawTui.mergerString(livingRoomP, shelfP, true, false, false));
     }
     public void chooseTiles(){
-        DrawTui.askWhat("Choose the tiles: [tiles rowcolumn(s)]");
+        DrawTui.askWhat("Choose the tiles: [tiles row,column]");
     }
     public void rearrangeTiles(){
         writeText("Choose an order for your tiles: [order number(s)]");

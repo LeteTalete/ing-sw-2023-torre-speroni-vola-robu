@@ -60,4 +60,5 @@ public interface View {
     void nextAction(int num);
 
     void showEndResult();
+
 }

@@ -2,7 +2,6 @@ package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.network.IRemoteController;
-import it.polimi.ingsw.requests.ChatMessageRequest;
 import it.polimi.ingsw.view.View;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -105,14 +104,13 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
     }
 
     @Override
-    public void sendChat(ChatMessageRequest message) {
+    public void sendChat(String username, String toString, String choice) {
         try {
-            remoteController.sendChat(message);
+            remoteController.sendChat(username, toString, choice);
         } catch (RemoteException e) {
             fileLog.error(e.getMessage());
         }
     }
-
 
     @Override
     public void setName(String name) {

@@ -51,7 +51,7 @@ public class Game {
         gameController.notifyAllPlayers(new ModelUpdate(this));
         /**the game then chooses a first player and notifies everyone**/
         String firstPlayer = getCurrentPlayer().getNickname();
-        gameController.notifyAllPlayers(new NotifyOnTurn(firstPlayer));
+        gameController.notifyOnStartTurn(firstPlayer);
         /**has a method to start a turn, which will notify each player that it's "nickname"'s turn**/
 
         /**has a method to change turns (it could already be implemented into Game**/

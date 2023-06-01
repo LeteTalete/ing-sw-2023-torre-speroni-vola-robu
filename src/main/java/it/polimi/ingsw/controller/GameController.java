@@ -110,8 +110,8 @@ public class GameController {
                 tiles.set(i,this.choiceOfTiles.get(order.get(i).charAt(0)-48-1));
             }
             this.choiceOfTiles = tiles;
-
-            master.notifySinglePlayer(token, new RearrangeOk(true));
+            master.notifyAboutRearrange(token, true);
+            //master.notifySinglePlayer(token, new RearrangeOk(true));
         }
         else
         {
@@ -129,13 +129,12 @@ public class GameController {
                 tiles.add(model.getGameBoard().getCouple(this.choiceOfTiles.get(i)).getTile());
             }
             fileLog.debug("i'm in choose column and i'm about to notify player: "+token+" about the move ok");
-            master.notifySinglePlayer(token, new ColumnOk(true));
-
+            master.notifyAboutColumn(token, true);
             updateGame(token,column,tiles);
         }
         else
         {
-            master.notifySinglePlayer(token, new ColumnOk(false));
+            master.notifyAboutColumn(token, false);
         }
     }
 
@@ -149,7 +148,7 @@ public class GameController {
     }
 
     public void nextTurn(String token){
-        master.notifySinglePlayer(token, new EndTurn());
+        master.notifyOnEndTurn(token);
         if ( model.getEndGame() != null && model.getPreviousPlayer().getChair() ){
             model.gameHasEnded();
         } else {
@@ -233,5 +232,9 @@ public class GameController {
 
     public void notifyAllPlayers(ModelUpdate modelUpdate) {
         master.notifyAllPlayers(gameId, modelUpdate);
+    }
+
+    public void notifyOnStartTurn(String currentPlayer) {
+        master.notifyOnStartTurn(gameId, currentPlayer);
     }
 }
