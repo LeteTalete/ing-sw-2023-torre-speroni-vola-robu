@@ -1,5 +1,6 @@
 package it.polimi.ingsw.client;
 
+import it.polimi.ingsw.model.Position;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -251,34 +252,33 @@ public class CommandParsing {
     {
         //todo adapt this to a string of a single coordinate
 
-        //user input should be like this: "02" or "38 45" or "54 11 64"
+        //user input should be like this: "0,2" or "3,8 4,5" or "5,4 1,1 6,4"
         //from 1 to 3 couples of int separated by a space
-        //there cannot be duplicated couples
-        //9 is not allowed (index out of bounds)
-        //note: ASCII: '0' = 48 ... '9' = 57
-        //note: 'space' = 32
+        //there cannot be duplicated couples (checked server side by Livingroom's check method)
         int l = s.length();
 
+        //user input can't be null or empty
+        if(s == null || s.length() == 0) return false;
 
-        if(l!=2 && l!=5 && l!=8) return false;
-        if(l > 5)
+        //extracting positions from the input
+        String[] substrings = s.split("\\s+"); //[5,4] [1,1] [6,4]
+        List<Position> positions = new ArrayList<Position>();
+        for(String sub : substrings)
         {
-            if(s.charAt(5) != 32) return false;
-            if(s.charAt(6) < 48 || s.charAt(6) > 56) return false;
-            if(s.charAt(7) < 48 || s.charAt(7) > 56) return false;
-            if((s.charAt(0) == s.charAt(6) && s.charAt(1) == s.charAt(7))
-                    || (s.charAt(3) == s.charAt(6) && s.charAt(4) == s.charAt(7)))  return false;
+            String[] pos = sub.split(","); //[5] [4]
+            if(pos.length != 2) return false;
+            Position p = new Position(Integer.parseInt(pos[0]),Integer.parseInt(pos[1])); //(5,4)
+            positions.add(p);
         }
 
-        if(l > 2)
+        //at least 1 couple of coordinates, maximum 3
+        if(positions.size() < 1 || positions.size() > 3) return false;
+
+        for(Position p : positions)
         {
-            if(s.charAt(2) != 32) return false;
-            if(s.charAt(3) < 48 || s.charAt(3) > 56) return false;
-            if(s.charAt(4) < 48 || s.charAt(4) > 56) return false;
-            if(s.charAt(0) == s.charAt(3) && s.charAt(1) == s.charAt(4))  return false;
+            if(p.getX()<0 || p.getY()<0) return false;
         }
-        if(s.charAt(0) < 48 || s.charAt(0) > 56) return false;
-        if(s.charAt(1) < 48 || s.charAt(1) > 56) return false;
+
         return true;
     }
 

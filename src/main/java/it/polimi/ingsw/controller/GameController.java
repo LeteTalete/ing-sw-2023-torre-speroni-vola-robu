@@ -62,17 +62,26 @@ public class GameController {
     public void chooseTiles(String token, List<String> userInput) throws RemoteException
     {
         ArrayList<Position> choice = new ArrayList<>();
+        boolean valid = true;
 
-        for(String s : userInput)
+        //userInput: [5,4] [1,1] [6,4]
+        //extracting positions from the input
+        for(String sub : userInput)
         {
-            choice.add(new Position(s.charAt(0)-48,s.charAt(1)-48));
+            String[] pos = sub.split(","); //[5] [4]
+            Position p = new Position(Integer.parseInt(pos[0]),Integer.parseInt(pos[1])); //(5,4)
+            choice.add(p);
+            if(p.getX()>=model.getGameBoard().getBoard().length || p.getY()>=getGameBoard().getBoard()[0].length) valid = false;
         }
-        if (model.getCurrentPlayer().getMyShelf().checkEnoughSpace(choice) && this.getGameBoard().checkPlayerChoice(choice)) {
+
+        if (valid && model.getCurrentPlayer().getMyShelf().checkEnoughSpace(choice) && this.getGameBoard().checkPlayerChoice(choice))
+        {
             this.choiceOfTiles = choice;
             master.notifySinglePlayer(token, new GetTilesResponse(choice));
             master.notifySinglePlayer(token, new TilesOk(true));
         }
-        else{
+        else
+        {
             master.notifySinglePlayer(token, new TilesOk(false));
         }
     }
