@@ -204,6 +204,9 @@ public class CommandParsing {
                 return;
             }
         }
+        if(multipleChoiceNumber.size() == 1){
+            master.setOnlyOneTile(true);
+        }
         master.chooseTiles(multipleChoiceNumber);
     }
 

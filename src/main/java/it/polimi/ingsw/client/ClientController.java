@@ -30,6 +30,7 @@ public class ClientController {
     private IRemoteController remoteController;
     private String userToken;
     private boolean toCLose;
+    private boolean onlyOneTile;
 
     //constructor
     public ClientController(View currentView) {
@@ -236,11 +237,18 @@ public class ClientController {
 
     public void nextAction(int num) {
         if(num==2){
-            currentView.displayNotification("You can now re-arrange the tiles or choose the column. Here are the commands:");
-            //todo it should show commands format, not show the request
-            currentView.chooseColumn();
-            currentView.chooseOrder();
-            setMyTurn(true);
+            if(!onlyOneTile){
+                currentView.displayNotification("You can now re-arrange the tiles or choose the column. Here are the commands:");
+                //todo it should show commands format, not show the request
+                currentView.chooseColumn();
+                currentView.chooseOrder();
+                setMyTurn(true);
+            }
+            else{
+                currentView.chooseOrder();
+                setMyTurn(true);
+            }
+
         }
         else if(num==3){
             currentView.chooseColumn();
@@ -257,6 +265,7 @@ public class ClientController {
     }
 
 
-
-
+    public void setOnlyOneTile(boolean b) {
+        this.onlyOneTile= b;
+    }
 }
