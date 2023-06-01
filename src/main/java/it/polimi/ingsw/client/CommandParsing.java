@@ -284,28 +284,22 @@ public class CommandParsing {
         if(s == null || s.length() == 0) return false;
 
         //extracting positions from the input
-        String[] substrings = s.split("\\s+"); //[5,4] [1,1] [6,4]
-        List<Position> positions = new ArrayList<Position>();
         Position p;
-        for(String sub : substrings)
+        String[] pos = s.split(","); //[5] [4]
+        if(pos.length != 2) return false;
+        try
         {
-            String[] pos = sub.split(","); //[5] [4]
-            if(pos.length != 2) return false;
-            try
-            {
-                p = new Position(Integer.parseInt(pos[0]),Integer.parseInt(pos[1])); //(5,4)
-            }
-            catch(NumberFormatException e)
-            {
-                return false;
-            }
-
-            if(p.getX()<0 || p.getY()<0) return false;
-            positions.add(p);
+            p = new Position(Integer.parseInt(pos[0]),Integer.parseInt(pos[1])); //(5,4)
+        }
+        catch(NumberFormatException e)
+        {
+            return false;
         }
 
+        if(p.getX()<0 || p.getY()<0) return false;
+
         //at least 1 couple of coordinates, maximum 3
-        if(positions.size() < 1 || positions.size() > 3) return false;
+        if(multipleChoiceNumber.size() < 1 || multipleChoiceNumber.size() > 3) return false;
 
         return true;
     }
