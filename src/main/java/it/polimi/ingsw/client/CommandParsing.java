@@ -23,7 +23,7 @@ public class CommandParsing {
     private boolean initializingRoom;
 
     private int choiceNumber;
-    private List<String> multipleChoiceNumber;
+    private List<String> multipleChoiceNumber = new ArrayList<>();
     private String choice;
     private final ClientController master;
     private boolean first;
@@ -226,14 +226,19 @@ public class CommandParsing {
         return true;
     }
 
-    private void executeTileCommand() {
-        for(String s : multipleChoiceNumber){
-            if(!checkTilesFormat(s)){
+    private void executeTileCommand()
+    {
+        if(multipleChoiceNumber.size() == 0) return;
+        for(String s : multipleChoiceNumber)
+        {
+            if(!checkTilesFormat(s))
+            {
                 master.errorFormat();
                 return;
             }
         }
-        if(multipleChoiceNumber.size() == 1){
+        if(multipleChoiceNumber.size() == 1)
+        {
             master.setOnlyOneTile(true);
         }
         master.chooseTiles(multipleChoiceNumber);
