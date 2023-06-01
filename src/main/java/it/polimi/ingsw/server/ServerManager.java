@@ -153,6 +153,7 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
             }
             else if(viewListener instanceof ServerSocketClientHandler){
                 //the cast is not necessary
+                fileLog.debug("I'm creating a token for the socket client handler");
                 createToken((ServerSocketClientHandler) viewListener, name);
             }
             if(success==null) {
@@ -241,7 +242,9 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
 
     public void createToken(ServerSocketClientHandler socketClientHandler, String token) {
         ConnectionManager.get().viewsProxy.put(token, new ViewProxy(socketClientHandler, token));
+        fileLog.debug("i put in viewsProxy");
         ConnectionManager.get().viewListenerMap.put(token, socketClientHandler);
+        fileLog.debug("I created a token for the socket client handler");
     }
 
     public void generateTokenRMI(IClientListener viewListener, String token) throws RemoteException {
