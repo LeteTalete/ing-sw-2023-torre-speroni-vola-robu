@@ -245,7 +245,7 @@ public class ClientController {
                 setMyTurn(true);
             }
             else{
-                currentView.chooseOrder();
+                currentView.chooseColumn();
                 setMyTurn(true);
             }
 
