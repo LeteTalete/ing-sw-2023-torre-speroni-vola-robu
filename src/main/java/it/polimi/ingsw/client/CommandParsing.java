@@ -195,14 +195,35 @@ public class CommandParsing {
         }
     }
 
-    private void executeRearrangeCommand() {
-        for(String s : multipleChoiceNumber){
-            if(!s.equals("1") && !s.equals("2") && !s.equals("3")){
-                master.errorFormat();
-                return;
+    private void executeRearrangeCommand()
+    {
+        if(!checkOrderFormat(multipleChoiceNumber))
+        {
+            master.errorFormat();
+            return;
+        }
+
+        master.rearrangeTiles(multipleChoiceNumber);
+    }
+
+    private boolean checkOrderFormat(List<String> order)
+    {
+        //checking for admissible values
+        for(int i=0; i<order.size();i++)
+        {
+            if(!order.get(i).equals("1") && !order.get(i).equals("2") && !order.get(i).equals("3")) return false;
+        }
+
+        //checking for duplicates
+        for(int i=0; i< order.size()-1;i++)
+        {
+            for(int j=i+1; j< order.size();j++)
+            {
+                if(order.get(i).equals(order.get(j))) return false;
             }
         }
-        master.rearrangeTiles(multipleChoiceNumber);
+
+        return true;
     }
 
     private void executeTileCommand() {

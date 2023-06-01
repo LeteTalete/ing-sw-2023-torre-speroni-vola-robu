@@ -92,10 +92,16 @@ public class GameController {
 
         if(this.choiceOfTiles == null || this.choiceOfTiles.size() != order.size()) valid = false;
 
-        //checking for duplicates
-        for(int i=0; i< order.size()-1;i++)
+        //checking for admissible values
+        for(int i=0;i<order.size() && valid;i++)
         {
-            for(int j=i+1; j< order.size();j++)
+            if(Integer.parseInt(order.get(i))>this.choiceOfTiles.size()) valid = false;
+        }
+
+        //checking for duplicates
+        for(int i=0; i< order.size()-1 && valid;i++)
+        {
+            for(int j=i+1; j< order.size() && valid;j++)
             {
                 if(order.get(i).equals(order.get(j))) valid = false;
             }
