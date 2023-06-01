@@ -263,16 +263,12 @@ public class CommandParsing {
             String[] pos = sub.split(","); //[5] [4]
             if(pos.length != 2) return false;
             Position p = new Position(Integer.parseInt(pos[0]),Integer.parseInt(pos[1])); //(5,4)
+            if(p.getX()<0 || p.getY()<0) return false;
             positions.add(p);
         }
 
         //at least 1 couple of coordinates, maximum 3
         if(positions.size() < 1 || positions.size() > 3) return false;
-
-        for(Position p : positions)
-        {
-            if(p.getX()<0 || p.getY()<0) return false;
-        }
 
         return true;
     }
