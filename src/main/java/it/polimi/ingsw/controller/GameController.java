@@ -88,7 +88,20 @@ public class GameController {
 
     public void rearrangeTiles(String token, List<String> order)
     {
-        if(this.choiceOfTiles != null && this.choiceOfTiles.size() == order.size())
+        boolean valid = true;
+
+        if(this.choiceOfTiles == null || this.choiceOfTiles.size() != order.size()) valid = false;
+
+        //checking for duplicates
+        for(int i=0; i< order.size()-1;i++)
+        {
+            for(int j=i+1; j< order.size();j++)
+            {
+                if(order.get(i).equals(order.get(j))) valid = false;
+            }
+        }
+
+        if(valid)
         {
             ArrayList<Position> tiles = new ArrayList<>(this.choiceOfTiles);
 
