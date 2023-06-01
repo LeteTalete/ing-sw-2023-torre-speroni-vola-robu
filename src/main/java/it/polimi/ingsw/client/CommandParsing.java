@@ -250,12 +250,7 @@ public class CommandParsing {
     }
     public boolean checkTilesFormat(String s)
     {
-        //todo adapt this to a string of a single coordinate
-
         //user input should be like this: "0,2" or "3,8 4,5" or "5,4 1,1 6,4"
-        //from 1 to 3 couples of int separated by a space
-        //there cannot be duplicated couples (checked server side by Livingroom's check method)
-        int l = s.length();
 
         //user input can't be null or empty
         if(s == null || s.length() == 0) return false;
