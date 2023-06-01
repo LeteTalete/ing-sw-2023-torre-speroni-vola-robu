@@ -68,11 +68,13 @@ public class ResponseDecoder implements ResponseHandler {
 
     @Override
     public void handle(ColumnOk moveOk) throws RemoteException {
+        fileLog.debug("columnok received, about to handle now");
         clientListener.notifyColumnOk(moveOk.isMoveOk());
         client.setReceivedResponse(false);
         synchronized (client) {
             fileLog.debug("columnok received and set notreceivedresponse to false");
             client.notifyAll();
+            fileLog.debug("columnok notified all");
         }
     }
 
@@ -90,7 +92,7 @@ public class ResponseDecoder implements ResponseHandler {
     @Override
     public void handle(GameEnd gameEnd) throws RemoteException {
         //todo change this so that it doesn`t pass the object to the clientlistener
-        clientListener.notifyGameEnd(gameEnd);
+        clientListener.notifyEndGame();
         client.setReceivedResponse(false);
         synchronized (client) {
             client.notifyAll();
@@ -100,7 +102,7 @@ public class ResponseDecoder implements ResponseHandler {
     @Override
     public void handle(LastTurn lastTurn) throws RemoteException {
         //todo change this so that it doesn`t pass the object to the clientlistener
-        clientListener.notifyLastTurn(lastTurn);
+        clientListener.notifyLastTurn(lastTurn.getName());
         client.setReceivedResponse(false);
         synchronized (client) {
             client.notifyAll();
@@ -152,6 +154,7 @@ public class ResponseDecoder implements ResponseHandler {
         fileLog.debug("rearrangeok received and set notreceivedresponse to false");
         synchronized (client) {
             client.notifyAll();
+            fileLog.debug("rearrangeok notified all");
         }
     }
 
@@ -161,8 +164,8 @@ public class ResponseDecoder implements ResponseHandler {
         client.setReceivedResponse(false);
         synchronized (client) {
             fileLog.debug("TilesOk received and set notreceivedresponse to false");
-
             client.notifyAll();
+            fileLog.debug("TilesOk notified all");
         }
     }
 

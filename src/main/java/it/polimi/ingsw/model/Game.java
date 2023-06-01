@@ -80,9 +80,8 @@ public class Game {
         }
         previousPlayer = currentPlayer;
         currentPlayer = players.get(next);
-
-        gameController.notifyAllPlayers(new ModelUpdate(this));
-        gameController.notifyAllPlayers(new NotifyOnTurn(currentPlayer.getNickname()));
+        gameController.notifyOnModelUpdate(new ModelUpdate(this));
+        gameController.notifyOnStartTurn(currentPlayer.getNickname());
 
     }
 
@@ -104,8 +103,8 @@ public class Game {
     public void gameHasEnded(){
         calculateScore();
         scoreBoard(players); // remember this scoreboard is printed only on the server
-        gameController.notifyAllPlayers(new ModelUpdate(this));
-        gameController.notifyAllPlayers(new GameEnd());
+        gameController.notifyOnModelUpdate(new ModelUpdate(this));
+        gameController.notifyOnGameEnd();
     }
 
     /** Method calculateScore calculates the score of each player at the end of the game */
@@ -172,7 +171,7 @@ public class Game {
         if ( endGame == null ) {
             if (this.getCurrentPlayer().getMyShelf().checkShelfFull()) {
                 setEndGame(this.getCurrentPlayer().getNickname());
-                gameController.notifyAllPlayers(new LastTurn(this.getCurrentPlayer().getNickname()));
+                gameController.notifyOnLastTurn(this.getCurrentPlayer().getNickname());
             }
         }
     }

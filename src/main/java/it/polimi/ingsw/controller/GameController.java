@@ -46,18 +46,7 @@ public class GameController {
         model.initialize();
     }
 
-    public void notifySinglePlayer(String token, Response response) throws RemoteException {
-        master.notifySinglePlayer(token, response);
-    }
 
-    public void notifyAllPlayers(Response response) {
-        master.notifyAllPlayers(gameId, response);
-    }
-/*
-    public void notifyAllPlayers(ModelUpdate message) {
-        master.notifyAllPlayers(gameId, message);
-    }
-*/
 
     public void chooseTiles(String token, List<String> userInput) throws RemoteException
     {
@@ -77,12 +66,14 @@ public class GameController {
         if (valid && model.getCurrentPlayer().getMyShelf().checkEnoughSpace(choice) && this.getGameBoard().checkPlayerChoice(choice))
         {
             this.choiceOfTiles = choice;
-            master.notifySinglePlayer(token, new GetTilesResponse(choice));
-            master.notifySinglePlayer(token, new TilesOk(true));
+            master.notifyAboutTiles(token, true, choice);
+            //master.notifySinglePlayer(token, new GetTilesResponse(choice));
+            //master.notifySinglePlayer(token, new TilesOk(true));
         }
         else
         {
-            master.notifySinglePlayer(token, new TilesOk(false));
+            master.notifyAboutTiles(token, false, choice);
+            //master.notifySinglePlayer(token, new TilesOk(false));
         }
     }
 
@@ -168,7 +159,7 @@ public class GameController {
             if ( card.checkConditions(model.getCurrentPlayer().getMyShelf()) == 1 ) {
                 int points = card.getPoints().pop();
                 model.getCurrentPlayer().setScore(points);
-                master.notifyAllPlayers(gameId, new CommonGoalGained(model.getCurrentPlayer().getNickname(), card.getID()));
+                master.notifyOnCGC(gameId, model.getCurrentPlayer().getNickname(), card.getID());
                 fileLog.info(model.getCurrentPlayer().getNickname() + " has received " + points + " points from CGC " + card.getID());
             }
         }
@@ -242,5 +233,17 @@ public class GameController {
 
     public void notifyOnStartTurn(String currentPlayer) {
         master.notifyOnStartTurn(gameId, currentPlayer);
+    }
+
+    public void notifyOnModelUpdate(ModelUpdate modelUpdate) {
+        master.notifyAllPlayers(gameId, modelUpdate);
+    }
+
+    public void notifyOnGameEnd() {
+        master.notifyOnEndGame(gameId);
+    }
+
+    public void notifyOnLastTurn(String nickname) {
+        master.notifyOnLastTurn(gameId, nickname);
     }
 }

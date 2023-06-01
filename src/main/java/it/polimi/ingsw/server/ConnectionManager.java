@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class ConnectionManager implements Serializable {
     private static ConnectionManager instance;
-    Map<String, ViewProxy> viewsProxy;
+    Map<String, ViewProxy> viewsProxy = new HashMap<>();
     //we create two maps to keep track of the active clients and their Listeners
     //it's important for these to be maps, so that the search is made easier with the usage of
     //a client's username as a key. The servercontroller will have a map with clients' username as keys and the

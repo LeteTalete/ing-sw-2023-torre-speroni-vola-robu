@@ -92,6 +92,7 @@ public class ServerSocketClientHandler implements Runnable, IClientListener
 
     @Override
     public void notifySuccessfulRegistration(String name, boolean b, String token, boolean first) throws RemoteException{
+        fileLog.debug("server about to say registration successful: "+name+" "+b+" "+token+" "+first);
         respond(new LoginResponse(name, b, token, first));
     }
 
@@ -122,14 +123,10 @@ public class ServerSocketClientHandler implements Runnable, IClientListener
         respond(new EndTurn());
     }
 
-    @Override
-    public void notifyGameEnd(GameEnd gameEnd) throws RemoteException {
-        respond(gameEnd);
-    }
 
     @Override
-    public void notifyLastTurn(LastTurn lastTurn) throws RemoteException {
-        respond(lastTurn);
+    public void notifyLastTurn(String firstDoneUser) throws RemoteException {
+        respond(new LastTurn(firstDoneUser));
     }
 
     @Override
@@ -167,7 +164,18 @@ public class ServerSocketClientHandler implements Runnable, IClientListener
         respond(new NotifyOnTurn(currentPlayer));
     }
 
+    @Override
+    public void notifyEndGame() throws RemoteException {
+        respond(new GameEnd());
+    }
+
+    @Override
+    public void notifyOnCGC(String nickname, int id) throws RemoteException {
+        respond(new CommonGoalGained(nickname, id));
+    }
+
     private void respond(Response response) {
+        fileLog.debug("server about to send response");
         try{
             out.writeObject(response);
             out.reset();

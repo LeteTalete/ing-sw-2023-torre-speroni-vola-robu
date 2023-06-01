@@ -59,7 +59,6 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
     @Override
     public void notifyColumnOk(boolean ok) throws RemoteException {
         if(ok){
-            view.nextAction(3);
             view.displayNotification("Choice of column successful!");
         }
         else{
@@ -74,15 +73,8 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
     }
 
     @Override
-    public void notifyGameEnd(GameEnd gameEnd) throws RemoteException {
-        view.setMyTurn(false);
-        view.setGameOn(false);
-        view.showEndResult();
-    }
-
-    @Override
-    public void notifyLastTurn(LastTurn lastTurn) throws RemoteException {
-        view.displayNotification(lastTurn.getName() + "completed their Shelfie. Last round starts now!");
+    public void notifyLastTurn(String firstDoneUser) throws RemoteException {
+        view.displayNotification(firstDoneUser + "completed their Shelfie. Last round starts now!");
     }
 
     @Override
@@ -130,6 +122,18 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
     @Override
     public void notifyStartTurn(String currentPlayer) throws RemoteException {
         view.changeTurn(currentPlayer);
+    }
+
+    @Override
+    public void notifyEndGame() throws RemoteException {
+        view.setMyTurn(false);
+        view.setGameOn(false);
+        view.showEndResult();
+    }
+
+    @Override
+    public void notifyOnCGC(String nickname, int id) throws RemoteException {
+        view.displayNotification(nickname + " gained Common Goal Card " + id + "!");
     }
 
 }

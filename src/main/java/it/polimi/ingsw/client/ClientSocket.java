@@ -126,12 +126,10 @@ public class ClientSocket implements IClientConnection
         setReceivedResponse(true);
         request(new ChooseTilesRequest(token, tilesChosen));
         while(notReceivingResponse){
-            try
-            {
+            try {
                 this.wait();
             }
-            catch (InterruptedException e)
-            {
+            catch (InterruptedException e) {
                 fileLog.error(e.getMessage());
             }
         }
@@ -194,7 +192,7 @@ public class ClientSocket implements IClientConnection
     }
 
     @Override
-    public void chooseColumn(int column) {
+    public synchronized void chooseColumn(int column) {
         setReceivedResponse(true);
         request(new ColumnRequest(token, column));
         while(notReceivingResponse){
@@ -229,7 +227,7 @@ public class ClientSocket implements IClientConnection
     }
 
     @Override
-    public void rearrangeTiles(String userToken, List<String> multipleChoiceNumber) {
+    public synchronized void rearrangeTiles(String userToken, List<String> multipleChoiceNumber) {
         setReceivedResponse(true);
         request(new RearrangeTilesRequest(userToken, multipleChoiceNumber));
         while(notReceivingResponse){

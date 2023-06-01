@@ -2,14 +2,11 @@ package it.polimi.ingsw.server;
 
 import it.polimi.ingsw.Updates.ModelUpdate;
 import it.polimi.ingsw.controller.GameController;
+import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.network.ClientListenerTUI;
 import it.polimi.ingsw.network.IClientListener;
 import it.polimi.ingsw.network.IRemoteController;
-import it.polimi.ingsw.notifications.ChatMessage;
 import it.polimi.ingsw.notifications.DisconnectionNotif;
-import it.polimi.ingsw.notifications.GameStart;
-import it.polimi.ingsw.requests.ChatMessageRequest;
-import it.polimi.ingsw.responses.LoginResponse;
 import it.polimi.ingsw.responses.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -79,7 +76,7 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
                 .filter(e -> e.getValue().equals(id))
                 .forEach(e -> {
                     try {
-                        ConnectionManager.get().getLocalView(e.getKey()).sendUpdatedModel(something);
+                        ConnectionManager.get().getViewProxy(e.getKey()).sendUpdatedModel(something);
                     } catch (RemoteException ex) {
                         fileLog.error(ex.getMessage());
                     }
@@ -153,7 +150,6 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
             }
             else if(viewListener instanceof ServerSocketClientHandler){
                 //the cast is not necessary
-                fileLog.debug("I'm creating a token for the socket client handler");
                 createToken((ServerSocketClientHandler) viewListener, name);
             }
             if(success==null) {
@@ -241,10 +237,9 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
     }
 
     public void createToken(ServerSocketClientHandler socketClientHandler, String token) {
-        ConnectionManager.get().viewsProxy.put(token, new ViewProxy(socketClientHandler, token));
-        fileLog.debug("i put in viewsProxy");
+        ViewProxy viewProxy = new ViewProxy(socketClientHandler, token);
+        ConnectionManager.get().viewsProxy.put(token, viewProxy);
         ConnectionManager.get().viewListenerMap.put(token, socketClientHandler);
-        fileLog.debug("I created a token for the socket client handler");
     }
 
     public void generateTokenRMI(IClientListener viewListener, String token) throws RemoteException {
@@ -268,7 +263,6 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
     }
 
     public void notifyOnStartTurn(String gameId, String currentPlayer) {
-        fileLog.debug("I am notifying the players that the turn has started");
         activeUsers.entrySet()
                 .stream()
                 .filter(e -> e.getValue().equals(gameId))
@@ -287,6 +281,53 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
         } catch (RemoteException e) {
             fileLog.error(e.getMessage());
         }
+    }
+//todo check if this method actually needs to pass an array of positions
+    public void notifyAboutTiles(String token, boolean b, ArrayList<Position> choice) {
+        try {
+            ConnectionManager.get().getViewProxy(token).notifyTilesOk(b);
+        } catch (RemoteException e) {
+            fileLog.error(e.getMessage());
+        }
+    }
+
+    public void notifyOnEndGame(String gameId) {
+        activeUsers.entrySet()
+                .stream()
+                .filter(e -> e.getValue().equals(gameId))
+                .forEach(e -> {
+                    try {
+                        ConnectionManager.get().getViewProxy(e.getKey()).notifyEndGame();
+                    } catch (RemoteException ex) {
+                        fileLog.error(ex.getMessage());
+                    }
+                });
+    }
+
+    public void notifyOnLastTurn(String gameId, String nickname) {
+        activeUsers.entrySet()
+                .stream()
+                .filter(e -> e.getValue().equals(gameId))
+                .forEach(e -> {
+                    try {
+                        ConnectionManager.get().getViewProxy(e.getKey()).notifyLastTurn(nickname);
+                    } catch (RemoteException ex) {
+                        fileLog.error(ex.getMessage());
+                    }
+                });
+    }
+
+    public void notifyOnCGC(String gameId, String nickname, int id) {
+        activeUsers.entrySet()
+                .stream()
+                .filter(e -> e.getValue().equals(gameId))
+                .forEach(e -> {
+                    try {
+                        ConnectionManager.get().getViewProxy(e.getKey()).notifyOnCGC(nickname, id);
+                    } catch (RemoteException ex) {
+                        fileLog.error(ex.getMessage());
+                    }
+                });
     }
 
     //TODO closeGame(gameId)

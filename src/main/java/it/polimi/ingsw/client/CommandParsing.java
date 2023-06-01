@@ -242,6 +242,7 @@ public class CommandParsing {
             master.setOnlyOneTile(true);
         }
         master.chooseTiles(multipleChoiceNumber);
+        fileLog.debug("me too, i'm done waiting for the response on tiles");
     }
 
     private void parseInteger(List<String> args) throws NumberFormatException

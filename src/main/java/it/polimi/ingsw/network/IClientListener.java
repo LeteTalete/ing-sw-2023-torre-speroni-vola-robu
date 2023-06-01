@@ -1,16 +1,17 @@
 package it.polimi.ingsw.network;
 
 import it.polimi.ingsw.Updates.ModelUpdate;
+import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.notifications.*;
 import it.polimi.ingsw.responses.*;
 
 import java.io.Serializable;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 
 public interface IClientListener extends Remote, Serializable {
-    //void processLogin(String result) throws RemoteException;
-    //should become event driven
+
     void sendNotification(Response response) throws RemoteException;
     void sendUpdatedModel(ModelUpdate message) throws RemoteException;
 
@@ -26,9 +27,7 @@ public interface IClientListener extends Remote, Serializable {
 
     void notifyEndTurn() throws RemoteException;
 
-    void notifyGameEnd(GameEnd gameEnd) throws RemoteException;
-
-    void notifyLastTurn(LastTurn lastTurn) throws RemoteException;
+    void notifyLastTurn(String firstDoneUser) throws RemoteException;
 
     void notifyCommonGoalGained(CommonGoalGained commonGoalGained) throws RemoteException;
 
@@ -45,4 +44,7 @@ public interface IClientListener extends Remote, Serializable {
     void notifyStartTurn(String currentPlayer) throws RemoteException;
 
 
+    void notifyEndGame() throws RemoteException;
+
+    void notifyOnCGC(String nickname, int id) throws RemoteException;
 }
