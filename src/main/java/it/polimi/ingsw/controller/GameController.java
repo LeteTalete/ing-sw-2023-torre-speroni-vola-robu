@@ -3,13 +3,11 @@ package it.polimi.ingsw.controller;
 import it.polimi.ingsw.Updates.ModelUpdate;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.model.board.LivingRoom;
+import it.polimi.ingsw.model.board.Position;
+import it.polimi.ingsw.model.board.Tile;
 import it.polimi.ingsw.model.cards.CommonGoalCard;
-import it.polimi.ingsw.model.enumerations.Tile;
-import it.polimi.ingsw.notifications.CommonGoalGained;
-import it.polimi.ingsw.notifications.EndTurn;
-import it.polimi.ingsw.responses.*;
+import it.polimi.ingsw.responses.RearrangeOk;
 import it.polimi.ingsw.server.ServerManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -30,16 +28,7 @@ public class GameController {
         model.setPlayers(playersList);
         model.setNumOfPlayers(playersList.size());
         gameId = id;
-        model.createGameBoard(playersList.size());
         master = serverMaster;
-    }
-
-    public GameController(ArrayList<Player> playersList, String id) {
-        model = new Game(id, this);
-        model.setPlayers(playersList);
-        model.setNumOfPlayers(playersList.size());
-        gameId = id;
-        model.createGameBoard(playersList.size());
     }
 
     public void initialize() throws RemoteException {
@@ -182,14 +171,14 @@ public class GameController {
         model.generateCGC(model.getPlayers().size());
     }
 
+    public Game getModel(){
+        return model;
+    }
     public void startGame(){
         model.startGame();
     }
     public void calculateScore(){
         model.calculateScore();
-    }
-    public void scoreBoard(){
-        model.scoreBoard(model.getPlayers());
     }
     public void setCurrentPlayer(Player currentPlayer) {
         model.setCurrentPlayer(currentPlayer);
@@ -221,10 +210,6 @@ public class GameController {
 
     public ArrayList<Position> getChoiceOfTiles() {
         return choiceOfTiles;
-    }
-
-    public void setChoiceOfTiles(String choiceOfTiles) {
-        this.choiceOfTiles = model.getChoiceOfTiles(choiceOfTiles);
     }
 
     public void notifyAllPlayers(ModelUpdate modelUpdate) {

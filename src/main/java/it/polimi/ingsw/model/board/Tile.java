@@ -1,4 +1,6 @@
-package it.polimi.ingsw.model.enumerations;
+package it.polimi.ingsw.model.board;
+
+import it.polimi.ingsw.model.enumerations.T_Type;
 
 import java.io.Serializable;
 

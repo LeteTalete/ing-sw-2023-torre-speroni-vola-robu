@@ -1,6 +1,6 @@
 package it.polimi.ingsw.client;
 
-import it.polimi.ingsw.model.Position;
+import it.polimi.ingsw.model.board.Position;
 import it.polimi.ingsw.network.IRemoteController;
 import it.polimi.ingsw.view.View;
 import org.apache.logging.log4j.LogManager;

@@ -2,11 +2,7 @@ package it.polimi.ingsw.model.board;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polimi.ingsw.model.Deck;
-import it.polimi.ingsw.model.Position;
-import it.polimi.ingsw.model.enumerations.Couple;
 import it.polimi.ingsw.model.enumerations.State;
-import it.polimi.ingsw.model.enumerations.Tile;
 
 import java.io.IOException;
 import java.io.InputStream;

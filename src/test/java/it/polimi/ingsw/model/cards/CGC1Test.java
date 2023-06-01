@@ -2,7 +2,7 @@ package it.polimi.ingsw.model.cards;
 
 import it.polimi.ingsw.model.board.Shelf;
 import it.polimi.ingsw.model.enumerations.T_Type;
-import it.polimi.ingsw.model.enumerations.Tile;
+import it.polimi.ingsw.model.board.Tile;
 
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;

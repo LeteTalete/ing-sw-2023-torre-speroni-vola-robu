@@ -6,9 +6,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
+
 import it.polimi.ingsw.model.board.Shelf;
-import it.polimi.ingsw.model.enumerations.Couple;
+import it.polimi.ingsw.model.board.Couple;
 import it.polimi.ingsw.model.enumerations.State;
 import it.polimi.ingsw.model.enumerations.T_Type;
 

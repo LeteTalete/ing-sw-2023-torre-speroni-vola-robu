@@ -1,14 +1,12 @@
 package it.polimi.ingsw.network;
 
 import it.polimi.ingsw.Updates.ModelUpdate;
-import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.notifications.*;
 import it.polimi.ingsw.responses.*;
 
 import java.io.Serializable;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
 
 public interface IClientListener extends Remote, Serializable {
 

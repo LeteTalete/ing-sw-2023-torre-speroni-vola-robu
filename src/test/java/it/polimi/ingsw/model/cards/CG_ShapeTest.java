@@ -2,14 +2,7 @@ package it.polimi.ingsw.model.cards;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polimi.ingsw.model.Deck;
-import it.polimi.ingsw.model.Position;
-import it.polimi.ingsw.model.board.Shelf;
-import it.polimi.ingsw.model.cards.CommonGoalCard;
-import it.polimi.ingsw.model.enumerations.Couple;
-import it.polimi.ingsw.model.enumerations.State;
-import it.polimi.ingsw.model.enumerations.T_Type;
-import it.polimi.ingsw.model.enumerations.Tile;
+import it.polimi.ingsw.model.board.Position;
 import org.junit.jupiter.api.Test;
 import static org.junit.Assert.*;
 

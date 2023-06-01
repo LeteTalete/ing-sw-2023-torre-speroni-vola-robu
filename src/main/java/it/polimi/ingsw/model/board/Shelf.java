@@ -1,9 +1,6 @@
 package it.polimi.ingsw.model.board;
 
-import it.polimi.ingsw.model.Position;
-import it.polimi.ingsw.model.enumerations.Couple;
 import it.polimi.ingsw.model.enumerations.State;
-import it.polimi.ingsw.model.enumerations.Tile;
 
 import java.io.Serializable;
 import java.util.ArrayList;

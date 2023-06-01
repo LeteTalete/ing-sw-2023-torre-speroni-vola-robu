@@ -1,11 +1,9 @@
 package it.polimi.ingsw.responses;
 
-import it.polimi.ingsw.model.Position;
-import it.polimi.ingsw.model.enumerations.Tile;
+import it.polimi.ingsw.model.board.Position;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class GetTilesResponse implements Response {
     private final ArrayList<Position> tilesChosen;

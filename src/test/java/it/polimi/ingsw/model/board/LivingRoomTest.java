@@ -1,11 +1,7 @@
 package it.polimi.ingsw.model.board;
 
-import it.polimi.ingsw.model.Deck;
-import it.polimi.ingsw.model.Position;
-import it.polimi.ingsw.model.enumerations.Couple;
 import it.polimi.ingsw.model.enumerations.State;
 import it.polimi.ingsw.model.enumerations.T_Type;
-import it.polimi.ingsw.model.enumerations.Tile;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -226,6 +222,17 @@ public class LivingRoomTest {
         assertEquals(State.EMPTY,livingRoom.getCouple(new Position(4,4)).getState());
         assertEquals(State.EMPTY,livingRoom.getCouple(new Position(4,5)).getState());
         assertEquals(State.EMPTY,livingRoom.getCouple(new Position(4,6)).getState());
+    }
+
+    /**
+     * Method getBoardTest tests if getBoard method returns the correct board.
+     */
+    @Test
+    public void getBoardTest(){
+        LivingRoom livingRoom = new LivingRoom(4);
+        assertNotNull(livingRoom.getBoard());
+        assertEquals(9, livingRoom.getBoard().length);
+        assertEquals(9, livingRoom.getBoard()[0].length);
     }
 }
 
