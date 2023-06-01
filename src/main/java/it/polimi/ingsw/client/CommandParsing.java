@@ -111,7 +111,15 @@ public class CommandParsing {
                     break;
                 }
                 //if choosing tiles
-                parseInteger(args);
+                try
+                {
+                    parseInteger(args);
+                }
+                catch(NumberFormatException e)
+                {
+                    master.errorFormat();
+                    break;
+                }
                 executeColumnCommand();
             }
             case (SHELFSHOW) -> {
@@ -210,22 +218,13 @@ public class CommandParsing {
         master.chooseTiles(multipleChoiceNumber);
     }
 
-    private void parseInteger(List<String> args) {
-        if(args.size()!=1){
-            //ack(">>>>>> ERROR: Insert one parameter");
-            //clientController.getViewClient().denyMove();
-            //choiceNumber = -1;
-            master.errorFormat();
-            return;
+    private void parseInteger(List<String> args) throws NumberFormatException
+    {
+        if(args.size()!=1 || args.get(0).length() != 1)
+        {
+            throw new NumberFormatException();
         }
-        try {
-            choiceNumber =Integer.parseInt(args.get(0));
-        }catch(NumberFormatException e){
-            //ack("ERROR: Wrong parameter");
-            //clientController.getViewClient().denyMove();
-            //choiceNumber = -1;
-            fileLog.error(e.getMessage());
-        }
+        choiceNumber =Integer.parseInt(args.get(0));
     }
 
     private void parseMultipleInteger(List<String> args) {
