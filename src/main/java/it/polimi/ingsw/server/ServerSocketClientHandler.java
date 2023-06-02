@@ -79,12 +79,6 @@ public class ServerSocketClientHandler implements Runnable, IClientListener
     }
 
     @Override
-    public void sendNotification(Response response) throws RemoteException
-    {
-        respond(response);
-    }
-
-    @Override
     public void sendUpdatedModel(ModelUpdate updated) throws RemoteException
     {
         respond(new ModelUpdateNotification(updated));
@@ -129,10 +123,6 @@ public class ServerSocketClientHandler implements Runnable, IClientListener
         respond(new LastTurn(firstDoneUser));
     }
 
-    @Override
-    public void notifyCommonGoalGained(CommonGoalGained commonGoalGained) throws RemoteException {
-        respond(commonGoalGained);
-    }
 
     @Override
     public void notifyChatMessage(String sender, String message) throws RemoteException {
@@ -140,8 +130,8 @@ public class ServerSocketClientHandler implements Runnable, IClientListener
     }
 
     @Override
-    public void updateModel(ModelUpdateNotification modelUpdateNotification) throws RemoteException {
-        //todo
+    public void updateModel(ModelUpdate modelUpdate) throws RemoteException {
+        respond(new ModelUpdateNotification(modelUpdate));
     }
 
     @Override
@@ -172,6 +162,11 @@ public class ServerSocketClientHandler implements Runnable, IClientListener
     @Override
     public void notifyOnCGC(String nickname, int id) throws RemoteException {
         respond(new CommonGoalGained(nickname, id));
+    }
+
+    @Override
+    public void notifyAboutDisconnection(String disconnectedUser) throws RemoteException {
+        respond(new DisconnectionNotif(disconnectedUser));
     }
 
     private void respond(Response response) {

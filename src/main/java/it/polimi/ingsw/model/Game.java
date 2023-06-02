@@ -44,7 +44,6 @@ public class Game {
         startGame();
         /**once the living room is set, controller decides who's first**/
         chooseFirstPlayer();
-        //todo check why this notify breaks everything: is it the modelupdate or the notify
         gameController.notifyAllPlayers(new ModelUpdate(this));
         /**the game then chooses a first player and notifies everyone**/
         String firstPlayer = getCurrentPlayer().getNickname();

@@ -97,11 +97,10 @@ public class GameController {
             }
             this.choiceOfTiles = tiles;
             master.notifyAboutRearrange(token, true);
-            //master.notifySinglePlayer(token, new RearrangeOk(true));
         }
         else
         {
-            master.notifySinglePlayer(token, new RearrangeOk(false));
+            master.notifyAboutRearrange(token, false);
         }
     }
 

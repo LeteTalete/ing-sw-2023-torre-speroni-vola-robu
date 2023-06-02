@@ -16,12 +16,6 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
         this.view = currentView;
     }
 
-   //this is wrong todo needs to be deleted
-    @Override
-    public void sendNotification(Response response) throws RemoteException {
-        view.detangleMessage(response);
-    }
-
     @Override
     public void sendUpdatedModel(ModelUpdate message) throws RemoteException {
         view.displayUpdatedModel(message);
@@ -78,25 +72,20 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
     }
 
     @Override
-    public void notifyCommonGoalGained(CommonGoalGained commonGoalGained) throws RemoteException {
-        view.displayNotification(commonGoalGained.getName() + " gained Common Goal Card " + commonGoalGained.getCard() + "!");
-    }
-
-    @Override
     public void notifyChatMessage(String sender, String message) throws RemoteException {
         view.displayChatNotification("@" + sender + ": " + message);
     }
 
     @Override
-    public void updateModel(ModelUpdateNotification modelUpdateNotification) throws RemoteException {
-        view.displayUpdatedModel(modelUpdateNotification.getUpdate());
+    public void updateModel(ModelUpdate modelUpdate) throws RemoteException {
+        view.displayUpdatedModel(modelUpdate);
     }
 
     @Override
     public void notifyRearrangeOk(boolean ok) throws RemoteException {
         if(ok){
-            view.nextAction(3);
             view.displayNotification("Rearrange successful!");
+            view.nextAction(3);
         }
         else{
             view.displayNotification("Invalid move. Try again.");
@@ -106,8 +95,8 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
     @Override
     public void notifyTilesOk(boolean ok) throws RemoteException {
         if(ok){
-            view.nextAction(2);
             view.displayNotification("Choice of tiles successful!");
+            view.nextAction(2);
         }
         else{
             view.displayNotification("Invalid move. Try again.");
@@ -134,6 +123,11 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
     @Override
     public void notifyOnCGC(String nickname, int id) throws RemoteException {
         view.displayNotification(nickname + " gained Common Goal Card " + id + "!");
+    }
+
+    @Override
+    public void notifyAboutDisconnection(String disconnectedUser) throws RemoteException {
+        view.displayNotification(disconnectedUser + " disconnected. The game is now over.");
     }
 
 }

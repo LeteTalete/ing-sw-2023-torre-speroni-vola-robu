@@ -60,7 +60,6 @@ public class CommandParsing {
             //if choosing tiles
             if(command.length() != 1 || command.charAt(0) < 50 || command.charAt(0) > 52) return;
             choiceNumber= Integer.parseInt(command);
-            fileLog.debug("choice number is " + choiceNumber);
             master.numberOfPlayers(choiceNumber);
             initializingRoom = false;
             return;
@@ -85,9 +84,11 @@ public class CommandParsing {
                 }
                 //if choosing tiles
                 parseMultipleInteger(args);
+                //todo this has a bug in which the second player won't be shown the command to re-arrange even if they chose
+                //multiple tiles. not sure if the bug is here but it`s worth signaling
                 executeTileCommand();
             }
-            //todo check if this is needed
+            //todo
             case (BACK) -> {
                 if (!isPlaying) {
                     notMyTurn();
@@ -183,18 +184,6 @@ public class CommandParsing {
         }
     }
 
-    private void parseUsername(List<String> args) {
-        //todo this could mean i can put an username with two or more words, but only the first will be parsed
-        try {
-            choice = args.get(0);
-        }catch(NumberFormatException e){
-            //ack("ERROR: Wrong parameter");
-            //clientController.getViewClient().denyMove();
-            //choiceNumber = -1;
-            fileLog.error(e.getMessage());
-        }
-    }
-
     private void executeRearrangeCommand()
     {
         if(!checkOrderFormat(multipleChoiceNumber))
@@ -239,10 +228,10 @@ public class CommandParsing {
         }
         if(multipleChoiceNumber.size() == 1)
         {
+            fileLog.debug("multipleChoiceNumber's size is "+multipleChoiceNumber.size());
             master.setOnlyOneTile(true);
         }
         master.chooseTiles(multipleChoiceNumber);
-        fileLog.debug("me too, i'm done waiting for the response on tiles");
     }
 
     private void parseInteger(List<String> args) throws NumberFormatException

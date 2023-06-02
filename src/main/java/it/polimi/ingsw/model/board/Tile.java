@@ -25,13 +25,4 @@ public class Tile implements Serializable {
         return this.figure;
     }
 
-    // todo: those two methods were added two months ago, but they are not used anywhere
-    public void setTileType(T_Type t) {
-        this.tileType = t;
-    }
-
-    public void setFigure(int d) {
-        this.figure = d;
-    }
-
 }

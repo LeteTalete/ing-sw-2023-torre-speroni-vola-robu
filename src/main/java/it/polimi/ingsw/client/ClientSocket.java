@@ -153,7 +153,7 @@ public class ClientSocket implements IClientConnection
     }
 
     private void request(Request request) {
-        System.out.println("I'm sending a request");
+        fileLog.info("I'm sending a request");
         try{
             socketOut.writeObject(request);
             socketOut.reset();

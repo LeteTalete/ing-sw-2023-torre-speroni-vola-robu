@@ -231,13 +231,10 @@ public class ClientTUI implements View{
     public void chooseTiles(){
         DrawTui.askWhat("Choose the tiles: [tiles row,column]");
     }
-    public void rearrangeTiles(){
-        writeText("Choose an order for your tiles: [order number(s)]");
-    }
 
     @Override
     public void showPersonalGoalCard(){
-
+        //todo?
     }
 
     @Override
@@ -277,7 +274,6 @@ public class ClientTUI implements View{
         this.commandParsing = commandParsing;
     }
 
-    //todo cleanup this probably isn't needed
     @Override
     public void askForTiles() {
         chooseTiles();
@@ -297,12 +293,6 @@ public class ClientTUI implements View{
     }
 
 
-
-    //this should be some kind of run that only gets lines and parses them
-    public void playing() {
-        //needs fixing
-
-    }
 
     public boolean isGameOn() {
         return master.isGameOn();

@@ -47,28 +47,6 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
         }
     }
 
-    public void notifySinglePlayer(String token, Response response){
-        try {
-            ConnectionManager.get().getLocalView(token).sendNotification(response);
-            fileLog.debug("i'm notifying single player");
-        } catch (RemoteException e) {
-            fileLog.error(e.getMessage());
-        }
-    }
-
-    public synchronized void notifyAllPlayers(String gameId, Response response) {
-        fileLog.debug("i'm about to notify all players");
-        activeUsers.entrySet()
-                .stream()
-                .filter(e -> e.getValue().equals(gameId))
-                .forEach(e -> {
-                    try {
-                        ConnectionManager.get().getLocalView(e.getKey()).sendNotification(response);
-                    } catch (RemoteException ex) {
-                        fileLog.error(ex.getMessage());
-                    }
-                });
-    }
 
     public synchronized void notifyAllPlayers(String id, ModelUpdate something) {
         activeUsers.entrySet()
@@ -76,7 +54,7 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
                 .filter(e -> e.getValue().equals(id))
                 .forEach(e -> {
                     try {
-                        ConnectionManager.get().getViewProxy(e.getKey()).sendUpdatedModel(something);
+                        ConnectionManager.get().viewListenerMap.get(e.getKey()).sendUpdatedModel(something);
                     } catch (RemoteException ex) {
                         fileLog.error(ex.getMessage());
                     }
@@ -133,8 +111,6 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
         return token;
     }
 
-    //this should be fixed further: all of these return strings, so that the server doesn't
-    //wait on them, but they should be fixed with threads
     //todo check on the alreadyexists attributes
     @Override
     public void login(String name, IClientListener viewListener) throws RemoteException {
@@ -153,10 +129,10 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
                 createToken((ServerSocketClientHandler) viewListener, name);
             }
             if(success==null) {
-                ConnectionManager.get().getViewProxy(token).notifySuccessfulRegistration(name, true, token, true);
+                ConnectionManager.get().viewListenerMap.get(token).notifySuccessfulRegistration(name, true, token, true);
 
             } else if(success.equals(StaticStrings.GAME_START)) {
-                ConnectionManager.get().getViewProxy(token).notifySuccessfulRegistration(name, true,token, false);
+                ConnectionManager.get().viewListenerMap.get(token).notifySuccessfulRegistration(name, true,token, false);
 
                 //now we need to notify all the players that the game is about to start
                 notifyAboutGameStart(waitingRoom.getId());
@@ -172,7 +148,7 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
                 waitingRoom=null;
 
             } else {
-                ConnectionManager.get().getViewProxy(token).notifySuccessfulRegistration(name, true, token, false);
+                ConnectionManager.get().viewListenerMap.get(token).notifySuccessfulRegistration(name, true, token, false);
             }
         }
     }
@@ -183,7 +159,7 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
                 .filter(e -> e.getValue().equals(id))
                 .forEach(e -> {
                     try {
-                        ConnectionManager.get().getViewProxy(e.getKey()).notifyGameStart();
+                        ConnectionManager.get().viewListenerMap.get(e.getKey()).notifyGameStart();
                     } catch (RemoteException ex) {
                         fileLog.error(ex.getMessage());
                     }
@@ -208,19 +184,17 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
         activeGames.get(activeUsers.get(token)).chooseColumn(token, column);
     }
 
-//todo fix
     public void disconnect(String token) {
         ConnectionManager.get().disconnectToken(token);
         String gameId = activeGames.get(token).getGameId();
-        //could be put in its own method notifyAllExcept
+        String disconnectedUser = ConnectionManager.get().getNameToken(token);
         activeUsers.entrySet()
                 .stream()
                 .filter(e -> e.getValue().equals(gameId))
                 .filter(e -> !e.getKey().equals(token))
                 .forEach(e -> {
                     try {
-                        DisconnectionNotif disconnectionNotif = new DisconnectionNotif(ConnectionManager.get().getNameToken(token));
-                        ConnectionManager.get().getViewProxy(e.getKey()).sendNotification(disconnectionNotif);
+                        ConnectionManager.get().viewListenerMap.get(e.getKey()).notifyAboutDisconnection(disconnectedUser);
                     } catch (RemoteException ex) {
                         fileLog.error(ex.getMessage());
                     }
@@ -237,18 +211,17 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
     }
 
     public void createToken(ServerSocketClientHandler socketClientHandler, String token) {
-        ViewProxy viewProxy = new ViewProxy(socketClientHandler, token);
-        ConnectionManager.get().viewsProxy.put(token, viewProxy);
         ConnectionManager.get().viewListenerMap.put(token, socketClientHandler);
     }
 
     public void generateTokenRMI(IClientListener viewListener, String token) throws RemoteException {
-        ConnectionManager.get().viewsProxy.put(token, new ViewProxy(viewListener, token));
+        ConnectionManager.get().viewListenerMap.put(token, viewListener);
+        //ConnectionManager.get().viewsProxy.put(token, new ViewProxy(viewListener, token));
     }
-//todo??
+
     public void notifyAboutRearrange(String token, boolean b) {
         try {
-            ConnectionManager.get().getViewProxy(token).notifyRearrangeOk(b);
+            ConnectionManager.get().viewListenerMap.get(token).notifyRearrangeOk(b);
         } catch (RemoteException e) {
             fileLog.error(e.getMessage());
         }
@@ -256,7 +229,7 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
 
     public void notifyAboutColumn(String token, boolean b) {
         try {
-            ConnectionManager.get().getViewProxy(token).notifyColumnOk(b);
+            ConnectionManager.get().viewListenerMap.get(token).notifyColumnOk(b);
         } catch (RemoteException e) {
             fileLog.error(e.getMessage());
         }
@@ -268,7 +241,7 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
                 .filter(e -> e.getValue().equals(gameId))
                 .forEach(e -> {
                     try {
-                        ConnectionManager.get().getViewProxy(e.getKey()).notifyStartTurn(currentPlayer);
+                        ConnectionManager.get().viewListenerMap.get(e.getKey()).notifyStartTurn(currentPlayer);
                     } catch (RemoteException ex) {
                         fileLog.error(ex.getMessage());
                     }
@@ -277,7 +250,7 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
 
     public void notifyOnEndTurn(String token) {
         try {
-            ConnectionManager.get().getViewProxy(token).notifyEndTurn();
+            ConnectionManager.get().viewListenerMap.get(token).notifyEndTurn();
         } catch (RemoteException e) {
             fileLog.error(e.getMessage());
         }
@@ -285,7 +258,7 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
 //todo check if this method actually needs to pass an array of positions
     public void notifyAboutTiles(String token, boolean b, ArrayList<Position> choice) {
         try {
-            ConnectionManager.get().getViewProxy(token).notifyTilesOk(b);
+            ConnectionManager.get().viewListenerMap.get(token).notifyTilesOk(b);
         } catch (RemoteException e) {
             fileLog.error(e.getMessage());
         }
@@ -297,7 +270,7 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
                 .filter(e -> e.getValue().equals(gameId))
                 .forEach(e -> {
                     try {
-                        ConnectionManager.get().getViewProxy(e.getKey()).notifyEndGame();
+                        ConnectionManager.get().viewListenerMap.get(e.getKey()).notifyEndGame();
                     } catch (RemoteException ex) {
                         fileLog.error(ex.getMessage());
                     }
@@ -310,7 +283,7 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
                 .filter(e -> e.getValue().equals(gameId))
                 .forEach(e -> {
                     try {
-                        ConnectionManager.get().getViewProxy(e.getKey()).notifyLastTurn(nickname);
+                        ConnectionManager.get().viewListenerMap.get(e.getKey()).notifyLastTurn(nickname);
                     } catch (RemoteException ex) {
                         fileLog.error(ex.getMessage());
                     }
@@ -323,7 +296,7 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
                 .filter(e -> e.getValue().equals(gameId))
                 .forEach(e -> {
                     try {
-                        ConnectionManager.get().getViewProxy(e.getKey()).notifyOnCGC(nickname, id);
+                        ConnectionManager.get().viewListenerMap.get(e.getKey()).notifyOnCGC(nickname, id);
                     } catch (RemoteException ex) {
                         fileLog.error(ex.getMessage());
                     }

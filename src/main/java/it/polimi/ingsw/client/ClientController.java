@@ -106,7 +106,6 @@ public class ClientController {
 
     public void chooseTiles(List<String> tilesChosen) {
         currentConnection.chooseTiles(userToken, tilesChosen);
-        fileLog.debug("i'm done with waiting for the tiles response");
     }
 
     public boolean isGameOn() {
@@ -158,7 +157,6 @@ public class ClientController {
     }
 
     public void numberOfPlayers(int number) {
-        fileLog.debug("number of players: " + number);
         if(number < 2 || number > 4){
             currentView.printError("Wrong number of players, please type 'help' for a list of commands");
         }
