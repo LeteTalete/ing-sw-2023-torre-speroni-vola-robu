@@ -88,7 +88,7 @@ public class CommandParsing {
                 //multiple tiles. not sure if the bug is here but it`s worth signaling
                 executeTileCommand();
             }
-            //todo
+            //todo??
             case (BACK) -> {
                 if (!isPlaying) {
                     notMyTurn();
@@ -102,7 +102,6 @@ public class CommandParsing {
                     notMyTurn();
                     break;
                 }
-                //if choosing tiles
                 parseMultipleInteger(args);
                 executeRearrangeCommand();
             }
@@ -111,7 +110,6 @@ public class CommandParsing {
                     notMyTurn();
                     break;
                 }
-                //if choosing tiles
                 try
                 {
                     parseInteger(args);
@@ -128,7 +126,6 @@ public class CommandParsing {
                     master.gameNotStarted();
                     break;
                 }
-                //if choosing tiles
                 executeShelfCommand();
             }
             case (HELP) -> master.printCommands();

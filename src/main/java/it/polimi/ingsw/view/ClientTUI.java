@@ -142,9 +142,16 @@ public class ClientTUI implements View{
 
     @Override
     public void printCommands() {
-        /**todo write all the commands: 'help', 'username [username]', 'number [number]',
-         * 'tiles [coordinatexcoordinatey coordinatexcoordinatey ecc]', 'order [number number number]',
-         * 'column [number]', 'showshelf [username]', '@ [username]' and some others that I can't think of now**/
+        writeText("Here are all the commands you can use while playing:\n" +
+                "help: shows all the commands\n" +
+                "tiles [coordinatexcoordinatey coordinatexcoordinatey]: to pick the tile(s) you want to place on your shelf\n" +
+                "order [number number number]: to set the order of the tiles you want to place on your shelf\n" +
+                "column [number]: to choose the column of the shelf in which you want to place your tiles\n" +
+                "showshelf [username]: shows the shelf of the player you want to see\n" +
+                "@[username] [message]: to send a message to a player\n" +
+                "@all [message]: to send a message to all the players\n" +
+                "quit: quits the game\n" +
+                "showplayers: shows the players\n");
     }
 
     @Override
@@ -309,7 +316,7 @@ public class ClientTUI implements View{
 
     @Override
     public void chooseOrder() {
-        writeText("Choose order: [order 'number(s)']");
+        writeText("Choose order: [order 'first number' 'second number' 'third number']");
     }
 
     @Override

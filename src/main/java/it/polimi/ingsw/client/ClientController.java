@@ -239,15 +239,14 @@ public class ClientController {
             if(!onlyOneTile){
                 currentView.displayNotification("You can now re-arrange the tiles or choose the column. Here are the commands:");
                 //todo it should show commands format, not show the request
-                currentView.chooseColumn();
                 currentView.chooseOrder();
+                currentView.chooseColumn();
                 setMyTurn(true);
             }
             else{
                 currentView.chooseColumn();
                 setMyTurn(true);
             }
-
         }
         else if(num==3){
             currentView.chooseColumn();

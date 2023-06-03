@@ -36,6 +36,7 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
     @Override
     public void setGameOn() throws RemoteException {
         view.writeText(StaticStrings.GAME_START);
+        view.printCommands();
         view.setGameOn(true);
     }
 
@@ -105,7 +106,7 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
 
     @Override
     public void notifyGameStart() throws RemoteException {
-        view.displayNotification("Game started!");
+        setGameOn();
     }
 
     @Override
