@@ -7,14 +7,14 @@ import it.polimi.ingsw.model.cards.CommonGoalCard;
 import it.polimi.ingsw.model.enumerations.T_Type;
 import it.polimi.ingsw.server.ServerManager;
 
-import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.Test;
-
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 public class GameTest {
 
@@ -261,7 +261,7 @@ public class GameTest {
     /**
      * Test gameHasEndedTest checks if the scores are correctly calculated and if the scoreBoard is correctly sorted.
      * The second, third and fourth player get respectively 4, 5, 6 tiles of the same color on the first column of their shelf.
-     * That means the second player gets 3 points, the third 5 and the fourth 8.
+     * That means the second player gets 3 points, the third 5 and the fourth 8. NB: The first player gets 0 points.
      * Since the PGCs are randomly assigned it is possible for player 4, 3 and 2 to have plus one point each.
      */
     @Test
@@ -359,12 +359,12 @@ public class GameTest {
         game.initialize();
 
         ArrayList<Tile> tiles = new ArrayList<>();
-        tiles.add(new Tile(T_Type.CAT,1));
-        tiles.add(new Tile(T_Type.CAT, 1));
-        tiles.add(new Tile(T_Type.CAT, 1));
+        tiles.add(new Tile(T_Type.GAMES,1));
+        tiles.add(new Tile(T_Type.GAMES, 1));
+        tiles.add(new Tile(T_Type.GAMES, 1));
 
         for (Player player : game.getPlayers() ){
-            player.getMyShelf().insertTiles(0,tiles);
+            player.getMyShelf().insertTiles(2,tiles);
         }
 
         game.setEndGame(game.getPlayers().get(0).getNickname());
