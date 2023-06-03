@@ -132,15 +132,6 @@ public class ClientTUI implements View{
     }
 
     @Override
-    public void detangleMessage(Response response) {
-        try {
-            master.detangleMessage(response);
-        } catch (RemoteException e) {
-            fileLog.error(e.getMessage());
-        }
-    }
-
-    @Override
     public void printCommands() {
         writeText("Here are all the commands you can use while playing:\n" +
                 "help: shows all the commands\n" +

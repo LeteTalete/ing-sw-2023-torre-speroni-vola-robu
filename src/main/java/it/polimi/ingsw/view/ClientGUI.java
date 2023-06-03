@@ -117,11 +117,6 @@ public class ClientGUI implements View {
     }
 
     @Override
-    public void detangleMessage(Response response) {
-
-    }
-
-    @Override
     public void printCommands() {
         //only for tui
     }

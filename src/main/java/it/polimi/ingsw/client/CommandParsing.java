@@ -88,15 +88,6 @@ public class CommandParsing {
                 //multiple tiles. not sure if the bug is here but it`s worth signaling
                 executeTileCommand();
             }
-            //todo??
-            case (BACK) -> {
-                if (!isPlaying) {
-                    notMyTurn();
-                    break;
-                }
-                //if user wants to go back
-                masterGoBack();
-            }
             case (REARRANGE) -> {
                 if (!isPlaying) {
                     notMyTurn();
@@ -158,10 +149,6 @@ public class CommandParsing {
         }
         fileLog.info("sending message " + message.toString() + " to " + choice);
         master.sendChat(choice, message.toString());
-    }
-
-    private void masterGoBack() {
-        /*todo, sends a notification to the server that the client wants to go back and...does something with the model & view, i guess*/
     }
 
     private void notMyTurn() {

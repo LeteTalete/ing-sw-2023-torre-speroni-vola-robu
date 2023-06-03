@@ -43,8 +43,6 @@ public interface View {
 
     void running();
 
-    void detangleMessage(Response response);
-
     void printCommands();
 
     void changeTurn(String name);

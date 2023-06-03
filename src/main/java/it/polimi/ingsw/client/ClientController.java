@@ -181,9 +181,6 @@ public class ClientController {
         return currentConnection;
     }
 
-    public void detangleMessage(Response response) throws RemoteException {
-        response.handleResponse(responseDecoder);
-    }
 
     public boolean isConnected() {
         return currentConnection.isConnected();
