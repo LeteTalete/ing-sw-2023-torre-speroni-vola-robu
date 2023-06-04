@@ -32,7 +32,11 @@ public class ResponseDecoder implements ResponseHandler {
 
     @Override
     public void handle(Pinged pinged) throws RemoteException {
-
+        try{
+            clientListener.sendPingSyn();
+        }catch (RemoteException e){
+            fileLog.error(e.getMessage());
+        }
     }
 
     @Override
@@ -120,7 +124,7 @@ public class ResponseDecoder implements ResponseHandler {
 
     @Override
     public void handle(ChatMessage chatMessage) throws RemoteException {
-        clientListener.notifyChatMessage(chatMessage.getSender(), chatMessage.getMessage());
+        clientListener.notifyChatMessage(chatMessage.getSender(), chatMessage.getMessage(), chatMessage.getReceiver());
         client.setReceivedResponse(false);
         synchronized (client) {
             client.notifyAll();

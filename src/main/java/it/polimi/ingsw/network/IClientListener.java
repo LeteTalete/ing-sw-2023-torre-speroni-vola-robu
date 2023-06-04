@@ -24,7 +24,7 @@ public interface IClientListener extends Remote, Serializable {
 
     void notifyLastTurn(String firstDoneUser) throws RemoteException;
 
-    void notifyChatMessage(String sender, String message) throws RemoteException;
+    void notifyChatMessage(String sender, String message, String receiver) throws RemoteException;
 
     void updateModel(ModelUpdate modelUpdate) throws RemoteException;
 
@@ -41,4 +41,7 @@ public interface IClientListener extends Remote, Serializable {
     void notifyOnCGC(String nickname, int id) throws RemoteException;
 
     void notifyAboutDisconnection(String disconnectedUser) throws RemoteException;
+    void sendPingSyn() throws RemoteException;
+    String getToken() throws RemoteException;
+    void setToken(String token) throws RemoteException;
 }

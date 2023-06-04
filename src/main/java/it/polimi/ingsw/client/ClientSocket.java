@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.model.board.Position;
+import it.polimi.ingsw.network.ConnectionClientTimer;
 import it.polimi.ingsw.requests.*;
 import it.polimi.ingsw.responses.Response;
 import it.polimi.ingsw.view.View;
@@ -15,6 +16,7 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Timer;
 
 public class ClientSocket implements IClientConnection
 {
@@ -34,6 +36,10 @@ public class ClientSocket implements IClientConnection
     private Thread receiving;
     private ResponseDecoder responseDecoder;
     private boolean notReceivingResponse;
+    private boolean syn;
+    private Timer checkTimer;
+    private final int synCheckTime = 1000;
+
 
 
     public ClientSocket(String ip, int port, ClientController cController) throws IOException
@@ -168,6 +174,11 @@ public class ClientSocket implements IClientConnection
     }
 
     @Override
+    public String getToken() {
+        return token;
+    }
+
+    @Override
     public void setReceivedResponse(boolean b) {
         notReceivingResponse = b;
     }
@@ -208,8 +219,8 @@ public class ClientSocket implements IClientConnection
 
 
     @Override
-    public void setSynCheckTimer(boolean b) {
-
+    public void setPing(boolean b) {
+        this.syn = b;
     }
 
     @Override
@@ -252,6 +263,27 @@ public class ClientSocket implements IClientConnection
         request(new ChatMessageRequest(username, toString, choice));
     }
 
+    @Override
+    public void sendPing(String token) {
+        setReceivedResponse(true);
+        request(new PingRequest(token));
+    }
 
+    @Override
+    public void setCheckTimer(boolean b) {
+        if(b){
+            checkTimer = new Timer();
+            checkTimer.scheduleAtFixedRate(new ConnectionClientTimer(this), synCheckTime, synCheckTime);
+        }
+        else{
+            checkTimer.purge();
+            checkTimer.cancel();
+        }
+    }
+
+
+    public boolean isSyn() {
+        return syn;
+    }
 
 }

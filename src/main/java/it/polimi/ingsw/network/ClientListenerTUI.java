@@ -12,6 +12,7 @@ import java.rmi.server.UnicastRemoteObject;
 
 public class ClientListenerTUI extends UnicastRemoteObject implements IClientListener {
     private transient final ClientTUI view;
+    private String token;
     public ClientListenerTUI(ClientTUI currentView) throws RemoteException{
         this.view = currentView;
     }
@@ -23,14 +24,22 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
 
     @Override
     public void notifySuccessfulRegistration(String name, boolean b, String token, boolean first) throws RemoteException {
-        if(b){
+        if(b) {
             view.displayNotification("Registration Successful!");
+            setToken(token);
+            if (!first){
+                view.displayNotification("Waiting for other players to join...");
+            }
             view.serverSavedUsername(name, true, token, first);
         }
         else{
             view.displayNotification("Registration failed: "+name+" already exists. Try again");
             view.serverSavedUsername(name, false, token, first);
         }
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     @Override
@@ -73,8 +82,9 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
     }
 
     @Override
-    public void notifyChatMessage(String sender, String message) throws RemoteException {
-        view.displayChatNotification("@" + sender + ": " + message);
+    public void notifyChatMessage(String sender, String message, String receiver) throws RemoteException {
+        view.displayChatNotification("@"+sender + " to " + receiver +": " + message);
+
     }
 
     @Override
@@ -131,4 +141,12 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
         view.displayNotification(disconnectedUser + " disconnected. The game is now over.");
     }
 
+    @Override
+    public void sendPingSyn() throws RemoteException {
+        view.pingSyn();
+    }
+
+    public String getToken() {
+        return token;
+    }
 }

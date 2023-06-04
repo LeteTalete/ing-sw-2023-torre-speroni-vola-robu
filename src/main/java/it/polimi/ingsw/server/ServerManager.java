@@ -6,8 +6,6 @@ import it.polimi.ingsw.model.board.Position;
 import it.polimi.ingsw.network.ClientListenerTUI;
 import it.polimi.ingsw.network.IClientListener;
 import it.polimi.ingsw.network.IRemoteController;
-import it.polimi.ingsw.notifications.DisconnectionNotif;
-import it.polimi.ingsw.responses.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -78,13 +76,17 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
     public void sendChat(String sender, String message, String receiver) throws RemoteException {
         fileLog.info("Received a chat message from "+sender+" to "+receiver+": "+message);
         String senderToken = ConnectionManager.get().namesTokens.get(sender);
-        if(receiver.equals("all")){
+        if(ConnectionManager.get().namesTokens.get(receiver)==null && !receiver.equals("all")){
+            fileLog.debug("Sender token is null");
+            ConnectionManager.get().getLocalView(senderToken).showTextNotification("The user you are trying to reach does not exist.");
+        }
+        else if(receiver.equals("all")){
             activeUsers.entrySet()
                     .stream()
                     .filter(e -> e.getValue().equals(activeUsers.get(senderToken)))
                     .forEach(e -> {
                         try {
-                            ConnectionManager.get().getLocalView(e.getKey()).notifyChatMessage(sender, message);
+                            ConnectionManager.get().getLocalView(e.getKey()).notifyChatMessage(sender, message, receiver);
                         } catch (RemoteException ex) {
                             fileLog.error(ex.getMessage());
                         }
@@ -92,7 +94,8 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
         }
         else{
             String receiverToken = ConnectionManager.get().namesTokens.get(receiver);
-            ConnectionManager.get().getLocalView(receiverToken).notifyChatMessage(sender, message);
+            ConnectionManager.get().getLocalView(senderToken).notifyChatMessage("you", message, receiver);
+            ConnectionManager.get().getLocalView(receiverToken).notifyChatMessage(sender, message, "you");
         }
 
     }
@@ -153,7 +156,7 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
         }
     }
 
-    private void notifyAboutGameStart(String id) {
+    public void notifyAboutGameStart(String id) {
         activeUsers.entrySet()
                 .stream()
                 .filter(e -> e.getValue().equals(id))
@@ -187,18 +190,8 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
     public void disconnect(String token) {
         ConnectionManager.get().disconnectToken(token);
         String gameId = activeGames.get(token).getGameId();
-        String disconnectedUser = ConnectionManager.get().getNameToken(token);
-        activeUsers.entrySet()
-                .stream()
-                .filter(e -> e.getValue().equals(gameId))
-                .filter(e -> !e.getKey().equals(token))
-                .forEach(e -> {
-                    try {
-                        ConnectionManager.get().viewListenerMap.get(e.getKey()).notifyAboutDisconnection(disconnectedUser);
-                    } catch (RemoteException ex) {
-                        fileLog.error(ex.getMessage());
-                    }
-                });
+        //todo close the game
+        //activeGames.get(gameId).;
     }
 
     public String getTokenFromHandler(ServerSocketClientHandler serverSocketClientHandler) {
@@ -212,11 +205,19 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
 
     public void createToken(ServerSocketClientHandler socketClientHandler, String token) {
         ConnectionManager.get().viewListenerMap.put(token, socketClientHandler);
+        ConnectionManager.get().startPingTimer(token);
+        ConnectionManager.get().startSynTimer(token);
     }
 
     public void generateTokenRMI(IClientListener viewListener, String token) throws RemoteException {
         ConnectionManager.get().viewListenerMap.put(token, viewListener);
-        //ConnectionManager.get().viewsProxy.put(token, new ViewProxy(viewListener, token));
+        ConnectionManager.get().startPingTimer(token);
+        ConnectionManager.get().startSynTimer(token);
+    }
+
+    @Override
+    public void sendPing(String token) throws RemoteException {
+        ConnectionManager.get().setPingMap(token, true);
     }
 
     public void notifyAboutRearrange(String token, boolean b) {

@@ -15,6 +15,7 @@ public interface IClientConnection {
      void login(String name);
 
      void setUserToken(String token);
+     String getToken();
 
      void setReceivedResponse(boolean b);
 
@@ -22,7 +23,8 @@ public interface IClientConnection {
 
     void chooseColumn(int column);
 
-    void setSynCheckTimer(boolean b);
+    void setPing(boolean b);
+    boolean isSyn();
 
     void close();
 
@@ -35,5 +37,7 @@ public interface IClientConnection {
     void passTiles(ArrayList<Position> tilesChosen);
 
     void sendChat(String username, String toString, String choice);
+    void sendPing(String token);
 
+    void setCheckTimer(boolean b);
 }

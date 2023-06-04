@@ -169,10 +169,6 @@ public class ClientController {
         currentConnection.chooseColumn(column);
     }
 
-    public void wake() {
-        currentConnection.setSynCheckTimer(true);
-    }
-
     public void close() {
         currentConnection.close();
     }
@@ -255,12 +251,17 @@ public class ClientController {
         currentView.displayNotification("The game has not started yet, please wait for the other players to join");
     }
 
-    public void sendChat(String choice, String toString) {
-        currentConnection.sendChat(username, toString, choice);
+    public void sendChat(String receiver, String message) {
+        currentConnection.sendChat(username, message, receiver);
+        //currentView.addToChatQueue(message, receiver);
     }
 
 
     public void setOnlyOneTile(boolean b) {
         this.onlyOneTile= b;
+    }
+
+    public void pingSyn() {
+        currentConnection.setPing(true);
     }
 }

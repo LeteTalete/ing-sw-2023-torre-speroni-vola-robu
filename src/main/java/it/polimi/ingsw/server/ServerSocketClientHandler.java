@@ -24,6 +24,7 @@ public class ServerSocketClientHandler implements Runnable, IClientListener
     private ObjectInputStream in;
     private ObjectOutputStream out;
     private boolean stop;
+    private String token;
 
     public ServerSocketClientHandler(Socket socket)
     {
@@ -87,6 +88,7 @@ public class ServerSocketClientHandler implements Runnable, IClientListener
     @Override
     public void notifySuccessfulRegistration(String name, boolean b, String token, boolean first) throws RemoteException{
         fileLog.debug("server about to say registration successful: "+name+" "+b+" "+token+" "+first);
+        setToken(token);
         respond(new LoginResponse(name, b, token, first));
     }
 
@@ -125,8 +127,8 @@ public class ServerSocketClientHandler implements Runnable, IClientListener
 
 
     @Override
-    public void notifyChatMessage(String sender, String message) throws RemoteException {
-        respond(new ChatMessage(sender, message));
+    public void notifyChatMessage(String sender, String message, String receiver) throws RemoteException {
+        respond(new ChatMessage(sender, message, receiver));
     }
 
     @Override
@@ -167,6 +169,21 @@ public class ServerSocketClientHandler implements Runnable, IClientListener
     @Override
     public void notifyAboutDisconnection(String disconnectedUser) throws RemoteException {
         respond(new DisconnectionNotif(disconnectedUser));
+    }
+
+    @Override
+    public void sendPingSyn() throws RemoteException {
+        respond(new Pinged());
+    }
+
+    @Override
+    public String getToken() throws RemoteException {
+        return token;
+    }
+
+    @Override
+    public void setToken(String token) throws RemoteException {
+        this.token = token;
     }
 
     private void respond(Response response) {

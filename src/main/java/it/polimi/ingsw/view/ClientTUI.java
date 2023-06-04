@@ -10,6 +10,7 @@ import it.polimi.ingsw.stati.Status;
 import it.polimi.ingsw.structures.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.ThreadContext;
 
 import java.rmi.RemoteException;
 import java.util.*;
@@ -30,6 +31,8 @@ public class ClientTUI implements View{
     private boolean isRunning;
     private String colorError; //todo please, make this red
     private String ServerIP;
+    private LinkedList<String> chatQueue = new LinkedList<>();
+    private String username;
 
 
     //constructor
@@ -279,6 +282,7 @@ public class ClientTUI implements View{
 
     @Override
     public void serverSavedUsername(String name, boolean b, String token, boolean first) {
+        this.username = name;
         master.serverSavedUsername(name, b, token, first);
         if(first){
             askAmountOfPlayers();
@@ -320,6 +324,25 @@ public class ClientTUI implements View{
         //todo
     }
 
+    @Override
+    public void pingSyn() {
+        master.pingSyn();
+    }
+
+    @Override
+    public void addToChatQueue(String message, String receiver) {
+        if(chatQueue.size()==4){
+            chatQueue.removeFirst();
+        }
+        if(receiver.equals("all")){
+            chatQueue.add("@you to all:"+message);
+        }else{
+            chatQueue.add("@you to "+receiver+": "+message);
+        }
+        DrawTui.printlnString("CHAT: ");
+        chatQueue.stream().forEach(x -> DrawTui.printlnString(x));
+    }
+
     public String getServerIP() {
         return ServerIP;
     }
@@ -330,7 +353,17 @@ public class ClientTUI implements View{
     }
 
     public void displayChatNotification(String s) {
+        if(chatQueue.size() == 4){
+            chatQueue.removeFirst();
+        }
+        chatQueue.add(s);
+        DrawTui.printlnString("CHAT: ");
+        chatQueue.stream().forEach(x -> DrawTui.printlnString(x));
         //todo
-        writeText(s);
+        //writeText(s);
+    }
+
+    public String getName() {
+        return username;
     }
 }

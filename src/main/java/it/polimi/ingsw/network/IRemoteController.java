@@ -19,4 +19,5 @@ public interface IRemoteController extends Remote {
 
     void sendChat(String username, String toString, String choice) throws RemoteException;
     void generateTokenRMI(IClientListener viewListener, String token) throws RemoteException;
+    void sendPing(String token) throws RemoteException;
 }
