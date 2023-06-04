@@ -212,6 +212,7 @@ public class ClientTUI implements View{
         String livingRoomP = DrawTui.graphicsLivingRoom(livingRoomView, false, true);  //livingRoom of Player
         String shelfP = DrawTui.graphicsShelf(playerBoardView.getShelf(), true, true);
         DrawTui.printlnString(DrawTui.mergerString(livingRoomP, shelfP, true, false, false));
+
     }
     public void chooseTiles(){
         DrawTui.askWhat("Choose the tiles: [tiles row,column]");

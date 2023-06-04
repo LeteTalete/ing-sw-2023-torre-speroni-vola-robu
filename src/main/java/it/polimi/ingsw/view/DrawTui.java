@@ -3,7 +3,6 @@ package it.polimi.ingsw.view;
 import it.polimi.ingsw.model.board.Couple;
 import it.polimi.ingsw.model.enumerations.State;
 import it.polimi.ingsw.model.enumerations.T_Type;
-import it.polimi.ingsw.model.enumerations.Tile;
 import it.polimi.ingsw.structures.LivingRoomView;
 import it.polimi.ingsw.structures.ShelfView;
 
@@ -107,7 +106,7 @@ public class DrawTui {
             } else if (typeTile == T_Type.TROPHY) {
                 return colorTileT + " T " + colorRESET;
             } else {
-                return colorTileF + slotTile + colorRESET;
+                return colorTileF + " F " + colorRESET;
             }
         }
     }
