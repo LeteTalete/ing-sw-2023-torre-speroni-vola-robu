@@ -1,0 +1,4 @@
+.background{
+    -fx-background-image: url("../imgs/parquet.jpg");
+    -fx-background-size: stretch;
+}

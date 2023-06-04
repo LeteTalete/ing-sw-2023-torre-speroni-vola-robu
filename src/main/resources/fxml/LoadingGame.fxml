@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
+
+<Pane prefHeight="302.0" prefWidth="636.0" styleClass="background" stylesheets="@../css/LoadingGame.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.ControllerGUI.ConnectionPlayer">
+   <children>
+      <StackPane prefHeight="150.0" prefWidth="200.0">
+         <children>
+            <ImageView fitHeight="121.0" fitWidth="636.0" pickOnBounds="true">
+               <image>
+                  <Image url="@../imgs/base.jpg" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="127.0" fitWidth="685.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../imgs/Title.png" />
+               </image>
+            </ImageView>
+         </children>
+         <padding>
+            <Insets top="20.0" />
+         </padding>
+      </StackPane>
+      <Label fx:id="labelSearchPlayers" contentDisplay="CENTER" layoutX="204.0" layoutY="189.0" prefHeight="35.0" prefWidth="228.0" text="Search Players: " textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="24.0" />
+         </font>
+      </Label>
+      <ProgressBar fx:id="barLoading" layoutX="106.0" layoutY="224.0" prefHeight="18.0" prefWidth="424.0" progress="0.0" />
+   </children>
+</Pane>

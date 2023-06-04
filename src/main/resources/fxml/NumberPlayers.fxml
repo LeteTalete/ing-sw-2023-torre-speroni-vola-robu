@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.effect.InnerShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="354.0" prefWidth="542.0" styleClass="background" stylesheets="@../css/NumberPlayers.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.ControllerGUI.ConnectionPlayer">
+   <children>
+      <ImageView fitHeight="243.0" fitWidth="437.0" layoutX="50.0" layoutY="60.0" pickOnBounds="true">
+         <image>
+            <Image url="@../imgs/base.jpg" />
+         </image>
+         <effect>
+            <DropShadow height="30.0" radius="14.5" width="30.0" />
+         </effect>
+      </ImageView>
+      <ImageView fitHeight="68.0" fitWidth="225.0" layoutX="164.0" layoutY="71.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../imgs/Title.png" />
+         </image>
+      </ImageView>
+      <Label alignment="CENTER" layoutX="67.0" layoutY="134.0" prefHeight="36.0" prefWidth="391.0" text="Enter one of the following numbers: 2, 3, 4" textFill="WHITE">
+         <font>
+            <Font name="System Bold Italic" size="18.0" />
+         </font>
+      </Label>
+      <Label alignment="CENTER_RIGHT" layoutX="67.0" layoutY="167.0" prefHeight="48.0" prefWidth="220.0" text="Number of Players:" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="24.0" />
+         </font>
+         <effect>
+            <DropShadow height="30.0" radius="14.5" width="30.0" />
+         </effect>
+      </Label>
+      <TextField fx:id="textNumPlayers" layoutX="294.0" layoutY="180.0" prefHeight="25.0" prefWidth="165.0">
+         <effect>
+            <DropShadow />
+         </effect></TextField>
+      <Label fx:id="errorMessageNumP" alignment="CENTER" layoutX="98.0" layoutY="213.0" prefHeight="80.0" prefWidth="286.0" text="                           ERROR!!! Incorrect value entered" textAlignment="RIGHT" textFill="#ffa800" visible="false" wrapText="true">
+         <font>
+            <Font name="System Bold Italic" size="20.0" />
+         </font>
+      </Label>
+      <StackPane fx:id="buttonNumPlayers" layoutX="399.0" layoutY="224.0" onMouseClicked="#clickedButtonNumPlayers" onMouseEntered="#enteredButton" onMouseExited="#exitedButton" prefHeight="46.0" prefWidth="60.0">
+         <children>
+            <ImageView fitHeight="56.0" fitWidth="60.0" pickOnBounds="true">
+               <image>
+                  <Image url="@../imgs/barra.png" />
+               </image>
+               <effect>
+                  <DropShadow />
+               </effect>
+            </ImageView>
+            <Label text="OK" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="25.0" />
+               </font>
+               <effect>
+                  <InnerShadow height="2.0" offsetX="1.5" radius="0.5" width="2.0" />
+               </effect>
+            </Label>
+         </children>
+      </StackPane>
+   </children>
+</Pane>

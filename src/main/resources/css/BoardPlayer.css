@@ -1,0 +1,59 @@
+.LivingRoom {
+    -fx-background-image: url("../imgs/Board/livingroom.png");
+    -fx-background-size: stretch;
+}
+
+.boardGame{
+    -fx-background-image: url("../imgs/parquet.jpg");
+    -fx-background-size: stretch;
+}
+
+.buttonShelfPlayers{
+    -fx-background-image: url("../imgs/ShelfOthers.jpg");
+    -fx-background-size: 500px;
+    -fx-background-position: -150px -50px;
+}
+
+.buttonPlayers{
+    -fx-background-image: url("../imgs/Display_2.jpg");
+    -fx-background-size: 800px;
+    -fx-background-position: -270px 300px;
+}
+
+.shelf{
+    -fx-background-image: url("../imgs/Board/bookshelf.png");
+    -fx-background-size: stretch;
+}
+
+.boxText{
+    -fx-background-color: #853c2e;
+}
+
+.boxChat{
+    -fx-background-color: #84906a;
+}
+
+.boxMessagge{
+    -fx-background-image: url("../imgs/barra.png");
+    -fx-background-size: stretch;
+}
+
+.boxChooseTile{
+    -fx-background-image: url("../imgs/tabella.png");
+}
+
+.labelBackground{
+    -fx-background-image: url("../imgs/base.jpg");
+}
+
+.divisorPane{
+    -fx-background-image: url("../imgs/base2.jpg");
+}
+
+.chatBoxTop{
+    -fx-background-color: #d9b38c;
+}
+
+.charBackground{
+    -fx-background-color:  #f4dfc6;
+}

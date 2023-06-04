@@ -104,7 +104,6 @@ public class ClientController {
         return username;
     }
 
-
     public void chooseTiles(List<String> tilesChosen) {
         currentConnection.chooseTiles(userToken, tilesChosen);
     }

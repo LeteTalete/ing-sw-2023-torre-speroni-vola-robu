@@ -10,12 +10,16 @@ import it.polimi.ingsw.structures.PlayerView;
 import it.polimi.ingsw.structures.ShelfView;
 
 public class ClientGUI implements View {
+
+    private GUIApplication guiApplication;
     private ClientController master;
     private CommandParsing commPars;
     private String ServerIP;
 
     @Override
     public void chooseConnection() {
+        guiApplication = new GUIApplication();
+        guiApplication.main(null);
 
     }
 
@@ -26,6 +30,7 @@ public class ClientGUI implements View {
 
     @Override
     public void getUsername() {
+        guiApplication.showSceneName(SceneNames.USERNAME);
     }
 
     @Override

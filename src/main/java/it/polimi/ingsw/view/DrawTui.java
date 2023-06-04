@@ -3,6 +3,7 @@ package it.polimi.ingsw.view;
 import it.polimi.ingsw.model.enumerations.Couple;
 import it.polimi.ingsw.model.enumerations.State;
 import it.polimi.ingsw.model.enumerations.T_Type;
+import it.polimi.ingsw.model.enumerations.Tile;
 import it.polimi.ingsw.structures.LivingRoomView;
 import it.polimi.ingsw.structures.ShelfView;
 
@@ -11,6 +12,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class DrawTui {
+    static final String colorERROR = "\033[1;38;5m"; //colore di un messaggio di errore
     static final String colorRESET = "\033[0m";  // Reset Changes
     static final String colorTileG = "\033[1;30;48;5;214m"; //Orange
     static final String colorTileC = "\033[1;30;48;5;10m"; //Green
@@ -37,27 +39,27 @@ public class DrawTui {
     public static void printlnString(String string){
         print.println(string);
     }
-    public static void printString(String string){
-        print.print(string);
-    }
     public static void askWhat(String whatString){
         print.print(whatString + "\n#: ");
     }
-    /*
 
-    static int getPositionTiles(){
-        String tiles;
-        int[] positionT;
-        do{
-            position =  getNextLine();
-            position.
-        }
-        return;
-    }
-
-     */
     static String getNextLine() {
         return scanner.nextLine();
+    }
+
+
+    //Mi restituisce la grafica delle Tile che ho scelto dalla LivingRoom, in modo che il giocatore possa scegliere lordine in cui le vuole
+    public static String graphicsOrderTiles(ArrayList<Couple> tiles){
+        String board = boardSide[3].repeat(sizeSlotTile + 2);
+        int numTiles = tiles.size();
+        String orderTiles = startLine + boardSide[1] + stringRepeat(board + boardSide[6],numTiles - 1) + board + boardSide[4] + "\n" + startLine;
+        for(Couple tile: tiles){
+            orderTiles += boardSide[0] + empty + slotTile(tile) + empty;
+        }
+        orderTiles += boardSide[0] + "\n" + startLine + boardSide[2] + stringRepeat(board + boardSide[7],numTiles - 1) + board + boardSide[5] + "\n";
+        orderTiles += startLine + empty.repeat((sizeSlotTile + 4)/2) + sequenceNumbers(0, numTiles, (sizeSlotTile/2)*2 + 3) + "\n";
+
+        return orderTiles;
     }
 
     public static String graphicsShelf(ShelfView myShelfView, boolean activEnd, boolean activMerge){
@@ -95,15 +97,15 @@ public class DrawTui {
         } else {
             T_Type typeTile = tile.getTile().getTileType();
             if(typeTile == T_Type.GAMES) {
-                return colorTileG + slotTile + colorRESET;
+                return colorTileG + " G " + colorRESET;
             } else if (typeTile == T_Type.CAT) {
-                return colorTileC + slotTile + colorRESET;
+                return colorTileC + " C " + colorRESET;
             } else if (typeTile == T_Type.BOOK) {
-                return colorTileB + slotTile + colorRESET;
+                return colorTileB + " B " + colorRESET;
             } else if (typeTile == T_Type.PLANT) {
-                return colorTileP + slotTile + colorRESET;
+                return colorTileP + " P " + colorRESET;
             } else if (typeTile == T_Type.TROPHY) {
-                return colorTileT + slotTile + colorRESET;
+                return colorTileT + " T " + colorRESET;
             } else {
                 return colorTileF + slotTile + colorRESET;
             }
@@ -229,12 +231,11 @@ public class DrawTui {
         cgc.insert(0,maxLen + dividNum + heightString + dividNum);
     }
 
-    //Con questo funzione aggiungo
+    //Con questo funzione aggiungo lo spazio bianco restente, in modo che ogni linea sia della stessa lunghezza
     private static void addEmptySpaceToString(StringBuilder stringOld, String add, String end, int mod){
         stringOld.append(add);
         stringOld.append(stringRepeat(empty, mod - ( add.replaceAll("\033\\[[;\\d]*m", "").length() % mod) - end.length() ) ).append(end);
     }
-
 
 
     //Mi serve per rimuovere la grafica di una stringa per sapere la sua vera lunghezza
@@ -329,34 +330,17 @@ public class DrawTui {
 
     //lenMaxColumn: rappresenta il numero di colonne che compongono la personalGoalCard
     //positionTilePCG: rappresenta il numero di tile
-
     public static String setStringPCG(ArrayList<String> positionTilePCG, int lenMaxColumn, boolean activEndN, boolean activMerge){
-        /*PersonalGoalCard:
-         ┌───────────────────────┐
-         │ ┌───┬───┬───┬───┬───┐ │
-         │ │   │   │   │   │   │ │
-         │ │   │   │   │   │   │ │
-         │ │   │   │   │   │   │ │
-         │ │   │   │   │   │   │ │
-         │ │   │   │   │   │   │ │
-         │ │   │   │   │   │   │ │
-         │ └───┴───┴───┴───┴───┘ │
-         ├───────────────────────┤
-         │ 1 | 2 | 3 | 4 | 5 | 6 │
-         │ 1 | 2 | 4 | 6 | 9 |12 │
-         └───────────────────────┘
-         */
+        String endLine = startLine + activEndLine(activEndN);
         StringBuilder pcg = new StringBuilder();
         String tileS = "";
         String tileEmty = empty.repeat(sizeSlotTile) + boardSide[0];
-        String endLine = startLine + activEndLine(activEndN);
         String board = stringRepeat(boardSide[3], (sizeSlotTile + 1)*lenMaxColumn + 3);
-
+        int lengthLine = (startLine + boardSide[1] + board + boardSide[4] + endLine).length();
+        addEmptySpaceToString(pcg, "PersonalGoalCard:", endLine, lengthLine);
         pcg.append(startLine + boardSide[1] + board + boardSide[4] + endLine);
-        int lengthLine = pcg.length();
         pcg.append(startLine + boardSide[0] + empty + boardSide[1] + stringRepeat(boardSide[3].repeat(sizeSlotTile) + boardSide[6], lenMaxColumn - 1) + boardSide[3].repeat(sizeSlotTile) + boardSide[4] + empty + boardSide[0] + endLine);
-
-        int heightPCG = 2;
+        int heightPCG = 8;
         int lenStringTile; //Se la lunghezza della stringa non è maggiore di 1 significa che non contiene tile in quella posizione
 
         for(int i = 0; i < positionTilePCG.size(); i++){
@@ -373,17 +357,17 @@ public class DrawTui {
                     pcg.append(stringRepeat(tileEmty, positionTile - oldPosT));
 
                     if (Objects.equals(tilesInRow[index + 1], "G")) {
-                        pcg.append(colorTileG + slotTile + colorRESET);
+                        pcg.append(colorTileG + " G " + colorRESET);
                     } else if (Objects.equals(tilesInRow[index + 1],"P")) {
-                        pcg.append(colorTileP + slotTile + colorRESET);
+                        pcg.append(colorTileP + " P " + colorRESET);
                     } else if (Objects.equals(tilesInRow[index + 1],"C")) {
-                        pcg.append(colorTileC + slotTile + colorRESET);
+                        pcg.append(colorTileC + " C " + colorRESET);
                     } else if (Objects.equals(tilesInRow[index + 1],"F")) {
-                        pcg.append(colorTileF + slotTile + colorRESET);
+                        pcg.append(colorTileF + " F " + colorRESET);
                     } else if (Objects.equals(tilesInRow[index + 1],"T"))  {
-                        pcg.append(colorTileT + slotTile + colorRESET);
+                        pcg.append(colorTileT + " T " + colorRESET);
                     } else {
-                        pcg.append(colorTileB + slotTile + colorRESET);
+                        pcg.append(colorTileB + " B " + colorRESET);
                     }
                     oldPosT = positionTile + 1;
                     ++heightPCG;
@@ -397,7 +381,8 @@ public class DrawTui {
         pcg.append(startLine + boardSide[0] + " 1 | 2 | 3 | 4 | 5 | 6 " +  boardSide[0] + endLine);
         pcg.append(startLine + boardSide[0] + " 1 | 2 | 4 | 6 | 9 |12 " +  boardSide[0] + endLine);
         pcg.append(startLine + boardSide[2] + board + boardSide[5] + endLine);
-        return pcg.toString();
+        if(!activMerge) return pcg.toString();
+        else return lengthLine + dividNum + heightPCG + pcg;
     }
 
     //mette '\n' se vero se no mette dividNum
@@ -412,25 +397,23 @@ public class DrawTui {
 
     //si usa all'inizio quando inizia il gioco
     public static void printTitle(){
-        printlnString("\n" + "\033[38;5;11m" +
-                """                       
-                               #           #                                ######       ####                   ##        ######\n
-                             ##          ##                               ###    ##     ##   #                  ##      ##     ##\n
-                            ###         ###                                ##     ##   ##                       ##     ##        \n
-                           ####       ####    ####       ##                ##    #    ##             #####      ##    ###       #      #####\n
-                           ## ##     ## ##   ## ##      ####                ##       ##    ###     ###    ##    ##   #######   ###   ###    ##\n
-                           ##  ##   ##  ##       ##    ## ##         #       ##     ##   ##  ##   ##    ###     ##    ###      ##   ##    ###\n
-                          ##    ## ##    ##      ##   ##   ##       ##        ##    ## ##    ##   ######     #  ##    ##       ##   ######     #\n
-                         ###     ###     ###    ##  ##      ##       ###     ###    ###     ## #   ##       ##  ## #  ##       ##    ##       ##\n
-                       ####      #        ####   ####       ##         ######      ##      ####     ########    ###   ##      ####    ########\n
-                                                            ##                                                        ## \n
-                                                           ##                                                         ##\n
-                                                #         ##                                                         ##\n
-                                                 ##     ###                                                         #\n
-                                                   #####\n
-                   """ + colorRESET
-        );
-        printlnString("+++++++++++++++++++++++++++++++++++++++++++[ START GAME ]+++++++++++++++++++++++++++++++++++++++++++");
+        print.print("""
+                          \033[38;5;228m#           #                                ######       ####                    ##           ######\033[0m                  \s
+                        \033[38;5;227m##          ##                               ###    ##    ###   #                  ###         ##     ##\033[0m                   \s
+                       \033[38;5;11m###         ###                               ###     ##  ###                       ###        ###\033[0m                           \s
+                      \033[38;5;214m####       #####   ####       ###              ###    #   ###             #####      ###        ###      #       #####\033[0m         \s
+                     \033[38;5;208m### ##     ## ###  ## ##      ####               ###      ###    ###     ####   ##    ###      #######   ###    ####   ##\033[0m       \s
+                     \033[38;5;202m###  ##   ##  ###      ##    ## ###        #      ###    ###   ##  ##   ###   ###     ###        ###      ##   ###   ###\033[0m          \s
+                     \033[38;5;9m###   ## ##   ###      ##   ###  ###      ##       ###   ### ##    ##   ######     #  ###        ###      ##   #######    #\033[0m      \s
+                    \033[38;5;197m###     ####    ###    ##   ###    ###      ###     ###   ####     ## #   ###     ##    ###    #  ###      ##    ###     ##\033[0m       \s
+                  \033[38;5;12m####       ##      ####   ######     ###        #######    ###      ####     ########      ######   ###     ####    ########\033[0m     \s
+                                                       \033[38;5;14m###                                                            ###\033[0m                           \s
+                                                      \033[38;5;51m###                                                             ###\033[0m                       \s
+                                          \033[38;5;85m#          ###                                                              ###\033[0m                          \s
+                                           \033[38;5;83m##      ####                                                               ##\033[0m                            \s
+                                            \033[38;5;10m########                                                                 #\033[0m                          \s
+                                
+        """);
     }
 
 

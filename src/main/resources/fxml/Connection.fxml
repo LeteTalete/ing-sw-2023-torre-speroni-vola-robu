@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.effect.InnerShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
+
+<Pane pickOnBounds="false" prefHeight="354.0" prefWidth="465.0" stylesheets="@../css/ConnectionPlayer.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.ControllerGUI.ConnectionPlayer">
+    <children>
+      <Label prefHeight="354.0" prefWidth="465.0" styleClass="setupPanel" />
+        <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" layoutX="-3.0" prefHeight="65.0" prefWidth="472.0" styleClass="labelBackground" textFill="#ffffff">
+         <font>
+            <Font name="System Bold Italic" size="32.0" />
+         </font>
+         <padding>
+            <Insets bottom="10.0" />
+         </padding>
+         <effect>
+            <DropShadow />
+         </effect></Label>
+        <ImageView fx:id="title" fitHeight="63.0" fitWidth="175.0" layoutX="145.0" layoutY="1.0">
+            <image>
+                <Image url="@../imgs/Title.png" />
+            </image>
+        </ImageView>
+      <StackPane fx:id="buttonSocket" layoutX="265.0" layoutY="93.0" onMouseClicked="#activeWindowSocket" onMouseEntered="#enteredButton" onMouseExited="#exitedButton" prefHeight="69.0" prefWidth="146.0">
+         <children>
+            <ImageView fitHeight="58.0" fitWidth="145.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../imgs/barra.png" />
+               </image>
+               <effect>
+                  <DropShadow />
+               </effect>
+            </ImageView>
+            <Label text="Socket" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="30.0" />
+               </font>
+               <effect>
+                  <InnerShadow height="2.0" offsetX="1.5" radius="0.5" width="2.0" />
+               </effect>
+            </Label>
+         </children>
+      </StackPane>
+      <StackPane fx:id="buttonRMI" layoutX="55.0" layoutY="93.0" onMouseClicked="#activeWindowRMI" onMouseEntered="#enteredButton" onMouseExited="#exitedButton" prefHeight="69.0" prefWidth="87.0">
+         <children>
+            <ImageView fitHeight="58.0" fitWidth="145.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../imgs/barra.png" />
+               </image>
+               <effect>
+                  <DropShadow />
+               </effect>
+            </ImageView>
+            <Label text="RMI" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="30.0" />
+               </font>
+               <effect>
+                  <InnerShadow height="2.0" offsetX="1.5" radius="0.5" width="2.0" />
+               </effect>
+            </Label>
+         </children>
+      </StackPane>
+      <HBox fx:id="IP" alignment="CENTER_RIGHT" layoutX="56.0" layoutY="190.0" prefHeight="40.0" prefWidth="354.0" visible="false">
+         <children>
+            <Label alignment="CENTER_RIGHT" prefHeight="40.0" prefWidth="37.0" text="IP:" textFill="WHITE">
+               <font>
+                  <Font name="System Bold Italic" size="28.0" />
+               </font>
+               <effect>
+                  <InnerShadow choke="0.08" height="0.5" radius="0.0" width="0.5" />
+               </effect>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <HBox.margin>
+                  <Insets right="10.0" />
+               </HBox.margin>
+            </Label>
+            <TextField fx:id="textIP" prefHeight="26.0" prefWidth="259.0">
+               <effect>
+                  <DropShadow />
+               </effect>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+            </TextField>
+         </children>
+      </HBox>
+      <HBox fx:id="port" alignment="CENTER_LEFT" layoutX="55.0" layoutY="247.0" prefHeight="40.0" prefWidth="209.0" visible="false">
+         <children>
+            <Label alignment="CENTER_RIGHT" prefHeight="40.0" prefWidth="86.0" text="PORT:" textFill="WHITE">
+               <font>
+                  <Font name="System Bold Italic" size="28.0" />
+               </font>
+               <effect>
+                  <DropShadow height="4.62" radius="2.395" width="6.96" />
+               </effect>
+               <HBox.margin>
+                  <Insets right="10.0" />
+               </HBox.margin>
+            </Label>
+            <TextField fx:id="textPort" prefHeight="26.0" prefWidth="98.0">
+               <effect>
+                  <DropShadow />
+               </effect>
+            </TextField>
+         </children>
+      </HBox>
+      <StackPane fx:id="buttonConnetionOK" layoutX="351.0" layoutY="287.0" onMouseClicked="#clickedButtonConnetionOK" onMouseEntered="#enteredButton" onMouseExited="#exitedButton" prefHeight="46.0" prefWidth="60.0">
+         <children>
+            <ImageView fitHeight="56.0" fitWidth="60.0" pickOnBounds="true">
+               <image>
+                  <Image url="@../imgs/barra.png" />
+               </image>
+               <effect>
+                  <DropShadow />
+               </effect>
+            </ImageView>
+            <Label text="OK" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="25.0" />
+               </font>
+               <effect>
+                  <InnerShadow height="2.0" offsetX="1.5" radius="0.5" width="2.0" />
+               </effect>
+            </Label>
+         </children>
+      </StackPane>
+      <Label fx:id="errorConnection" alignment="CENTER" layoutX="48.0" layoutY="284.0" prefHeight="63.0" prefWidth="286.0" text="                           ERROR!!! Incorrect value entered" textAlignment="RIGHT" textFill="RED" visible="false" wrapText="true">
+         <font>
+            <Font name="System Bold Italic" size="21.0" />
+         </font>
+         <effect>
+            <DropShadow />
+         </effect>
+      </Label>
+    </children>
+</Pane>

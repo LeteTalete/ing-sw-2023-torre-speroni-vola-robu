@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.effect.InnerShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="535.0" prefWidth="600.0" styleClass="background" stylesheets="@../css/ScoreEndGame.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ImageView fitHeight="83.0" fitWidth="600.0" pickOnBounds="true">
+         <image>
+            <Image url="@../imgs/base.jpg" />
+         </image>
+         <effect>
+            <DropShadow />
+         </effect>
+      </ImageView>
+      <ImageView fitHeight="83.0" fitWidth="284.0" layoutX="166.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../imgs/Title.png" />
+         </image></ImageView>
+      <Label fx:id="labelStateGame" alignment="CENTER" contentDisplay="CENTER" layoutY="83.0" prefHeight="101.0" prefWidth="600.0" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="69.0" />
+         </font>
+         <effect>
+            <DropShadow height="46.73" radius="25.205" width="56.09" />
+         </effect>
+      </Label>
+      <VBox layoutX="73.0" layoutY="184.0" prefHeight="280.0" prefWidth="454.0" style="-fx-background-color: #FFFFFF; -fx-opacity: 0.9;">
+         <children>
+            <HBox prefHeight="51.0" prefWidth="454.0">
+               <children>
+                  <Label prefHeight="54.0" prefWidth="265.0" text="Player">
+                     <font>
+                        <Font name="System Bold" size="36.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                     <padding>
+                        <Insets left="20.0" />
+                     </padding>
+                  </Label>
+                  <Label prefHeight="53.0" prefWidth="189.0" text="Score">
+                     <font>
+                        <Font name="System Bold" size="36.0" />
+                     </font>
+                     <padding>
+                        <Insets left="20.0" />
+                     </padding>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox prefHeight="51.0" prefWidth="454.0">
+               <children>
+                  <Label alignment="CENTER" prefHeight="51.0" prefWidth="70.0">
+                     <font>
+                        <Font name="System Bold" size="33.0" />
+                     </font>
+                  </Label>
+                  <Label prefHeight="51.0" prefWidth="223.0">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                  </Label>
+                  <Label prefHeight="51.0" prefWidth="200.0">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox prefHeight="51.0" prefWidth="454.0">
+               <children>
+                  <Label alignment="CENTER" prefHeight="51.0" prefWidth="70.0">
+                     <font>
+                        <Font name="System Bold" size="33.0" />
+                     </font>
+                  </Label>
+                  <Label prefHeight="51.0" prefWidth="223.0">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                  </Label>
+                  <Label prefHeight="51.0" prefWidth="200.0">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+         </children>
+         <effect>
+            <InnerShadow height="19.0" radius="9.0" width="19.0" />
+         </effect>
+      </VBox>
+   </children>
+</Pane>

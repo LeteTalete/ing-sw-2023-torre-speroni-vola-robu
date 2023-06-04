@@ -97,7 +97,6 @@ public class ClientTUI implements View{
 
         connectionType = connection;
 
-
     }
     private String nextCommand() {
         command = frominput.nextLine();
@@ -190,23 +189,7 @@ public class ClientTUI implements View{
     }
 
     public void GameTitle(){
-        DrawTui.printlnString(colorTitle + """                       
-                               #           #                                ######       ####                   ##        ######
-                             ##          ##                               ###    ##     ##   #                  ##      ##     ##
-                            ###         ###                                ##     ##   ##                       ##     ##        \s
-                           ####       ####    ####       ##                ##    #    ##             #####      ##    ###       #      #####\s
-                           ## ##     ## ##   ## ##      ####                ##       ##    ###     ###    ##    ##   #######   ###   ###    ##\s
-                           ##  ##   ##  ##       ##    ## ##         #       ##     ##   ##  ##   ##    ###     ##    ###      ##   ##    ###\s
-                          ##    ## ##    ##      ##   ##   ##       ##        ##    ## ##    ##   ######     #  ##    ##       ##   ######     #\s
-                         ###     ###     ###    ##  ##      ##       ###     ###    ###     ## #   ##       ##  ## #  ##       ##    ##       ##
-                       ####      #        ####   ####       ##         ######      ##      ####     ########    ###   ##      ####    ########     \s
-                                                            ##                                                        ##  \s
-                                                           ##                                                         ##
-                                                #         ##                                                         ##
-                                                 ##     ###                                                         #
-                                                   #####                          \s
-                   """ + colorRESET
-        );
+        DrawTui.printTitle();
         DrawTui.printlnString("+++++++++++++++++++++++++++++++++++++++++++[ START GAME ]+++++++++++++++++++++++++++++++++++++++++++");
     }
 
@@ -230,7 +213,10 @@ public class ClientTUI implements View{
         DrawTui.askWhat("Choose the tiles: [tiles rowcolumn(s)]");
     }
     public void rearrangeTiles(){
-        writeText("Choose an order for your tiles: [order number(s)]");
+
+
+        DrawTui.askWhat("Choose an order for your tiles: [order number(s)]");
+
     }
 
     @Override
@@ -251,7 +237,7 @@ public class ClientTUI implements View{
 
     @Override
     public void printError(String message) {
-        writeText(message);
+        writeText(DrawTui.colorERROR + message + DrawTui.colorRESET);
     }
 
     @Override
@@ -301,6 +287,11 @@ public class ClientTUI implements View{
         //needs fixing
 
     }
+
+    public void chooseOrderTiles(){
+
+    }
+
 
     public boolean isGameOn() {
         return master.isGameOn();

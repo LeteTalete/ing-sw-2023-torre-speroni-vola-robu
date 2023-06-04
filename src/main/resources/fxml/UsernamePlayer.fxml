@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.effect.InnerShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="354.0" prefWidth="542.0" styleClass="background" stylesheets="@../css/NumberPlayers.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.ControllerGUI.ConnectionPlayer">
+   <children>
+      <ImageView fitHeight="243.0" fitWidth="437.0" layoutX="50.0" layoutY="60.0" pickOnBounds="true">
+         <image>
+            <Image url="@../imgs/base.jpg" />
+         </image>
+         <effect>
+            <DropShadow height="30.0" radius="14.5" width="30.0" />
+         </effect>
+      </ImageView>
+      <ImageView fitHeight="68.0" fitWidth="225.0" layoutX="164.0" layoutY="71.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../imgs/Title.png" />
+         </image>
+      </ImageView>
+      <Label alignment="CENTER_RIGHT" layoutX="67.0" layoutY="156.0" prefHeight="48.0" prefWidth="130.0" text="Username:" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="24.0" />
+         </font>
+         <effect>
+            <DropShadow height="30.0" radius="14.5" width="30.0" />
+         </effect>
+      </Label>
+      <TextField fx:id="textUsername" layoutX="208.0" layoutY="169.0" prefHeight="25.0" prefWidth="251.0">
+         <effect>
+            <DropShadow />
+         </effect></TextField>
+      <StackPane fx:id="buttonUsername" layoutX="399.0" layoutY="224.0" onMouseClicked="#clickedButtonUsername" onMouseEntered="#enteredButton" onMouseExited="#exitedButton" prefHeight="46.0" prefWidth="60.0">
+         <children>
+            <ImageView fitHeight="56.0" fitWidth="60.0" pickOnBounds="true">
+               <image>
+                  <Image url="@../imgs/barra.png" />
+               </image>
+               <effect>
+                  <DropShadow />
+               </effect>
+            </ImageView>
+            <Label text="OK" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="25.0" />
+               </font>
+               <effect>
+                  <InnerShadow height="2.0" offsetX="1.5" radius="0.5" width="2.0" />
+               </effect>
+            </Label>
+         </children>
+      </StackPane>
+   </children>
+</Pane>
