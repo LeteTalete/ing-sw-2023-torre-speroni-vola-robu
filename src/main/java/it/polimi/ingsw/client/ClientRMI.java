@@ -1,8 +1,8 @@
 package it.polimi.ingsw.client;
 
-import it.polimi.ingsw.model.Position;
+import it.polimi.ingsw.model.board.Position;
+import it.polimi.ingsw.network.ConnectionClientTimer;
 import it.polimi.ingsw.network.IRemoteController;
-import it.polimi.ingsw.requests.ChatMessageRequest;
 import it.polimi.ingsw.view.View;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,6 +12,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
 
 
 public class ClientRMI implements IClientConnection, Remote, Serializable {
@@ -23,6 +24,9 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
     private String userToken;
     private ResponseDecoder responseDecoder;
     private boolean isConnected;
+    private boolean syn;
+    private Timer checkTimer;
+    private final int synCheckTime = 1000;
 
     public ClientRMI(ClientController clientHandler, IRemoteController rc) {
         this.master = clientHandler;
@@ -43,6 +47,11 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
     @Override
     public void setUserToken(String token) {
         this.userToken = token;
+    }
+
+    @Override
+    public String getToken() {
+        return userToken;
     }
 
     @Override
@@ -70,8 +79,8 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
 
 
     @Override
-    public void setSynCheckTimer(boolean b) {
-
+    public void setPing(boolean b) {
+        this.syn = b;
     }
 
     @Override
@@ -105,14 +114,34 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
     }
 
     @Override
-    public void sendChat(ChatMessageRequest message) {
+    public void sendChat(String username, String toString, String choice) {
         try {
-            remoteController.sendChat(message);
+            remoteController.sendChat(username, toString, choice);
         } catch (RemoteException e) {
             fileLog.error(e.getMessage());
         }
     }
 
+    @Override
+    public void sendPing(String token) {
+        try {
+            remoteController.sendPing(token);
+        } catch (RemoteException e) {
+            fileLog.error(e.getMessage());
+        }
+    }
+
+    @Override
+    public void setCheckTimer(boolean b) {
+        if(b){
+            checkTimer = new Timer();
+            checkTimer.scheduleAtFixedRate(new ConnectionClientTimer(this), synCheckTime, synCheckTime);
+        }
+        else{
+            checkTimer.purge();
+            checkTimer.cancel();
+        }
+    }
 
     @Override
     public void setName(String name) {
@@ -142,5 +171,9 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
 
     public void setConnected(boolean connected) {
         isConnected = connected;
+    }
+
+    public boolean isSyn() {
+        return syn;
     }
 }

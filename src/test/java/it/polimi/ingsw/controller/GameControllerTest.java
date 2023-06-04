@@ -1,18 +1,22 @@
-package it.polimi.ingsw.model;
+package it.polimi.ingsw.controller;
 
-import it.polimi.ingsw.controller.GameController;
+import it.polimi.ingsw.model.Player;
+import it.polimi.ingsw.model.board.Position;
 import it.polimi.ingsw.model.board.Shelf;
 import it.polimi.ingsw.model.cards.CG_RowCol;
 import it.polimi.ingsw.model.cards.CG_Shape;
 import it.polimi.ingsw.model.cards.CommonGoalCard;
 import it.polimi.ingsw.model.enumerations.T_Type;
-import it.polimi.ingsw.model.enumerations.Tile;
+import it.polimi.ingsw.model.board.Tile;
+import it.polimi.ingsw.server.ServerManager;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 public class GameControllerTest {
 
@@ -20,13 +24,19 @@ public class GameControllerTest {
     @Test
     public void generateCGCTest() {
         ArrayList<Player> players = new ArrayList<>();
-        Integer gameid = 0;
-        int num = 4;
-        for ( int i = 0; i < num; i++){
+        int gameID = 0;
+        int numOfPlayers = new Random().nextInt(3) + 2;
+        System.out.println("Number of players: " + numOfPlayers + "\n");
+        for ( int i = 0; i < numOfPlayers; i++){
             players.add(new Player());
         }
 
-        GameController game = new GameController(players,gameid.toString());
+        GameController game;
+        try {
+            game = new GameController(players, Integer.toString(gameID),new ServerManager());
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
         assertNotNull(game);
         int i = 0;
         int j;
@@ -34,22 +44,40 @@ public class GameControllerTest {
         assertNotNull(game.getCommonGoalCards());
 
         for (CommonGoalCard card : game.getCommonGoalCards()) {
+
+            Integer[] expectedIDs = {0,1,2,3,4,5,6,7,8,9,10,11};
+            List<Integer> expectedIDsList = Arrays.asList(expectedIDs);
+            assertTrue(expectedIDsList.contains((card.getID())));
+
+            if ( numOfPlayers == 4 ) {
+                assertEquals(2, card.getPoints().get(0).intValue());
+                assertEquals(4, card.getPoints().get(1).intValue());
+                assertEquals(6, card.getPoints().get(2).intValue());
+                assertEquals(8, card.getPoints().get(3).intValue());
+            } else if ( numOfPlayers == 3 ) {
+                assertEquals(4, card.getPoints().get(0).intValue());
+                assertEquals(6, card.getPoints().get(1).intValue());
+                assertEquals(8, card.getPoints().get(2).intValue());
+            } else if ( numOfPlayers == 2 ) {
+                assertEquals(4, card.getPoints().get(0).intValue());
+                assertEquals(8, card.getPoints().get(1).intValue());
+            }
+
             j = 0;
             if ( card.getType().equals("Shape") ) {
 
                 i++;
                 System.out.println("Common goal card n°: " + i);
-                assertNotNull(card.getID());
                 System.out.println("Card ID: " + card.getID());
-                assertNotNull(card.getType());
+                assertEquals("Shape", card.getType());
                 System.out.println("Card Type: " + card.getType());
-                assertNotNull(card.getNumOfOccurrences());
+                assertTrue(card.getNumOfOccurrences() >= 0);
                 System.out.println("Number of Occurrences: " + card.getNumOfOccurrences());
-                assertNotNull(card.getDiffType());
+                assertTrue(card.getDiffType() == 0 || card.getDiffType() == 1);
                 System.out.println("Different type: " + card.getDiffType());
-                assertNotNull(card.getSurrounded());
+                assertTrue(card.getSurrounded() == 0 || card.getSurrounded() == 1);
                 System.out.println("Surrounded: " + card.getSurrounded());
-                assertNotNull(card.getStairs());
+                assertTrue(card.getStairs() == 0 || card.getStairs() == 1);
                 System.out.println("Stairs: " + card.getStairs());
                 assertNotNull(card.getDescription());
                 System.out.println("Description: " + card.getDescription());
@@ -63,10 +91,7 @@ public class GameControllerTest {
                         System.out.println("x: " + position.getX() + ", y: " + position.getY());
                     }
                 }
-                assertEquals(2, card.getPoints().get(0).intValue());
-                assertEquals(4, card.getPoints().get(1).intValue());
-                assertEquals(6, card.getPoints().get(2).intValue());
-                assertEquals(8, card.getPoints().get(3).intValue());
+
                 System.out.print("Points: ");
                 int size = card.getPoints().size();
                 for (int m = 0; m < size; m++) {
@@ -83,24 +108,20 @@ public class GameControllerTest {
 
                 i++;
                 System.out.println("Common goal card n°: " + i);
-                assertNotNull(card.getID());
                 System.out.println("Card ID: " + card.getID());
                 assertNotNull(card.getType());
                 System.out.println("Card Type: " + card.getType());
-                assertNotNull(card.getNumOfOccurrences());
+                assertTrue(card.getNumOfOccurrences() >= 0);
                 System.out.println("Number of Occurrences: " + card.getNumOfOccurrences());
-                assertNotNull(card.getDiffType());
+                assertTrue(card.getDiffType() == 0 || card.getDiffType() == 1);
                 System.out.println("How many diff tiles: " + card.getDiffUpTo());
-                assertNotNull(card.getVertical());
+                assertTrue(card.getVertical() == 0 || card.getVertical() == 1);
                 System.out.println("Vertical: " + card.getVertical());
-                assertNotNull(card.getHorizontal());
+                assertTrue(card.getHorizontal() == 0 || card.getHorizontal() == 1);
                 System.out.println("Horizontal: " + card.getHorizontal());
                 assertNotNull(card.getDescription());
                 System.out.println("Description: " + card.getDescription());
-                assertEquals(2, card.getPoints().get(0).intValue());
-                assertEquals(4, card.getPoints().get(1).intValue());
-                assertEquals(6, card.getPoints().get(2).intValue());
-                assertEquals(8, card.getPoints().get(3).intValue());
+
                 System.out.print("Points: ");
                 int size = card.getPoints().size();
                 for (int m = 0; m < size; m++) {
@@ -116,20 +137,16 @@ public class GameControllerTest {
             } else if ( card.getType().equals("Groups") ) {
                 i++;
                 System.out.println("Common goal card n°: " + i);
-                assertNotNull(card.getID());
                 System.out.println("Card ID: " + card.getID());
                 assertNotNull(card.getType());
                 System.out.println("Card Type: " + card.getType());
-                assertNotNull(card.getNumOfOccurrences());
+                assertTrue(card.getNumOfOccurrences() >= 0);
                 System.out.println("Number of Occurrences: " + card.getNumOfOccurrences());
-                assertNotNull(card.getAtLeast());
+                assertTrue(card.getAtLeast() >= 1);
                 System.out.println("At Least: " + card.getAtLeast());
                 assertNotNull(card.getDescription());
                 System.out.println("Description: " + card.getDescription());
-                assertEquals(2, card.getPoints().get(0).intValue());
-                assertEquals(4, card.getPoints().get(1).intValue());
-                assertEquals(6, card.getPoints().get(2).intValue());
-                assertEquals(8, card.getPoints().get(3).intValue());
+
                 System.out.print("Points: ");
                 int size = card.getPoints().size();
                 for (int m = 0; m < size; m++) {
@@ -150,10 +167,10 @@ public class GameControllerTest {
     public void calculateScoreTest(){
 
         Shelf shelf = new Shelf();
-        ArrayList<Tile> tiles = new ArrayList<Tile>();
+        ArrayList<Tile> tiles = new ArrayList<>();
 
         Player player = new Player();
-        player.setNickname("lalala");
+        player.setNickname("kiwi");
         player.setMyShelf(shelf);
         player.setGoalCard(1);
 

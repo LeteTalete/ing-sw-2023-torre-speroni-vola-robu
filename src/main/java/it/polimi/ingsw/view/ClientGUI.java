@@ -122,11 +122,6 @@ public class ClientGUI implements View {
     }
 
     @Override
-    public void detangleMessage(Response response) {
-
-    }
-
-    @Override
     public void printCommands() {
         //only for tui
     }
@@ -158,7 +153,7 @@ public class ClientGUI implements View {
     }
 
     @Override
-    public void nextAction() {
+    public void nextAction(int num) {
 
     }
 
@@ -166,5 +161,16 @@ public class ClientGUI implements View {
     public void showEndResult() {
         //todo
     }
+
+    @Override
+    public void pingSyn() {
+        master.pingSyn();
+    }
+
+    @Override
+    public void addToChatQueue(String message, String receiver) {
+
+    }
+
 
 }

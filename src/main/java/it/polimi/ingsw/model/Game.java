@@ -3,15 +3,11 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.Updates.ModelUpdate;
 import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.model.board.LivingRoom;
+import it.polimi.ingsw.model.board.Tile;
 import it.polimi.ingsw.model.cards.CommonGoalCard;
-import it.polimi.ingsw.model.enumerations.Tile;
-import it.polimi.ingsw.notifications.GameEnd;
-import it.polimi.ingsw.notifications.LastTurn;
-import it.polimi.ingsw.notifications.NotifyOnTurn;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -26,6 +22,7 @@ public class Game {
     private final String gameId;
     private static GameController gameController;
     private ArrayList<Player> players;
+    private List<Player> scoreBoard;
     private int numOfPlayers;
     private LivingRoom gameBoard;
     private List<CommonGoalCard> commonGoalCards;
@@ -35,7 +32,7 @@ public class Game {
         gameController = gameC;
     }
 
-    public void initialize() throws RemoteException {
+    public void initialize() {
         fileLog.info("Initializing game " + gameId + "with players: ");
         for (Player player : players) {
             fileLog.info(player.getNickname());
@@ -47,11 +44,10 @@ public class Game {
         startGame();
         /**once the living room is set, controller decides who's first**/
         chooseFirstPlayer();
-        //todo check why this notify breaks everything: is it the modelupdate or the notify
         gameController.notifyAllPlayers(new ModelUpdate(this));
         /**the game then chooses a first player and notifies everyone**/
         String firstPlayer = getCurrentPlayer().getNickname();
-        gameController.notifyAllPlayers(new NotifyOnTurn(firstPlayer));
+        gameController.notifyOnStartTurn(firstPlayer);
         /**has a method to start a turn, which will notify each player that it's "nickname"'s turn**/
 
         /**has a method to change turns (it could already be implemented into Game**/
@@ -80,19 +76,14 @@ public class Game {
         }
         previousPlayer = currentPlayer;
         currentPlayer = players.get(next);
-
-        gameController.notifyAllPlayers(new ModelUpdate(this));
-        gameController.notifyAllPlayers(new NotifyOnTurn(currentPlayer.getNickname()));
+        gameController.notifyOnModelUpdate(new ModelUpdate(this));
+        gameController.notifyOnStartTurn(currentPlayer.getNickname());
 
     }
 
     /** Method scoreBoard ranks in descending order the players by their scores and then prints them */
     public void scoreBoard(ArrayList<Player> ps){
-        List<Player> ranking;
-        ranking = ps.stream().sorted(Comparator.comparing(Player::getScore).reversed()).collect(Collectors.toList());
-        for ( Player player : ranking ){
-            fileLog.info( player.getNickname() + "'s score is: " + player.getScore());
-        }
+        this.scoreBoard = ps.stream().sorted(Comparator.comparing(Player::getScore).reversed()).collect(Collectors.toList());
     }
 
     /** Method startGame initializes CGCs, PGCs and chooses the first player */
@@ -103,16 +94,16 @@ public class Game {
 
     public void gameHasEnded(){
         calculateScore();
-        scoreBoard(players); // remember this scoreboard is printed only on the server
-        gameController.notifyAllPlayers(new ModelUpdate(this));
-        gameController.notifyAllPlayers(new GameEnd());
+        scoreBoard(players);
+        gameController.notifyOnModelUpdate(new ModelUpdate(this));
+        gameController.notifyOnGameEnd();
     }
 
     /** Method calculateScore calculates the score of each player at the end of the game */
     public void calculateScore(){
         for ( Player player : players ){
             player.setScore(player.getMyShelf().additionalPoints() + player.getGoalCard().scorePersonalGoalCard(player.getMyShelf()));
-            if (endGame.equals(player.getNickname())){
+            if (endGame != null && endGame.equals(player.getNickname())){
                 player.setScore(1);
             }
         }
@@ -172,7 +163,7 @@ public class Game {
         if ( endGame == null ) {
             if (this.getCurrentPlayer().getMyShelf().checkShelfFull()) {
                 setEndGame(this.getCurrentPlayer().getNickname());
-                gameController.notifyAllPlayers(new LastTurn(this.getCurrentPlayer().getNickname()));
+                gameController.notifyOnLastTurn(this.getCurrentPlayer().getNickname());
             }
         }
     }
@@ -228,37 +219,7 @@ public class Game {
     public void setEndGame(String endGame) {
         this.endGame = endGame;
     }
-
-
-    public ArrayList<Position> getChoiceOfTiles(String choiceOfTiles) {
-        //choiceOfTiles is the string in the correct format sent by the user to select from 1 to 3 tiles from the board
-        //if those tiles can be picked, this method will return an ArrayList of the corresponding positions
-        //otherwise this method will return null so the server can send to the client an Error Message
-
-        ArrayList<Position> tilesChosen = new ArrayList<>();
-
-        for (int i = 0; i < choiceOfTiles.length(); i++)
-        {
-            if (i % 3 == 0)
-            {
-                tilesChosen.add(new Position());
-                tilesChosen.get(i / 3).setX(choiceOfTiles.charAt(i) - 48);
-            }
-            else if (( i + 1 ) % 3 != 0)
-            {
-                tilesChosen.get(( i - 1 ) / 3).setY(choiceOfTiles.charAt(i) - 48);
-            }
-        }
-
-        if(!gameBoard.checkPlayerChoice(tilesChosen))
-        {
-            //if the tilesChosen are can't be picked, the server has to send an Error message back to the client
-            //todo handle this situation
-            //DEBUG
-            fileLog.debug("DEBUG: those tiles can't be picked");
-            tilesChosen = null;
-        }
-
-        return tilesChosen;
+    public List<Player> getScoreBoard() {
+        return scoreBoard;
     }
 }

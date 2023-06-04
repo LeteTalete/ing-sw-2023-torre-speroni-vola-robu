@@ -3,16 +3,11 @@ package it.polimi.ingsw.controller;
 import it.polimi.ingsw.Updates.ModelUpdate;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.model.board.LivingRoom;
+import it.polimi.ingsw.model.board.Position;
+import it.polimi.ingsw.model.board.Tile;
 import it.polimi.ingsw.model.cards.CommonGoalCard;
-import it.polimi.ingsw.model.enumerations.Tile;
-import it.polimi.ingsw.notifications.CommonGoalGained;
-import it.polimi.ingsw.notifications.EndTurn;
-import it.polimi.ingsw.responses.GetOrderResponse;
-import it.polimi.ingsw.responses.GetTilesResponse;
-import it.polimi.ingsw.responses.MoveOk;
-import it.polimi.ingsw.responses.Response;
+import it.polimi.ingsw.responses.RearrangeOk;
 import it.polimi.ingsw.server.ServerManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -33,71 +28,79 @@ public class GameController {
         model.setPlayers(playersList);
         model.setNumOfPlayers(playersList.size());
         gameId = id;
-        model.createGameBoard(playersList.size());
         master = serverMaster;
-    }
-
-    public GameController(ArrayList<Player> playersList, String id) {
-        model = new Game(id, this);
-        model.setPlayers(playersList);
-        model.setNumOfPlayers(playersList.size());
-        gameId = id;
-        model.createGameBoard(playersList.size());
     }
 
     public void initialize() throws RemoteException {
         model.initialize();
     }
 
-    public void notifySinglePlayer(String token, Response response) throws RemoteException {
-        master.notifySinglePlayer(token, response);
-    }
 
-    public void notifyAllPlayers(Response response) {
-        master.notifyAllPlayers(gameId, response);
-    }
-/*
-    public void notifyAllPlayers(ModelUpdate message) {
-        master.notifyAllPlayers(gameId, message);
-    }
-*/
 
     public void chooseTiles(String token, List<String> userInput) throws RemoteException
     {
         ArrayList<Position> choice = new ArrayList<>();
+        boolean valid = true;
 
-        for(String s : userInput)
+        //userInput: [5,4] [1,1] [6,4]
+        //extracting positions from the input
+        for(String sub : userInput)
         {
-            choice.add(new Position(s.charAt(0)-48,s.charAt(1)-48));
+            String[] pos = sub.split(","); //[5] [4]
+            Position p = new Position(Integer.parseInt(pos[0]),Integer.parseInt(pos[1])); //(5,4)
+            choice.add(p);
+            if(p.getX()>=model.getGameBoard().getBoard().length || p.getY()>=getGameBoard().getBoard()[0].length) valid = false;
         }
-        if (model.getCurrentPlayer().getMyShelf().checkEnoughSpace(choice) && this.getGameBoard().checkPlayerChoice(choice)) {
+
+        if (valid && model.getCurrentPlayer().getMyShelf().checkEnoughSpace(choice) && this.getGameBoard().checkPlayerChoice(choice))
+        {
             this.choiceOfTiles = choice;
-            master.notifySinglePlayer(token, new GetTilesResponse(choice));
-            master.notifySinglePlayer(token, new MoveOk(true));
+            master.notifyAboutTiles(token, true, choice);
+            //master.notifySinglePlayer(token, new GetTilesResponse(choice));
+            //master.notifySinglePlayer(token, new TilesOk(true));
         }
-        else{
-            master.notifySinglePlayer(token, new MoveOk(false));
+        else
+        {
+            master.notifyAboutTiles(token, false, choice);
+            //master.notifySinglePlayer(token, new TilesOk(false));
         }
     }
 
     public void rearrangeTiles(String token, List<String> order)
     {
-        if(this.choiceOfTiles != null && this.choiceOfTiles.size() == order.size())
+        boolean valid = true;
+
+        if(this.choiceOfTiles == null || this.choiceOfTiles.size() != order.size()) valid = false;
+
+        //checking for admissible values
+        for(int i=0;i<order.size() && valid;i++)
         {
-            ArrayList<Position> tiles = (ArrayList<Position>) this.choiceOfTiles.clone();
+            if(Integer.parseInt(order.get(i))>this.choiceOfTiles.size()) valid = false;
+        }
+
+        //checking for duplicates
+        for(int i=0; i< order.size()-1 && valid;i++)
+        {
+            for(int j=i+1; j< order.size() && valid;j++)
+            {
+                if(order.get(i).equals(order.get(j))) valid = false;
+            }
+        }
+
+        if(valid)
+        {
+            ArrayList<Position> tiles = new ArrayList<>(this.choiceOfTiles);
 
             for(int i=0; i<order.size(); i++)
             {
                 tiles.set(i,this.choiceOfTiles.get(order.get(i).charAt(0)-48-1));
             }
             this.choiceOfTiles = tiles;
-
-            master.notifySinglePlayer(token, new GetOrderResponse(tiles, true));
-            master.notifySinglePlayer(token, new MoveOk(true));
+            master.notifyAboutRearrange(token, true);
         }
         else
         {
-            master.notifySinglePlayer(token, new MoveOk(false));
+            master.notifyAboutRearrange(token, false);
         }
     }
 
@@ -110,13 +113,13 @@ public class GameController {
             {
                 tiles.add(model.getGameBoard().getCouple(this.choiceOfTiles.get(i)).getTile());
             }
-            master.notifySinglePlayer(token, new MoveOk(true));
-
+            fileLog.debug("i'm in choose column and i'm about to notify player: "+token+" about the move ok");
+            master.notifyAboutColumn(token, true);
             updateGame(token,column,tiles);
         }
         else
         {
-            master.notifySinglePlayer(token, new MoveOk(false));
+            master.notifyAboutColumn(token, false);
         }
     }
 
@@ -130,7 +133,7 @@ public class GameController {
     }
 
     public void nextTurn(String token){
-        master.notifySinglePlayer(token, new EndTurn());
+        master.notifyOnEndTurn(token);
         if ( model.getEndGame() != null && model.getPreviousPlayer().getChair() ){
             model.gameHasEnded();
         } else {
@@ -144,19 +147,16 @@ public class GameController {
             if ( card.checkConditions(model.getCurrentPlayer().getMyShelf()) == 1 ) {
                 int points = card.getPoints().pop();
                 model.getCurrentPlayer().setScore(points);
-                master.notifyAllPlayers(gameId, new CommonGoalGained(model.getCurrentPlayer().getNickname(), card.getID()));
+                master.notifyOnCGC(gameId, model.getCurrentPlayer().getNickname(), card.getID());
                 fileLog.info(model.getCurrentPlayer().getNickname() + " has received " + points + " points from CGC " + card.getID());
             }
         }
     }
 
     public void insertTilesInShelf(int column, ArrayList<Tile> tiles){
-        model.getCurrentPlayer().getMyShelf().insertTiles(column,tiles);
-
-        if ( model.getCurrentPlayer().getMyShelf().checkShelfFull() ){
-            model.setEndGame(model.getCurrentPlayer().getNickname());
-        }
+        model.insertTiles(column,tiles);
     }
+
     public void updateBoardCouples(){
         model.getGameBoard().updateCouples(this.choiceOfTiles);
         this.choiceOfTiles = null;
@@ -170,14 +170,14 @@ public class GameController {
         model.generateCGC(model.getPlayers().size());
     }
 
+    public Game getModel(){
+        return model;
+    }
     public void startGame(){
         model.startGame();
     }
     public void calculateScore(){
         model.calculateScore();
-    }
-    public void scoreBoard(){
-        model.scoreBoard(model.getPlayers());
     }
     public void setCurrentPlayer(Player currentPlayer) {
         model.setCurrentPlayer(currentPlayer);
@@ -211,11 +211,23 @@ public class GameController {
         return choiceOfTiles;
     }
 
-    public void setChoiceOfTiles(String choiceOfTiles) {
-        this.choiceOfTiles = model.getChoiceOfTiles(choiceOfTiles);
-    }
-
     public void notifyAllPlayers(ModelUpdate modelUpdate) {
         master.notifyAllPlayers(gameId, modelUpdate);
+    }
+
+    public void notifyOnStartTurn(String currentPlayer) {
+        master.notifyOnStartTurn(gameId, currentPlayer);
+    }
+
+    public void notifyOnModelUpdate(ModelUpdate modelUpdate) {
+        master.notifyAllPlayers(gameId, modelUpdate);
+    }
+
+    public void notifyOnGameEnd() {
+        master.notifyOnEndGame(gameId);
+    }
+
+    public void notifyOnLastTurn(String nickname) {
+        master.notifyOnLastTurn(gameId, nickname);
     }
 }

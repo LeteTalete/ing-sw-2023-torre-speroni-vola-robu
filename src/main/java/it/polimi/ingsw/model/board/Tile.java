@@ -1,4 +1,6 @@
-package it.polimi.ingsw.model.enumerations;
+package it.polimi.ingsw.model.board;
+
+import it.polimi.ingsw.model.enumerations.T_Type;
 
 import java.io.Serializable;
 
@@ -21,15 +23,6 @@ public class Tile implements Serializable {
     public int getFigure()
     {
         return this.figure;
-    }
-
-    // todo: those two methods were added two months ago, but they are not used anywhere
-    public void setTileType(T_Type t) {
-        this.tileType = t;
-    }
-
-    public void setFigure(int d) {
-        this.figure = d;
     }
 
 }

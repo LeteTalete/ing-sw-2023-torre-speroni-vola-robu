@@ -17,23 +17,14 @@ public class ChatMessageRequest extends Request {
         this.message = m;
         this.receiver = r;
     }
-    public String getSender() {
-        return sender;
-    }
-
     public String getMessage() {
         return message;
     }
 
-    public String getReceiver() {
-        return receiver;
-    }
-
-
     @Override
     public void handleRequest(ServerSocketClientHandler socketClientHandler, ServerManager serverManager) {
         try {
-            serverManager.sendChat(this);
+            serverManager.sendChat(sender, message, receiver);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }

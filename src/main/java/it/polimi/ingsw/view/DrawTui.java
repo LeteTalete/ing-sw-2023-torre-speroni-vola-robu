@@ -1,6 +1,6 @@
 package it.polimi.ingsw.view;
 
-import it.polimi.ingsw.model.enumerations.Couple;
+import it.polimi.ingsw.model.board.Couple;
 import it.polimi.ingsw.model.enumerations.State;
 import it.polimi.ingsw.model.enumerations.T_Type;
 import it.polimi.ingsw.model.enumerations.Tile;

@@ -1,10 +1,8 @@
 package it.polimi.ingsw.client;
 
-import it.polimi.ingsw.model.Position;
+import it.polimi.ingsw.model.board.Position;
 import it.polimi.ingsw.network.IClientListener;
 import it.polimi.ingsw.network.IRemoteController;
-import it.polimi.ingsw.notifications.ChatMessage;
-import it.polimi.ingsw.requests.ChatMessageRequest;
 import it.polimi.ingsw.responses.Response;
 import it.polimi.ingsw.server.StaticStrings;
 import it.polimi.ingsw.view.View;
@@ -32,6 +30,7 @@ public class ClientController {
     private IRemoteController remoteController;
     private String userToken;
     private boolean toCLose;
+    private boolean onlyOneTile;
 
     //constructor
     public ClientController(View currentView) {
@@ -129,11 +128,13 @@ public class ClientController {
         commPars.setPlaying(turn);
     }
 
-    public void serverSavedUsername(String name, boolean b, String token) {
+    public void serverSavedUsername(String name, boolean b, String token, boolean first) {
         if(b){
             setUserToken(token);
             setUsername(name);
             currentConnection.setUserToken(token);
+            commPars.setFirst(first);
+            setToCLose(false);
         }
         else{
             userLogin();
@@ -155,7 +156,6 @@ public class ClientController {
     }
 
     public void numberOfPlayers(int number) {
-        fileLog.debug("number of players: " + number);
         if(number < 2 || number > 4){
             currentView.printError("Wrong number of players, please type 'help' for a list of commands");
         }
@@ -168,10 +168,6 @@ public class ClientController {
         currentConnection.chooseColumn(column);
     }
 
-    public void wake() {
-        currentConnection.setSynCheckTimer(true);
-    }
-
     public void close() {
         currentConnection.close();
     }
@@ -180,9 +176,6 @@ public class ClientController {
         return currentConnection;
     }
 
-    public void detangleMessage(Response response) throws RemoteException {
-        response.handleResponse(responseDecoder);
-    }
 
     public boolean isConnected() {
         return currentConnection.isConnected();
@@ -233,23 +226,41 @@ public class ClientController {
         currentView.printError("Wrong format, please try again or type 'help' for a list of commands");
     }
 
-    public void nextAction() {
-        if(myTurn == 3){
+    public void nextAction(int num) {
+        if(num==2){
+            if(!onlyOneTile){
+                currentView.displayNotification("You can now re-arrange the tiles or choose the column. Here are the commands:");
+                //todo it should show commands format, not show the request
+                currentView.chooseOrder();
+                currentView.chooseColumn();
+                setMyTurn(true);
+            }
+            else{
+                currentView.chooseColumn();
+                setMyTurn(true);
+            }
+        }
+        else if(num==3){
             currentView.chooseColumn();
         }
-        else if(myTurn == 2){
-            currentView.displayNotification("You can now re-arrange the tiles or choose the column. Here are the commands:");
-            //todo it should show commands format, not show the request
-            currentView.chooseColumn();
-            currentView.chooseOrder();
-        }
+
     }
 
     public void gameNotStarted() {
         currentView.displayNotification("The game has not started yet, please wait for the other players to join");
     }
 
-    public void sendChat(String choice, String toString) {
-        currentConnection.sendChat(new ChatMessageRequest(username, toString, choice));
+    public void sendChat(String receiver, String message) {
+        currentConnection.sendChat(username, message, receiver);
+        //currentView.addToChatQueue(message, receiver);
+    }
+
+
+    public void setOnlyOneTile(boolean b) {
+        this.onlyOneTile= b;
+    }
+
+    public void pingSyn() {
+        currentConnection.setPing(true);
     }
 }

@@ -15,8 +15,7 @@ public interface ResponseHandler {
 
     void handle(DisconnectionNotif disconnectionNotif) throws RemoteException;
 
-    void handle(MoveOk moveOk) throws RemoteException;
-    void handle(GetOrderResponse getOrderResponse) throws RemoteException;
+    void handle(ColumnOk moveOk) throws RemoteException;
 
     void handle(EndTurn endTurn) throws RemoteException;
 
@@ -31,4 +30,8 @@ public interface ResponseHandler {
     void handle(TextNotification textNotification) throws RemoteException;
 
     void handle(ModelUpdateNotification modelUpdateNotification) throws RemoteException;
+
+    void handle(RearrangeOk rearrangeOk) throws RemoteException;
+
+    void handle(TilesOk tilesOk) throws RemoteException;
 }

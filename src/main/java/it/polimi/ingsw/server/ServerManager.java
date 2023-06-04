@@ -2,14 +2,10 @@ package it.polimi.ingsw.server;
 
 import it.polimi.ingsw.Updates.ModelUpdate;
 import it.polimi.ingsw.controller.GameController;
+import it.polimi.ingsw.model.board.Position;
+import it.polimi.ingsw.network.ClientListenerTUI;
 import it.polimi.ingsw.network.IClientListener;
 import it.polimi.ingsw.network.IRemoteController;
-import it.polimi.ingsw.notifications.ChatMessage;
-import it.polimi.ingsw.notifications.DisconnectionNotif;
-import it.polimi.ingsw.notifications.GameStart;
-import it.polimi.ingsw.requests.ChatMessageRequest;
-import it.polimi.ingsw.responses.LoginResponse;
-import it.polimi.ingsw.responses.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -49,26 +45,6 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
         }
     }
 
-    public void notifySinglePlayer(String token, Response response){
-        try {
-            ConnectionManager.get().getLocalView(token).sendNotification(response);
-        } catch (RemoteException e) {
-            fileLog.error(e.getMessage());
-        }
-    }
-
-    public synchronized void notifyAllPlayers(String gameId, Response response) {
-        activeUsers.entrySet()
-                .stream()
-                .filter(e -> e.getValue().equals(gameId))
-                .forEach(e -> {
-                    try {
-                        ConnectionManager.get().getLocalView(e.getKey()).sendNotification(response);
-                    } catch (RemoteException ex) {
-                        fileLog.error(ex.getMessage());
-                    }
-                });
-    }
 
     public synchronized void notifyAllPlayers(String id, ModelUpdate something) {
         activeUsers.entrySet()
@@ -76,7 +52,7 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
                 .filter(e -> e.getValue().equals(id))
                 .forEach(e -> {
                     try {
-                        ConnectionManager.get().getLocalView(e.getKey()).sendUpdatedModel(something);
+                        ConnectionManager.get().viewListenerMap.get(e.getKey()).sendUpdatedModel(something);
                     } catch (RemoteException ex) {
                         fileLog.error(ex.getMessage());
                     }
@@ -97,25 +73,29 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
     }
 
     @Override
-    public void sendChat(ChatMessageRequest messageRequest) throws RemoteException {
-        fileLog.info("Received a chat message from "+messageRequest.getSender()+" to "+messageRequest.getReceiver()+": "+messageRequest.getMessage());
-        ChatMessage message = new ChatMessage(messageRequest.getSender(), messageRequest.getMessage());
-        String senderToken = ConnectionManager.get().namesTokens.get(message.getSender());
-        if(messageRequest.getReceiver().equals("all")){
+    public void sendChat(String sender, String message, String receiver) throws RemoteException {
+        fileLog.info("Received a chat message from "+sender+" to "+receiver+": "+message);
+        String senderToken = ConnectionManager.get().namesTokens.get(sender);
+        if(ConnectionManager.get().namesTokens.get(receiver)==null && !receiver.equals("all")){
+            fileLog.debug("Sender token is null");
+            ConnectionManager.get().getLocalView(senderToken).showTextNotification("The user you are trying to reach does not exist.");
+        }
+        else if(receiver.equals("all")){
             activeUsers.entrySet()
                     .stream()
                     .filter(e -> e.getValue().equals(activeUsers.get(senderToken)))
                     .forEach(e -> {
                         try {
-                            ConnectionManager.get().getLocalView(e.getKey()).notifyChatMessage(message);
+                            ConnectionManager.get().getLocalView(e.getKey()).notifyChatMessage(sender, message, receiver);
                         } catch (RemoteException ex) {
                             fileLog.error(ex.getMessage());
                         }
                     });
         }
         else{
-            String receiverToken = ConnectionManager.get().namesTokens.get(messageRequest.getReceiver());
-            ConnectionManager.get().getLocalView(receiverToken).notifyChatMessage(message);
+            String receiverToken = ConnectionManager.get().namesTokens.get(receiver);
+            ConnectionManager.get().getLocalView(senderToken).notifyChatMessage("you", message, receiver);
+            ConnectionManager.get().getLocalView(receiverToken).notifyChatMessage(sender, message, "you");
         }
 
     }
@@ -134,30 +114,31 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
         return token;
     }
 
-    //this should be fixed further: all of these return strings, so that the server doesn't
-    //wait on them, but they should be fixed with threads
     //todo check on the alreadyexists attributes
     @Override
     public void login(String name, IClientListener viewListener) throws RemoteException {
         if(ConnectionManager.get().tokenNames.containsValue(name)){
-            LoginResponse loginResponse = new LoginResponse(name, false, null, false);
-            viewListener.notifySuccessfulRegistration(loginResponse);
+            viewListener.notifySuccessfulRegistration(name, false, null, false);
         }
         else{
             String token = generateToken();
             ConnectionManager.get().addClientView(token, name, viewListener);
             String success = putInWaitingRoom(name, token);
-
+            if(viewListener instanceof ClientListenerTUI /*|| viewListener instanceof ClientListenerGui*/){
+                generateTokenRMI(viewListener, name);
+            }
+            else if(viewListener instanceof ServerSocketClientHandler){
+                //the cast is not necessary
+                createToken((ServerSocketClientHandler) viewListener, name);
+            }
             if(success==null) {
-                LoginResponse loginResponse = new LoginResponse(name, true, token, true);
-                ConnectionManager.get().getLocalView(token).notifySuccessfulRegistration(loginResponse);
+                ConnectionManager.get().viewListenerMap.get(token).notifySuccessfulRegistration(name, true, token, true);
 
             } else if(success.equals(StaticStrings.GAME_START)) {
-                LoginResponse loginResponse = new LoginResponse(name, true, token, false);
-                ConnectionManager.get().getLocalView(token).notifySuccessfulRegistration(loginResponse);
+                ConnectionManager.get().viewListenerMap.get(token).notifySuccessfulRegistration(name, true,token, false);
 
                 //now we need to notify all the players that the game is about to start
-                notifyAllPlayers(waitingRoom.getId(), new GameStart());
+                notifyAboutGameStart(waitingRoom.getId());
 
                 //i have to create the players when creating the game
                 GameController game = new GameController(waitingRoom.getListOfPlayers(), waitingRoom.getId(), this);
@@ -170,10 +151,22 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
                 waitingRoom=null;
 
             } else {
-                LoginResponse loginResponse = new LoginResponse(name, true, token, false);
-                ConnectionManager.get().getLocalView(token).notifySuccessfulRegistration(loginResponse);
+                ConnectionManager.get().viewListenerMap.get(token).notifySuccessfulRegistration(name, true, token, false);
             }
         }
+    }
+
+    public void notifyAboutGameStart(String id) {
+        activeUsers.entrySet()
+                .stream()
+                .filter(e -> e.getValue().equals(id))
+                .forEach(e -> {
+                    try {
+                        ConnectionManager.get().viewListenerMap.get(e.getKey()).notifyGameStart();
+                    } catch (RemoteException ex) {
+                        fileLog.error(ex.getMessage());
+                    }
+                });
     }
 
 
@@ -194,23 +187,11 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
         activeGames.get(activeUsers.get(token)).chooseColumn(token, column);
     }
 
-
     public void disconnect(String token) {
         ConnectionManager.get().disconnectToken(token);
         String gameId = activeGames.get(token).getGameId();
-        //could be put in its own method notifyAllExcept
-        activeUsers.entrySet()
-                .stream()
-                .filter(e -> e.getValue().equals(gameId))
-                .filter(e -> !e.getKey().equals(token))
-                .forEach(e -> {
-                    try {
-                        DisconnectionNotif disconnectionNotif = new DisconnectionNotif(ConnectionManager.get().getNameToken(token));
-                        ConnectionManager.get().getLocalView(e.getKey()).sendNotification(disconnectionNotif);
-                    } catch (RemoteException ex) {
-                        fileLog.error(ex.getMessage());
-                    }
-                });
+        //todo close the game
+        //activeGames.get(gameId).;
     }
 
     public String getTokenFromHandler(ServerSocketClientHandler serverSocketClientHandler) {
@@ -221,5 +202,107 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
         }
         return "error!";
     }
+
+    public void createToken(ServerSocketClientHandler socketClientHandler, String token) {
+        ConnectionManager.get().viewListenerMap.put(token, socketClientHandler);
+        ConnectionManager.get().startPingTimer(token);
+        ConnectionManager.get().startSynTimer(token);
+    }
+
+    public void generateTokenRMI(IClientListener viewListener, String token) throws RemoteException {
+        ConnectionManager.get().viewListenerMap.put(token, viewListener);
+        ConnectionManager.get().startPingTimer(token);
+        ConnectionManager.get().startSynTimer(token);
+    }
+
+    @Override
+    public void sendPing(String token) throws RemoteException {
+        ConnectionManager.get().setPingMap(token, true);
+    }
+
+    public void notifyAboutRearrange(String token, boolean b) {
+        try {
+            ConnectionManager.get().viewListenerMap.get(token).notifyRearrangeOk(b);
+        } catch (RemoteException e) {
+            fileLog.error(e.getMessage());
+        }
+    }
+
+    public void notifyAboutColumn(String token, boolean b) {
+        try {
+            ConnectionManager.get().viewListenerMap.get(token).notifyColumnOk(b);
+        } catch (RemoteException e) {
+            fileLog.error(e.getMessage());
+        }
+    }
+
+    public void notifyOnStartTurn(String gameId, String currentPlayer) {
+        activeUsers.entrySet()
+                .stream()
+                .filter(e -> e.getValue().equals(gameId))
+                .forEach(e -> {
+                    try {
+                        ConnectionManager.get().viewListenerMap.get(e.getKey()).notifyStartTurn(currentPlayer);
+                    } catch (RemoteException ex) {
+                        fileLog.error(ex.getMessage());
+                    }
+                });
+    }
+
+    public void notifyOnEndTurn(String token) {
+        try {
+            ConnectionManager.get().viewListenerMap.get(token).notifyEndTurn();
+        } catch (RemoteException e) {
+            fileLog.error(e.getMessage());
+        }
+    }
+//todo check if this method actually needs to pass an array of positions
+    public void notifyAboutTiles(String token, boolean b, ArrayList<Position> choice) {
+        try {
+            ConnectionManager.get().viewListenerMap.get(token).notifyTilesOk(b);
+        } catch (RemoteException e) {
+            fileLog.error(e.getMessage());
+        }
+    }
+
+    public void notifyOnEndGame(String gameId) {
+        activeUsers.entrySet()
+                .stream()
+                .filter(e -> e.getValue().equals(gameId))
+                .forEach(e -> {
+                    try {
+                        ConnectionManager.get().viewListenerMap.get(e.getKey()).notifyEndGame();
+                    } catch (RemoteException ex) {
+                        fileLog.error(ex.getMessage());
+                    }
+                });
+    }
+
+    public void notifyOnLastTurn(String gameId, String nickname) {
+        activeUsers.entrySet()
+                .stream()
+                .filter(e -> e.getValue().equals(gameId))
+                .forEach(e -> {
+                    try {
+                        ConnectionManager.get().viewListenerMap.get(e.getKey()).notifyLastTurn(nickname);
+                    } catch (RemoteException ex) {
+                        fileLog.error(ex.getMessage());
+                    }
+                });
+    }
+
+    public void notifyOnCGC(String gameId, String nickname, int id) {
+        activeUsers.entrySet()
+                .stream()
+                .filter(e -> e.getValue().equals(gameId))
+                .forEach(e -> {
+                    try {
+                        ConnectionManager.get().viewListenerMap.get(e.getKey()).notifyOnCGC(nickname, id);
+                    } catch (RemoteException ex) {
+                        fileLog.error(ex.getMessage());
+                    }
+                });
+    }
+
     //TODO closeGame(gameId)
 }

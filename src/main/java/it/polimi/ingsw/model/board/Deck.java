@@ -1,7 +1,7 @@
-package it.polimi.ingsw.model;
+package it.polimi.ingsw.model.board;
 
 import it.polimi.ingsw.model.enumerations.T_Type;
-import it.polimi.ingsw.model.enumerations.Tile;
+import it.polimi.ingsw.model.board.Tile;
 
 import java.io.Serializable;
 import java.util.Collections;

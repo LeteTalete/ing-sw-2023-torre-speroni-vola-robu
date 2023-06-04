@@ -16,4 +16,8 @@ public class DisconnectionNotif implements Response {
     public void handleResponse(ResponseHandler responseHandler) throws RemoteException {
         responseHandler.handle(this);
     }
+
+    public String getName() {
+        return username;
+    }
 }

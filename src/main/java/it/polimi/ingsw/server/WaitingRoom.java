@@ -29,7 +29,7 @@ public class WaitingRoom {
         this.playersWaiting=this.playersWaiting+1;
         fileLog.info("There are currently "+playersWaiting+" players ready to play:");
         for (Player player : players) {
-            System.out.println(player.getNickname());
+            fileLog.info(player.getNickname());
         }
         if(playersWaiting==maxPLayers)
         {

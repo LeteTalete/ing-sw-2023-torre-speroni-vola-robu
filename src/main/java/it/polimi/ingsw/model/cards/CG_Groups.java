@@ -2,9 +2,9 @@ package it.polimi.ingsw.model.cards;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polimi.ingsw.model.Position;
+import it.polimi.ingsw.model.board.Position;
 import it.polimi.ingsw.model.board.Shelf;
-import it.polimi.ingsw.model.enumerations.Couple;
+import it.polimi.ingsw.model.board.Couple;
 import it.polimi.ingsw.model.enumerations.State;
 
 import java.io.IOException;

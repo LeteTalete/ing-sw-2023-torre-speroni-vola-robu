@@ -1,8 +1,8 @@
 package it.polimi.ingsw.structures;
 
-import it.polimi.ingsw.model.Position;
+import it.polimi.ingsw.model.board.Position;
 import it.polimi.ingsw.model.board.LivingRoom;
-import it.polimi.ingsw.model.enumerations.Couple;
+import it.polimi.ingsw.model.board.Couple;
 
 import java.io.Serializable;
 

@@ -11,6 +11,8 @@ import java.util.List;
 public class ModelUpdate implements Serializable{
     private LivingRoom gameBoard;
     private List<Player> players;
+    private List<Player> scoreboard;
+
     private String endGame;
     private List<CommonGoalCard> commonGoalCards;
 
@@ -19,6 +21,7 @@ public class ModelUpdate implements Serializable{
         this.players = model.getPlayers();
         this.endGame = model.getEndGame();
         this.commonGoalCards = model.getCommonGoalCards();
+        this.scoreboard = model.getScoreBoard();
     }
 
 

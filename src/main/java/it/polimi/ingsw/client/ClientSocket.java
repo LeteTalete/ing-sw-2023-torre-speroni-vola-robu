@@ -1,7 +1,7 @@
 package it.polimi.ingsw.client;
 
-import it.polimi.ingsw.model.Position;
-import it.polimi.ingsw.notifications.ChatMessage;
+import it.polimi.ingsw.model.board.Position;
+import it.polimi.ingsw.network.ConnectionClientTimer;
 import it.polimi.ingsw.requests.*;
 import it.polimi.ingsw.responses.Response;
 import it.polimi.ingsw.view.View;
@@ -16,6 +16,7 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Timer;
 
 public class ClientSocket implements IClientConnection
 {
@@ -35,6 +36,10 @@ public class ClientSocket implements IClientConnection
     private Thread receiving;
     private ResponseDecoder responseDecoder;
     private boolean notReceivingResponse;
+    private boolean syn;
+    private Timer checkTimer;
+    private final int synCheckTime = 1000;
+
 
 
     public ClientSocket(String ip, int port, ClientController cController) throws IOException
@@ -127,15 +132,14 @@ public class ClientSocket implements IClientConnection
         setReceivedResponse(true);
         request(new ChooseTilesRequest(token, tilesChosen));
         while(notReceivingResponse){
-            try
-            {
+            try {
                 this.wait();
             }
-            catch (InterruptedException e)
-            {
+            catch (InterruptedException e) {
                 fileLog.error(e.getMessage());
             }
         }
+        fileLog.debug("I received a response on choose tiles");
     }
 
     @Override
@@ -147,15 +151,15 @@ public class ClientSocket implements IClientConnection
             try{
                 //maybe this doesn't need 'this', but since it's a thread it's better to be safe
                 this.wait();
-
             }catch (InterruptedException e){
                 fileLog.error(e.getMessage());
             }
         }
+        fileLog.debug("I received a response on login");
     }
 
     private void request(Request request) {
-        System.out.println("I'm sending a request");
+        fileLog.info("I'm sending a request");
         try{
             socketOut.writeObject(request);
             socketOut.reset();
@@ -167,6 +171,11 @@ public class ClientSocket implements IClientConnection
     @Override
     public void setUserToken(String tokenA) {
         this.token = tokenA;
+    }
+
+    @Override
+    public String getToken() {
+        return token;
     }
 
     @Override
@@ -186,32 +195,32 @@ public class ClientSocket implements IClientConnection
             try{
                 //maybe this doesn't need 'this', but since it's a thread it's better to be safe
                 this.wait();
-
             }catch (InterruptedException e){
                 fileLog.error(e.getMessage());
             }
         }
+        fileLog.debug("I received a response on number of player");
     }
 
     @Override
-    public void chooseColumn(int column) {
+    public synchronized void chooseColumn(int column) {
         setReceivedResponse(true);
         request(new ColumnRequest(token, column));
         while(notReceivingResponse){
             try{
                 //maybe this doesn't need 'this', but since it's a thread it's better to be safe
                 this.wait();
-
             }catch (InterruptedException e){
                 fileLog.error(e.getMessage());
             }
         }
+        fileLog.debug("I received a response on choose column");
     }
 
 
     @Override
-    public void setSynCheckTimer(boolean b) {
-
+    public void setPing(boolean b) {
+        this.syn = b;
     }
 
     @Override
@@ -229,18 +238,18 @@ public class ClientSocket implements IClientConnection
     }
 
     @Override
-    public void rearrangeTiles(String userToken, List<String> multipleChoiceNumber) {
+    public synchronized void rearrangeTiles(String userToken, List<String> multipleChoiceNumber) {
         setReceivedResponse(true);
         request(new RearrangeTilesRequest(userToken, multipleChoiceNumber));
         while(notReceivingResponse){
             try{
                 //maybe this doesn't need 'this', but since it's a thread it's better to be safe
                 this.wait();
-
             }catch (InterruptedException e){
                 fileLog.error(e.getMessage());
             }
         }
+        fileLog.debug("I received a response on rearrange tiles");
     }
 
     @Override
@@ -249,19 +258,32 @@ public class ClientSocket implements IClientConnection
     }
 
     @Override
-    public void sendChat(ChatMessageRequest message) {
+    public void sendChat(String username, String toString, String choice) {
         setReceivedResponse(true);
-        request(message);
-        while(notReceivingResponse){
-            try{
-                //maybe this doesn't need 'this', but since it's a thread it's better to be safe
-                this.wait();
+        request(new ChatMessageRequest(username, toString, choice));
+    }
 
-            }catch (InterruptedException e){
-                fileLog.error(e.getMessage());
-            }
+    @Override
+    public void sendPing(String token) {
+        setReceivedResponse(true);
+        request(new PingRequest(token));
+    }
+
+    @Override
+    public void setCheckTimer(boolean b) {
+        if(b){
+            checkTimer = new Timer();
+            checkTimer.scheduleAtFixedRate(new ConnectionClientTimer(this), synCheckTime, synCheckTime);
+        }
+        else{
+            checkTimer.purge();
+            checkTimer.cancel();
         }
     }
 
+
+    public boolean isSyn() {
+        return syn;
+    }
 
 }

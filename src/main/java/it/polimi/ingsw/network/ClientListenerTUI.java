@@ -12,16 +12,9 @@ import java.rmi.server.UnicastRemoteObject;
 
 public class ClientListenerTUI extends UnicastRemoteObject implements IClientListener {
     private transient final ClientTUI view;
+    private String token;
     public ClientListenerTUI(ClientTUI currentView) throws RemoteException{
         this.view = currentView;
-    }
-
-    //this will become a bunch of sendNotification methods that will resolve different types of messages
-    //that way we can implement socket connections
-
-    @Override
-    public void sendNotification(Response response) throws RemoteException {
-        view.detangleMessage(response);
     }
 
     @Override
@@ -30,20 +23,29 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
     }
 
     @Override
-    public void notifySuccessfulRegistration(LoginResponse loginResponse) throws RemoteException {
-        if(loginResponse.b){
+    public void notifySuccessfulRegistration(String name, boolean b, String token, boolean first) throws RemoteException {
+        if(b) {
             view.displayNotification("Registration Successful!");
-            view.serverSavedUsername(loginResponse.name, true, loginResponse.token, loginResponse.first);
+            setToken(token);
+            if (!first){
+                view.displayNotification("Waiting for other players to join...");
+            }
+            view.serverSavedUsername(name, true, token, first);
         }
         else{
-            view.displayNotification("Registration failed: "+loginResponse.name+" already exists. Try again");
-            view.serverSavedUsername(loginResponse.name, false, loginResponse.token, loginResponse.first);
+            view.displayNotification("Registration failed: "+name+" already exists. Try again");
+            view.serverSavedUsername(name, false, token, first);
         }
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     @Override
     public void setGameOn() throws RemoteException {
         view.writeText(StaticStrings.GAME_START);
+        view.printCommands();
         view.setGameOn(true);
     }
 
@@ -53,16 +55,15 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
     }
 
     @Override
-    public void showTextNotification(String waitingRoomCreated) {
-        view.displayNotification(waitingRoomCreated);
+    public void showTextNotification(String message) throws RemoteException {
+        view.displayNotification(message);
     }
 
 
     @Override
-    public void notifyMoveOk(MoveOk moveOk) throws RemoteException {
-        if(moveOk.isMoveOk()){
-            view.nextAction();
-            view.displayNotification("Move successful!");
+    public void notifyColumnOk(boolean ok) throws RemoteException {
+        if(ok){
+            view.displayNotification("Choice of column successful!");
         }
         else{
             view.displayNotification("Invalid move. Try again.");
@@ -70,36 +71,82 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
     }
 
     @Override
-    public void notifyEndTurn(EndTurn endTurn) throws RemoteException {
+    public void notifyEndTurn() throws RemoteException {
         view.setMyTurn(false);
         view.displayNotification("Turn ended.");
     }
 
     @Override
-    public void notifyGameEnd(GameEnd gameEnd) throws RemoteException {
+    public void notifyLastTurn(String firstDoneUser) throws RemoteException {
+        view.displayNotification(firstDoneUser + "completed their Shelfie. Last round starts now!");
+    }
+
+    @Override
+    public void notifyChatMessage(String sender, String message, String receiver) throws RemoteException {
+        view.displayChatNotification("@"+sender + " to " + receiver +": " + message);
+
+    }
+
+    @Override
+    public void updateModel(ModelUpdate modelUpdate) throws RemoteException {
+        view.displayUpdatedModel(modelUpdate);
+    }
+
+    @Override
+    public void notifyRearrangeOk(boolean ok) throws RemoteException {
+        if(ok){
+            view.displayNotification("Rearrange successful!");
+            view.nextAction(3);
+        }
+        else{
+            view.displayNotification("Invalid move. Try again.");
+        }
+    }
+
+    @Override
+    public void notifyTilesOk(boolean ok) throws RemoteException {
+        if(ok){
+            view.displayNotification("Choice of tiles successful!");
+            view.nextAction(2);
+        }
+        else{
+            view.displayNotification("Invalid move. Try again.");
+        }
+    }
+
+    @Override
+    public void notifyGameStart() throws RemoteException {
+        setGameOn();
+    }
+
+    @Override
+    public void notifyStartTurn(String currentPlayer) throws RemoteException {
+        view.changeTurn(currentPlayer);
+    }
+
+    @Override
+    public void notifyEndGame() throws RemoteException {
         view.setMyTurn(false);
         view.setGameOn(false);
         view.showEndResult();
     }
 
     @Override
-    public void notifyLastTurn(LastTurn lastTurn) throws RemoteException {
-        view.displayNotification(lastTurn.getName() + "completed their Shelfie. Last round starts now!");
+    public void notifyOnCGC(String nickname, int id) throws RemoteException {
+        view.displayNotification(nickname + " gained Common Goal Card " + id + "!");
     }
 
     @Override
-    public void notifyCommonGoalGained(CommonGoalGained commonGoalGained) throws RemoteException {
-        view.displayNotification(commonGoalGained.getName() + " gained Common Goal Card " + commonGoalGained.getCard() + "!");
+    public void notifyAboutDisconnection(String disconnectedUser) throws RemoteException {
+        view.displayNotification(disconnectedUser + " disconnected. The game is now over.");
     }
 
     @Override
-    public void notifyChatMessage(ChatMessage chatMessage) throws RemoteException {
-        view.displayChatNotification("@" + chatMessage.getSender() + ": " + chatMessage.getMessage());
+    public void sendPingSyn() throws RemoteException {
+        view.pingSyn();
     }
 
-    @Override
-    public void updateModel(ModelUpdateNotification modelUpdateNotification) throws RemoteException {
-        view.displayUpdatedModel(modelUpdateNotification.getUpdate());
+    public String getToken() {
+        return token;
     }
-
 }

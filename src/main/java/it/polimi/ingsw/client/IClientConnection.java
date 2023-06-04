@@ -1,9 +1,7 @@
 package it.polimi.ingsw.client;
 
 
-import it.polimi.ingsw.model.Position;
-import it.polimi.ingsw.notifications.ChatMessage;
-import it.polimi.ingsw.requests.ChatMessageRequest;
+import it.polimi.ingsw.model.board.Position;
 import it.polimi.ingsw.view.View;
 
 import java.util.ArrayList;
@@ -17,6 +15,7 @@ public interface IClientConnection {
      void login(String name);
 
      void setUserToken(String token);
+     String getToken();
 
      void setReceivedResponse(boolean b);
 
@@ -24,7 +23,8 @@ public interface IClientConnection {
 
     void chooseColumn(int column);
 
-    void setSynCheckTimer(boolean b);
+    void setPing(boolean b);
+    boolean isSyn();
 
     void close();
 
@@ -36,5 +36,8 @@ public interface IClientConnection {
 
     void passTiles(ArrayList<Position> tilesChosen);
 
-    void sendChat(ChatMessageRequest message);
+    void sendChat(String username, String toString, String choice);
+    void sendPing(String token);
+
+    void setCheckTimer(boolean b);
 }

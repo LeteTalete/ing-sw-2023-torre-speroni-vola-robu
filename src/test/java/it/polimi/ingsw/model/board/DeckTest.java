@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model.board;
 
-import it.polimi.ingsw.model.Deck;
-import it.polimi.ingsw.model.enumerations.Tile;
+import it.polimi.ingsw.model.board.Deck;
+import it.polimi.ingsw.model.board.Tile;
 
 import java.util.ArrayList;
 import java.util.Comparator;

@@ -43,8 +43,6 @@ public interface View {
 
     void running();
 
-    void detangleMessage(Response response);
-
     void printCommands();
 
     void changeTurn(String name);
@@ -57,7 +55,11 @@ public interface View {
 
     void chooseOrder();
 
-    void nextAction();
+    void nextAction(int num);
 
     void showEndResult();
+
+    void pingSyn();
+
+    void addToChatQueue(String message, String receiver);
 }

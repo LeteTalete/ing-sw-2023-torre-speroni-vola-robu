@@ -1,8 +1,13 @@
 package it.polimi.ingsw.server;
 
+import it.polimi.ingsw.network.ConnectionServerTimer;
+import it.polimi.ingsw.network.ConnectionTimer;
 import it.polimi.ingsw.network.IClientListener;
+import it.polimi.ingsw.network.ConnectionServerPingTimer;
+import org.apache.logging.log4j.ThreadContext;
 
 import java.io.Serializable;
+import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,15 +18,21 @@ public class ConnectionManager implements Serializable {
     //a client's username as a key. The servercontroller will have a map with clients' username as keys and the
     //number of their "room" (i.e. the game controller for their game) as values
 
-    /**instead of viewListener we need a generic ConnectionType that allows me to send something to the client without
-    the need for the need for the server to know what kind of connection the single clients are using**/
-//tokens and listeners
+    //tokens and listeners
     Map<String, IClientListener> viewListenerMap = new HashMap<>();
+
     //tokens and usernames
     Map<String, String> tokenNames = new HashMap<>();
+    //usernames and tokens
     Map<String, String> namesTokens = new HashMap<>();
-    private ConnectionManager(){
+    //tokens and timers
+    private final Map<String, ConnectionTimer> timers = new HashMap<>();
+    private final int synTime=100000;
+    private final int ackTime = 200000;
+    private Map<String, Boolean> pingCheck = new HashMap<>();
+    private final Map<String, ConnectionTimer> synTimers = new HashMap<>();
 
+    private ConnectionManager(){
     }
     public static synchronized ConnectionManager get(){
         if(instance == null){
@@ -46,11 +57,47 @@ public class ConnectionManager implements Serializable {
     }
 
     public void disconnectToken(String token) {
-        //not sure about any of this, will review in the future
-        //IClientListener toDisconnect = viewListenerMap.get(token);
+        viewListenerMap.entrySet()
+                .stream()
+                .filter(e -> !e.getKey().equals(token))
+                .forEach(e -> {
+                    try {
+                        e.getValue().notifyAboutDisconnection(tokenNames.get(token));
+                    } catch (RemoteException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                });
         viewListenerMap.remove(token);
         tokenNames.remove(token);
-        //TODO close the socket connection too
-        //the server manager will notify the other players in the game after the client is disconnected
+    }
+
+    void startPingTimer(String token){
+        timers.put(token, new ConnectionTimer());
+        timers.get(token).scheduleAtFixedRate(new ConnectionServerPingTimer(viewListenerMap.get(token)), ackTime, ackTime);
+    }
+
+    void startSynTimer(String token){
+        synTimers.put(token, new ConnectionTimer());
+        synTimers.get(token).scheduleAtFixedRate(new ConnectionServerTimer(viewListenerMap.get(token)), synTime, synTime);
+    }
+
+    public Map<String, Boolean> getPingMap() {
+        return pingCheck;
+    }
+
+    public void setPingMap(String token, boolean received) {
+        if(pingCheck.containsKey(token)){
+            pingCheck.replace(token, received);
+        }
+        else{
+            pingCheck.put(token, received);
+        }
+    }
+
+    public void stopPingTimer(String token) {
+        if(timers.containsKey(token)){
+            timers.get(token).cancel();
+            timers.remove(token);
+        }
     }
 }

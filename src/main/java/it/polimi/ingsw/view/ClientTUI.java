@@ -10,6 +10,7 @@ import it.polimi.ingsw.stati.Status;
 import it.polimi.ingsw.structures.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.ThreadContext;
 
 import java.rmi.RemoteException;
 import java.util.*;
@@ -30,6 +31,8 @@ public class ClientTUI implements View{
     private boolean isRunning;
     private String colorError; //todo please, make this red
     private String ServerIP;
+    private LinkedList<String> chatQueue = new LinkedList<>();
+    private String username;
 
 
     //constructor
@@ -97,6 +100,7 @@ public class ClientTUI implements View{
 
         connectionType = connection;
 
+
     }
     private String nextCommand() {
         command = frominput.nextLine();
@@ -120,28 +124,28 @@ public class ClientTUI implements View{
             }
         } while (master.isConnected());
         if(master.isGameOn() /*and connection is not lost, idk*/) {
+            fileLog.debug("entered an if and is stuck");
             //i don't remember what i was supposed to write here, i'm tired
         }
         else {
+            fileLog.debug("ClientTUI stopped");
             master.close();
         }
 
     }
 
     @Override
-    public void detangleMessage(Response response) {
-        try {
-            master.detangleMessage(response);
-        } catch (RemoteException e) {
-            fileLog.error(e.getMessage());
-        }
-    }
-
-    @Override
     public void printCommands() {
-        /**todo write all the commands: 'help', 'username [username]', 'number [number]',
-         * 'tiles [coordinatexcoordinatey coordinatexcoordinatey ecc]', 'order [number number number]',
-         * 'column [number]', 'showshelf [username]', '@ [username]' and some others that I can't think of now**/
+        writeText("Here are all the commands you can use while playing:\n" +
+                "help: shows all the commands\n" +
+                "tiles [coordinatexcoordinatey coordinatexcoordinatey]: to pick the tile(s) you want to place on your shelf\n" +
+                "order [number number number]: to set the order of the tiles you want to place on your shelf\n" +
+                "column [number]: to choose the column of the shelf in which you want to place your tiles\n" +
+                "showshelf [username]: shows the shelf of the player you want to see\n" +
+                "@[username] [message]: to send a message to a player\n" +
+                "@all [message]: to send a message to all the players\n" +
+                "quit: quits the game\n" +
+                "showplayers: shows the players\n");
     }
 
     @Override
@@ -210,18 +214,12 @@ public class ClientTUI implements View{
         DrawTui.printlnString(DrawTui.mergerString(livingRoomP, shelfP, true, false, false));
     }
     public void chooseTiles(){
-        DrawTui.askWhat("Choose the tiles: [tiles rowcolumn(s)]");
-    }
-    public void rearrangeTiles(){
-
-
-        DrawTui.askWhat("Choose an order for your tiles: [order number(s)]");
-
+        DrawTui.askWhat("Choose the tiles: [tiles row,column]");
     }
 
     @Override
     public void showPersonalGoalCard(){
-
+        //todo?
     }
 
     @Override
@@ -261,7 +259,6 @@ public class ClientTUI implements View{
         this.commandParsing = commandParsing;
     }
 
-    //todo cleanup this probably isn't needed
     @Override
     public void askForTiles() {
         chooseTiles();
@@ -269,7 +266,8 @@ public class ClientTUI implements View{
 
     @Override
     public void serverSavedUsername(String name, boolean b, String token, boolean first) {
-        master.serverSavedUsername(name, b, token);
+        this.username = name;
+        master.serverSavedUsername(name, b, token, first);
         if(first){
             askAmountOfPlayers();
         }
@@ -280,17 +278,6 @@ public class ClientTUI implements View{
         return master.isMyTurn();
     }
 
-
-
-    //this should be some kind of run that only gets lines and parses them
-    public void playing() {
-        //needs fixing
-
-    }
-
-    public void chooseOrderTiles(){
-
-    }
 
 
     public boolean isGameOn() {
@@ -308,17 +295,36 @@ public class ClientTUI implements View{
 
     @Override
     public void chooseOrder() {
-        writeText("Choose order: [order 'number(s)']");
+        writeText("Choose order: [order 'first number' 'second number' 'third number']");
     }
 
     @Override
-    public void nextAction() {
-        master.nextAction();
+    public void nextAction(int num) {
+        master.nextAction(num);
     }
 
     @Override
     public void showEndResult() {
         //todo
+    }
+
+    @Override
+    public void pingSyn() {
+        master.pingSyn();
+    }
+
+    @Override
+    public void addToChatQueue(String message, String receiver) {
+        if(chatQueue.size()==4){
+            chatQueue.removeFirst();
+        }
+        if(receiver.equals("all")){
+            chatQueue.add("@you to all:"+message);
+        }else{
+            chatQueue.add("@you to "+receiver+": "+message);
+        }
+        DrawTui.printlnString("CHAT: ");
+        chatQueue.stream().forEach(x -> DrawTui.printlnString(x));
     }
 
     public String getServerIP() {
@@ -331,6 +337,17 @@ public class ClientTUI implements View{
     }
 
     public void displayChatNotification(String s) {
+        if(chatQueue.size() == 4){
+            chatQueue.removeFirst();
+        }
+        chatQueue.add(s);
+        DrawTui.printlnString("CHAT: ");
+        chatQueue.stream().forEach(x -> DrawTui.printlnString(x));
         //todo
+        //writeText(s);
+    }
+
+    public String getName() {
+        return username;
     }
 }

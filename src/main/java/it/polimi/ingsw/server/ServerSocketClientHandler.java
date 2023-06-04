@@ -24,6 +24,7 @@ public class ServerSocketClientHandler implements Runnable, IClientListener
     private ObjectInputStream in;
     private ObjectOutputStream out;
     private boolean stop;
+    private String token;
 
     public ServerSocketClientHandler(Socket socket)
     {
@@ -78,13 +79,6 @@ public class ServerSocketClientHandler implements Runnable, IClientListener
         }
     }
 
-//todo fix this switch case
-    @Override
-    public void sendNotification(Response response) throws RemoteException
-    {
-        respond(response);
-    }
-
     @Override
     public void sendUpdatedModel(ModelUpdate updated) throws RemoteException
     {
@@ -92,8 +86,10 @@ public class ServerSocketClientHandler implements Runnable, IClientListener
     }
 
     @Override
-    public void notifySuccessfulRegistration(LoginResponse loginResponse) throws RemoteException{
-        respond(loginResponse);
+    public void notifySuccessfulRegistration(String name, boolean b, String token, boolean first) throws RemoteException{
+        fileLog.debug("server about to say registration successful: "+name+" "+b+" "+token+" "+first);
+        setToken(token);
+        respond(new LoginResponse(name, b, token, first));
     }
 
     @Override
@@ -114,41 +110,84 @@ public class ServerSocketClientHandler implements Runnable, IClientListener
 
 
     @Override
-    public void notifyMoveOk(MoveOk moveOk) throws RemoteException {
-        respond(moveOk);
+    public void notifyColumnOk(boolean ok) throws RemoteException {
+        respond(new ColumnOk(ok));
     }
 
     @Override
-    public void notifyEndTurn(EndTurn endTurn) throws RemoteException {
-        respond(endTurn);
+    public void notifyEndTurn() throws RemoteException {
+        respond(new EndTurn());
+    }
+
+
+    @Override
+    public void notifyLastTurn(String firstDoneUser) throws RemoteException {
+        respond(new LastTurn(firstDoneUser));
+    }
+
+
+    @Override
+    public void notifyChatMessage(String sender, String message, String receiver) throws RemoteException {
+        respond(new ChatMessage(sender, message, receiver));
     }
 
     @Override
-    public void notifyGameEnd(GameEnd gameEnd) throws RemoteException {
-        respond(gameEnd);
+    public void updateModel(ModelUpdate modelUpdate) throws RemoteException {
+        respond(new ModelUpdateNotification(modelUpdate));
     }
 
     @Override
-    public void notifyLastTurn(LastTurn lastTurn) throws RemoteException {
-        respond(lastTurn);
+    public void notifyRearrangeOk(boolean ok) throws RemoteException {
+        respond(new RearrangeOk(ok));
     }
 
     @Override
-    public void notifyCommonGoalGained(CommonGoalGained commonGoalGained) throws RemoteException {
-        respond(commonGoalGained);
+    public void notifyTilesOk(boolean ok) throws RemoteException {
+        respond(new TilesOk(ok));
     }
 
     @Override
-    public void notifyChatMessage(ChatMessage chatMessage) throws RemoteException {
-        respond(chatMessage);
+    public void notifyGameStart() throws RemoteException {
+        respond(new GameStart());
     }
 
     @Override
-    public void updateModel(ModelUpdateNotification modelUpdateNotification) throws RemoteException {
-        //idk
+    public void notifyStartTurn(String currentPlayer) throws RemoteException {
+        respond(new NotifyOnTurn(currentPlayer));
+    }
+
+    @Override
+    public void notifyEndGame() throws RemoteException {
+        respond(new GameEnd());
+    }
+
+    @Override
+    public void notifyOnCGC(String nickname, int id) throws RemoteException {
+        respond(new CommonGoalGained(nickname, id));
+    }
+
+    @Override
+    public void notifyAboutDisconnection(String disconnectedUser) throws RemoteException {
+        respond(new DisconnectionNotif(disconnectedUser));
+    }
+
+    @Override
+    public void sendPingSyn() throws RemoteException {
+        respond(new Pinged());
+    }
+
+    @Override
+    public String getToken() throws RemoteException {
+        return token;
+    }
+
+    @Override
+    public void setToken(String token) throws RemoteException {
+        this.token = token;
     }
 
     private void respond(Response response) {
+        fileLog.debug("server about to send response");
         try{
             out.writeObject(response);
             out.reset();
