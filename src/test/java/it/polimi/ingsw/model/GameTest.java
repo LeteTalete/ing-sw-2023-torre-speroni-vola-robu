@@ -335,7 +335,7 @@ public class GameTest {
 
     /**
      * Test calculateScoreTest checks if the scores are correctly calculated.
-     * Each player gets 3 tiles of the same tile type on the first column of their shelf.
+     * Each player gets 3 tiles of tile type GAMES on the third column of their shelf.
      * Each player gets 2 points but the end game token is set to the first player who gets 1 point more.
      */
     @Test
