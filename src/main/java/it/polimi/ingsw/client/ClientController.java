@@ -43,21 +43,25 @@ public class ClientController {
         setupConnection();
     }
 
+    //todo if the ip is wrong, it shouldn't ask for the nickname
     public void setupConnection() {
         currentView.chooseConnection();
-        //todo uncomment this and place SIP instead of null when initializing connections
-        //currentView.askServerIP();
-        //String SIP = currentView.getServerIP();
         String connectionStatus = "Connecting...";
-        if(currentView.getConnectionType().equals("RMI")) {
-            connectionStatus = setupRMI(System.getProperty(HOSTNAME));
+        do
+        {
+            currentView.askServerIP();
+            String SIP = currentView.getServerIP();
+            if(currentView.getConnectionType().equals("RMI")) {
+                connectionStatus = setupRMI(SIP);
+            }
+            else if(currentView.getConnectionType().equals("SOCKET")){
+                connectionStatus = setupSocket(SIP);
+            }
+            else if(connectionStatus!=null){
+                this.currentView.displayNotification(connectionStatus);
+            }
         }
-        else if(currentView.getConnectionType().equals("SOCKET")){
-            connectionStatus = setupSocket(System.getProperty(HOSTNAME));
-        }
-        else if(connectionStatus!=null){
-            this.currentView.displayNotification(connectionStatus);
-        }
+        while(connectionStatus!=null);
     }
 
     public String setupSocket(String serverIP) {
@@ -69,16 +73,16 @@ public class ClientController {
             this.responseDecoder = new ResponseDecoder(listenerClient, currentConnection);
             clientSocket.setResponseDecoder(responseDecoder);
             clientSocket.startClient();
+            return null;
 
         } catch (Exception e) {
             fileLog.error(e);
         }
-        return null;
+        return "connection refused";
     }
 
     private String setupRMI(String serverIP) {
         try{
-            //TODO put serverip in host field of locateregisty
             this.registry = LocateRegistry.getRegistry(serverIP,8089);
             this.remoteController = (IRemoteController) registry.lookup("Login");
             ClientRMI clientRMI = new ClientRMI(this, remoteController);
@@ -88,11 +92,12 @@ public class ClientController {
             clientRMI.setResponseDecoder(responseDecoder);
             clientRMI.setConnected(true);
             userLogin();
+            return null;
 
         }catch(Exception e){
             fileLog.error(e.getMessage());
         }
-        return null;
+        return "connection refused";
     }
 
     public void userLogin () {
