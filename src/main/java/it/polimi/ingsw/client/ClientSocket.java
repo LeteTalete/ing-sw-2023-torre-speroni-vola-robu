@@ -50,14 +50,20 @@ public class ClientSocket implements IClientConnection
         this.notReceivingResponse = true;
     }
 
-    public void openStreams() throws IOException {
-
+    public void openStreams()
+    {
+        try
+        {
             socket = new Socket(ip, port);
             this.socketOut = new ObjectOutputStream(socket.getOutputStream());
             this.socketIn = new ObjectInputStream(socket.getInputStream());
             amIconnected= true;
             startReceiving();
-
+        }
+        catch(IOException e)
+        {
+            fileLog.error(e.getMessage());
+        }
     }
 
     private void startReceiving() {
@@ -93,18 +99,12 @@ public class ClientSocket implements IClientConnection
         return null;
     }
 
-    public boolean startClient()
+    public void startClient()
     {
-        try {
-            openStreams();
-            System.out.println(">> Connection established");
-            //if the connection is successful i can use socket's streams to communicate with the server
-            master.userLogin();
-            return true;
-        } catch (IOException e) {
-            fileLog.error(e.getMessage());
-            return false;
-        }
+        openStreams();
+        System.out.println(">> Connection established");
+        //if the connection is successful i can use socket's streams to communicate with the server
+        master.userLogin();
     }
 
     public void closeStreams() throws IOException
