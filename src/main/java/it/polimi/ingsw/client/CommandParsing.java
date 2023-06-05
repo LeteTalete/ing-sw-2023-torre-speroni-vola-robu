@@ -11,9 +11,10 @@ import java.util.List;
 public class CommandParsing {
     private static Logger fileLog = LogManager.getRootLogger();
     private static final String TILES = "tiles";
+    private static final String HIDESHELF = "hideshelves";
     private static final String HELP = "help";
     private static final String REARRANGE = "order";
-    private static final String SHELFSHOW = "showshelf";
+    private static final String SHELFSHOW = "showshelves";
     private static final String COLUMN = "column";
     private static final String BACK = "back";
     //for when it's the player's turn
@@ -118,6 +119,13 @@ public class CommandParsing {
                     break;
                 }
                 executeShelfCommand();
+            }
+            case(HIDESHELF) -> {
+                if (!gameIsOn) {
+                    master.gameNotStarted();
+                    break;
+                }
+                master.hideShelves();
             }
             case (HELP) -> master.printCommands();
             default -> {

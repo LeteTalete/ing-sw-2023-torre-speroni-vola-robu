@@ -263,4 +263,8 @@ public class ClientController {
     public void pingSyn() {
         currentConnection.setPing(true);
     }
+
+    public void hideShelves() {
+        currentView.hideShelves();
+    }
 }
