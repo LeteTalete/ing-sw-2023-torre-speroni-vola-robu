@@ -33,7 +33,7 @@ public class DrawTui {
     private static ArrayList<String> stringCGC = new ArrayList<>();
     private final static PrintStream print = new PrintStream(System.out, true, StandardCharsets.UTF_8);
     private final static Scanner scanner = new Scanner(System.in);
-    private static String stringPGC;
+    private static String stringPGC = "";
 
     public static void printlnString(String string){
         print.println(string);
@@ -329,8 +329,8 @@ public class DrawTui {
 
     //lenMaxColumn: rappresenta il numero di colonne che compongono la personalGoalCard
     //positionTilePCG: rappresenta il numero di tile
-    public static String setStringPCG(ArrayList<String> positionTilePCG, int lenMaxColumn, boolean activEndN, boolean activMerge){
-        String endLine = startLine + activEndLine(activEndN);
+    public static void setStringPCG(ArrayList<String> positionTilePCG, int lenMaxColumn){
+        String endLine = startLine + "\n";
         StringBuilder pcg = new StringBuilder();
         String tileS = "";
         String tileEmty = empty.repeat(sizeSlotTile) + boardSide[0];
@@ -380,8 +380,11 @@ public class DrawTui {
         pcg.append(startLine + boardSide[0] + " 1 | 2 | 3 | 4 | 5 | 6 " +  boardSide[0] + endLine);
         pcg.append(startLine + boardSide[0] + " 1 | 2 | 4 | 6 | 9 |12 " +  boardSide[0] + endLine);
         pcg.append(startLine + boardSide[2] + board + boardSide[5] + endLine);
-        if(!activMerge) return pcg.toString();
-        else return lengthLine + dividNum + heightPCG + pcg;
+        stringPGC = lengthLine + dividNum + heightPCG + dividNum + pcg;
+    }
+
+    public static String getStringPCG(){
+        return stringPGC;
     }
 
     //mette '\n' se vero se no mette dividNum

@@ -33,6 +33,7 @@ public class ClientTUI implements View{
     private String ServerIP;
     private LinkedList<String> chatQueue = new LinkedList<>();
     private String username;
+    private boolean isStarGame = true;
 
 
     //constructor
@@ -40,6 +41,7 @@ public class ClientTUI implements View{
         setupStdInput();
         try {
             this.listenerClient = new ClientListenerTUI(this);
+
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
@@ -56,16 +58,23 @@ public class ClientTUI implements View{
         this.frominput = new Scanner(System.in);
     }
 
+    public void setBoardStartGame(){
+        DrawTui.setStringPCG(gameView.getPlayersView().stream()
+                .filter(p -> p.getNickname().equals(master.getUsername())).findFirst().orElse(null).getPersonalGoalCard().getPositionTilePC(), 5);
+    }
+
     public void displayUpdatedModel(ModelUpdate modelUpdate){
         //todo check this
         this.gameView = new GameView(modelUpdate);
-
+        //
+        if(this.isStarGame){
+            this.isStarGame = false;
+            setBoardStartGame();
+        }
         clearConsole();
         PlayerView mine = gameView.getPlayersView().stream()
                 .filter(p -> p.getNickname().equals(master.getUsername())).findFirst().orElse(null);
         showBoardPlayer(mine, gameView.getGameBoardView());
-        System.out.println(DrawTui.setStringPCG(gameView.getPlayersView().stream()
-                .filter(p -> p.getNickname().equals(master.getUsername())).findFirst().orElse(null).getPersonalGoalCard().getPositionTilePC(), 5, true, false));
 
         if ( gameView.getEndGame() == null ) {
             System.out.println("EndGame token still available." + "\n");
@@ -76,8 +85,9 @@ public class ClientTUI implements View{
         System.out.println( "Points still available: " + gameView.getCommonGoalCards().get(0).getPoints().pop() + "\n");
         System.out.println( "Common goal card 2: " + gameView.getCommonGoalCards().get(1).getDescription());
         System.out.println( "Points still available: " + gameView.getCommonGoalCards().get(1).getPoints().pop() + "\n");
-
     }
+
+
 
     public static void clearConsole() {
         System.out.print("\033\143");
@@ -211,8 +221,9 @@ public class ClientTUI implements View{
     public void showBoardPlayer(PlayerView playerBoardView, LivingRoomView livingRoomView){
         String livingRoomP = DrawTui.graphicsLivingRoom(livingRoomView, false, true);  //livingRoom of Player
         String shelfP = DrawTui.graphicsShelf(playerBoardView.getShelf(), true, true);
-        DrawTui.printlnString(DrawTui.mergerString(livingRoomP, shelfP, true, false, false));
-
+        String pcg = DrawTui.getStringPCG();
+        livingRoomP = DrawTui.mergerString(livingRoomP, shelfP, false, true, false);
+        DrawTui.printlnString(DrawTui.mergerString(livingRoomP, pcg, true, false, false));
     }
     public void chooseTiles(){
         DrawTui.askWhat("Choose the tiles: [tiles row,column]");
