@@ -62,4 +62,6 @@ public interface View {
     void pingSyn();
 
     void addToChatQueue(String message, String receiver);
+
+    void hideShelves();
 }

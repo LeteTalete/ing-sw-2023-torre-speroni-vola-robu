@@ -90,7 +90,22 @@ public class ClientTUI implements View{
 
 
     public static void clearConsole() {
-        System.out.print("\033\143");
+        try{
+            String operatingSystem = System.getProperty("os.name"); //Check the current operating system
+
+            if(operatingSystem.contains("Windows")){
+                ProcessBuilder pb = new ProcessBuilder("cmd", "/c", "cls");
+                Process startProcess = pb.inheritIO().start();
+                startProcess.waitFor();
+            } else {
+                ProcessBuilder pb = new ProcessBuilder("clear");
+                Process startProcess = pb.inheritIO().start();
+
+                startProcess.waitFor();
+            }
+        }catch(Exception e){
+            System.out.println(e);
+        }
     }
 
     @Override
@@ -151,11 +166,11 @@ public class ClientTUI implements View{
                 "tiles [coordinatexcoordinatey coordinatexcoordinatey]: to pick the tile(s) you want to place on your shelf\n" +
                 "order [number number number]: to set the order of the tiles you want to place on your shelf\n" +
                 "column [number]: to choose the column of the shelf in which you want to place your tiles\n" +
-                "showshelf [username]: shows the shelf of the player you want to see\n" +
+                "showshelves: shows the shelves of all the other players\n" +
+                "hideshelves: hides the shelves of the other players\n" +
                 "@[username] [message]: to send a message to a player\n" +
                 "@all [message]: to send a message to all the players\n" +
-                "quit: quits the game\n" +
-                "showplayers: shows the players\n");
+                "quit: quits the game\n");
     }
 
     @Override
@@ -337,6 +352,11 @@ public class ClientTUI implements View{
         }
         DrawTui.printlnString("CHAT: ");
         chatQueue.stream().forEach(x -> DrawTui.printlnString(x));
+    }
+
+    @Override
+    public void hideShelves() {
+        //todo
     }
 
     public String getServerIP() {
