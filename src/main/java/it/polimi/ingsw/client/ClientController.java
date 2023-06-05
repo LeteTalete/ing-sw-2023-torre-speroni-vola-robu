@@ -43,7 +43,6 @@ public class ClientController {
         setupConnection();
     }
 
-    //todo if the ip is wrong, it shouldn't ask for the nickname
     public void setupConnection() {
         currentView.chooseConnection();
         String connectionStatus = "Connecting...";
@@ -72,8 +71,11 @@ public class ClientController {
             clientSocket.setViewClient(currentView);
             this.responseDecoder = new ResponseDecoder(listenerClient, currentConnection);
             clientSocket.setResponseDecoder(responseDecoder);
-            clientSocket.startClient();
-            return null;
+            if  ( clientSocket.startClient() ){
+                return null;
+            } else {
+                return "connection refused";
+            }
 
         } catch (Exception e) {
             fileLog.error(e);
