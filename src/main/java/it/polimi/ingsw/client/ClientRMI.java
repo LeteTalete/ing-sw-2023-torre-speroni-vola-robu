@@ -62,7 +62,7 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
     @Override
     public void numberOfPlayers(String name, String token, int number) {
         try {
-            remoteController.createWaitingRoom(name, userToken, number);
+            remoteController.setPlayersWaitingRoom(token, number);
         } catch (RemoteException e) {
             fileLog.error(e.getMessage());
             throw new RuntimeException(e);

@@ -157,6 +157,7 @@ public class ClientTUI implements View{
                 "order [number number number]: to set the order of the tiles you want to place on your shelf\n" +
                 "column [number]: to choose the column of the shelf in which you want to place your tiles\n" +
                 "showshelves: shows the shelves of all the other players\n" +
+                "cards: shows the description of the common goal cards\n" +
                 "hideshelves: hides the shelves of the other players\n" +
                 "@[username] [message]: to send a message to a player\n" +
                 "@all [message]: to send a message to all the players\n" +

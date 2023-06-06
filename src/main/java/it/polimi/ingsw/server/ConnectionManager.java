@@ -1,18 +1,21 @@
 package it.polimi.ingsw.server;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import it.polimi.ingsw.network.ConnectionServerTimer;
 import it.polimi.ingsw.network.ConnectionTimer;
 import it.polimi.ingsw.network.IClientListener;
 import it.polimi.ingsw.network.ConnectionServerPingTimer;
-import org.apache.logging.log4j.ThreadContext;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ConnectionManager implements Serializable {
     private static ConnectionManager instance;
+    public List<String> inactiveUsers = new ArrayList<>();
     //we create two maps to keep track of the active clients and their Listeners
     //it's important for these to be maps, so that the search is made easier with the usage of
     //a client's username as a key. The servercontroller will have a map with clients' username as keys and the
@@ -57,16 +60,18 @@ public class ConnectionManager implements Serializable {
     }
 
     public void disconnectToken(String token) {
-        viewListenerMap.entrySet()
-                .stream()
-                .filter(e -> !e.getKey().equals(token))
-                .forEach(e -> {
-                    try {
-                        e.getValue().notifyAboutDisconnection(tokenNames.get(token));
-                    } catch (RemoteException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                });
+        if(!inactiveUsers.contains(token)){
+            viewListenerMap.entrySet()
+                    .stream()
+                    .filter(e -> !e.getKey().equals(token))
+                    .forEach(e -> {
+                        try {
+                            e.getValue().notifyAboutDisconnection(tokenNames.get(token));
+                        } catch (RemoteException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                    });
+        }
         viewListenerMap.remove(token);
         tokenNames.remove(token);
     }
