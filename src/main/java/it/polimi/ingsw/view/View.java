@@ -2,12 +2,15 @@ package it.polimi.ingsw.view;
 
 import it.polimi.ingsw.client.ClientController;
 import it.polimi.ingsw.client.CommandParsing;
+import it.polimi.ingsw.model.board.Position;
 import it.polimi.ingsw.network.IClientListener;
 import it.polimi.ingsw.responses.Response;
 import it.polimi.ingsw.stati.Status;
 import it.polimi.ingsw.structures.LivingRoomView;
 import it.polimi.ingsw.structures.PlayerView;
 import it.polimi.ingsw.structures.ShelfView;
+
+import java.util.ArrayList;
 
 public interface View {
     void chooseConnection();
@@ -55,7 +58,7 @@ public interface View {
 
     void chooseOrder();
 
-    void nextAction(int num);
+    void nextAction(int num, ArrayList<Position> tiles);
 
     void showEndResult();
 

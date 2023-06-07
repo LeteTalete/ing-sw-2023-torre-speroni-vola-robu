@@ -3,6 +3,7 @@ package it.polimi.ingsw.view;
 import it.polimi.ingsw.Updates.ModelUpdate;
 import it.polimi.ingsw.client.ClientController;
 import it.polimi.ingsw.client.CommandParsing;
+import it.polimi.ingsw.model.board.Position;
 import it.polimi.ingsw.network.ClientListenerTUI;
 import it.polimi.ingsw.network.IClientListener;
 import it.polimi.ingsw.responses.Response;
@@ -316,8 +317,8 @@ public class ClientTUI implements View{
     }
 
     @Override
-    public void nextAction(int num) {
-        master.nextAction(num);
+    public void nextAction(int num, ArrayList<Position> tiles) {
+        master.nextAction(num, tiles);
     }
 
     @Override

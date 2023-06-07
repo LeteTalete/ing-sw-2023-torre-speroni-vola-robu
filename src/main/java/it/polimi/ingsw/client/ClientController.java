@@ -226,16 +226,18 @@ public class ClientController {
         currentView.printError("Wrong format, please try again or type 'help' for a list of commands");
     }
 
-    public void nextAction(int num) {
+    public void nextAction(int num, ArrayList<Position> tiles) {
         if(num==2){
             if(!onlyOneTile){
                 currentView.displayNotification("You can now re-arrange the tiles or choose the column. Here are the commands:");
+                //todo show the tiles now
                 //todo it should show commands format, not show the request
                 currentView.chooseOrder();
                 currentView.chooseColumn();
                 setMyTurn(true);
             }
             else{
+                //todo show the tiles now too, if tiles!=null
                 currentView.chooseColumn();
                 setMyTurn(true);
             }

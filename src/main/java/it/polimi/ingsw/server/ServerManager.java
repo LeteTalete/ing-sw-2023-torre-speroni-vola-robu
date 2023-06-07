@@ -243,9 +243,9 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
         }
     }
 
-    public void notifyAboutRearrange(String token, boolean b) {
+    public void notifyAboutRearrange(String token, boolean b, ArrayList<Position> tiles) {
         try {
-            ConnectionManager.get().viewListenerMap.get(token).notifyRearrangeOk(b);
+            ConnectionManager.get().viewListenerMap.get(token).notifyRearrangeOk(b, tiles);
         } catch (RemoteException e) {
             fileLog.error(e.getMessage());
         }
@@ -282,7 +282,7 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
 //todo check if this method actually needs to pass an array of positions
     public void notifyAboutTiles(String token, boolean b, ArrayList<Position> choice) {
         try {
-            ConnectionManager.get().viewListenerMap.get(token).notifyTilesOk(b);
+            ConnectionManager.get().viewListenerMap.get(token).notifyTilesOk(b, choice);
         } catch (RemoteException e) {
             fileLog.error(e.getMessage());
         }

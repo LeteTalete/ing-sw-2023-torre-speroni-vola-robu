@@ -1,10 +1,12 @@
 package it.polimi.ingsw.network;
 
 import it.polimi.ingsw.Updates.ModelUpdate;
+import it.polimi.ingsw.model.board.Position;
 
 import java.io.Serializable;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 
 public interface IClientListener extends Remote, Serializable {
 
@@ -29,9 +31,9 @@ public interface IClientListener extends Remote, Serializable {
 
     void updateModel(ModelUpdate modelUpdate) throws RemoteException;
 
-    void notifyRearrangeOk(boolean ok) throws RemoteException;
+    void notifyRearrangeOk(boolean ok, ArrayList<Position> tiles) throws RemoteException;
 
-    void notifyTilesOk(boolean ok) throws RemoteException;
+    void notifyTilesOk(boolean ok, ArrayList<Position> tiles) throws RemoteException;
 
     void notifyGameStart() throws RemoteException;
 

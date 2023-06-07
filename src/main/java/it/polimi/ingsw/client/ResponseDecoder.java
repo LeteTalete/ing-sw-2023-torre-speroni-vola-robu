@@ -151,7 +151,7 @@ public class ResponseDecoder implements ResponseHandler {
 
     @Override
     public void handle(RearrangeOk rearrangeOk) throws RemoteException {
-        clientListener.notifyRearrangeOk(rearrangeOk.isMoveOk());
+        clientListener.notifyRearrangeOk(rearrangeOk.isMoveOk(), rearrangeOk.getTiles());
         client.setReceivedResponse(false);
         synchronized (client) {
             client.notifyAll();
@@ -160,7 +160,7 @@ public class ResponseDecoder implements ResponseHandler {
 
     @Override
     public void handle(TilesOk tilesOk) throws RemoteException {
-        clientListener.notifyTilesOk(tilesOk.isMoveOk());
+        clientListener.notifyTilesOk(tilesOk.isMoveOk(), tilesOk.getTiles());
         client.setReceivedResponse(false);
         synchronized (client) {
             client.notifyAll();
