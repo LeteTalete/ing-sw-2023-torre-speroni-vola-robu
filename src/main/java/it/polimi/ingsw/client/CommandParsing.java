@@ -85,8 +85,8 @@ public class CommandParsing {
                 }
                 //if choosing tiles
                 parseMultipleInteger(args);
-                //todo this has a bug in which the second player won't be shown the command to re-arrange even if they chose
-                //multiple tiles. not sure if the bug is here but it`s worth signaling
+                /**todo this has a bug in which the second player won't be shown the command to re-arrange
+                 * even if they chose multiple tiles. not sure if the bug is here but it`s worth signaling**/
                 executeTileCommand();
             }
             case (REARRANGE) -> {

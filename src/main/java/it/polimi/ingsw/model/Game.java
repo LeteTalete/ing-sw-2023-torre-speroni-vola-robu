@@ -218,7 +218,7 @@ public class Game {
         return scoreBoard;
     }
 
-    //todo: those methods are never used, clean up
+    //cleanup those methods are never used
     public void setPlayersView(ArrayList<Player> players) {
         this.players = players;
     }

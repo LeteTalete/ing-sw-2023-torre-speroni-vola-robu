@@ -279,7 +279,6 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
             fileLog.error(e.getMessage());
         }
     }
-//todo check if this method actually needs to pass an array of positions
     public void notifyAboutTiles(String token, boolean b, ArrayList<Position> choice) {
         try {
             ConnectionManager.get().viewListenerMap.get(token).notifyTilesOk(b, choice);

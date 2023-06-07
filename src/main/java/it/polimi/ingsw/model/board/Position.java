@@ -21,7 +21,7 @@ public class Position implements Serializable {
     }
 
 
-    //todo: those methods are never used, clean up
+    //cleanup those methods are never used
     public Position() {
     }
 
