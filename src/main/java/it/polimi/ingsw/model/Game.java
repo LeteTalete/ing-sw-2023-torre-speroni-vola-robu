@@ -182,9 +182,6 @@ public class Game {
     public Player getPreviousPlayer(){
         return this.previousPlayer;
     }
-    public void setNumOfPlayers(int num){
-        this.numOfPlayers = num;
-    }
     public LivingRoom getGameBoard(){
         return this.gameBoard;
     }
@@ -194,22 +191,20 @@ public class Game {
         return this.players;
     }
 
-    public void setPlayers(ArrayList<Player> players){
-        this.players = players;
+
+    public void setNumOfPlayers(int num){
+        //todo: this method needs a test
+        this.numOfPlayers = num;
     }
-    public void setPlayersView(ArrayList<Player> players) {
+    // it is kinda weird because setters usually get covered by other tests
+    // but those two are not used anywhere, instead they get called
+    // maybe
+    public void setPlayers(ArrayList<Player> players){
+        //todo: this method needs a test
         this.players = players;
     }
     public String getGameId(){
         return this.gameId;
-    }
-
-    public String placeTilesOnShelf(List<Tile> tilesChosen, int column) {
-        return null;
-    }
-
-    public void createGameBoard(int size) {
-        gameBoard = new LivingRoom(size);
     }
 
     public String getEndGame() {
@@ -221,5 +216,18 @@ public class Game {
     }
     public List<Player> getScoreBoard() {
         return scoreBoard;
+    }
+
+    //todo: those methods are never used, clean up
+    public void setPlayersView(ArrayList<Player> players) {
+        this.players = players;
+    }
+
+    public String placeTilesOnShelf(List<Tile> tilesChosen, int column) {
+        return null;
+    }
+
+    public void createGameBoard(int size) {
+        gameBoard = new LivingRoom(size);
     }
 }
