@@ -25,6 +25,7 @@ public class ServerSocketClientHandler implements Runnable, IClientListener
     private ObjectOutputStream out;
     private boolean stop;
     private String token;
+    private String connectionType = "SOCKET";
 
     public ServerSocketClientHandler(Socket socket)
     {
@@ -77,6 +78,11 @@ public class ServerSocketClientHandler implements Runnable, IClientListener
         } catch (IOException e) {
             fileLog.error(e.getMessage());
         }
+    }
+
+    @Override
+    public String getTypeConnection() throws RemoteException {
+        return connectionType;
     }
 
     @Override

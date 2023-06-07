@@ -1,9 +1,6 @@
 package it.polimi.ingsw.network;
 
 import it.polimi.ingsw.Updates.ModelUpdate;
-import it.polimi.ingsw.client.ResponseDecoder;
-import it.polimi.ingsw.notifications.*;
-import it.polimi.ingsw.responses.*;
 import it.polimi.ingsw.server.StaticStrings;
 import it.polimi.ingsw.view.ClientTUI;
 
@@ -11,10 +8,16 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
 public class ClientListenerTUI extends UnicastRemoteObject implements IClientListener {
+    private String connectionType = "RMI";
     private transient final ClientTUI view;
     private String token;
     public ClientListenerTUI(ClientTUI currentView) throws RemoteException{
         this.view = currentView;
+    }
+
+    @Override
+    public String getTypeConnection() throws RemoteException {
+        return connectionType;
     }
 
     @Override

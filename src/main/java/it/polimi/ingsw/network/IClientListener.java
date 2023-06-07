@@ -8,6 +8,7 @@ import java.rmi.RemoteException;
 
 public interface IClientListener extends Remote, Serializable {
 
+    String getTypeConnection() throws RemoteException;
     void sendUpdatedModel(ModelUpdate message) throws RemoteException;
 
     void notifySuccessfulRegistration(String name, boolean b, String token, boolean first) throws RemoteException;

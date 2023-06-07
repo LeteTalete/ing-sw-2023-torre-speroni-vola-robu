@@ -129,14 +129,13 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
                 {
                     createGame(waitingRoom.getId());
                 }
-
-
             }
 
-            if(viewListener instanceof ClientListenerTUI /*|| viewListener instanceof ClientListenerGui*/){
+
+            if(viewListener.getTypeConnection().equals("RMI")){
                 generateTokenRMI(viewListener, name);
             }
-            else if(viewListener instanceof ServerSocketClientHandler){
+            else if(viewListener.getTypeConnection().equals("SOCKET")){
                 //the cast is not necessary
                 createToken((ServerSocketClientHandler) viewListener, name);
             }
