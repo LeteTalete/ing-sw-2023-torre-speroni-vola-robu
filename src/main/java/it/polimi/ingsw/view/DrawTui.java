@@ -1,7 +1,6 @@
 package it.polimi.ingsw.view;
 
 import it.polimi.ingsw.model.board.Couple;
-import it.polimi.ingsw.model.cards.CommonGoalCard;
 import it.polimi.ingsw.model.enumerations.State;
 import it.polimi.ingsw.model.enumerations.T_Type;
 import it.polimi.ingsw.structures.GameView;
@@ -22,9 +21,8 @@ public class DrawTui {
     static final String colorTileP = "\033[1;30;48;5;13m"; //Magenta
     static final String colorTileF = "\033[1;30;48;5;27m"; //Blue
     static final String colorTileT = "\033[1;30;48;5;14m"; //Cyan
-    static final String colorTitle = "\033[38;5;11m"; //Yellow
     static final String colorTilePicked = "\033[1;97;48;5;124m"; //Red tile, White text
-    static final String tileSquare = "\033[1;51m"; //Rappresenta la grafica di un rettangolino vuoto
+    static final String tileSquare = "\033[1;38;5;88;48;5;244m"; //"\033[1;51m"; Rappresenta la grafica di un rettangolino vuoto
     static final String[] boardSide = {"│","┌","└", "─", "┐", "┘", "┬", "┴", "├", "┼", "┤"};
     static final String equal = "="; //Per le CGC
     static final String diff = "≠";  //Per le CGC
@@ -49,7 +47,7 @@ public class DrawTui {
     }
 
     //Mi restituisce la grafica delle Tile che ho scelto dalla LivingRoom, in modo che il giocatore possa scegliere lordine in cui le vuole
-    public static String graphicsOrderTiles(ArrayList<Couple> tiles){
+    public static void graphicsOrderTiles(ArrayList<Couple> tiles){
         String board = boardSide[3].repeat(sizeSlotTile + 2);
         int numTiles = tiles.size();
         String orderTiles = startLine + boardSide[1] + stringRepeat(board + boardSide[6],numTiles - 1) + board + boardSide[4] + "\n" + startLine;
@@ -58,7 +56,7 @@ public class DrawTui {
         }
         orderTiles += boardSide[0] + "\n" + startLine + boardSide[2] + stringRepeat(board + boardSide[7],numTiles - 1) + board + boardSide[5] + "\n";
         orderTiles += startLine + empty.repeat((sizeSlotTile + 4)/2) + sequenceNumbers(0, numTiles, (sizeSlotTile/2)*2 + 3) + "\n";
-        return orderTiles;
+        printlnString(orderTiles);
     }
 
     public static String graphicsShelf(ShelfView myShelfView, String name, boolean activEnd, boolean activMerge){

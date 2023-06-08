@@ -232,7 +232,7 @@ public class ClientController {
                 currentView.displayNotification("You can now re-arrange the tiles or choose the column. Here are the commands:");
                 //todo show the tiles now
                 //todo it should show commands format, not show the request
-                currentView.chooseOrder();
+                currentView.chooseOrder(tiles);
                 currentView.chooseColumn();
                 setMyTurn(true);
             }

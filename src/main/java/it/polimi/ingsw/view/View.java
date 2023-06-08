@@ -55,7 +55,7 @@ public interface View {
 
     void chooseColumn();
 
-    void chooseOrder();
+    void chooseOrder(ArrayList<Position> tilesPosition);
 
     void nextAction(int num, ArrayList<Position> tiles);
 

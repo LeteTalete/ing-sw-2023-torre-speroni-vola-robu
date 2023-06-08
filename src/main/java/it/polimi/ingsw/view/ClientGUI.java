@@ -155,7 +155,7 @@ public class ClientGUI implements View {
     }
 
     @Override
-    public void chooseOrder() {
+    public void chooseOrder(ArrayList<Position> tilesPosition) {
         //todo
     }
 
