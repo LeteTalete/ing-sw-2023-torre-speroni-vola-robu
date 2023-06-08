@@ -272,4 +272,5 @@ public class ClientController {
     public void hideShelves() {
         currentView.hideShelves();
     }
+    public void showShelves(){currentView.showShelves();}
 }

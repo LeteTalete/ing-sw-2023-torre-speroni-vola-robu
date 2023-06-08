@@ -3,6 +3,7 @@ package it.polimi.ingsw.view;
 import it.polimi.ingsw.Updates.ModelUpdate;
 import it.polimi.ingsw.client.ClientController;
 import it.polimi.ingsw.client.CommandParsing;
+import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.network.ClientListenerTUI;
 import it.polimi.ingsw.network.IClientListener;
 import it.polimi.ingsw.responses.Response;
@@ -33,9 +34,7 @@ public class ClientTUI implements View{
     private String ServerIP;
     private LinkedList<String> chatQueue = new LinkedList<>();
     private String username;
-    private boolean isStarGame = true;
-
-
+    private boolean isStarGame = false;
     //constructor
     public ClientTUI(){
         setupStdInput();
@@ -61,33 +60,29 @@ public class ClientTUI implements View{
     public void setBoardStartGame(){
         DrawTui.setStringPCG(gameView.getPlayersView().stream()
                 .filter(p -> p.getNickname().equals(master.getUsername())).findFirst().orElse(null).getPersonalGoalCard().getPositionTilePC(), 5);
+        this.gameView.getCommonGoalCards().forEach((idCGC) -> DrawTui.setStringCGC(idCGC.getID()));
     }
 
     public void displayUpdatedModel(ModelUpdate modelUpdate){
         //todo check this
         this.gameView = new GameView(modelUpdate);
         //
-        if(this.isStarGame){
-            this.isStarGame = false;
+        if(!this.isStarGame){
+            this.isStarGame = true;
             setBoardStartGame();
         }
         clearConsole();
-        PlayerView mine = gameView.getPlayersView().stream()
-                .filter(p -> p.getNickname().equals(master.getUsername())).findFirst().orElse(null);
-        showBoardPlayer(mine, gameView.getGameBoardView());
-
         if ( gameView.getEndGame() == null ) {
             System.out.println("EndGame token still available." + "\n");
         } else {
             System.out.println("EndGame token taken by: " + gameView.getEndGame() + "\n");
         }
-        System.out.println( "Common goal card 1: " + gameView.getCommonGoalCards().get(0).getDescription());
-        System.out.println( "Points still available: " + gameView.getCommonGoalCards().get(0).getPoints().pop() + "\n");
-        System.out.println( "Common goal card 2: " + gameView.getCommonGoalCards().get(1).getDescription());
-        System.out.println( "Points still available: " + gameView.getCommonGoalCards().get(1).getPoints().pop() + "\n");
+        showCommonGoalCard(this.gameView.getCommonGoalCards().get(0).getPoints().pop(), gameView.getCommonGoalCards().get(1).getPoints().pop());
+
+        PlayerView mine = gameView.getPlayersView().stream()
+                .filter(p -> p.getNickname().equals(master.getUsername())).findFirst().orElse(null);
+        showBoardPlayer(mine, gameView.getGameBoardView());
     }
-
-
 
     public static void clearConsole() {
         try{
@@ -122,10 +117,7 @@ public class ClientTUI implements View{
                 connection = "SOCKET";
             }
         }while(!connection.equals("RMI") && !connection.equals("SOCKET"));
-
         connectionType = connection;
-
-
     }
     private String nextCommand() {
         command = frominput.nextLine();
@@ -156,7 +148,6 @@ public class ClientTUI implements View{
             fileLog.debug("ClientTUI stopped");
             master.close();
         }
-
     }
 
     @Override
@@ -223,9 +214,34 @@ public class ClientTUI implements View{
     }
 
     @Override
-    public void showShelf(ShelfView myShelf){
-        DrawTui.graphicsShelf(myShelf, true, false);
+    public void showShelves(){
+        String shelfAll = "";
+        ArrayList<PlayerView> listPlayers = new ArrayList<>();
+        listPlayers.addAll(this.gameView.getPlayersView());
+        int numShelfNeed = listPlayers.size() - 1; //is the number of players (without considering the participant) who have not yet set their shelf
+
+        for(int i = 0, len = numShelfNeed; i < listPlayers.size() && numShelfNeed > 0; i++){
+            if(!Objects.equals(listPlayers.get(i).getNickname(), master.getUsername())){
+                if(len == 1){
+                    if(shelfAll.isEmpty()){
+                        shelfAll = DrawTui.graphicsShelf(listPlayers.get(i).getShelf(), listPlayers.get(i).getNickname(),true,false);
+                        //System.out.println(" SHelf1: \n" + shelfAll);
+                    }
+                    else{
+                        shelfAll = DrawTui.mergerString(shelfAll, DrawTui.graphicsShelf(listPlayers.get(i).getShelf(), listPlayers.get(i).getNickname(),true,true),true,false,false);
+                        //System.out.println(" SHelf2: \n" + shelfAll);
+                    }
+                } else {
+                    if(shelfAll.isEmpty()) shelfAll = DrawTui.graphicsShelf(listPlayers.get(i).getShelf(), listPlayers.get(i).getNickname(),false,true);
+                    else shelfAll = DrawTui.mergerString(shelfAll, DrawTui.graphicsShelf(listPlayers.get(i).getShelf(), listPlayers.get(i).getNickname(),false,true),false,true,false);
+                    //System.out.println(" SHelf3: \n" + shelfAll);
+                }
+                --len;
+            }
+        }
+        DrawTui.printlnString(shelfAll);
     }
+
 
     @Override
     public void showLivingRoom(LivingRoomView livingRoomView){
@@ -235,9 +251,9 @@ public class ClientTUI implements View{
     @Override
     public void showBoardPlayer(PlayerView playerBoardView, LivingRoomView livingRoomView){
         String livingRoomP = DrawTui.graphicsLivingRoom(livingRoomView, false, true);  //livingRoom of Player
-        String shelfP = DrawTui.graphicsShelf(playerBoardView.getShelf(), true, true);
+        String shelfP = DrawTui.graphicsShelf(playerBoardView.getShelf(), "Shelf:", false, true);
         String pcg = DrawTui.getStringPCG();
-        livingRoomP = DrawTui.mergerString(livingRoomP, shelfP, false, true, false);
+        livingRoomP  = DrawTui.mergerString(livingRoomP, shelfP, false, true, false);
         DrawTui.printlnString(DrawTui.mergerString(livingRoomP, pcg, true, false, false));
     }
     public void chooseTiles(){
@@ -247,6 +263,12 @@ public class ClientTUI implements View{
     @Override
     public void showPersonalGoalCard(){
         //todo?
+    }
+
+    public void showCommonGoalCard(int token1, int token2){
+        String CGC1 =  DrawTui.mergerString(DrawTui.getStringCGC(0), DrawTui.graphicsToken(token1, false), false , true, true);
+        String CGC2 = DrawTui.mergerString(DrawTui.getStringCGC(1), DrawTui.graphicsToken(token2, true), true, true, true);
+        DrawTui.printlnString(DrawTui.mergerString(CGC1, CGC2, true, false, true));
     }
 
     @Override
@@ -310,11 +332,9 @@ public class ClientTUI implements View{
     public boolean isGameOn() {
         return master.isGameOn();
     }
-
     public void setGameOn(boolean gameOn) {
         master.setGameOn(gameOn);
     }
-
     @Override
     public void chooseColumn() {
         writeText("Choose column: [column 'number']");
@@ -332,7 +352,15 @@ public class ClientTUI implements View{
 
     @Override
     public void showEndResult() {
-        //todo
+        ArrayList<PlayerView> playersSorted = new ArrayList<>();
+        playersSorted.addAll(gameView.getPlayersView());
+        Collections.sort(playersSorted, new Comparator<PlayerView>(){
+            @Override
+            public int compare(PlayerView player1, PlayerView player2){
+                return Integer.compare(player2.getScore(), player1.getScore());
+            }
+        });
+        DrawTui.printlnString(DrawTui.endGameScore(master.getUsername(), playersSorted));
     }
 
     @Override

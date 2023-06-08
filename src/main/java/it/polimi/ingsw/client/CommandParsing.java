@@ -165,6 +165,7 @@ public class CommandParsing {
 
 
     private void executeShelfCommand() {
+        master.showShelves();
     }
 
     private void executeColumnCommand() {

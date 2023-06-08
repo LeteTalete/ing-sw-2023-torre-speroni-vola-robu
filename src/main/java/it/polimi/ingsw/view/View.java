@@ -21,11 +21,10 @@ public interface View {
     //place tiles on shelf
 
     void GameTitle();
-    void showShelf(ShelfView myShelf);
+    void showShelves();
+    void setBoardStartGame();
     void showLivingRoom(LivingRoomView livingRoomView);
-
     void showBoardPlayer(PlayerView playerBoardView, LivingRoomView livingRoomView);
-
     void showPersonalGoalCard();
     void showBoard(LivingRoomView livingRoomView);
     IClientListener getListener();

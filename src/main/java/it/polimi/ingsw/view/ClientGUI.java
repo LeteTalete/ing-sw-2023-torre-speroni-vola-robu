@@ -52,9 +52,13 @@ public class ClientGUI implements View {
     public void GameTitle() {
 
     }
+    @Override
+    public void setBoardStartGame(){
+
+    }
 
     @Override
-    public void showShelf(ShelfView myShelf) {
+    public void showShelves(){
 
     }
 

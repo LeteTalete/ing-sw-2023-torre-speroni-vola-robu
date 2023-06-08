@@ -1,9 +1,12 @@
 package it.polimi.ingsw.view;
 
 import it.polimi.ingsw.model.board.Couple;
+import it.polimi.ingsw.model.cards.CommonGoalCard;
 import it.polimi.ingsw.model.enumerations.State;
 import it.polimi.ingsw.model.enumerations.T_Type;
+import it.polimi.ingsw.structures.GameView;
 import it.polimi.ingsw.structures.LivingRoomView;
+import it.polimi.ingsw.structures.PlayerView;
 import it.polimi.ingsw.structures.ShelfView;
 
 import java.io.PrintStream;
@@ -30,11 +33,10 @@ public class DrawTui {
     static final String dividNum = "#"; //dividLine  mi serve per dividere i parametri dell'altezza e lunghezza di una stringa da fondere con un'altra
     static final Integer sizeSlotTile = 3; //Tile size to be colored è meglio che sia dispari
     static final String slotTile = stringRepeat(empty, sizeSlotTile);
-    private static ArrayList<String> stringCGC = new ArrayList<>();
     private final static PrintStream print = new PrintStream(System.out, true, StandardCharsets.UTF_8);
     private final static Scanner scanner = new Scanner(System.in);
     private static String stringPGC = "";
-
+    private static ArrayList<String> stringCGC = new ArrayList<>();
     public static void printlnString(String string){
         print.println(string);
     }
@@ -46,7 +48,6 @@ public class DrawTui {
         return scanner.nextLine();
     }
 
-
     //Mi restituisce la grafica delle Tile che ho scelto dalla LivingRoom, in modo che il giocatore possa scegliere lordine in cui le vuole
     public static String graphicsOrderTiles(ArrayList<Couple> tiles){
         String board = boardSide[3].repeat(sizeSlotTile + 2);
@@ -57,11 +58,10 @@ public class DrawTui {
         }
         orderTiles += boardSide[0] + "\n" + startLine + boardSide[2] + stringRepeat(board + boardSide[7],numTiles - 1) + board + boardSide[5] + "\n";
         orderTiles += startLine + empty.repeat((sizeSlotTile + 4)/2) + sequenceNumbers(0, numTiles, (sizeSlotTile/2)*2 + 3) + "\n";
-
         return orderTiles;
     }
 
-    public static String graphicsShelf(ShelfView myShelfView, boolean activEnd, boolean activMerge){
+    public static String graphicsShelf(ShelfView myShelfView, String name, boolean activEnd, boolean activMerge){
         Couple[][] shelfView = myShelfView.getShelfsMatrixView();
         Iterator<Couple[]> board = Arrays.asList(shelfView).iterator();
         int numTileShelf = shelfView[0].length;
@@ -69,9 +69,11 @@ public class DrawTui {
         String endLine = startDouble + activEndLine(activEnd);
         String side = startDouble + boardSide[0].repeat(2) + stringRepeat(boardSide[3].repeat(sizeSlotTile) + boardSide[0].repeat(2), numTileShelf) + endLine; //la string che divide le strinche con le tile
         String roof = stringRepeat(boardSide[3].repeat(2 + sizeSlotTile), numTileShelf) + boardSide[3].repeat(2);
-        StringBuilder shelfString = new StringBuilder(startDouble + roof + endLine);
-        int lengthShelf = shelfString.length();
-        int heigthSHelf = 2;
+        StringBuilder shelfString = new StringBuilder();
+        int lengthShelf = (startDouble + roof + endLine).length();
+        int heigthSHelf = 3;
+        addEmptySpaceToString(shelfString, startDouble + name, endLine, lengthShelf);
+        shelfString.append(startDouble + roof + endLine);
         shelfString.append(side);
         while(board.hasNext()){
             shelfString.append(startDouble + boardSide[0].repeat(2));
@@ -111,12 +113,15 @@ public class DrawTui {
         }
     }
 
-    public static void setStringCGC(ArrayList<Integer> idCGC){
-        idCGC.forEach((n) -> stringCGC.add(graphicsCGC(n, false, true)));
+    public static String getStringCGC(int numCGC){
+        return stringCGC.get(numCGC);
     }
 
-
-    public static String graphicsCGC(int numCG, boolean activEnd, boolean activMerge){
+    public static void setStringCGC(int numCGC){
+        stringCGC.add(graphicsCGC(numCGC, stringCGC.size() + 1));
+    }
+    // idCG si riferisce a quale CGC sia, mentre numCG è la CGC che vede il giocatore, quindi se è la primo o la seconda
+    public static String graphicsCGC(int idCG, int numCG){
         String tileEqual = tileSquare + empty +  equal + empty + colorRESET;
         String tileDiff = tileSquare + empty + diff + empty + colorRESET;
         String whiteSlot = empty.repeat(sizeSlotTile);
@@ -124,65 +129,60 @@ public class DrawTui {
         int lenMaxString = sizeSlotTile*9; //Dimensione del rettangolo della stringa
 
         StringBuilder CGC = new StringBuilder();
-        String endS = activEndLine(activEnd);
-        addEmptySpaceToString(CGC, "CommonGoalCard[" + numCG + "]:", endS, lenMaxString);
+        addEmptySpaceToString(CGC, "CommonGoalCard[" + numCG + "]:", dividNum, lenMaxString);
         int heightString = 1; //altezza della Linea
-        switch (numCG) {
-            case 1 -> tileCGColumn(CGC, tileEqual, 2, 2, lenMaxString, endS, false, 2, 0);
-            case 2 -> tileCGColumn(CGC, tileDiff, 6, 1, lenMaxString, endS, false, 2, 0);
-            case 3 -> tileCGColumn(CGC, tileEqual, 4, 1, lenMaxString, endS, true, 4, 0);
-            case 4 -> tileCGColumn(CGC, tileEqual, 2, 1, lenMaxString, endS, true, 6, 0);
-            case 5 -> tileCGColumn(CGC, tileEmpty, 6, 1, lenMaxString, endS, false, 3, 3);
-            case 6 -> tileCGColumn(CGC, tileDiff, 1, 5, lenMaxString, endS, false, 3, 0);
-            case 7 -> tileCGColumn(CGC, tileEmpty, 1, 5, lenMaxString, endS, false, 4, 3);
-            case 8 -> {
-                String board = stringRepeat(empty + boardSide[3], sizeSlotTile);
-                String white = empty.repeat(11);
-                for (int i = 0; i < 5; i++) {
-                    if (i == 0 || i == 4) addEmptySpaceToString(CGC, startLine + tileEqual + board + empty + tileEqual, endS, lenMaxString);
-                    else addEmptySpaceToString(CGC, startLine + "|" + white + "|", endS, lenMaxString);
-                    ++heightString;
-                }
-            }
-            case 9 -> {
-                String whiteSpaceFull = empty.repeat(lenMaxString - 1);
-                String whiteSpace = empty.repeat(2);
-                addEmptySpaceToString(CGC, startLine.repeat(2) + tileEqual + whiteSlot + tileEqual, endS, lenMaxString);
-                ++heightString;
-                for (int i = 0; i < 2; i++) {
-                    CGC.append(whiteSpaceFull).append(endS);
-                    addEmptySpaceToString(CGC, startLine + tileEqual + whiteSpace + tileEqual + whiteSpace + tileEqual, endS, lenMaxString);
-                    heightString += 2;
-                }
-            }
-            case 10 -> {
-                for (int i = 0; i < 3; i++) {
-                    if (i == 1) addEmptySpaceToString(CGC, startLine + whiteSlot + tileEqual, endS, lenMaxString);
-                    else addEmptySpaceToString(CGC, startLine + tileEqual + whiteSlot + tileEqual, endS, lenMaxString);
-                    ++heightString;
-                }
-            }
-            case 11 -> {
+        switch (idCG) {
+            case 0 -> {
                 String spaceWhite = "";
                 for (int i = 0; i < 5; i++) {
-                    addEmptySpaceToString(CGC, startLine + spaceWhite + tileEqual, endS, lenMaxString);
+                    addEmptySpaceToString(CGC, startLine + spaceWhite + tileEqual, dividNum, lenMaxString);
                     spaceWhite += whiteSlot;
                     ++heightString;
                 }
             }
-            case 12 -> {
-                for (int i = 1; i < 6; i++) {
-                    addEmptySpaceToString(CGC, tileCGRow(tileEmpty, i, false, 0, 0), endS, lenMaxString);
+            case 1 -> {
+                String board = stringRepeat(empty + boardSide[3], sizeSlotTile);
+                String white = empty.repeat(11);
+                for (int i = 0; i < 5; i++) {
+                    if (i == 0 || i == 4) addEmptySpaceToString(CGC, startLine + tileEqual + board + empty + tileEqual, dividNum, lenMaxString);
+                    else addEmptySpaceToString(CGC, startLine + "|" + white + "|", dividNum, lenMaxString);
                     ++heightString;
                 }
             }
+            case 2 -> tileCGColumn(CGC, tileEqual, 2, 2, lenMaxString, dividNum, false, 2, 0);
+            case 3 -> {
+                for (int i = 0; i < 3; i++) {
+                    if (i == 1) addEmptySpaceToString(CGC, startLine + whiteSlot + tileEqual, dividNum, lenMaxString);
+                    else addEmptySpaceToString(CGC, startLine + tileEqual + whiteSlot + tileEqual, dividNum, lenMaxString);
+                    ++heightString;
+                }
+            }
+            case 4 -> {
+                for (int i = 1; i < 6; i++) {
+                    addEmptySpaceToString(CGC, tileCGRow(tileEmpty, i, false, 0, 0), dividNum, lenMaxString);
+                    ++heightString;
+                }
+            }
+            case 5 -> tileCGColumn(CGC, tileEqual, 2, 1, lenMaxString, dividNum, true, 6, 0);
+            case 6 -> tileCGColumn(CGC, tileEqual, 4, 1, lenMaxString, dividNum, true, 4, 0);
+            case 7 -> {
+                String whiteSpaceFull = empty.repeat(lenMaxString - 1);
+                String whiteSpace = empty.repeat(2);
+                addEmptySpaceToString(CGC, startLine.repeat(2) + tileEqual + whiteSlot + tileEqual, dividNum, lenMaxString);
+                ++heightString;
+                for (int i = 0; i < 2; i++) {
+                    CGC.append(whiteSpaceFull).append(dividNum);
+                    addEmptySpaceToString(CGC, startLine + tileEqual + whiteSpace + tileEqual + whiteSpace + tileEqual, dividNum, lenMaxString);
+                    heightString += 2;
+                }
+            }
+            case 8 -> tileCGColumn(CGC, tileEmpty, 6, 1, lenMaxString, dividNum, false, 3, 3);
+            case 9 -> tileCGColumn(CGC, tileEmpty, 1, 5, lenMaxString, dividNum, false, 4, 3);
+            case 10 -> tileCGColumn(CGC, tileDiff, 6, 1, lenMaxString, dividNum, false, 2, 0);
+            case 11 -> tileCGColumn(CGC, tileDiff, 1, 5, lenMaxString, dividNum, false, 3, 0);
         }
-        if(numCG > 7) CGC.insert(0,lenMaxString + dividNum + heightString + dividNum );
-        if(!activMerge){
-            CGC.delete(0, CGC.indexOf(dividNum) + 1);
-            CGC.delete(0, CGC.indexOf(dividNum) + 1);
-        }
-        return  CGC.toString();
+        if( idCG == 0 || idCG == 1 || idCG == 3 || idCG == 4 || idCG == 7) CGC.insert(0,lenMaxString + dividNum + heightString + dividNum );
+        return CGC.toString();
     }
 
     private static String tileCGRow(String tile, int numTileForRow, boolean dashedEdge, int repet, int maxDif){
@@ -336,7 +336,7 @@ public class DrawTui {
         String tileEmty = empty.repeat(sizeSlotTile) + boardSide[0];
         String board = stringRepeat(boardSide[3], (sizeSlotTile + 1)*lenMaxColumn + 3);
         int lengthLine = (startLine + boardSide[1] + board + boardSide[4] + endLine).length();
-        addEmptySpaceToString(pcg, "PersonalGoalCard:", endLine, lengthLine);
+        addEmptySpaceToString(pcg,  startLine + "PersonalGoalCard:", endLine, lengthLine);
         pcg.append(startLine + boardSide[1] + board + boardSide[4] + endLine);
         pcg.append(startLine + boardSide[0] + empty + boardSide[1] + stringRepeat(boardSide[3].repeat(sizeSlotTile) + boardSide[6], lenMaxColumn - 1) + boardSide[3].repeat(sizeSlotTile) + boardSide[4] + empty + boardSide[0] + endLine);
         int heightPCG = 8;
@@ -354,7 +354,6 @@ public class DrawTui {
                 for(int index = 0; index < tilesInRow.length; index += 2 ) {
                     positionTile = Integer.parseInt(tilesInRow[index]);
                     pcg.append(stringRepeat(tileEmty, positionTile - oldPosT));
-
                     if (Objects.equals(tilesInRow[index + 1], "G")) {
                         pcg.append(colorTileG + " G " + colorRESET);
                     } else if (Objects.equals(tilesInRow[index + 1],"P")) {
@@ -381,6 +380,7 @@ public class DrawTui {
         pcg.append(startLine + boardSide[0] + " 1 | 2 | 4 | 6 | 9 |12 " +  boardSide[0] + endLine);
         pcg.append(startLine + boardSide[2] + board + boardSide[5] + endLine);
         stringPGC = lengthLine + dividNum + heightPCG + dividNum + pcg;
+
     }
 
     public static String getStringPCG(){
@@ -400,22 +400,75 @@ public class DrawTui {
     //si usa all'inizio quando inizia il gioco
     public static void printTitle(){
         print.print("""
-                          \033[38;5;228m#           #                                ######       ####                    ##           ######\033[0m                  \s
-                        \033[38;5;227m##          ##                               ###    ##    ###   #                  ###         ##     ##\033[0m                   \s
-                       \033[38;5;11m###         ###                               ###     ##  ###                       ###        ###\033[0m                           \s
-                      \033[38;5;214m####       #####   ####       ###              ###    #   ###             #####      ###        ###      #       #####\033[0m         \s
-                     \033[38;5;208m### ##     ## ###  ## ##      ####               ###      ###    ###     ####   ##    ###      #######   ###    ####   ##\033[0m       \s
-                     \033[38;5;202m###  ##   ##  ###      ##    ## ###        #      ###    ###   ##  ##   ###   ###     ###        ###      ##   ###   ###\033[0m          \s
-                     \033[38;5;9m###   ## ##   ###      ##   ###  ###      ##       ###   ### ##    ##   ######     #  ###        ###      ##   #######    #\033[0m      \s
-                    \033[38;5;197m###     ####    ###    ##   ###    ###      ###     ###   ####     ## #   ###     ##    ###    #  ###      ##    ###     ##\033[0m       \s
-                  \033[38;5;12m####       ##      ####   ######     ###        #######    ###      ####     ########      ######   ###     ####    ########\033[0m     \s
-                                                       \033[38;5;14m###                                                            ###\033[0m                           \s
-                                                      \033[38;5;51m###                                                             ###\033[0m                       \s
-                                          \033[38;5;85m#          ###                                                              ###\033[0m                          \s
-                                           \033[38;5;83m##      ####                                                               ##\033[0m                            \s
-                                            \033[38;5;10m########                                                                 #\033[0m                          \s
+                          \033[1;38;5;228m#           #                                ######       ####                    ##           ######
+                        \033[39;38;5;227m##          ##                               ###    ##    ###   #                  ###         ##     ##
+                       \033[38;5;11m###         ###                               ###     ##  ###                       ###        ###
+                      \033[38;5;214m####       #####   ####       ###              ###    #   ###             #####      ###        ###      #       #####
+                     \033[38;5;208m### ##     ## ###  ## ##      ####               ###      ###    ###     ####   ##    ###      #######   ###    ####   ##
+                     \033[38;5;202m###  ##   ##  ###      ##    ## ###        #      ###    ###   ##  ##   ###   ###     ###        ###      ##   ###   ###
+                     \033[38;5;9m###   ## ##   ###      ##   ###  ###      ##       ###   ### ##    ##   ######     #  ###        ###      ##   #######    #
+                    \033[38;5;197m###     ####    ###    ##   ###    ###      ###     ###   ####     ## #   ###     ##    ###    #  ###      ##    ###     ##
+                  \033[38;5;12m####       ##      ####   ######     ###        #######    ###      ####     ########      ######   ###     ####    ########
+                                                       \033[38;5;14m###                                                            ###
+                                                      \033[38;5;51m###                                                             ###
+                                          \033[38;5;85m#          ###                                                              ###
+                                           \033[38;5;83m##      ####                                                               ##
+                                            \033[38;5;10m########                                                                 #\033[0m
                                 
         """);
+    }
+
+    public static String endGameScore(String namePlayerClient, ArrayList<PlayerView> players){
+        String winner = """
+                  ####     ####        ##   #####    ##   #####               #    ####
+                  ###       ###   #     # ##    ##    # ##    ##      #####   ## ##    ##
+                   ##   #   ###  ###    ##      ###   ##      ###   ###  ###   ###      #
+                    ## ### ###    ##    ##      ###   ##      ###  ######      ###
+                     ###  ###     ##    ##      ###   ##      ###   ##    ##   ###
+                      #    #     ####   ##     ###    ##     ###     ######   ###
+                """;
+        String loser = """
+                   ##                    ####             #    ####
+                  ###       #####      ###   #    #####   ## ##    ##
+                  ###      ###   ##     ###     ###  ###   ###      #
+                  ###     ###     ##     ###   ######      ###
+                  ###   #  ###   ##  #    ###   ##    ##   ###
+                   #####    ######    #####      ######   ###
+                """;
+        String tabScore = startLine + "  Players                            Score\n" + startLine + "#################################  ##########\n";
+        int len = players.size();
+        String color;
+        String title = "";
+        for(int i = 0; i < len; i++){
+            if(i == 0) color = "\033[1;30;48;5;196m";
+            else if(i ==  1) color = "\033[1;30;48;5;202m";
+            else if(i == 2) color = "\033[1;30;48;5;208m";
+            else color = "\033[1;30;48;5;214m";
+            String name = players.get(i).getNickname();
+            if(namePlayerClient.equals(name)){
+                if(i == 0) title = "\033[1;38;5;196m" + winner;
+                else if(i == 1) title = "\033[1;38;5;202m" + loser;
+                else if( i == 2) title = "\033[1;38;5;208m" + loser;
+                else title = "\033[1;38;5;214m" + loser;
+                title += colorRESET;
+            }
+            String score = Integer.toString(players.get(i).getScore());
+            tabScore += startLine + color + "  " + name + " ".repeat(31 - name.length()) + colorRESET + "  " + color + "  " + score + " ".repeat(8 - score.length()) + colorRESET + "\n" + startLine;
+            if(i + 1 == len) tabScore += "#################################  ##########\n";
+            else tabScore += "---------------------------------  ----------\n";
+        }
+        return title + tabScore;
+
+    }
+
+    //il parametro activeDelimit permette di inserire alla fine un carattere separatore in modo che il punteggio di questa carta sia separata dall'altra carta
+    //il parametro activeEndN attiva il paramentro di separazione
+    public static String graphicsToken(int numToken, boolean activeEndN){
+        String endLine = activeEndN ? "\n": startLine.repeat(10) + dividNum;
+        String roof = startLine + boardSide[1] + boardSide[3].repeat(5) +  boardSide[4] + endLine;
+        return roof.length() + dividNum + 4 + dividNum +  startLine + "Token: " + endLine + roof +
+                startLine + boardSide[0] + empty + "[" + numToken + "]" + empty + boardSide[0] + endLine +
+                startLine + boardSide[2] + boardSide[3].repeat(5) + boardSide[5] + endLine;
     }
 
 
