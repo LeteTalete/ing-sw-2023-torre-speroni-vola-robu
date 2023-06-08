@@ -96,11 +96,11 @@ public class GameController {
                 tiles.set(i,this.choiceOfTiles.get(order.get(i).charAt(0)-48-1));
             }
             this.choiceOfTiles = tiles;
-            master.notifyAboutRearrange(token, true);
+            master.notifyAboutRearrange(token, true, tiles);
         }
         else
         {
-            master.notifyAboutRearrange(token, false);
+            master.notifyAboutRearrange(token, false, null);
         }
     }
 

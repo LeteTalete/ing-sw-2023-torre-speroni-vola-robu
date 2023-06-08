@@ -1,20 +1,25 @@
 package it.polimi.ingsw.network;
 
 import it.polimi.ingsw.Updates.ModelUpdate;
-import it.polimi.ingsw.client.ResponseDecoder;
-import it.polimi.ingsw.notifications.*;
-import it.polimi.ingsw.responses.*;
+import it.polimi.ingsw.model.board.Position;
 import it.polimi.ingsw.server.StaticStrings;
 import it.polimi.ingsw.view.ClientTUI;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
 
 public class ClientListenerTUI extends UnicastRemoteObject implements IClientListener {
+    private String connectionType = "RMI";
     private transient final ClientTUI view;
     private String token;
     public ClientListenerTUI(ClientTUI currentView) throws RemoteException{
         this.view = currentView;
+    }
+
+    @Override
+    public String getTypeConnection() throws RemoteException {
+        return connectionType;
     }
 
     @Override
@@ -93,10 +98,10 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
     }
 
     @Override
-    public void notifyRearrangeOk(boolean ok) throws RemoteException {
+    public void notifyRearrangeOk(boolean ok, ArrayList<Position> tiles) throws RemoteException {
         if(ok){
             view.displayNotification("Rearrange successful!");
-            view.nextAction(3);
+            view.nextAction(3, tiles);
         }
         else{
             view.displayNotification("Invalid move. Try again.");
@@ -104,10 +109,10 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
     }
 
     @Override
-    public void notifyTilesOk(boolean ok) throws RemoteException {
+    public void notifyTilesOk(boolean ok, ArrayList<Position> tiles) throws RemoteException {
         if(ok){
             view.displayNotification("Choice of tiles successful!");
-            view.nextAction(2);
+            view.nextAction(2, tiles);
         }
         else{
             view.displayNotification("Invalid move. Try again.");

@@ -15,9 +15,11 @@ public interface IRemoteController extends Remote {
     //selectColumn method also calls endTurn method, which notifies the player about the end of their turn,
     //changes the currentPlayer, and checks if it;s the last turn
     void selectColumn (String token, int column) throws RemoteException;
-    void createWaitingRoom(String username, String userToken, int number) throws RemoteException;
+    void createWaitingRoom(String username, String userToken) throws RemoteException;
 
     void sendChat(String username, String toString, String choice) throws RemoteException;
     void generateTokenRMI(IClientListener viewListener, String token) throws RemoteException;
     void sendPing(String token) throws RemoteException;
+
+    void setPlayersWaitingRoom(String token, int num) throws RemoteException;
 }

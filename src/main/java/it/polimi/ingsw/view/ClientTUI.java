@@ -3,7 +3,6 @@ package it.polimi.ingsw.view;
 import it.polimi.ingsw.Updates.ModelUpdate;
 import it.polimi.ingsw.client.ClientController;
 import it.polimi.ingsw.client.CommandParsing;
-import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.network.ClientListenerTUI;
 import it.polimi.ingsw.network.IClientListener;
 import it.polimi.ingsw.responses.Response;
@@ -40,7 +39,6 @@ public class ClientTUI implements View{
         setupStdInput();
         try {
             this.listenerClient = new ClientListenerTUI(this);
-
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
@@ -117,7 +115,10 @@ public class ClientTUI implements View{
                 connection = "SOCKET";
             }
         }while(!connection.equals("RMI") && !connection.equals("SOCKET"));
+
         connectionType = connection;
+
+
     }
     private String nextCommand() {
         command = frominput.nextLine();
@@ -148,6 +149,7 @@ public class ClientTUI implements View{
             fileLog.debug("ClientTUI stopped");
             master.close();
         }
+
     }
 
     @Override
@@ -158,6 +160,7 @@ public class ClientTUI implements View{
                 "order [number number number]: to set the order of the tiles you want to place on your shelf\n" +
                 "column [number]: to choose the column of the shelf in which you want to place your tiles\n" +
                 "showshelves: shows the shelves of all the other players\n" +
+                "cards: shows the description of the common goal cards\n" +
                 "hideshelves: hides the shelves of the other players\n" +
                 "@[username] [message]: to send a message to a player\n" +
                 "@all [message]: to send a message to all the players\n" +
@@ -241,7 +244,6 @@ public class ClientTUI implements View{
         }
         DrawTui.printlnString(shelfAll);
     }
-
 
     @Override
     public void showLivingRoom(LivingRoomView livingRoomView){
@@ -332,9 +334,11 @@ public class ClientTUI implements View{
     public boolean isGameOn() {
         return master.isGameOn();
     }
+
     public void setGameOn(boolean gameOn) {
         master.setGameOn(gameOn);
     }
+
     @Override
     public void chooseColumn() {
         writeText("Choose column: [column 'number']");
@@ -346,8 +350,8 @@ public class ClientTUI implements View{
     }
 
     @Override
-    public void nextAction(int num) {
-        master.nextAction(num);
+    public void nextAction(int num, ArrayList<Position> tiles) {
+        master.nextAction(num, tiles);
     }
 
     @Override

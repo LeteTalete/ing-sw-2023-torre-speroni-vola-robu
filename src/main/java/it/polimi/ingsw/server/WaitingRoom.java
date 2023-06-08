@@ -9,15 +9,18 @@ import java.util.ArrayList;
 public class WaitingRoom {
     private static Logger fileLog = LogManager.getRootLogger();
     private String id;
+    private ServerManager master;
     private int playersWaiting;
     private int maxPLayers;
     private ArrayList<Player> players;
+    private ArrayList<Player> overflowPlayers;
     //constructor
-    public WaitingRoom(int identifier, int max_players){
+    public WaitingRoom(int identifier, ServerManager serverManager){
         this.id = String.valueOf(identifier);
         this.playersWaiting = 0;
         players = new ArrayList<Player>();
-        this.maxPLayers = max_players;
+        this.master=serverManager;
+        overflowPlayers = new ArrayList<Player>();
     }
 
     public String addPlayerToWaitingRoom(String name, String token){
@@ -42,8 +45,28 @@ public class WaitingRoom {
     public String getId(){
         return this.id;
     }
+    public int getMaxPLayers(){
+        return this.maxPLayers;
+    }
 
     public ArrayList<Player> getListOfPlayers() {
         return this.players;
+    }
+    public Player getSinglePlayer(int i){
+        return this.players.get(i);
+    }
+
+    public void setMaxPLayers(int maxPLayers) {
+        this.maxPLayers = maxPLayers;
+        if(playersWaiting>=maxPLayers)
+        {
+            fileLog.info("Enough players to start the game!");
+            master.createGame(id);
+            //return StaticStrings.GAME_START;
+        }
+        else if(playersWaiting>maxPLayers)
+        {
+            //return StaticStrings.GAME_START;
+        }
     }
 }

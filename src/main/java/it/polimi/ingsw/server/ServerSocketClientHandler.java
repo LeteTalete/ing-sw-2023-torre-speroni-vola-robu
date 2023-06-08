@@ -1,6 +1,7 @@
 package it.polimi.ingsw.server;
 
 import it.polimi.ingsw.Updates.ModelUpdate;
+import it.polimi.ingsw.model.board.Position;
 import it.polimi.ingsw.network.IClientListener;
 import it.polimi.ingsw.notifications.*;
 import it.polimi.ingsw.requests.Request;
@@ -13,6 +14,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 
 
 //this class handles the communication with the client associated to the assigned socket
@@ -25,6 +27,7 @@ public class ServerSocketClientHandler implements Runnable, IClientListener
     private ObjectOutputStream out;
     private boolean stop;
     private String token;
+    private String connectionType = "SOCKET";
 
     public ServerSocketClientHandler(Socket socket)
     {
@@ -77,6 +80,11 @@ public class ServerSocketClientHandler implements Runnable, IClientListener
         } catch (IOException e) {
             fileLog.error(e.getMessage());
         }
+    }
+
+    @Override
+    public String getTypeConnection() throws RemoteException {
+        return connectionType;
     }
 
     @Override
@@ -137,13 +145,13 @@ public class ServerSocketClientHandler implements Runnable, IClientListener
     }
 
     @Override
-    public void notifyRearrangeOk(boolean ok) throws RemoteException {
-        respond(new RearrangeOk(ok));
+    public void notifyRearrangeOk(boolean ok, ArrayList<Position> tiles) throws RemoteException {
+        respond(new RearrangeOk(ok, tiles));
     }
 
     @Override
-    public void notifyTilesOk(boolean ok) throws RemoteException {
-        respond(new TilesOk(ok));
+    public void notifyTilesOk(boolean ok, ArrayList<Position> tiles) throws RemoteException {
+        respond(new TilesOk(ok, tiles));
     }
 
     @Override

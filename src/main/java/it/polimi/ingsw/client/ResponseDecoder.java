@@ -19,16 +19,6 @@ public class ResponseDecoder implements ResponseHandler {
         this.client = clientC;
     }
 
-    //todo these tiles need to be passed to the client's view to help the user visualize what's going on
-    @Override
-    public void handle(GetTilesResponse getTilesResponse) throws RemoteException {
-        client.passTiles(getTilesResponse.getTilesChosen());
-        //clientListener.notifyTilesResponse(getTilesResponse);
-        client.setReceivedResponse(false);
-        synchronized (client) {
-            client.notifyAll();
-        }
-    }
 
     @Override
     public void handle(Pinged pinged) throws RemoteException {
@@ -151,7 +141,7 @@ public class ResponseDecoder implements ResponseHandler {
 
     @Override
     public void handle(RearrangeOk rearrangeOk) throws RemoteException {
-        clientListener.notifyRearrangeOk(rearrangeOk.isMoveOk());
+        clientListener.notifyRearrangeOk(rearrangeOk.isMoveOk(), rearrangeOk.getTiles());
         client.setReceivedResponse(false);
         synchronized (client) {
             client.notifyAll();
@@ -160,7 +150,7 @@ public class ResponseDecoder implements ResponseHandler {
 
     @Override
     public void handle(TilesOk tilesOk) throws RemoteException {
-        clientListener.notifyTilesOk(tilesOk.isMoveOk());
+        clientListener.notifyTilesOk(tilesOk.isMoveOk(), tilesOk.getTiles());
         client.setReceivedResponse(false);
         synchronized (client) {
             client.notifyAll();

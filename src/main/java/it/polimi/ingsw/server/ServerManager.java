@@ -2,6 +2,7 @@ package it.polimi.ingsw.server;
 
 import it.polimi.ingsw.Updates.ModelUpdate;
 import it.polimi.ingsw.controller.GameController;
+import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.board.Position;
 import it.polimi.ingsw.network.ClientListenerTUI;
 import it.polimi.ingsw.network.IClientListener;
@@ -15,7 +16,6 @@ import java.util.*;
 
 public class ServerManager extends UnicastRemoteObject implements IRemoteController {
     private static Logger fileLog = LogManager.getRootLogger();
-
     private Map<String, GameController> activeGames;
     private WaitingRoom waitingRoom;
     //network manager: to instantiate RMI and socket
@@ -59,17 +59,12 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
                 });
     }
 
-    public synchronized void createWaitingRoom (String name, String token, int howMany){
+    public synchronized void createWaitingRoom (String name, String token){
         Random rand = new Random();
         int id = rand.nextInt(1000);
-        waitingRoom = new WaitingRoom(id, howMany);
+        waitingRoom = new WaitingRoom(id, this);
         waitingRoom.addPlayerToWaitingRoom(name, token);
         activeUsers.put(token, String.valueOf(id));
-        try{
-            ConnectionManager.get().getLocalView(token).showTextNotification("I created a waiting room. Waiting for other players to join...");
-        } catch (RemoteException e) {
-            fileLog.error(e.getMessage());
-        }
     }
 
     @Override
@@ -114,7 +109,6 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
         return token;
     }
 
-    //todo check on the alreadyexists attributes
     @Override
     public void login(String name, IClientListener viewListener) throws RemoteException {
         if(ConnectionManager.get().tokenNames.containsValue(name)){
@@ -123,50 +117,73 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
         else{
             String token = generateToken();
             ConnectionManager.get().addClientView(token, name, viewListener);
-            String success = putInWaitingRoom(name, token);
-            if(viewListener instanceof ClientListenerTUI /*|| viewListener instanceof ClientListenerGui*/){
+
+            if(waitingRoom==null){
+                ConnectionManager.get().viewListenerMap.get(token).notifySuccessfulRegistration(name, true, token, true);
+                createWaitingRoom(name, token);
+            }
+            else  {
+                ConnectionManager.get().viewListenerMap.get(token).notifySuccessfulRegistration(name, true, token, false);
+                String success = putInWaitingRoom(name, token);
+                if(success.equals(StaticStrings.GAME_START))
+                {
+                    createGame(waitingRoom.getId());
+                }
+            }
+
+
+            if(viewListener.getTypeConnection().equals("RMI")){
                 generateTokenRMI(viewListener, name);
             }
-            else if(viewListener instanceof ServerSocketClientHandler){
+            else if(viewListener.getTypeConnection().equals("SOCKET")){
                 //the cast is not necessary
                 createToken((ServerSocketClientHandler) viewListener, name);
-            }
-            if(success==null) {
-                ConnectionManager.get().viewListenerMap.get(token).notifySuccessfulRegistration(name, true, token, true);
-
-            } else if(success.equals(StaticStrings.GAME_START)) {
-                ConnectionManager.get().viewListenerMap.get(token).notifySuccessfulRegistration(name, true,token, false);
-
-                //now we need to notify all the players that the game is about to start
-                notifyAboutGameStart(waitingRoom.getId());
-
-                //i have to create the players when creating the game
-                GameController game = new GameController(waitingRoom.getListOfPlayers(), waitingRoom.getId(), this);
-                activeGames.put(waitingRoom.getId(), game);
-
-                fileLog.info("I created a new game with id: " + waitingRoom.getId() + "and started the game!");
-                fileLog.info("The players are: " + waitingRoom.getListOfPlayers());
-
-                game.initialize();
-                waitingRoom=null;
-
-            } else {
-                ConnectionManager.get().viewListenerMap.get(token).notifySuccessfulRegistration(name, true, token, false);
             }
         }
     }
 
-    public void notifyAboutGameStart(String id) {
-        activeUsers.entrySet()
-                .stream()
-                .filter(e -> e.getValue().equals(id))
-                .forEach(e -> {
-                    try {
-                        ConnectionManager.get().viewListenerMap.get(e.getKey()).notifyGameStart();
-                    } catch (RemoteException ex) {
-                        fileLog.error(ex.getMessage());
-                    }
-                });
+    public void createGame(String id) {
+        //i have to create the players when creating the game
+        ArrayList<Player> playersReady = new ArrayList<>();
+        int i=0;
+        for(; i<waitingRoom.getMaxPLayers(); i++){
+            playersReady.add(waitingRoom.getSinglePlayer(i));
+        }
+        if(i<waitingRoom.getListOfPlayers().size()){
+            for(; i<waitingRoom.getListOfPlayers().size(); i++){
+                String token = waitingRoom.getListOfPlayers().get(i).getTokenId();
+                activeUsers.remove(token);
+                ConnectionManager.get().inactiveUsers.add(token);
+                try {
+                    ConnectionManager.get().viewListenerMap.get(token).showTextNotification("There is no game active for you. Please disconnect and try again later");
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+        //now we need to notify all the players that the game is about to start
+        notifyAboutGameStart(playersReady);
+        GameController game = new GameController(playersReady, waitingRoom.getId(), this);
+        activeGames.put(waitingRoom.getId(), game);
+
+        fileLog.info("I created a new game with id: " + waitingRoom.getId() + "and started the game!");
+
+        try {
+            game.initialize();
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+        waitingRoom=null;
+    }
+
+    public void notifyAboutGameStart(ArrayList<Player> playersReady) {
+        playersReady.stream().forEach(p -> {
+            try {
+                ConnectionManager.get().viewListenerMap.get(p.getTokenId()).notifyGameStart();
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
 
@@ -188,10 +205,8 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
     }
 
     public void disconnect(String token) {
+        fileLog.debug("I am disconnecting user: " + token);
         ConnectionManager.get().disconnectToken(token);
-        String gameId = activeGames.get(token).getGameId();
-        //todo close the game
-        //activeGames.get(gameId).;
     }
 
     public String getTokenFromHandler(ServerSocketClientHandler serverSocketClientHandler) {
@@ -220,9 +235,17 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
         ConnectionManager.get().setPingMap(token, true);
     }
 
-    public void notifyAboutRearrange(String token, boolean b) {
+    @Override
+    public void setPlayersWaitingRoom(String token, int num) throws RemoteException {
+        waitingRoom.setMaxPLayers(num);
+        if(activeGames.isEmpty()){
+            ConnectionManager.get().viewListenerMap.get(token).showTextNotification("Waiting room created! Waiting for other players to join...");
+        }
+    }
+
+    public void notifyAboutRearrange(String token, boolean b, ArrayList<Position> tiles) {
         try {
-            ConnectionManager.get().viewListenerMap.get(token).notifyRearrangeOk(b);
+            ConnectionManager.get().viewListenerMap.get(token).notifyRearrangeOk(b, tiles);
         } catch (RemoteException e) {
             fileLog.error(e.getMessage());
         }
@@ -256,10 +279,9 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
             fileLog.error(e.getMessage());
         }
     }
-//todo check if this method actually needs to pass an array of positions
     public void notifyAboutTiles(String token, boolean b, ArrayList<Position> choice) {
         try {
-            ConnectionManager.get().viewListenerMap.get(token).notifyTilesOk(b);
+            ConnectionManager.get().viewListenerMap.get(token).notifyTilesOk(b, choice);
         } catch (RemoteException e) {
             fileLog.error(e.getMessage());
         }

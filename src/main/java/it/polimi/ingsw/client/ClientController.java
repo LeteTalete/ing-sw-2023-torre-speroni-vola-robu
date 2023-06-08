@@ -43,25 +43,21 @@ public class ClientController {
         setupConnection();
     }
 
-    //todo if the ip is wrong, it shouldn't ask for the nickname
     public void setupConnection() {
         currentView.chooseConnection();
+        //todo uncomment this and place SIP instead of null when initializing connections
+        //currentView.askServerIP();
+        //String SIP = currentView.getServerIP();
         String connectionStatus = "Connecting...";
-        do
-        {
-            currentView.askServerIP();
-            String SIP = currentView.getServerIP();
-            if(currentView.getConnectionType().equals("RMI")) {
-                connectionStatus = setupRMI(SIP);
-            }
-            else if(currentView.getConnectionType().equals("SOCKET")){
-                connectionStatus = setupSocket(SIP);
-            }
-            else if(connectionStatus!=null){
-                this.currentView.displayNotification(connectionStatus);
-            }
+        if(currentView.getConnectionType().equals("RMI")) {
+            connectionStatus = setupRMI(System.getProperty(HOSTNAME));
         }
-        while(connectionStatus!=null);
+        else if(currentView.getConnectionType().equals("SOCKET")){
+            connectionStatus = setupSocket(System.getProperty(HOSTNAME));
+        }
+        else if(connectionStatus!=null){
+            this.currentView.displayNotification(connectionStatus);
+        }
     }
 
     public String setupSocket(String serverIP) {
@@ -73,16 +69,16 @@ public class ClientController {
             this.responseDecoder = new ResponseDecoder(listenerClient, currentConnection);
             clientSocket.setResponseDecoder(responseDecoder);
             clientSocket.startClient();
-            return null;
 
         } catch (Exception e) {
             fileLog.error(e);
         }
-        return "connection refused";
+        return null;
     }
 
     private String setupRMI(String serverIP) {
         try{
+            //TODO put serverip in host field of locateregisty
             this.registry = LocateRegistry.getRegistry(serverIP,8089);
             this.remoteController = (IRemoteController) registry.lookup("Login");
             ClientRMI clientRMI = new ClientRMI(this, remoteController);
@@ -92,12 +88,11 @@ public class ClientController {
             clientRMI.setResponseDecoder(responseDecoder);
             clientRMI.setConnected(true);
             userLogin();
-            return null;
 
         }catch(Exception e){
             fileLog.error(e.getMessage());
         }
-        return "connection refused";
+        return null;
     }
 
     public void userLogin () {
@@ -231,16 +226,18 @@ public class ClientController {
         currentView.printError("Wrong format, please try again or type 'help' for a list of commands");
     }
 
-    public void nextAction(int num) {
+    public void nextAction(int num, ArrayList<Position> tiles) {
         if(num==2){
             if(!onlyOneTile){
                 currentView.displayNotification("You can now re-arrange the tiles or choose the column. Here are the commands:");
+                //todo show the tiles now
                 //todo it should show commands format, not show the request
                 currentView.chooseOrder();
                 currentView.chooseColumn();
                 setMyTurn(true);
             }
             else{
+                //todo show the tiles now too, if tiles!=null
                 currentView.chooseColumn();
                 setMyTurn(true);
             }

@@ -61,6 +61,8 @@ public class Player implements Serializable {
         this.score += myScore;
     }
 
+    //todo: those two last methods are server related
+    // I don't know if they need to be tested
     public String getTokenId() {
         return tokenId;
     }

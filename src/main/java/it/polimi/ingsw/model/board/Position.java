@@ -11,13 +11,6 @@ public class Position implements Serializable {
         this.y = y;
     }
 
-    public Position() {
-    }
-
-    public int getX()
-    {
-        return this.x;
-    }
 
     public void setX(int x) {
         this.x = x;
@@ -25,6 +18,16 @@ public class Position implements Serializable {
 
     public int getY() {
         return this.y;
+    }
+
+
+    //cleanup those methods are never used
+    public Position() {
+    }
+
+    public int getX()
+    {
+        return this.x;
     }
 
     public void setY(int y) {
