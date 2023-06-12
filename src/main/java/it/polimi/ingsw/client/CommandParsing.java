@@ -184,7 +184,7 @@ public class CommandParsing {
             master.errorFormat();
             return;
         }
-
+    //todo print the tiles in the order they were chosen
         master.rearrangeTiles(multipleChoiceNumber);
     }
 
@@ -252,8 +252,13 @@ public class CommandParsing {
         return isPlaying;
     }
 
-    public void setPlaying(boolean playing) {
-        isPlaying = playing;
+    public void setPlaying(int playing) {
+        if(playing>0){
+            isPlaying = true;
+        }
+        else{
+            isPlaying = false;
+        }
     }
 
     public void setGameIsOn(boolean gameIsOn) {

@@ -34,7 +34,7 @@ public interface View {
 
     void printError(String message);
 
-    void setMyTurn(boolean b);
+    void setMyTurn(int b);
     void startRun();
 
     void setMaster(ClientController clientController, CommandParsing commandParsing);

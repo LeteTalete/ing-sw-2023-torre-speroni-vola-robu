@@ -3,13 +3,11 @@ package it.polimi.ingsw.client;
 import it.polimi.ingsw.model.board.Position;
 import it.polimi.ingsw.network.IClientListener;
 import it.polimi.ingsw.network.IRemoteController;
-import it.polimi.ingsw.responses.Response;
 import it.polimi.ingsw.server.StaticStrings;
 import it.polimi.ingsw.view.View;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
@@ -120,11 +118,8 @@ public class ClientController {
         return myTurn;
     }
 
-    public void setMyTurn(boolean turn) {
-        if(turn)
-            this.myTurn = 1;
-        else
-            this.myTurn = 0;
+    public void setMyTurn(int turn) {
+        this.myTurn = turn;
         commPars.setPlaying(turn);
     }
 
@@ -195,12 +190,12 @@ public class ClientController {
 
     public void isItMyTurn(String name) {
         if(name.equals(username)){
-            setMyTurn(true);
+            setMyTurn(1);
             currentView.displayNotification(StaticStrings.YOUR_TURN);
             currentView.askForTiles();
         }
         else{
-            setMyTurn(false);
+            setMyTurn(0);
             currentView.displayNotification("It's " + name + "'s turn");
         }
     }
@@ -234,18 +229,14 @@ public class ClientController {
                 //todo it should show commands format, not show the request
                 currentView.chooseOrder(tiles);
                 currentView.chooseColumn();
-                setMyTurn(true);
+                setMyTurn(2);
             }
             else{
                 //todo show the tiles now too, if tiles!=null
                 currentView.chooseColumn();
-                setMyTurn(true);
+                setMyTurn(2);
             }
         }
-        else if(num==3){
-            currentView.chooseColumn();
-        }
-
     }
 
     public void gameNotStarted() {

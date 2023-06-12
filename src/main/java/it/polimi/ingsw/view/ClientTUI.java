@@ -292,7 +292,7 @@ public class ClientTUI implements View{
     }
 
     @Override
-    public void setMyTurn(boolean b) {
+    public void setMyTurn(int b) {
         //the view has a while loop that gets the player's input
         //if this b is false, none of the input can be sent to the server. it is only elaborated when the client asks
         //to see another player's shelf, for example
