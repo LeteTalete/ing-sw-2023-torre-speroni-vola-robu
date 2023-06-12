@@ -216,12 +216,16 @@ public class ClientTUI implements View{
     public void printCommands() {
         writeText("Here are all the commands you can use while playing:\n" +
                 "help: shows all the commands\n" +
+                "hidecommands: hides all the commands\n" +
                 "tiles [coordinatexcoordinatey coordinatexcoordinatey]: to pick the tile(s) you want to place on your shelf\n" +
                 "order [number number number]: to set the order of the tiles you want to place on your shelf\n" +
                 "column [number]: to choose the column of the shelf in which you want to place your tiles\n" +
                 "showshelves: shows the shelves of all the other players\n" +
-                "cards: shows the description of the common goal cards\n" +
                 "hideshelves: hides the shelves of the other players\n" +
+                "showchat: shows the chat\n" +
+                "hidechat: hides the chat\n" +
+                "showcards: shows common goal cards and their description\n" +
+                "hidecards: hide the common goal cards\n" +
                 "@[username] [message]: to send a message to a player\n" +
                 "@all [message]: to send a message to all the players\n" +
                 "quit: quits the game\n");
