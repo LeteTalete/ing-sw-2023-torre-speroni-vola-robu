@@ -39,6 +39,9 @@ public class CommandParsing {
         if(initializingName) {
             fileLog.debug("initializing name");
             //if asking for name
+            if(!checkUsernameFormat(command)){
+                return;
+            }
             master.askLogin(command);
             if ( master.getUsername() != null) {
                 fileLog.debug("the name has been set");
@@ -76,6 +79,25 @@ public class CommandParsing {
             args.remove(0);
         }
         executeCom(command, args);
+    }
+
+    private boolean checkUsernameFormat(String command) {
+        if(command.length() > 20) {
+            master.errorFormat();
+            master.userLogin();
+            return false;
+        }
+        /*for(int i = 0; i < command.length(); i++) {
+            if(command.charAt(i) < 48 || command.charAt(i) > 122) {
+                master.errorFormat();
+            }
+        }*/
+        else if(command.contains(" ")) {
+            master.errorFormat();
+            master.userLogin();
+            return false;
+        }
+        return true;
     }
 
     private void executeCom(String command, List<String> args) {
