@@ -37,9 +37,11 @@ public class CommandParsing {
 
     public void elaborateInput(String command) {
         if(initializingName) {
+            fileLog.debug("initializing name");
             //if asking for name
             master.askLogin(command);
             if ( master.getUsername() != null) {
+                fileLog.debug("the name has been set");
                 initializingName = false;
                 if ( master.isGameOn() ) {
                     initializingRoom = false;

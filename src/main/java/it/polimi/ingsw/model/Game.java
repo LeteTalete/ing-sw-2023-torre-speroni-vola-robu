@@ -218,16 +218,4 @@ public class Game {
         return scoreBoard;
     }
 
-    //cleanup those methods are never used
-    public void setPlayersView(ArrayList<Player> players) {
-        this.players = players;
-    }
-
-    public String placeTilesOnShelf(List<Tile> tilesChosen, int column) {
-        return null;
-    }
-
-    public void createGameBoard(int size) {
-        gameBoard = new LivingRoom(size);
-    }
 }

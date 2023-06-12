@@ -115,6 +115,7 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
             viewListener.notifySuccessfulRegistration(name, false, null, false);
         }
         else{
+            fileLog.debug("Received a login request from "+name);
             String token = generateToken();
             ConnectionManager.get().addClientView(token, name, viewListener);
 
@@ -123,6 +124,7 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
                 createWaitingRoom(name, token);
             }
             else  {
+                fileLog.debug("Waiting room is not null, adding player"+name+ "to waiting room");
                 ConnectionManager.get().viewListenerMap.get(token).notifySuccessfulRegistration(name, true, token, false);
                 String success = putInWaitingRoom(name, token);
                 if(success.equals(StaticStrings.GAME_START))

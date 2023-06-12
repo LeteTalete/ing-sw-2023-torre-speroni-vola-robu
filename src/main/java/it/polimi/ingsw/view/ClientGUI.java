@@ -21,9 +21,8 @@ public class ClientGUI implements View {
 
     @Override
     public void chooseConnection() {
-        guiApplication = new GUIApplication();
+        guiApplication = new GUIApplication(this);
         guiApplication.main(null);
-
     }
 
     @Override

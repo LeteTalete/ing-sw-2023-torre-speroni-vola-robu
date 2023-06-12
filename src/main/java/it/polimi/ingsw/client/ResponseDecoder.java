@@ -32,6 +32,7 @@ public class ResponseDecoder implements ResponseHandler {
     @Override
     public void handle(LoginResponse loginResponse) throws RemoteException {
         clientListener.notifySuccessfulRegistration(loginResponse.name, loginResponse.b, loginResponse.token, loginResponse.first);
+        fileLog.debug("Login response received, about to set receivedresponse false");
         client.setReceivedResponse(false);
         synchronized (client) {
             client.notifyAll();

@@ -188,8 +188,9 @@ public class ClientTUI implements View{
     public void getUsername(){
         writeText("Insert username: ");
         if(!isRunning){
-            running();
             setIsRunning(true);
+            fileLog.debug("isRunning set to true");
+            running();
         }
     }
 
@@ -319,8 +320,10 @@ public class ClientTUI implements View{
 
     @Override
     public void serverSavedUsername(String name, boolean b, String token, boolean first) {
-        this.username = name;
         master.serverSavedUsername(name, b, token, first);
+        if(b){
+            this.username = name;
+        }
         if(first){
             askAmountOfPlayers();
         }

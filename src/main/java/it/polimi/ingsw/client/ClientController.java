@@ -34,7 +34,6 @@ public class ClientController {
     public ClientController(View currentView) {
         this.currentView = currentView;
         this.listenerClient = currentView.getListener();
-        this.username = new String();
         //not sure if we need the command parsing anyway
         this.commPars = new CommandParsing(this);
         currentView.setMaster(this, commPars);
@@ -126,6 +125,7 @@ public class ClientController {
     public void serverSavedUsername(String name, boolean b, String token, boolean first) {
         if(b){
             setUserToken(token);
+            fileLog.debug("i'm about the set the name "+name);
             setUsername(name);
             currentConnection.setUserToken(token);
             commPars.setFirst(first);
@@ -136,7 +136,7 @@ public class ClientController {
         }
     }
 
-    public void setUsername(String username){ this.username = username; }
+    public void setUsername(String username){ this.username = new String(username); }
 
     public void setUserToken(String userToken) {
         this.userToken = userToken;
