@@ -4,11 +4,9 @@ import it.polimi.ingsw.client.ClientController;
 import it.polimi.ingsw.client.CommandParsing;
 import it.polimi.ingsw.model.board.Position;
 import it.polimi.ingsw.network.IClientListener;
-import it.polimi.ingsw.responses.Response;
 import it.polimi.ingsw.stati.Status;
 import it.polimi.ingsw.structures.LivingRoomView;
 import it.polimi.ingsw.structures.PlayerView;
-import it.polimi.ingsw.structures.ShelfView;
 
 import java.util.ArrayList;
 
@@ -25,7 +23,14 @@ public interface View {
 
     void GameTitle();
     void showShelves();
-    void setBoardStartGame();
+    void showChat();
+    void hideChat();
+    void showCommands();
+    void hideCommands();
+    void showCommonGoalCards();
+    void hideCommonGoalCards();
+
+    void setPGCandCGC();
     void showLivingRoom(LivingRoomView livingRoomView);
     void showBoardPlayer(PlayerView playerBoardView, LivingRoomView livingRoomView);
     void showPersonalGoalCard();
@@ -66,4 +71,7 @@ public interface View {
     void addToChatQueue(String message, String receiver);
 
     void hideShelves();
+
+
+    void passTilesToView(ArrayList<Position> tiles);
 }

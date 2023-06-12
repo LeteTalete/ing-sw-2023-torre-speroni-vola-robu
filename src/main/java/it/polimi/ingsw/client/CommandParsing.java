@@ -15,7 +15,13 @@ public class CommandParsing {
     private static final String HELP = "help";
     private static final String REARRANGE = "order";
     private static final String SHELFSHOW = "showshelves";
+    private static final String SHOWCARDS = "showcards";
+    private static final String HIDECARDS = "hidecards";
+    private static final String HIDECOMMANDS = "hidecommands";
+    private static final String SHOWCHAT = "showchat";
+    private static final String HIDECHAT = "hidechat";
     private static final String COLUMN = "column";
+
     private static final String BACK = "back";
     //for when it's the player's turn
     private boolean isPlaying;
@@ -142,7 +148,7 @@ public class CommandParsing {
                     master.gameNotStarted();
                     break;
                 }
-                executeShelfCommand();
+                master.showShelves();
             }
             case(HIDESHELF) -> {
                 if (!gameIsOn) {
@@ -151,7 +157,48 @@ public class CommandParsing {
                 }
                 master.hideShelves();
             }
-            case (HELP) -> master.printCommands();
+            case(SHOWCARDS) -> {
+                if (!gameIsOn) {
+                    master.gameNotStarted();
+                    break;
+                }
+                master.showCards();
+            }
+            case (HIDECARDS) -> {
+                if (!gameIsOn) {
+                    master.gameNotStarted();
+                    break;
+                }
+                master.hideCards();
+            }
+            case (HELP) -> {
+                if (!gameIsOn) {
+                    master.gameNotStarted();
+                    break;
+                }
+                master.showCommands();
+            }
+            case (HIDECOMMANDS) -> {
+                if (!gameIsOn) {
+                    master.gameNotStarted();
+                    break;
+                }
+                master.hideCommands();
+            }
+            case (SHOWCHAT) -> {
+                if (!gameIsOn) {
+                    master.gameNotStarted();
+                    break;
+                }
+                master.showChat();
+            }
+            case (HIDECHAT) -> {
+                if (!gameIsOn) {
+                    master.gameNotStarted();
+                    break;
+                }
+                master.hideChat();
+            }
             default -> {
                 if(command.startsWith("@")) {
                     if (!gameIsOn) {

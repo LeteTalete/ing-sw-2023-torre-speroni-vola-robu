@@ -21,7 +21,7 @@ public class ClientGUI implements View {
 
     @Override
     public void chooseConnection() {
-        guiApplication = new GUIApplication(this);
+        // guiApplication = new GUIApplication(this);
         guiApplication.main(null);
     }
 
@@ -55,12 +55,42 @@ public class ClientGUI implements View {
 
     }
     @Override
-    public void setBoardStartGame(){
+    public void setPGCandCGC(){
 
     }
 
     @Override
     public void showShelves(){
+
+    }
+
+    @Override
+    public void showChat() {
+
+    }
+
+    @Override
+    public void hideChat() {
+
+    }
+
+    @Override
+    public void showCommands() {
+
+    }
+
+    @Override
+    public void hideCommands() {
+
+    }
+
+    @Override
+    public void showCommonGoalCards() {
+
+    }
+
+    @Override
+    public void hideCommonGoalCards() {
 
     }
 
@@ -180,6 +210,11 @@ public class ClientGUI implements View {
 
     @Override
     public void hideShelves() {
+
+    }
+
+    @Override
+    public void passTilesToView(ArrayList<Position> tiles) {
 
     }
 
