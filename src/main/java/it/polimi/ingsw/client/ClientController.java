@@ -3,7 +3,6 @@ package it.polimi.ingsw.client;
 import it.polimi.ingsw.model.board.Position;
 import it.polimi.ingsw.network.IClientListener;
 import it.polimi.ingsw.network.IRemoteController;
-import it.polimi.ingsw.server.StaticStrings;
 import it.polimi.ingsw.view.View;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -191,13 +190,9 @@ public class ClientController {
     public void isItMyTurn(String name) {
         if(name.equals(username)){
             setMyTurn(1);
-            currentView.displayNotification(StaticStrings.YOUR_TURN);
-            currentView.askForTiles();
         }
         else{
-            setMyTurn(0);
-            currentView.displayNotification("It's " + name + "'s turn");
-        }
+            setMyTurn(0);}
     }
 
     public void rearrangeTiles(List<String> multipleChoiceNumber) {
@@ -209,12 +204,7 @@ public class ClientController {
     }
 
     public void passTiles(ArrayList<Position> tilesChosen) {
-        if(tilesChosen.size()==1){
-            myTurn = 3;
-        }
-        else{
-            myTurn = 2;
-        }
+        myTurn = 2;
     }
 
     public void errorFormat() {
@@ -223,19 +213,8 @@ public class ClientController {
 
     public void nextAction(int num, ArrayList<Position> tiles) {
         if(num==2){
-            if(!onlyOneTile){
-                currentView.displayNotification("You can now re-arrange the tiles or choose the column. Here are the commands:");
-                //todo show the tiles now
-                //todo it should show commands format, not show the request
-                currentView.chooseOrder(tiles);
-                currentView.chooseColumn();
-                setMyTurn(2);
-            }
-            else{
-                //todo show the tiles now too, if tiles!=null
-                currentView.chooseColumn();
-                setMyTurn(2);
-            }
+            currentView.passTilesToView(tiles);
+            setMyTurn(2);
         }
     }
 
@@ -261,4 +240,25 @@ public class ClientController {
         currentView.hideShelves();
     }
     public void showShelves(){currentView.showShelves();}
+
+    public void showCards(){currentView.showCommonGoalCards();}
+
+    public void hideCards() { currentView.hideCommonGoalCards(); }
+
+    public void showCommands() {
+        currentView.showCommands();
+    }
+
+    public void hideCommands() {
+        currentView.hideCommands();
+    }
+
+    public void showChat() {
+        currentView.showChat();
+    }
+
+    public void hideChat() {
+        currentView.hideChat();
+    }
 }
+

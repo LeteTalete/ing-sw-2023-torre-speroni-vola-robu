@@ -44,10 +44,10 @@ public class Game {
         startGame();
         /**once the living room is set, controller decides who's first**/
         chooseFirstPlayer();
-        gameController.notifyAllPlayers(new ModelUpdate(this));
         /**the game then chooses a first player and notifies everyone**/
         String firstPlayer = getCurrentPlayer().getNickname();
         gameController.notifyOnStartTurn(firstPlayer);
+        gameController.notifyAllPlayers(new ModelUpdate(this));
         /**has a method to start a turn, which will notify each player that it's "nickname"'s turn**/
 
         /**has a method to change turns (it could already be implemented into Game**/
@@ -76,8 +76,9 @@ public class Game {
         }
         previousPlayer = currentPlayer;
         currentPlayer = players.get(next);
-        gameController.notifyOnModelUpdate(new ModelUpdate(this));
         gameController.notifyOnStartTurn(currentPlayer.getNickname());
+        gameController.notifyOnModelUpdate(new ModelUpdate(this));
+
 
     }
 

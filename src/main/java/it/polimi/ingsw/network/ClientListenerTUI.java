@@ -55,7 +55,6 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
     @Override
     public void setGameOn() throws RemoteException {
         view.writeText(StaticStrings.GAME_START);
-        view.printCommands();
         view.setGameOn(true);
     }
 
@@ -105,8 +104,9 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
     @Override
     public void notifyRearrangeOk(boolean ok, ArrayList<Position> tiles) throws RemoteException {
         if(ok){
-            view.displayNotification("Rearrange successful!");
             view.nextAction(2, tiles);
+            view.refreshBoard();
+            view.displayNotification("Rearrange successful!");
         }
         else{
             view.displayNotification("Invalid move. Try again.");
@@ -116,8 +116,8 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
     @Override
     public void notifyTilesOk(boolean ok, ArrayList<Position> tiles) throws RemoteException {
         if(ok){
-            view.displayNotification("Choice of tiles successful!");
             view.nextAction(2, tiles);
+            view.refreshBoard();
         }
         else{
             view.displayNotification("Invalid move. Try again.");
