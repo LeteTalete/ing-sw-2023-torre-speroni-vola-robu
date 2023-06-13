@@ -39,6 +39,8 @@ public class ClientGUI implements View {
     @Override
     public void chooseConnection() {
         System.out.println("FineConnection");
+        // guiApplication = new GUIApplication(this);
+        guiApplication.main(null);
     }
 
     @Override
@@ -215,6 +217,11 @@ public class ClientGUI implements View {
 
     @Override
     public void hideShelves() {
+
+    }
+
+    @Override
+    public void passTilesToView(ArrayList<Position> tiles) {
 
     }
 
