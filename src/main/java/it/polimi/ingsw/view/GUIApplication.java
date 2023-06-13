@@ -1,55 +1,82 @@
 package it.polimi.ingsw.view;
 
+import com.sun.javafx.scene.text.GlyphList;
+import it.polimi.ingsw.client.ClientController;
+import it.polimi.ingsw.view.ControllerGUI.BoardPlayer;
 import it.polimi.ingsw.view.ControllerGUI.ConnectionPlayer;
+import it.polimi.ingsw.view.ControllerGUI.GenericController;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.image.Image;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.Objects;
 
 public class GUIApplication extends Application {
-
-    private Stage stage;
-    private FXMLLoader loader;
+    //private static GenericController genericController;
+    public static ClientGUI clientGUI;
+    private static GenericController genericController;
+    private static Stage stageWindow;
 
     @Override
     public void start(Stage stage) throws Exception {
-        setStage(stage);
-        showSceneName(SceneNames.CONNECTION);
+        stageWindow = stage;
+        showSceneName(SceneNames.BOARDPLAYER);
+        stageWindow.setOnCloseRequest(event -> System.exit(0));
+        //showSceneName(SceneNames.BOARDPLAYER);
     }
 
-    public void setUpStage(SceneNames sceneNames){
-        try{
-            this.loader = new FXMLLoader(getClass().getResource(sceneNames.scaneString()));
-            Scene scene = new Scene(this.loader.load());
-            this.stage.setScene(scene);
-            this.stage.setResizable(false); //Non modifica le dimensioni della finestra
-        } catch (IOException e){
+
+    private static void setUpStage(SceneNames sceneNames){
+        try {
+            FXMLLoader loader = new FXMLLoader(GUIApplication.class.getResource(sceneNames.scaneString()));
+            Scene scene = new Scene(loader.load());
+            Image icon = new Image(Objects.requireNonNull(GUIApplication.class.getResourceAsStream("/imgs/Icon.png")));
+            genericController = loader.getController();
+            //activeGenericController();
+            stageWindow.getIcons().add(icon);
+            stageWindow.setResizable(false); //Non modifica le dimensioni della finestra
+            stageWindow.setScene(scene);
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-
-    public void setStage(Stage stage){
-        this.stage = stage;
+    private static void activeGenericController(){
+        ((BoardPlayer) genericController).setBoadPlayer();
     }
 
-    public void showSceneName(SceneNames sceneNames){
-        setUpStage(sceneNames);
-        if(sceneNames.equals(SceneNames.CONNECTION)){
-            //Finestra in cui il giocatore deve scegliere la ripologia di connessione
-            ConnectionPlayer connectionPlayer = this.loader.getController();
-            connectionPlayer.setWindowConnection(stage);
-            this.stage.setHeight(220);
-            this.stage.setTitle("Choose Connection");
-            this.stage.show();
-        } else if(sceneNames.equals(SceneNames.USERNAME)){
+    public static void showSceneName(SceneNames sceneNames){
+        Platform.runLater(()-> {
+            setUpStage(sceneNames);
+            if(sceneNames.equals(SceneNames.CONNECTION)){
+                stageWindow.setHeight(220);
+                stageWindow.setTitle("Choose Connection");
+            } else if(sceneNames.equals(SceneNames.USERNAME)){
+                stageWindow.setTitle("Choose name");
+            } else if(sceneNames.equals(SceneNames.NUMPLAYERS)){
+                stageWindow.setTitle("Choose number players");
+            } else if(sceneNames.equals(SceneNames.BOARDPLAYER)){
+                stageWindow.setTitle("MyShelfie");
+            }
+            stageWindow.show();
+        });
+    }
 
+    public static Stage getStageWindow(){
+        return stageWindow;
+    }
 
+    public static void closeStage(){
+        if(stageWindow != null){
+            stageWindow.close();
         }
-
     }
+
 
     public static void main(String args[]){
         launch(args);

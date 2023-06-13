@@ -3,42 +3,64 @@ package it.polimi.ingsw.view;
 import it.polimi.ingsw.client.ClientController;
 import it.polimi.ingsw.client.CommandParsing;
 import it.polimi.ingsw.model.board.Position;
+import it.polimi.ingsw.network.ClientListenerGUI;
+import it.polimi.ingsw.network.ClientListenerTUI;
 import it.polimi.ingsw.network.IClientListener;
 import it.polimi.ingsw.responses.Response;
 import it.polimi.ingsw.stati.Status;
 import it.polimi.ingsw.structures.LivingRoomView;
 import it.polimi.ingsw.structures.PlayerView;
 import it.polimi.ingsw.structures.ShelfView;
+import it.polimi.ingsw.view.ControllerGUI.GenericController;
 
+import javax.swing.*;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class ClientGUI implements View {
-
-    private GUIApplication guiApplication;
     private ClientController master;
+    private ClientListenerGUI listenerClient;
     private CommandParsing commPars;
+    private String connectionType;
+    private boolean isRunning;
     private String ServerIP;
-
+    private LinkedList<String> chatQueue = new LinkedList<>();
+    private String username;
+    private boolean isStarGame = false;
+    public ClientGUI(){
+        try {
+            this.listenerClient = new ClientListenerGUI(this);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+        GUIApplication.clientGUI = this;
+    }
     @Override
     public void chooseConnection() {
-        guiApplication = new GUIApplication();
-        guiApplication.main(null);
-
+        System.out.println("FineConnection");
     }
 
     @Override
     public String getConnectionType() {
-        return null;
+        System.out.println("connection type");
+        return this.connectionType;
     }
-
+    public void setConnectionType(String typeConnection){
+        this.connectionType = typeConnection;
+    }
     @Override
     public void getUsername() {
-        guiApplication.showSceneName(SceneNames.USERNAME);
+        if(!isRunning){
+            GUIApplication.showSceneName(SceneNames.USERNAME);
+            isRunning = true;
+        }
+        System.out.println("NAME:");
     }
 
     @Override
     public void displayNotification(String message) {
-
+        System.out.println("displayNotification: " + message);
     }
 
     @Override
@@ -48,7 +70,7 @@ public class ClientGUI implements View {
 
     @Override
     public void askAmountOfPlayers() {
-
+        GUIApplication.showSceneName(SceneNames.NUMPLAYERS);
     }
 
     @Override
@@ -88,7 +110,7 @@ public class ClientGUI implements View {
 
     @Override
     public IClientListener getListener() {
-        return null;
+        return this.listenerClient;
     }
 
 
@@ -113,14 +135,26 @@ public class ClientGUI implements View {
         this.commPars = commandParsing;
     }
 
+    public ClientController getMaster(){
+        return this.master;
+    }
+    public CommandParsing getCommPars(){
+        return this.commPars;
+    }
+
     @Override
     public void askForTiles() {
+        System.out.println("FUNZIONA");
 
     }
 
     @Override
     public void serverSavedUsername(String name, boolean b, String token, boolean first) {
-
+        this.username = name;
+        master.serverSavedUsername(name, b, token, first);
+        if(first){
+            askAmountOfPlayers();
+        }
     }
 
     @Override
@@ -130,7 +164,7 @@ public class ClientGUI implements View {
 
     @Override
     public void printCommands() {
-        //only for tui
+
     }
 
     @Override

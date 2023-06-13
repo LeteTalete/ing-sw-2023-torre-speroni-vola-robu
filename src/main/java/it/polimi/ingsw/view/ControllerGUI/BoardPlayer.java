@@ -1,8 +1,9 @@
 package it.polimi.ingsw.view.ControllerGUI;
 
+import it.polimi.ingsw.view.GUIApplication;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.effect.InnerShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -12,15 +13,55 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.Popup;
+import javafx.stage.Stage;
+
+import javax.swing.*;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.net.URL;
+import java.util.Objects;
+import java.util.ResourceBundle;
 
 public class BoardPlayer extends GenericController {
     @FXML private VBox chooseTileBox;
     @FXML private HBox scorePlayer;
     @FXML private Label labelTurn;
     @FXML private ImageView chair, tileEndGame, imageCommonCard1, imageCommonCard2, imagePersonalGoalCard;
+    @FXML private ChoiceBox choiceChat;
     @FXML private GridPane myShelf, livingRoom;
 
     private double xOffset = 0, yOffset = 0;
+
+    public void setBoadPlayer(){
+        Image PersonalGC = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/imgs/PersonalCards/Personal_Goals2.png")));
+        Image CommonGC1 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/imgs/CommonCards/2.jpg")));
+        Image CommonGC2 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/imgs/CommonCards/0.jpg")));
+        imageCommonCard1.setImage(CommonGC1);
+        imageCommonCard2.setImage(CommonGC2);
+        imagePersonalGoalCard.setImage(PersonalGC);
+        String[] players = {"All", "player1", "player2"}; //lo dovrò prendere dalla partita
+        choiceChat.getItems().addAll(players); //Per settare la chat, il nome
+        choiceChat.setValue("All"); //Per settare il valore predefinito
+
+    }
+
+    public void chooseColumn(MouseEvent mouseEvent){
+        //ImageView ((StackPane) mouseEvent.getSource()).getChildren(1)
+    }
+
+
+
+
+
+    //Quando un giocatore prende la tileEndGame deve essere resa invisibile in quanto è stata presa dal giocatore,
+    //se è stata presa dal giocatore stesso allora deve essere mostrata nello ScoreBox
+    public void tileEndGameTaken(Boolean currentPlayer){
+        if(currentPlayer){
+            ((ImageView) scorePlayer.getChildren().get(2)).setImage(tileEndGame.getImage());
+        }
+        tileEndGame.setVisible(false);
+    }
 
     //Questa funzione mi permette di gestire il trascinamento delle tile 2/3 tile per cui dovrò decidere l'ordine:
     private void setDraggingTile(ImageView imageView){

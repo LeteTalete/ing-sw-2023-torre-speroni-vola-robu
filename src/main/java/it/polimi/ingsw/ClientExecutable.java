@@ -3,6 +3,7 @@ package it.polimi.ingsw;
 import it.polimi.ingsw.client.ClientController;
 import it.polimi.ingsw.view.ClientGUI;
 import it.polimi.ingsw.view.ClientTUI;
+import it.polimi.ingsw.view.GUIApplication;
 import it.polimi.ingsw.view.View;
 
 import java.util.Scanner;
@@ -19,13 +20,16 @@ public class ClientExecutable {
 
         if(interfaceC.equals("GUI")){
             clientView = new ClientGUI();
+            clientController = new ClientController(clientView);
+            //GUIApplication.clientGUI = (ClientGUI) clientView;
+            GUIApplication.main(null);
         }else {
             clientView = new ClientTUI();
+            clientController = new ClientController(clientView);
+            clientController.setupConnection();
         }
         //client executable will run an instance of ClientRMI or ClientSocket
         //accordingly to the preferred connection
-        clientController = new ClientController(clientView);
-
     }
 
 

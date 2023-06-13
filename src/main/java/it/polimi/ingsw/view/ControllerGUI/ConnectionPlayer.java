@@ -1,5 +1,9 @@
 package it.polimi.ingsw.view.ControllerGUI;
 
+import it.polimi.ingsw.client.ClientRMI;
+import it.polimi.ingsw.client.ClientSocket;
+import it.polimi.ingsw.client.ResponseDecoder;
+import it.polimi.ingsw.network.IRemoteController;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -15,15 +19,17 @@ import javafx.stage.Stage;
 import it.polimi.ingsw.view.GUIApplication;
 
 import java.io.IOException;
+import java.rmi.registry.LocateRegistry;
 
 public class ConnectionPlayer extends GenericController {
 
     @FXML private StackPane buttonConnetionOK, buttonRMI, buttonSocket, buttonNumPlayers, buttonUsername;
     @FXML private HBox IP, port;
-    @FXML private TextField textIP, textPort, textUsername, textNumPlayers;
+    @FXML private TextField textUsername, textNumPlayers;
     @FXML private Label errorMessageNumP, errorConnection, labelSearchPlayers;
     @FXML private ProgressBar barLoading;
     @FXML private Stage windowConnection;
+    private String typeConnection;
 
     //Quando passo sopra ai bottoni essi diventano un pò più grandi e quando ci esco ritornano alla dimensione originale
     public void enteredButton(MouseEvent mouseEvent){
@@ -40,34 +46,43 @@ public class ConnectionPlayer extends GenericController {
         imageView.setOpacity(1);
     }
 
-    //Si attiva quando premo sul bottone buttonConnetionOK e deve attivare la connessione con il server
-    public void clickedButtonConnetionOK(MouseEvent mouseEvent){
-
+    //Si attiva quando premo sui bottone ok della finestra di connessione
+    public void clickedButtonConnetion(MouseEvent mouseEvent){
+        GUIApplication.clientGUI.setConnectionType(this.typeConnection);
+        GUIApplication.clientGUI.getMaster().setupConnection();
     }
 
     //Si arriva quando il giocatore che ha sta creando la partita ha deciso quale sia il numero dei dei partecipanti
     public void clickedButtonNumPlayers(MouseEvent mouseEvent){
+        GUIApplication.clientGUI.getCommPars().elaborateInput(((Label) (((StackPane) mouseEvent.getSource()).getChildren().get(0))).getText());
 
     }
 
     //Si arriva quando il giocatore ha deciso il suo username
     public void clickedButtonUsername(MouseEvent mouseEvent){
-
+        System.out.println(textUsername.getText());
+        GUIApplication.clientGUI.getCommPars().elaborateInput(textUsername.getText());
     }
 
-    public void setWindowConnection(Stage stage){
+    /*public void setWindowConnection(Stage stage){
         this.windowConnection = stage;
     }
 
-    public void activeWindowSocket(MouseEvent mouseEvent) throws IOException {
+     */
+
+
+    public void activeWindowSocket(MouseEvent mouseEvent){
         IP.setVisible(true);
         port.setVisible(true);
+        this.typeConnection = "SOCKET";
+        GUIApplication.getStageWindow().setHeight(400);
     }
     
     public void activeWindowRMI(MouseEvent mouseEvent){
         IP.setVisible(true);
         port.setVisible(false);
-        windowConnection.setHeight(390);
+        this.typeConnection = "RMI";
+        GUIApplication.getStageWindow().setHeight(400);
     }
 
 

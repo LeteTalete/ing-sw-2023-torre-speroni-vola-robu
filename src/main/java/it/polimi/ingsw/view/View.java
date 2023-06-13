@@ -44,7 +44,6 @@ public interface View {
     void serverSavedUsername(String name, boolean b, String token, boolean first);
 
     void running();
-
     void printCommands();
 
     void changeTurn(String name);

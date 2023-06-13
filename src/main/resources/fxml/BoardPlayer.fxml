@@ -33,7 +33,7 @@
             <DropShadow height="10.0" radius="4.5" width="10.0" />
          </effect>
       </Label>
-      <Button fx:id="shelfPlayers" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="0.0" layoutX="1191.0" layoutY="63.0" mnemonicParsing="false" onAction="#openShelfPlayers" prefHeight="42.0" prefWidth="214.0" styleClass="buttonShelfPlayers" stylesheets="@../css/BoardPlayer.css" text="Shelfs" textAlignment="CENTER" textFill="WHITE">
+      <Button fx:id="shelfPlayers" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="0.0" layoutX="1191.0" layoutY="63.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="214.0" styleClass="buttonShelfPlayers" stylesheets="@../css/BoardPlayer.css" text="Shelfs" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font name="System Bold" size="47.0" />
          </font>
@@ -133,12 +133,16 @@
       </StackPane>
       <VBox layoutX="1188.0" layoutY="247.0" prefHeight="459.0" prefWidth="220.0">
          <children>
-            <ChoiceBox prefHeight="28.0" prefWidth="220.0" styleClass="chatBoxTop" />
+            <ChoiceBox fx:id="choiceChat" prefHeight="28.0" prefWidth="220.0" styleClass="chatBoxTop" />
             <ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="351.0" prefWidth="220.0">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="351.0" prefWidth="218.0">
                      <children>
-                        <VBox fx:id="boxChat" alignment="BOTTOM_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="351.0" prefWidth="220.0" styleClass="charBackground" />
+                        <StackPane prefHeight="150.0" prefWidth="200.0">
+                           <children>
+                              <VBox fx:id="boxChat" alignment="BOTTOM_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="351.0" prefWidth="220.0" styleClass="charBackground" />
+                           </children>
+                        </StackPane>
                      </children>
                   </AnchorPane>
               </content>
@@ -147,7 +151,7 @@
             <HBox alignment="CENTER_RIGHT" prefHeight="60.0" prefWidth="220.0">
                <children>
                   <TextArea maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="39.0" prefWidth="170.0" wrapText="true" />
-                  <StackPane onMouseEntered="#activeButton" onMouseExited="#deactivateButton" prefHeight="88.0" prefWidth="60.0">
+                  <StackPane onMouseEntered="#activeButton" onMouseExited="#deactivateButton" prefHeight="46.0" prefWidth="55.0">
                      <children>
                         <ImageView fitHeight="58.0" fitWidth="47.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -173,7 +177,7 @@
       </VBox>
       <FlowPane alignment="TOP_CENTER" columnHalignment="CENTER" layoutX="532.0" layoutY="209.0" maxHeight="-Infinity" maxWidth="-Infinity" orientation="VERTICAL" prefHeight="500.0" prefWidth="145.0">
          <children>
-            <StackPane onMouseEntered="#enteredButton" onMouseExited="#exitedButton" prefHeight="54.0" prefWidth="100.0">
+            <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseEntered="#activeButton" onMouseExited="#deactivateButton" prefHeight="54.0" prefWidth="55.0">
                <children>
                   <ImageView fitHeight="58.0" fitWidth="47.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -229,9 +233,9 @@
          <children>
             <HBox prefHeight="46.0" prefWidth="366.0">
                <children>
-                  <StackPane onMouseEntered="#activeButton" onMouseExited="#deactivateButton" prefHeight="54.0" prefWidth="51.0">
+                  <StackPane onMouseClicked="#chooseColumn" onMouseEntered="#activeButton" onMouseExited="#deactivateButton" prefHeight="54.0" prefWidth="51.0">
                      <children>
-                        <ImageView fitHeight="58.0" fitWidth="47.0" onMouseEntered="#enteredButton" onMouseExited="#exitedButton" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="58.0" fitWidth="47.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../imgs/pulsanteSfondo1.png" />
                            </image>
@@ -255,7 +259,7 @@
                         <Insets right="25.0" />
                      </HBox.margin>
                   </StackPane>
-                  <StackPane onMouseEntered="#activeButton" onMouseExited="#deactivateButton" prefHeight="54.0" prefWidth="51.0">
+                  <StackPane onMouseClicked="#chooseColumn" onMouseEntered="#activeButton" onMouseExited="#deactivateButton" prefHeight="54.0" prefWidth="51.0">
                      <children>
                         <ImageView fitHeight="58.0" fitWidth="47.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -278,7 +282,7 @@
                         <Insets right="28.0" />
                      </HBox.margin>
                   </StackPane>
-                  <StackPane onMouseEntered="#activeButton" onMouseExited="#deactivateButton" prefHeight="54.0" prefWidth="51.0">
+                  <StackPane onMouseClicked="#chooseColumn" onMouseEntered="#activeButton" onMouseExited="#deactivateButton" prefHeight="54.0" prefWidth="51.0">
                      <children>
                         <ImageView fitHeight="58.0" fitWidth="47.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -301,7 +305,7 @@
                         <Insets right="26.0" />
                      </HBox.margin>
                   </StackPane>
-                  <StackPane onMouseEntered="#activeButton" onMouseExited="#deactivateButton" prefHeight="54.0" prefWidth="51.0">
+                  <StackPane onMouseClicked="#chooseColumn" onMouseEntered="#activeButton" onMouseExited="#deactivateButton" prefHeight="46.0" prefWidth="56.0">
                      <children>
                         <ImageView fitHeight="58.0" fitWidth="47.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -323,11 +327,11 @@
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
-                     <padding>
-                        <Insets right="30.0" />
-                     </padding>
+                     <HBox.margin>
+                        <Insets right="20.0" />
+                     </HBox.margin>
                   </StackPane>
-                  <StackPane onMouseEntered="#activeButton" onMouseExited="#deactivateButton" prefHeight="54.0" prefWidth="51.0">
+                  <StackPane onMouseClicked="#chooseColumn" onMouseEntered="#activeButton" onMouseExited="#deactivateButton" prefHeight="54.0" prefWidth="51.0">
                      <children>
                         <ImageView fitHeight="58.0" fitWidth="47.0" pickOnBounds="true" preserveRatio="true">
                            <image>

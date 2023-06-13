@@ -40,15 +40,18 @@ public class ClientController {
         //not sure if we need the command parsing anyway
         this.commPars = new CommandParsing(this);
         currentView.setMaster(this, commPars);
-        setupConnection();
+        //setupConnection();
+        this.currentView.chooseConnection();
     }
 
+
     public void setupConnection() {
-        currentView.chooseConnection();
+        //currentView.chooseConnection();
         //todo uncomment this and place SIP instead of null when initializing connections
         //currentView.askServerIP();
         //String SIP = currentView.getServerIP();
         String connectionStatus = "Connecting...";
+        System.out.println("setupConnection");
         if(currentView.getConnectionType().equals("RMI")) {
             connectionStatus = setupRMI(System.getProperty(HOSTNAME));
         }
@@ -76,7 +79,7 @@ public class ClientController {
         return null;
     }
 
-    private String setupRMI(String serverIP) {
+    public String setupRMI(String serverIP) {
         try{
             //TODO put serverip in host field of locateregisty
             this.registry = LocateRegistry.getRegistry(serverIP,8089);

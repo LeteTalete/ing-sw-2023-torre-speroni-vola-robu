@@ -120,7 +120,6 @@ public class ClientTUI implements View{
 
         connectionType = connection;
 
-
     }
     private String nextCommand() {
         command = frominput.nextLine();
@@ -153,7 +152,6 @@ public class ClientTUI implements View{
         }
 
     }
-
     @Override
     public void printCommands() {
         writeText("Here are all the commands you can use while playing:\n" +
@@ -230,16 +228,13 @@ public class ClientTUI implements View{
                 if(len == 1){
                     if(shelfAll.isEmpty()){
                         shelfAll = DrawTui.graphicsShelf(listPlayers.get(i).getShelf(), listPlayers.get(i).getNickname(),true,false);
-                        //System.out.println(" SHelf1: \n" + shelfAll);
                     }
                     else{
                         shelfAll = DrawTui.mergerString(shelfAll, DrawTui.graphicsShelf(listPlayers.get(i).getShelf(), listPlayers.get(i).getNickname(),true,true),true,false,false);
-                        //System.out.println(" SHelf2: \n" + shelfAll);
                     }
                 } else {
                     if(shelfAll.isEmpty()) shelfAll = DrawTui.graphicsShelf(listPlayers.get(i).getShelf(), listPlayers.get(i).getNickname(),false,true);
                     else shelfAll = DrawTui.mergerString(shelfAll, DrawTui.graphicsShelf(listPlayers.get(i).getShelf(), listPlayers.get(i).getNickname(),false,true),false,true,false);
-                    //System.out.println(" SHelf3: \n" + shelfAll);
                 }
                 --len;
             }
@@ -303,7 +298,6 @@ public class ClientTUI implements View{
     public void startRun() {
         //playing();
     }
-
 
 
     @Override
