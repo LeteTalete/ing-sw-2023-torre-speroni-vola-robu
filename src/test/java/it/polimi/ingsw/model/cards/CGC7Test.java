@@ -5,6 +5,8 @@ import it.polimi.ingsw.model.enumerations.T_Type;
 import it.polimi.ingsw.model.board.Tile;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -12,12 +14,25 @@ import java.util.ArrayList;
 
 public class CGC7Test {
 
+    private Shelf shelf;
+    private ArrayList<Tile> tiles;
+    private CG_Shape CGC7;
+
+    /**
+     * Method setUp creates a new shelf, a new ArrayList of tiles and a new CGC7 before each test.
+     */
+    @BeforeEach
+    public void setUp() {
+        shelf = new Shelf();
+        tiles = new ArrayList<>();
+        CGC7 = new CG_Shape(7);
+    }
     /**
      * Test createCardTest creates an instance of CGC7 and checks if all parameters are correct.
      */
     @Test
     public void createCardTest(){
-        CG_Shape CGC7 = new CG_Shape(7);
+
         System.out.println(CGC7.getDescription());
         assertEquals(7, CGC7.getID());
         assertEquals("Shape", CGC7.getType());
@@ -36,8 +51,6 @@ public class CGC7Test {
      */
     @Test
     public void emptyShelfTest(){
-        Shelf shelf = new Shelf();
-        CG_Shape CGC7 = new CG_Shape(7);
 
         System.out.println("emptyShelfTest");
         shelf.printShelf();
@@ -54,9 +67,6 @@ public class CGC7Test {
      */
     @Test
     public void eightOccTest1(){
-        Shelf shelf = new Shelf();
-        ArrayList<Tile> tiles = new ArrayList<>();
-        CG_Shape CGC7 = new CG_Shape(7);
 
         tiles.add(new Tile(T_Type.CAT,1));
         tiles.add(new Tile(T_Type.CAT,1));
@@ -96,9 +106,6 @@ public class CGC7Test {
      */
     @Test
     public void eightOccTest2(){
-        Shelf shelf = new Shelf();
-        ArrayList<Tile> tiles = new ArrayList<>();
-        CG_Shape CGC7 = new CG_Shape(7);
 
         tiles.add(new Tile(T_Type.PLANT,1));
         tiles.add(new Tile(T_Type.GAMES,1));
@@ -161,9 +168,6 @@ public class CGC7Test {
      */
     @Test
     public void failTest(){
-        Shelf shelf = new Shelf();
-        ArrayList<Tile> tiles = new ArrayList<>();
-        CG_Shape CGC7 = new CG_Shape(7);
 
         tiles.add(new Tile(T_Type.TROPHY,1));
         tiles.add(new Tile(T_Type.TROPHY,1));

@@ -5,6 +5,8 @@ import it.polimi.ingsw.model.enumerations.T_Type;
 import it.polimi.ingsw.model.board.Tile;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -12,12 +14,26 @@ import java.util.ArrayList;
 
 public class CGC2Test {
 
+    private Shelf shelf;
+    private ArrayList<Tile> tiles;
+    private CG_Shape CGC2;
+
+    /**
+     * Method setUp creates a new shelf, a new ArrayList of tiles and a new CGC2 before each test.
+     */
+    @BeforeEach
+    public void setUp() {
+        shelf = new Shelf();
+        tiles = new ArrayList<>();
+        CGC2 = new CG_Shape(2);
+    }
+
     /**
      * Test createCardTest creates an instance of CGC2 and checks if all parameters are correct.
      */
     @Test
     public void createCardTest(){
-        CG_Shape CGC2 = new CG_Shape(2);
+
         System.out.println(CGC2.getDescription());
         assertEquals(2, CGC2.getID());
         assertEquals("Shape", CGC2.getType());
@@ -41,8 +57,6 @@ public class CGC2Test {
      */
     @Test
     public void emptyShelfTest(){
-        Shelf shelf = new Shelf();
-        CG_Shape CGC2 = new CG_Shape(2);
 
         System.out.println("emptyShelfTest");
         shelf.printShelf();
@@ -58,9 +72,6 @@ public class CGC2Test {
      */
     @Test
     public void squareTest1(){
-        Shelf shelf = new Shelf();
-        ArrayList<Tile> tiles = new ArrayList<>();
-        CG_Shape CGC2 = new CG_Shape(2);
 
         tiles.add(new Tile(T_Type.CAT,1));
         tiles.add(new Tile(T_Type.FRAME, 1));
@@ -122,9 +133,6 @@ public class CGC2Test {
      */
     @Test
     public void squareTest2(){
-        Shelf shelf = new Shelf();
-        ArrayList<Tile> tiles = new ArrayList<>();
-        CG_Shape CGC2 = new CG_Shape(2);
 
         tiles.add(new Tile(T_Type.CAT,1));
         tiles.add(new Tile(T_Type.FRAME, 1));
@@ -186,9 +194,6 @@ public class CGC2Test {
      */
     @Test
     public void squareTest3(){
-        Shelf shelf = new Shelf();
-        ArrayList<Tile> tiles = new ArrayList<>();
-        CG_Shape CGC2 = new CG_Shape(2);
 
         tiles.add(new Tile(T_Type.CAT,1));
         tiles.add(new Tile(T_Type.FRAME, 1));
@@ -249,9 +254,6 @@ public class CGC2Test {
      */
     @Test
     public void squareTest4(){
-        Shelf shelf = new Shelf();
-        ArrayList<Tile> tiles = new ArrayList<>();
-        CG_Shape CGC2 = new CG_Shape(2);
 
         tiles.add(new Tile(T_Type.CAT,1));
         tiles.add(new Tile(T_Type.CAT,1));
@@ -288,9 +290,6 @@ public class CGC2Test {
      */
     @Test
     public void failTest5(){
-        Shelf shelf = new Shelf();
-        ArrayList<Tile> tiles = new ArrayList<>();
-        CG_Shape CGC2 = new CG_Shape(2);
 
         tiles.add(new Tile(T_Type.CAT,1));
         tiles.add(new Tile(T_Type.FRAME, 1));
@@ -351,9 +350,6 @@ public class CGC2Test {
      */
     @Test
     public void failTest1(){
-        Shelf shelf = new Shelf();
-        ArrayList<Tile> tiles = new ArrayList<>();
-        CG_Shape CGC2 = new CG_Shape(2);
 
         tiles.add(new Tile(T_Type.CAT,1));
         tiles.add(new Tile(T_Type.FRAME, 1));
@@ -413,9 +409,6 @@ public class CGC2Test {
      */
     @Test
     public void failTest2(){
-        Shelf shelf = new Shelf();
-        ArrayList<Tile> tiles = new ArrayList<>();
-        CG_Shape CGC2 = new CG_Shape(2);
 
         tiles.add(new Tile(T_Type.CAT,1));
         tiles.add(new Tile(T_Type.CAT,1));
@@ -441,9 +434,6 @@ public class CGC2Test {
      */
     @Test
     public void failTest3(){
-        Shelf shelf = new Shelf();
-        ArrayList<Tile> tiles = new ArrayList<>();
-        CG_Shape CGC2 = new CG_Shape(2);
 
         tiles.add(new Tile(T_Type.CAT,1));
         tiles.add(new Tile(T_Type.FRAME, 1));
@@ -503,9 +493,6 @@ public class CGC2Test {
      */
     @Test
     public void failTest4(){
-        Shelf shelf = new Shelf();
-        ArrayList<Tile> tiles = new ArrayList<>();
-        CG_Shape CGC2 = new CG_Shape(2);
 
         tiles.add(new Tile(T_Type.BOOK, 1));
         tiles.add(new Tile(T_Type.CAT, 1));

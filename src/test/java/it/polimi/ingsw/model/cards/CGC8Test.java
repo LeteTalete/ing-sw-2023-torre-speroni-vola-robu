@@ -5,19 +5,34 @@ import it.polimi.ingsw.model.enumerations.T_Type;
 import it.polimi.ingsw.model.board.Tile;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
 
 public class CGC8Test {
+    private Shelf shelf;
+    private ArrayList<Tile> tiles;
+    private CG_RowCol CGC8;
+
+    /**
+     * Method setUp creates a new shelf, a new ArrayList of tiles and a new CGC8 before each test.
+     */
+    @BeforeEach
+    public void setUp() {
+        shelf = new Shelf();
+        tiles = new ArrayList<>();
+        CGC8 = new CG_RowCol(8);
+    }
 
     /**
      * Test createCardTest creates an instance of CGC8 and checks if all parameters are correct.
      */
     @Test
     public void createCardTest(){
-        CG_RowCol CGC8 = new CG_RowCol(8);
+
         System.out.println(CGC8.getDescription());
         assertEquals(8, CGC8.getID());
         assertEquals("RowCol", CGC8.getType());
@@ -34,8 +49,6 @@ public class CGC8Test {
      */
     @Test
     public void emptyShelfTest(){
-        Shelf shelf = new Shelf();
-        CG_RowCol CGC8 = new CG_RowCol(8);
 
         System.out.println("emptyShelfTest");
         shelf.printShelf();
@@ -51,9 +64,6 @@ public class CGC8Test {
      */
     @Test
     public void threeVerticalTest1(){
-        Shelf shelf = new Shelf();
-        ArrayList<Tile> tiles = new ArrayList<>();
-        CG_RowCol CGC8 = new CG_RowCol(8);
 
         tiles.add(new Tile(T_Type.PLANT, 1));
         tiles.add(new Tile(T_Type.TROPHY, 1));
@@ -96,9 +106,6 @@ public class CGC8Test {
      */
     @Test
     public void threeVerticalTest2(){
-        Shelf shelf = new Shelf();
-        ArrayList<Tile> tiles = new ArrayList<>();
-        CG_RowCol CGC8 = new CG_RowCol(8);
 
         tiles.add(new Tile(T_Type.PLANT, 1));
         tiles.add(new Tile(T_Type.PLANT, 1));
@@ -141,9 +148,6 @@ public class CGC8Test {
      */
     @Test
     public void threeVerticalTest3(){
-        Shelf shelf = new Shelf();
-        ArrayList<Tile> tiles = new ArrayList<>();
-        CG_RowCol CGC8 = new CG_RowCol(8);
 
         tiles.add(new Tile(T_Type.PLANT, 1));
         tiles.add(new Tile(T_Type.PLANT, 1));
@@ -187,9 +191,6 @@ public class CGC8Test {
      */
     @Test
     public void threeVerticalTest4(){
-        Shelf shelf = new Shelf();
-        ArrayList<Tile> tiles = new ArrayList<>();
-        CG_RowCol CGC8 = new CG_RowCol(8);
 
         tiles.add(new Tile(T_Type.PLANT, 1));
         tiles.add(new Tile(T_Type.TROPHY, 1));
@@ -233,9 +234,6 @@ public class CGC8Test {
      */
     @Test
     public void failTest1(){
-        Shelf shelf = new Shelf();
-        ArrayList<Tile> tiles = new ArrayList<>();
-        CG_RowCol CGC8 = new CG_RowCol(8);
 
         tiles.add(new Tile(T_Type.PLANT,1));
         tiles.add(new Tile(T_Type.CAT,1));
@@ -278,9 +276,6 @@ public class CGC8Test {
      */
     @Test
     public void failTest2(){
-        Shelf shelf = new Shelf();
-        ArrayList<Tile> tiles = new ArrayList<>();
-        CG_RowCol CGC8 = new CG_RowCol(8);
 
         tiles.add(new Tile(T_Type.PLANT, 1));
         tiles.add(new Tile(T_Type.TROPHY, 1));

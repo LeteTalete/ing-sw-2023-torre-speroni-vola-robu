@@ -5,19 +5,34 @@ import it.polimi.ingsw.model.enumerations.T_Type;
 import it.polimi.ingsw.model.board.Tile;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
 
 public class CGC9Test {
+    private Shelf shelf;
+    private ArrayList<Tile> tiles;
+    private CG_RowCol CGC9;
+
+    /**
+     * Method setUp creates a new shelf, a new ArrayList of tiles and a new CGC9 before each test.
+     */
+    @BeforeEach
+    public void setUp() {
+        shelf = new Shelf();
+        tiles = new ArrayList<>();
+        CGC9 = new CG_RowCol(9);
+    }
 
     /**
      * Test createCardTest creates an instance of CGC9 and checks if all parameters are correct.
      */
     @Test
     public void createCardTest(){
-        CG_RowCol CGC9 = new CG_RowCol(9);
+
         System.out.println(CGC9.getDescription());
         assertEquals(9, CGC9.getID());
         assertEquals("RowCol", CGC9.getType());
@@ -34,8 +49,6 @@ public class CGC9Test {
      */
     @Test
     public void emptyShelfTest(){
-        Shelf shelf = new Shelf();
-        CG_RowCol CGC9 = new CG_RowCol(9);
 
         System.out.println("emptyShelfTest");
         shelf.printShelf();
@@ -51,9 +64,6 @@ public class CGC9Test {
      */
     @Test
     public void threeHorizontalTest1(){
-        Shelf shelf = new Shelf();
-        ArrayList<Tile> tiles = new ArrayList<>();
-        CG_RowCol CGC9 = new CG_RowCol(9);
 
         tiles.add(new Tile(T_Type.CAT,1));
         tiles.add(new Tile(T_Type.CAT,1));
@@ -92,9 +102,6 @@ public class CGC9Test {
      */
     @Test
     public void threeHorizontalTest2(){
-        Shelf shelf = new Shelf();
-        ArrayList<Tile> tiles = new ArrayList<>();
-        CG_RowCol CGC9 = new CG_RowCol(9);
 
         tiles.add(new Tile(T_Type.CAT,1));
         tiles.add(new Tile(T_Type.GAMES,1));
@@ -122,9 +129,6 @@ public class CGC9Test {
      */
     @Test
     public void threeHorizontalTest3(){
-        Shelf shelf = new Shelf();
-        ArrayList<Tile> tiles = new ArrayList<>();
-        CG_RowCol CGC9 = new CG_RowCol(9);
 
         tiles.add(new Tile(T_Type.CAT,1));
         tiles.add(new Tile(T_Type.GAMES,1));
@@ -163,9 +167,6 @@ public class CGC9Test {
      */
     @Test
     public void failTest1(){
-        Shelf shelf = new Shelf();
-        ArrayList<Tile> tiles = new ArrayList<>();
-        CG_RowCol CGC9 = new CG_RowCol(9);
 
         tiles.add(new Tile(T_Type.CAT,1));
         tiles.add(new Tile(T_Type.CAT,1));
@@ -200,9 +201,6 @@ public class CGC9Test {
      */
     @Test
     public void failTest2(){
-        Shelf shelf = new Shelf();
-        ArrayList<Tile> tiles = new ArrayList<>();
-        CG_RowCol CGC9 = new CG_RowCol(9);
 
         tiles.add(new Tile(T_Type.PLANT,1));
         tiles.add(new Tile(T_Type.TROPHY,1));
@@ -263,9 +261,6 @@ public class CGC9Test {
      */
     @Test
     public void failTest3(){
-        Shelf shelf = new Shelf();
-        ArrayList<Tile> tiles = new ArrayList<>();
-        CG_RowCol CGC9 = new CG_RowCol(9);
 
         tiles.add(new Tile(T_Type.CAT,1));
         tiles.add(new Tile(T_Type.CAT,1));
