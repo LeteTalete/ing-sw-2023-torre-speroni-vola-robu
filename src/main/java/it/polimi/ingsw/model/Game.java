@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.Updates.ModelUpdate;
 import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.model.board.LivingRoom;
@@ -8,6 +10,8 @@ import it.polimi.ingsw.model.cards.CommonGoalCard;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -37,7 +41,7 @@ public class Game {
         for (Player player : players) {
             fileLog.info(player.getNickname());
         }
-        /**we need the server to pass the number of players and the list of players to the gameController, somehow**/
+        /** we need the server to pass the number of players and the list of players to the gameController, somehow**/
         // create and setup board (we're assuming this all happens in the next instruction)
         this.gameBoard = new LivingRoom(numOfPlayers);
         fileLog.info("I've created a living room board!");
@@ -119,7 +123,8 @@ public class Game {
     public void generateCGC(int numOfPlayers){
         commonGoalCards = new ArrayList<>();
         int numberOfCommonGoalCards = 2; // Change this number if you want to use more cards
-        int[] idsOfTheCards = new Random().ints(0, 12).distinct().limit(numberOfCommonGoalCards).toArray();
+        int cardNodes = getNumberOfCardNodes();
+        int[] idsOfTheCards = new Random().ints(0, cardNodes).distinct().limit(numberOfCommonGoalCards).toArray();
 
         for ( int i = 0; i < numberOfCommonGoalCards; i++){
             CommonGoalCard dummy = new CommonGoalCard(idsOfTheCards[i]);
@@ -139,6 +144,19 @@ public class Game {
                 card.getPoints().push(6);
                 card.getPoints().push(8);
             }
+        }
+    }
+
+    /** Method getNumberOfCardNodes returns the number of nodes in the JSON file containing the CGCs. */
+    public int getNumberOfCardNodes(){
+
+        ObjectMapper mapper = new ObjectMapper();
+        InputStream inputStream = Game.class.getClassLoader().getResourceAsStream("JSON/CommonGoalCards.json");
+        try {
+            JsonNode rootNode = mapper.readTree(inputStream);
+            return rootNode.size();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

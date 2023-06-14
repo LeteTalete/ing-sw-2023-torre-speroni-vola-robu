@@ -469,6 +469,7 @@ public class ClientTUI implements View{
 
     @Override
     public void showEndResult() {
+        //todo: maybe it's better to call clearConsole() and then print the end result
         ArrayList<PlayerView> playersSorted = new ArrayList<>();
         playersSorted.addAll(gameView.getPlayersView());
         Collections.sort(playersSorted, new Comparator<PlayerView>() {
