@@ -5,6 +5,8 @@ import it.polimi.ingsw.model.enumerations.T_Type;
 import it.polimi.ingsw.model.board.Tile;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -12,12 +14,26 @@ import java.util.ArrayList;
 
 public class CGC4Test {
 
+    private Shelf shelf;
+    private ArrayList<Tile> tiles;
+    private CG_Shape CGC4;
+
+    /**
+     * Method setUp creates a new shelf, a new ArrayList of tiles and a new CGC4 before each test.
+     */
+    @BeforeEach
+    public void setUp() {
+        shelf = new Shelf();
+        tiles = new ArrayList<>();
+        CGC4 = new CG_Shape(4);
+    }
+
     /**
      * Test createCardTest creates an instance of CGC4 and checks if all parameters are correct.
      */
     @Test
     public void createCardTest(){
-        CG_Shape CGC4 = new CG_Shape(4);
+
         System.out.println(CGC4.getDescription());
         assertEquals(4, CGC4.getID());
         assertEquals("Shape", CGC4.getType());
@@ -71,9 +87,6 @@ public class CGC4Test {
      */
     @Test
     public void stairsTest(){
-        Shelf shelf = new Shelf();
-        ArrayList<Tile> tiles = new ArrayList<>();
-        CG_Shape CGC4 = new CG_Shape(4);
 
         tiles.add(new Tile(T_Type.BOOK, 1));
         tiles.add(new Tile(T_Type.FRAME, 1));
@@ -119,9 +132,6 @@ public class CGC4Test {
      */
     @Test
     public void mirrorStairsTest(){
-        Shelf shelf = new Shelf();
-        ArrayList<Tile> tiles = new ArrayList<>();
-        CG_Shape CGC4 = new CG_Shape(4);
 
         tiles.add(new Tile(T_Type.FRAME, 1));
         shelf.insertTiles(0, tiles);
@@ -167,9 +177,6 @@ public class CGC4Test {
      */
     @Test
     public void failTest1(){
-        Shelf shelf = new Shelf();
-        ArrayList<Tile> tiles = new ArrayList<>();
-        CG_Shape CGC4 = new CG_Shape(4);
 
         tiles.add(new Tile(T_Type.BOOK, 1));
         tiles.add(new Tile(T_Type.FRAME, 1));
@@ -208,9 +215,6 @@ public class CGC4Test {
      */
     @Test
     public void failTest2(){
-        Shelf shelf = new Shelf();
-        ArrayList<Tile> tiles = new ArrayList<>();
-        CG_Shape CGC4 = new CG_Shape(4);
 
         tiles.add(new Tile(T_Type.FRAME, 1));
         shelf.insertTiles(0, tiles);
@@ -248,9 +252,6 @@ public class CGC4Test {
      */
     @Test
     public void failTest3(){
-        Shelf shelf = new Shelf();
-        ArrayList<Tile> tiles = new ArrayList<>();
-        CG_Shape CGC4 = new CG_Shape(4);
 
         tiles.add(new Tile(T_Type.BOOK, 1));
         tiles.add(new Tile(T_Type.FRAME, 1));
@@ -301,9 +302,6 @@ public class CGC4Test {
      */
     @Test
     public void failTest4(){
-        Shelf shelf = new Shelf();
-        ArrayList<Tile> tiles = new ArrayList<>();
-        CG_Shape CGC4 = new CG_Shape(4);
 
         tiles.add(new Tile(T_Type.FRAME, 1));
         tiles.add(new Tile(T_Type.BOOK, 1));
@@ -353,9 +351,6 @@ public class CGC4Test {
      */
     @Test
     public void failTest5(){
-        Shelf shelf = new Shelf();
-        ArrayList<Tile> tiles = new ArrayList<>();
-        CG_Shape CGC4 = new CG_Shape(4);
 
         tiles.add(new Tile(T_Type.BOOK, 1));
         tiles.add(new Tile(T_Type.FRAME, 1));

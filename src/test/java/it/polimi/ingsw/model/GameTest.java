@@ -11,24 +11,25 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class GameTest {
+    private Game game;
 
     /**
-     * Test gameConstructorTest checks if the game is created correctly.
-     * It checks if the number of players, the players' usernames, the players' shelves and the game's ID are correctly set.
-     * It also checks if the game board, the end game token, the common goal cards, the current player and the previous
-     * player are still correctly null.
+     * Method setUp creates a new game with 4 players and an ID before each test.
+     * It checks if the game is not null and if the game's ID and the number of players are correctly set.
      */
-    @Test
-    public void gameConstructorTest() {
+    @BeforeEach
+    public void setUp() {
         String ID = "1";
         ArrayList<Player> players = new ArrayList<>();
-        int numOfPlayers = new Random().nextInt(3) + 2;
+        int numOfPlayers = 4;
         for ( int i = 0; i < numOfPlayers; i++){
             players.add(new Player());
             players.get(i).setNickname("Player" + i); // The usernames are Player0, Player1, Player2, ...
@@ -41,12 +42,32 @@ public class GameTest {
             throw new RuntimeException(e);
         }
 
-        Game game = gameController.getModel();
-        assertNotNull(game);
-        assertEquals(ID, game.getGameId());
-        assertEquals(numOfPlayers, game.getPlayers().size());
+        game = gameController.getModel();
+    }
 
-        for (int i = 0; i < numOfPlayers; i++){
+    /**
+     * Method setNull sets the game to null after each test.
+     */
+    @AfterEach
+    public void setNull(){
+        game = null;
+    }
+
+    /**
+     * Test gameConstructorTest checks if the game is created correctly.
+     * It checks if the number of players, the players' usernames, the players' shelves and the game's ID are correctly set.
+     * It also checks if the game board, the end game token, the common goal cards, the current player and the previous
+     * player are still correctly null.
+     */
+    @Test
+    public void gameConstructorTest() {
+
+        assertNotNull(game);
+        assertEquals("1", game.getGameId());
+        assertEquals(4, game.getPlayers().size());
+
+
+        for (int i = 0; i < game.getPlayers().size(); i++){
             assertEquals("Player" + i, game.getPlayers().get(i).getNickname());
             assertNotNull(game.getPlayers().get(i).getMyShelf());
             assertNull(game.getPlayers().get(i).getGoalCard());
@@ -67,22 +88,6 @@ public class GameTest {
      */
     @Test
     public void initializeTest() {
-        String ID = "1";
-        ArrayList<Player> players = new ArrayList<>();
-        int numOfPlayers = new Random().nextInt(3) + 2;
-        for ( int i = 0; i < numOfPlayers; i++){
-            players.add(new Player());
-            players.get(i).setNickname("Player" + i); // The usernames are Player0, Player1, Player2, ...
-        }
-
-        GameController gameController;
-        try {
-            gameController = new GameController(players, ID, new ServerManager());
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
-
-        Game game = gameController.getModel();
 
         assertNull(game.getGameBoard());
         assertNull(game.getEndGame());
@@ -90,7 +95,7 @@ public class GameTest {
         assertNull(game.getPreviousPlayer());
         assertNull(game.getCommonGoalCards());
 
-        for (int i = 0; i < numOfPlayers; i++){
+        for (int i = 0; i < game.getPlayers().size(); i++){
             assertNull(game.getPlayers().get(i).getGoalCard());
         }
 
@@ -103,7 +108,7 @@ public class GameTest {
         assertNotNull(game.getCommonGoalCards());
         assertEquals(2, game.getCommonGoalCards().size());
 
-        for (int i = 0; i < numOfPlayers; i++){
+        for (int i = 0; i < game.getPlayers().size(); i++){
             assertNotNull(game.getPlayers().get(i).getGoalCard());
         }
     }
@@ -114,26 +119,12 @@ public class GameTest {
      */
     @Test
     public void chooseFirstPlayerTest() {
-        String ID = "1";
-        ArrayList<Player> players = new ArrayList<>();
-        int numOfPlayers = new Random().nextInt(3) + 2;
-        for ( int i = 0; i < numOfPlayers; i++){
-            players.add(new Player());
-            players.get(i).setNickname("Player" + i); // The usernames are Player0, Player1, Player2, ...
-        }
-
-        GameController gameController;
-        try {
-            gameController = new GameController(players, ID, new ServerManager());
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
-
-        Game game = gameController.getModel();
 
         assertNull(game.getCurrentPlayer());
         assertNull(game.getPreviousPlayer());
+
         game.chooseFirstPlayer();
+
         assertNotNull(game.getCurrentPlayer());
         assertTrue(game.getCurrentPlayer().getChair());
         assertNull(game.getPreviousPlayer());
@@ -146,22 +137,7 @@ public class GameTest {
      */
     @Test
     public void nextTurnTest() {
-        String ID = "1";
-        ArrayList<Player> players = new ArrayList<>();
-        int numOfPlayers = new Random().nextInt(3) + 2;
-        for ( int i = 0; i < numOfPlayers; i++){
-            players.add(new Player());
-            players.get(i).setNickname("Player" + i); // The usernames are Player0, Player1, Player2, ...
-        }
 
-        GameController gameController;
-        try {
-            gameController = new GameController(players, ID, new ServerManager());
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
-
-        Game game = gameController.getModel();
         assertNull(game.getCurrentPlayer());
         game.initialize();
         assertNotNull(game.getCurrentPlayer());
@@ -179,22 +155,7 @@ public class GameTest {
      */
     @Test
     public void scoreboardTest(){
-        String ID = "1";
-        ArrayList<Player> players = new ArrayList<>();
-        int numOfPlayers = 4;
-        for ( int i = 0; i < numOfPlayers; i++){
-            players.add(new Player());
-            players.get(i).setNickname("Player" + i); // The usernames are Player0, Player1, Player2, ...
-        }
 
-        GameController gameController;
-        try {
-            gameController = new GameController(players, ID, new ServerManager());
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
-
-        Game game = gameController.getModel();
         game.initialize();
 
         game.getPlayers().get(0).setScore(3);
@@ -226,25 +187,9 @@ public class GameTest {
      */
     @Test
     public void startGameTest(){
-        String ID = "1";
-        ArrayList<Player> players = new ArrayList<>();
-        int numOfPlayers = 4;
-        for ( int i = 0; i < numOfPlayers; i++){
-            players.add(new Player());
-            players.get(i).setNickname("Player" + i); // The usernames are Player0, Player1, Player2, ...
-        }
-
-        GameController gameController;
-        try {
-            gameController = new GameController(players, ID, new ServerManager());
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
-
-        Game game = gameController.getModel();
 
         assertNull(game.getCommonGoalCards());
-        for (int i = 0; i < numOfPlayers; i++){
+        for (int i = 0; i < game.getPlayers().size(); i++){
             assertNull(game.getPlayers().get(i).getGoalCard());
         }
 
@@ -253,7 +198,7 @@ public class GameTest {
         assertNotNull(game.getCommonGoalCards());
         assertEquals(2, game.getCommonGoalCards().size());
 
-        for (int i = 0; i < numOfPlayers; i++){
+        for (int i = 0; i < game.getPlayers().size(); i++){
             assertNotNull(game.getPlayers().get(i).getGoalCard());
         }
     }
@@ -266,22 +211,6 @@ public class GameTest {
      */
     @Test
     public void gameHasEndedTest(){
-        String ID = "1";
-        ArrayList<Player> players = new ArrayList<>();
-        int numOfPlayers = 4;
-        for ( int i = 0; i < numOfPlayers; i++){
-            players.add(new Player());
-            players.get(i).setNickname("Player" + i); // The usernames are Player0, Player1, Player2, ...
-        }
-
-        GameController gameController;
-        try {
-            gameController = new GameController(players, ID, new ServerManager());
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
-
-        Game game = gameController.getModel();
 
         game.initialize();
 
@@ -340,22 +269,7 @@ public class GameTest {
      */
     @Test
     public void calculateScoreTest(){
-        String ID = "1";
-        ArrayList<Player> players = new ArrayList<>();
-        int numOfPlayers = 4;
-        for ( int i = 0; i < numOfPlayers; i++){
-            players.add(new Player());
-            players.get(i).setNickname("Player" + i); // The usernames are Player0, Player1, Player2, ...
-        }
 
-        GameController gameController;
-        try {
-            gameController = new GameController(players, ID, new ServerManager());
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
-
-        Game game = gameController.getModel();
         game.initialize();
 
         ArrayList<Tile> tiles = new ArrayList<>();
@@ -387,22 +301,6 @@ public class GameTest {
      */
     @Test
     public void generateCGCTest(){
-        String ID = "1";
-        ArrayList<Player> players = new ArrayList<>();
-        int numOfPlayers = new Random().nextInt(3) + 2;
-        for ( int i = 0; i < numOfPlayers; i++){
-            players.add(new Player());
-            players.get(i).setNickname("Player" + i); // The usernames are Player0, Player1, Player2, ...
-        }
-
-        GameController gameController;
-        try {
-            gameController = new GameController(players, ID, new ServerManager());
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
-
-        Game game = gameController.getModel();
 
         assertNull(game.getCommonGoalCards());
         game.generateCGC(game.getPlayers().size());
@@ -414,16 +312,16 @@ public class GameTest {
             List<Integer> expectedIDsList = Arrays.asList(expectedIDs);
             assertTrue(expectedIDsList.contains((card.getID())));
 
-            if ( numOfPlayers == 4 ) {
+            if ( game.getPlayers().size() == 4 ) {
                 assertEquals(2, card.getPoints().get(0).intValue());
                 assertEquals(4, card.getPoints().get(1).intValue());
                 assertEquals(6, card.getPoints().get(2).intValue());
                 assertEquals(8, card.getPoints().get(3).intValue());
-            } else if ( numOfPlayers == 3 ) {
+            } else if ( game.getPlayers().size() == 3 ) {
                 assertEquals(4, card.getPoints().get(0).intValue());
                 assertEquals(6, card.getPoints().get(1).intValue());
                 assertEquals(8, card.getPoints().get(2).intValue());
-            } else if ( numOfPlayers == 2 ) {
+            } else if ( game.getPlayers().size() == 2 ) {
                 assertEquals(4, card.getPoints().get(0).intValue());
                 assertEquals(8, card.getPoints().get(1).intValue());
             }
@@ -461,24 +359,8 @@ public class GameTest {
      */
     @Test
     public void generatePGCTest(){
-        String ID = "1";
-        ArrayList<Player> players = new ArrayList<>();
-        int numOfPlayers = new Random().nextInt(3) + 2;
-        for ( int i = 0; i < numOfPlayers; i++){
-            players.add(new Player());
-            players.get(i).setNickname("Player" + i); // The usernames are Player0, Player1, Player2, ...
-        }
 
-        GameController gameController;
-        try {
-            gameController = new GameController(players, ID, new ServerManager());
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
-
-        Game game = gameController.getModel();
-
-        for (int i = 0; i < numOfPlayers; i++){
+        for (int i = 0; i < game.getPlayers().size(); i++){
             assertNull(game.getPlayers().get(i).getGoalCard());
         }
 
@@ -487,7 +369,7 @@ public class GameTest {
         Integer[] expectedIDs = {1,2,3,4,5,6,7,8,9,10,11,12};
         List<Integer> expectedIDsList = Arrays.asList(expectedIDs);
 
-        for (int i = 0; i < numOfPlayers; i++){
+        for (int i = 0; i < game.getPlayers().size(); i++){
             assertNotNull(game.getPlayers().get(i).getGoalCard());
             assertTrue(expectedIDsList.contains((game.getPlayers().get(i).getGoalCard().getNumPGC())));
         }
@@ -500,22 +382,7 @@ public class GameTest {
      */
     @Test
     public void insertTilesTest(){
-        String ID = "1";
-        ArrayList<Player> players = new ArrayList<>();
-        int numOfPlayers = new Random().nextInt(3) + 2;
-        for ( int i = 0; i < numOfPlayers; i++){
-            players.add(new Player());
-            players.get(i).setNickname("Player" + i); // The usernames are Player0, Player1, Player2, ...
-        }
 
-        GameController gameController;
-        try {
-            gameController = new GameController(players, ID, new ServerManager());
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
-
-        Game game = gameController.getModel();
         game.initialize();
 
         ArrayList<Tile> tiles = new ArrayList<>();

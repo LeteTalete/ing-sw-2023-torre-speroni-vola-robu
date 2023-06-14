@@ -5,6 +5,8 @@ import it.polimi.ingsw.model.enumerations.T_Type;
 import it.polimi.ingsw.model.board.Tile;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -12,12 +14,26 @@ import java.util.ArrayList;
 
 public class CGC5Test {
 
+    private Shelf shelf;
+    private ArrayList<Tile> tiles;
+    private CG_Groups CGC5;
+
+    /**
+     * Method setUp creates a new shelf, a new ArrayList of tiles and a new CGC5 before each test.
+     */
+    @BeforeEach
+    public void setUp() {
+        shelf = new Shelf();
+        tiles = new ArrayList<>();
+        CGC5 = new CG_Groups(5);
+    }
+
     /**
      * Test createCardTest creates an instance of CGC5 and checks if all parameters are correct.
      */
     @Test
     public void createCardTest(){
-        CG_Groups CGC5 = new CG_Groups(5);
+
         System.out.println(CGC5.getDescription());
         assertEquals(5, CGC5.getID());
         assertEquals("Groups", CGC5.getType());
@@ -32,8 +48,6 @@ public class CGC5Test {
      */
     @Test
     public void emptyShelfTest(){
-        Shelf shelf = new Shelf();
-        CG_Groups CGC5 = new CG_Groups(5);
 
         System.out.println("emptyShelfTest");
         shelf.printShelf();
@@ -50,9 +64,6 @@ public class CGC5Test {
      */
     @Test
     public void sixOccTest1(){
-        Shelf shelf = new Shelf();
-        ArrayList<Tile> tiles = new ArrayList<>();
-        CG_Groups CGC5 = new CG_Groups(5);
 
         tiles.add(new Tile(T_Type.CAT,1));
         tiles.add(new Tile(T_Type.CAT,1));
@@ -96,9 +107,6 @@ public class CGC5Test {
      */
     @Test
     public void sixOccTest2(){
-        Shelf shelf = new Shelf();
-        ArrayList<Tile> tiles = new ArrayList<>();
-        CG_Groups CGC5 = new CG_Groups(5);
 
         tiles.add(new Tile(T_Type.CAT,1));
         tiles.add(new Tile(T_Type.CAT,1));
@@ -149,9 +157,6 @@ public class CGC5Test {
      */
     @Test
     public void sixOccTest3(){
-        Shelf shelf = new Shelf();
-        ArrayList<Tile> tiles = new ArrayList<>();
-        CG_Groups CGC5 = new CG_Groups(5);
 
         tiles.add(new Tile(T_Type.CAT,1));
         tiles.add(new Tile(T_Type.CAT,1));
@@ -204,9 +209,6 @@ public class CGC5Test {
      */
     @Test
     public void failTest1(){
-        Shelf shelf = new Shelf();
-        ArrayList<Tile> tiles = new ArrayList<>();
-        CG_Groups CGC5 = new CG_Groups(5);
 
         tiles.add(new Tile(T_Type.CAT,1));
         tiles.add(new Tile(T_Type.CAT,1));
@@ -247,9 +249,6 @@ public class CGC5Test {
      */
     @Test
     public void failTest2(){
-        Shelf shelf = new Shelf();
-        ArrayList<Tile> tiles = new ArrayList<>();
-        CG_Groups CGC5 = new CG_Groups(5);
 
         tiles.add(new Tile(T_Type.CAT,1));
         tiles.add(new Tile(T_Type.CAT,1));
@@ -298,9 +297,6 @@ public class CGC5Test {
      */
     @Test
     public void failTest3(){
-        Shelf shelf = new Shelf();
-        ArrayList<Tile> tiles = new ArrayList<>();
-        CG_Groups CGC5 = new CG_Groups(5);
 
         tiles.add(new Tile(T_Type.CAT,1));
         tiles.add(new Tile(T_Type.CAT,1));

@@ -5,19 +5,34 @@ import it.polimi.ingsw.model.enumerations.T_Type;
 import it.polimi.ingsw.model.board.Tile;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
 
 public class CGC6Test {
+    private Shelf shelf;
+    private ArrayList<Tile> tiles;
+    private CG_Groups CGC6;
+
+    /**
+     * Method setUp creates a new shelf, a new ArrayList of tiles and a new CGC6 before each test.
+     */
+    @BeforeEach
+    public void setUp() {
+        shelf = new Shelf();
+        tiles = new ArrayList<>();
+        CGC6 = new CG_Groups(6);
+    }
 
     /**
      * Test createCardTest creates an instance of CGC6 and checks if all parameters are correct.
      */
     @Test
     public void createCardTest(){
-        CG_Groups CGC6 = new CG_Groups(6);
+
         System.out.println(CGC6.getDescription());
         assertEquals(6, CGC6.getID());
         assertEquals("Groups", CGC6.getType());
@@ -32,8 +47,6 @@ public class CGC6Test {
      */
     @Test
     public void emptyShelfTest(){
-        Shelf shelf = new Shelf();
-        CG_Groups CGC6 = new CG_Groups(6);
 
         System.out.println("emptyShelfTest");
         shelf.printShelf();
@@ -49,9 +62,6 @@ public class CGC6Test {
      */
     @Test
     public void fourOccTest1(){
-        Shelf shelf = new Shelf();
-        ArrayList<Tile> tiles = new ArrayList<>();
-        CG_Groups CGC6 = new CG_Groups(6);
 
         tiles.add(new Tile(T_Type.CAT,1));
         tiles.add(new Tile(T_Type.CAT,1));
@@ -96,9 +106,6 @@ public class CGC6Test {
      */
     @Test
     public void fourOccTest2(){
-        Shelf shelf = new Shelf();
-        ArrayList<Tile> tiles = new ArrayList<>();
-        CG_Groups CGC6 = new CG_Groups(6);
 
         tiles.add(new Tile(T_Type.BOOK, 1));
         tiles.add(new Tile(T_Type.CAT,1));
@@ -154,9 +161,6 @@ public class CGC6Test {
      */
     @Test
     public void fourOccTest3(){
-        Shelf shelf = new Shelf();
-        ArrayList<Tile> tiles = new ArrayList<>();
-        CG_Groups CGC6 = new CG_Groups(6);
 
         tiles.add(new Tile(T_Type.BOOK, 1));
         tiles.add(new Tile(T_Type.CAT,1));
@@ -213,9 +217,6 @@ public class CGC6Test {
      */
     @Test
     public void failTest1(){
-        Shelf shelf = new Shelf();
-        ArrayList<Tile> tiles = new ArrayList<>();
-        CG_Groups CGC6 = new CG_Groups(6);
 
         tiles.add(new Tile(T_Type.BOOK, 1));
         tiles.add(new Tile(T_Type.CAT,1));
@@ -258,9 +259,6 @@ public class CGC6Test {
      */
     @Test
     public void failTest2(){
-        Shelf shelf = new Shelf();
-        ArrayList<Tile> tiles = new ArrayList<>();
-        CG_Groups CGC6 = new CG_Groups(6);
 
         tiles.add(new Tile(T_Type.BOOK, 1));
         tiles.add(new Tile(T_Type.CAT,1));
@@ -310,9 +308,6 @@ public class CGC6Test {
      */
     @Test
     public void failTest3(){
-        Shelf shelf = new Shelf();
-        ArrayList<Tile> tiles = new ArrayList<>();
-        CG_Groups CGC6 = new CG_Groups(6);
 
         tiles.add(new Tile(T_Type.BOOK, 1));
         tiles.add(new Tile(T_Type.CAT,1));

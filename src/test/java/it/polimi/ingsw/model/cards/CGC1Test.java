@@ -5,6 +5,8 @@ import it.polimi.ingsw.model.enumerations.T_Type;
 import it.polimi.ingsw.model.board.Tile;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -12,12 +14,26 @@ import java.util.ArrayList;
 
 public class CGC1Test {
 
+    private Shelf shelf;
+    private ArrayList<Tile> tiles;
+    private CG_Shape CGC1;
+
+    /**
+     * Method setUp creates a new shelf, a new ArrayList of tiles and a new CGC1 before each test.
+     */
+    @BeforeEach
+    public void setUp() {
+        shelf = new Shelf();
+        tiles = new ArrayList<>();
+        CGC1 = new CG_Shape(1);
+    }
+
     /**
      * Test createCardTest creates an instance of CGC1 and checks if all parameters are correct.
      */
     @Test
     public void createCardTest(){
-        CG_Shape CGC1 = new CG_Shape(1);
+
         System.out.println(CGC1.getDescription());
         assertEquals(1, CGC1.getID());
         assertEquals("Shape", CGC1.getType());
@@ -41,8 +57,6 @@ public class CGC1Test {
      */
     @Test
     public void emptyShelfTest(){
-        Shelf shelf = new Shelf();
-        CG_Shape CGC1 = new CG_Shape(1);
 
         System.out.println("emptyShelfTest");
         shelf.printShelf();
@@ -58,9 +72,6 @@ public class CGC1Test {
      */
     @Test
     public void cornersTest(){
-        Shelf shelf = new Shelf();
-        ArrayList<Tile> tiles = new ArrayList<>();
-        CG_Shape CGC1 = new CG_Shape(1);
 
         tiles.add(new Tile(T_Type.CAT,1));
         tiles.add(new Tile(T_Type.FRAME, 1));
@@ -122,9 +133,6 @@ public class CGC1Test {
      */
     @Test
     public void differentCornerTest(){
-        Shelf shelf = new Shelf();
-        ArrayList<Tile> tiles = new ArrayList<>();
-        CG_Shape CGC1 = new CG_Shape(1);
 
         tiles.add(new Tile(T_Type.CAT,1));
         tiles.add(new Tile(T_Type.FRAME, 1));
@@ -185,9 +193,6 @@ public class CGC1Test {
      */
     @Test
     public void emptyCornerTest(){
-        Shelf shelf = new Shelf();
-        ArrayList<Tile> tiles = new ArrayList<>();
-        CG_Shape CGC1 = new CG_Shape(1);
 
         tiles.add(new Tile(T_Type.CAT,1));
         tiles.add(new Tile(T_Type.FRAME, 1));
