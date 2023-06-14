@@ -7,6 +7,7 @@ import it.polimi.ingsw.view.ControllerGUI.ConnectionPlayer;
 import it.polimi.ingsw.view.ControllerGUI.GenericController;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
@@ -25,9 +26,8 @@ public class GUIApplication extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         stageWindow = stage;
-        showSceneName(SceneNames.BOARDPLAYER);
+        showSceneName(SceneNames.CONNECTION);
         stageWindow.setOnCloseRequest(event -> System.exit(0));
-        //showSceneName(SceneNames.BOARDPLAYER);
     }
 
 
@@ -58,8 +58,10 @@ public class GUIApplication extends Application {
                 stageWindow.setTitle("Choose Connection");
             } else if(sceneNames.equals(SceneNames.USERNAME)){
                 stageWindow.setTitle("Choose name");
-            } else if(sceneNames.equals(SceneNames.NUMPLAYERS)){
+            } else if(sceneNames.equals(SceneNames.NUMPLAYERS)) {
                 stageWindow.setTitle("Choose number players");
+            } else if (sceneNames.equals(SceneNames.WAITINGROOM)){
+                stageWindow.setTitle("Waiting Room");
             } else if(sceneNames.equals(SceneNames.BOARDPLAYER)){
                 stageWindow.setTitle("MyShelfie");
             }

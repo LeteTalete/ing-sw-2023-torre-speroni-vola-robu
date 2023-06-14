@@ -1,5 +1,6 @@
 package it.polimi.ingsw.view;
 
+import it.polimi.ingsw.Updates.ModelUpdate;
 import it.polimi.ingsw.client.ClientController;
 import it.polimi.ingsw.client.CommandParsing;
 import it.polimi.ingsw.model.board.Position;
@@ -22,10 +23,16 @@ public interface View {
     //choose tiles from board
     //reorder tiles
     //place tiles on shelf
-
     void GameTitle();
     void showShelves();
-    void setBoardStartGame();
+    void showChat();
+    void hideChat();
+    void showCommands();
+    void hideCommands();
+    void showCommonGoalCards();
+    void hideCommonGoalCards();
+
+    void displayUpdatedModel(ModelUpdate modelUpdate);
     void showLivingRoom(LivingRoomView livingRoomView);
     void showBoardPlayer(PlayerView playerBoardView, LivingRoomView livingRoomView);
     void showPersonalGoalCard();
@@ -34,7 +41,7 @@ public interface View {
 
     void printError(String message);
 
-    void setMyTurn(boolean b);
+    void setMyTurn(int b);
     void startRun();
 
     void setMaster(ClientController clientController, CommandParsing commandParsing);
@@ -44,6 +51,7 @@ public interface View {
     void serverSavedUsername(String name, boolean b, String token, boolean first);
 
     void running();
+
     void printCommands();
 
     void changeTurn(String name);
@@ -65,4 +73,7 @@ public interface View {
     void addToChatQueue(String message, String receiver);
 
     void hideShelves();
+
+
+    void passTilesToView(ArrayList<Position> tiles);
 }

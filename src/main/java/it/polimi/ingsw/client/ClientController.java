@@ -79,7 +79,7 @@ public class ClientController {
         return null;
     }
 
-    public String setupRMI(String serverIP) {
+    private String setupRMI(String serverIP) {
         try{
             //TODO put serverip in host field of locateregisty
             this.registry = LocateRegistry.getRegistry(serverIP,8089);
@@ -123,17 +123,15 @@ public class ClientController {
         return myTurn;
     }
 
-    public void setMyTurn(boolean turn) {
-        if(turn)
-            this.myTurn = 1;
-        else
-            this.myTurn = 0;
+    public void setMyTurn(int turn) {
+        this.myTurn = turn;
         commPars.setPlaying(turn);
     }
 
     public void serverSavedUsername(String name, boolean b, String token, boolean first) {
         if(b){
             setUserToken(token);
+            fileLog.debug("i'm about the set the name "+name);
             setUsername(name);
             currentConnection.setUserToken(token);
             commPars.setFirst(first);
@@ -144,7 +142,7 @@ public class ClientController {
         }
     }
 
-    public void setUsername(String username){ this.username = username; }
+    public void setUsername(String username){ this.username = new String(username); }
 
     public void setUserToken(String userToken) {
         this.userToken = userToken;
@@ -198,14 +196,10 @@ public class ClientController {
 
     public void isItMyTurn(String name) {
         if(name.equals(username)){
-            setMyTurn(true);
-            currentView.displayNotification(StaticStrings.YOUR_TURN);
-            currentView.askForTiles();
+            setMyTurn(1);
         }
         else{
-            setMyTurn(false);
-            currentView.displayNotification("It's " + name + "'s turn");
-        }
+            setMyTurn(0);}
     }
 
     public void rearrangeTiles(List<String> multipleChoiceNumber) {
@@ -217,12 +211,7 @@ public class ClientController {
     }
 
     public void passTiles(ArrayList<Position> tilesChosen) {
-        if(tilesChosen.size()==1){
-            myTurn = 3;
-        }
-        else{
-            myTurn = 2;
-        }
+        myTurn = 2;
     }
 
     public void errorFormat() {
@@ -231,24 +220,9 @@ public class ClientController {
 
     public void nextAction(int num, ArrayList<Position> tiles) {
         if(num==2){
-            if(!onlyOneTile){
-                currentView.displayNotification("You can now re-arrange the tiles or choose the column. Here are the commands:");
-                //todo show the tiles now
-                //todo it should show commands format, not show the request
-                currentView.chooseOrder(tiles);
-                currentView.chooseColumn();
-                setMyTurn(true);
-            }
-            else{
-                //todo show the tiles now too, if tiles!=null
-                currentView.chooseColumn();
-                setMyTurn(true);
-            }
+            currentView.passTilesToView(tiles);
+            setMyTurn(2);
         }
-        else if(num==3){
-            currentView.chooseColumn();
-        }
-
     }
 
     public void gameNotStarted() {
@@ -273,4 +247,24 @@ public class ClientController {
         currentView.hideShelves();
     }
     public void showShelves(){currentView.showShelves();}
+
+    public void showCards(){currentView.showCommonGoalCards();}
+
+    public void hideCards() { currentView.hideCommonGoalCards(); }
+
+    public void showCommands() {
+        currentView.showCommands();
+    }
+
+    public void hideCommands() {
+        currentView.hideCommands();
+    }
+
+    public void showChat() {
+        currentView.showChat();
+    }
+
+    public void hideChat() {
+        currentView.hideChat();
+    }
 }

@@ -3,7 +3,7 @@ package it.polimi.ingsw.view;
 public enum SceneNames {
     CONNECTION("/fxml/Connection.fxml"),
     USERNAME("/fxml/UsernamePlayer.fxml"),
-    LOADINGGAME("/fxml/LoadingGame.fxml"),
+    WAITINGROOM("/fxml/LoadingGame.fxml"),
     NUMPLAYERS("/fxml/NumberPlayers.fxml"),
     ENDGAME("/fxml/ScoreEndGame.fxml"),
     BOARDPLAYER("/fxml/BoardPlayer.fxml");

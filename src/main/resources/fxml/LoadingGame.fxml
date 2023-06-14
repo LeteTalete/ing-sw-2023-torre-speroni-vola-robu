@@ -2,14 +2,14 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<Pane prefHeight="302.0" prefWidth="636.0" styleClass="background" stylesheets="@../css/LoadingGame.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.ControllerGUI.ConnectionPlayer">
+<Pane prefHeight="436.0" prefWidth="636.0" styleClass="background" stylesheets="@../css/LoadingGame.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.ControllerGUI.ConnectionPlayer">
    <children>
       <StackPane prefHeight="150.0" prefWidth="200.0">
          <children>
@@ -28,11 +28,21 @@
             <Insets top="20.0" />
          </padding>
       </StackPane>
-      <Label fx:id="labelSearchPlayers" contentDisplay="CENTER" layoutX="204.0" layoutY="189.0" prefHeight="35.0" prefWidth="228.0" text="Search Players: " textFill="WHITE">
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutY="322.0" prefHeight="35.0" prefWidth="642.0" text="Waiting for other players to join..." textFill="WHITE">
          <font>
-            <Font name="System Bold" size="24.0" />
+            <Font name="System Bold" size="34.0" />
          </font>
+         <effect>
+            <DropShadow height="81.83" radius="29.302500000000002" spread="0.45" width="37.38" />
+         </effect>
       </Label>
-      <ProgressBar fx:id="barLoading" layoutX="106.0" layoutY="224.0" prefHeight="18.0" prefWidth="424.0" progress="0.0" />
+      <ImageView fitHeight="138.0" fitWidth="146.0" layoutX="249.0" layoutY="168.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../imgs/BoxShadow.png" />
+         </image>
+         <effect>
+            <DropShadow height="65.48" radius="37.6575" spread="0.51" width="87.15" />
+         </effect>
+      </ImageView>
    </children>
 </Pane>

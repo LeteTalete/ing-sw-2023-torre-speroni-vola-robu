@@ -4,12 +4,16 @@ import it.polimi.ingsw.Updates.ModelUpdate;
 import it.polimi.ingsw.model.board.Position;
 import it.polimi.ingsw.server.StaticStrings;
 import it.polimi.ingsw.view.ClientTUI;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 
 public class ClientListenerTUI extends UnicastRemoteObject implements IClientListener {
+    private static Logger fileLog = LogManager.getRootLogger();
+
     private String connectionType = "RMI";
     private transient final ClientTUI view;
     private String token;
@@ -29,6 +33,7 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
 
     @Override
     public void notifySuccessfulRegistration(String name, boolean b, String token, boolean first) throws RemoteException {
+        fileLog.debug("I'm in clientListenerTUI");
         if(b) {
             view.displayNotification("Registration Successful!");
             setToken(token);
@@ -50,7 +55,6 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
     @Override
     public void setGameOn() throws RemoteException {
         view.writeText(StaticStrings.GAME_START);
-        view.printCommands();
         view.setGameOn(true);
     }
 
@@ -77,7 +81,7 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
 
     @Override
     public void notifyEndTurn() throws RemoteException {
-        view.setMyTurn(false);
+        view.setMyTurn(0);
         view.displayNotification("Turn ended.");
     }
 
@@ -100,8 +104,9 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
     @Override
     public void notifyRearrangeOk(boolean ok, ArrayList<Position> tiles) throws RemoteException {
         if(ok){
+            view.nextAction(2, tiles);
+            view.refreshBoard();
             view.displayNotification("Rearrange successful!");
-            view.nextAction(3, tiles);
         }
         else{
             view.displayNotification("Invalid move. Try again.");
@@ -111,8 +116,8 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
     @Override
     public void notifyTilesOk(boolean ok, ArrayList<Position> tiles) throws RemoteException {
         if(ok){
-            view.displayNotification("Choice of tiles successful!");
             view.nextAction(2, tiles);
+            view.refreshBoard();
         }
         else{
             view.displayNotification("Invalid move. Try again.");
@@ -131,7 +136,7 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
 
     @Override
     public void notifyEndGame() throws RemoteException {
-        view.setMyTurn(false);
+        view.setMyTurn(0);
         view.setGameOn(false);
         view.showEndResult();
     }

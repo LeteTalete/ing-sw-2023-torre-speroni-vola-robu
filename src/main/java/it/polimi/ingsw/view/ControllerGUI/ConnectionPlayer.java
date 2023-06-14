@@ -25,10 +25,7 @@ public class ConnectionPlayer extends GenericController {
 
     @FXML private StackPane buttonConnetionOK, buttonRMI, buttonSocket, buttonNumPlayers, buttonUsername;
     @FXML private HBox IP, port;
-    @FXML private TextField textUsername, textNumPlayers;
-    @FXML private Label errorMessageNumP, errorConnection, labelSearchPlayers;
-    @FXML private ProgressBar barLoading;
-    @FXML private Stage windowConnection;
+    @FXML private TextField textUsername;
     private String typeConnection;
 
     //Quando passo sopra ai bottoni essi diventano un pò più grandi e quando ci esco ritornano alla dimensione originale
@@ -54,7 +51,7 @@ public class ConnectionPlayer extends GenericController {
 
     //Si arriva quando il giocatore che ha sta creando la partita ha deciso quale sia il numero dei dei partecipanti
     public void clickedButtonNumPlayers(MouseEvent mouseEvent){
-        GUIApplication.clientGUI.getCommPars().elaborateInput(((Label) (((StackPane) mouseEvent.getSource()).getChildren().get(0))).getText());
+        GUIApplication.clientGUI.getCommPars().elaborateInput(((Label) (((StackPane) mouseEvent.getSource()).getChildren().get(1))).getText());
 
     }
 

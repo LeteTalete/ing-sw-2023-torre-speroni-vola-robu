@@ -15,6 +15,7 @@ public class ModelUpdate implements Serializable{
 
     private String endGame;
     private List<CommonGoalCard> commonGoalCards;
+    private String currentPlayerNickname;
 
     public ModelUpdate(Game model){
         this.gameBoard = model.getGameBoard();
@@ -22,6 +23,7 @@ public class ModelUpdate implements Serializable{
         this.endGame = model.getEndGame();
         this.commonGoalCards = model.getCommonGoalCards();
         this.scoreboard = model.getScoreBoard();
+        this.currentPlayerNickname = model.getCurrentPlayer().getNickname();
     }
 
 
@@ -39,5 +41,8 @@ public class ModelUpdate implements Serializable{
 
     public List<CommonGoalCard> getCommonGoalCards() {
         return commonGoalCards;
+    }
+    public String getCurrentPlayerNickname() {
+        return currentPlayerNickname;
     }
 }

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.view;
 
+import it.polimi.ingsw.Updates.ModelUpdate;
 import it.polimi.ingsw.client.ClientController;
 import it.polimi.ingsw.client.CommandParsing;
 import it.polimi.ingsw.model.board.Position;
@@ -8,6 +9,7 @@ import it.polimi.ingsw.network.ClientListenerTUI;
 import it.polimi.ingsw.network.IClientListener;
 import it.polimi.ingsw.responses.Response;
 import it.polimi.ingsw.stati.Status;
+import it.polimi.ingsw.structures.GameView;
 import it.polimi.ingsw.structures.LivingRoomView;
 import it.polimi.ingsw.structures.PlayerView;
 import it.polimi.ingsw.structures.ShelfView;
@@ -20,6 +22,7 @@ import java.util.LinkedList;
 
 public class ClientGUI implements View {
     private ClientController master;
+    private GameView gameView;
     private ClientListenerGUI listenerClient;
     private CommandParsing commPars;
     private String connectionType;
@@ -37,15 +40,22 @@ public class ClientGUI implements View {
         GUIApplication.clientGUI = this;
     }
     @Override
+    public void displayUpdatedModel(ModelUpdate modelUpdate){
+        //todo check this
+        this.gameView = new GameView(modelUpdate);
+        //
+        if (!this.isStarGame) {
+            this.isStarGame = true;
+            GUIApplication.showSceneName(SceneNames.BOARDPLAYER);
+        }
+    }
+    @Override
     public void chooseConnection() {
-        System.out.println("FineConnection");
-        // guiApplication = new GUIApplication(this);
-        guiApplication.main(null);
+        System.out.println("Connessione");//lasciare vuoto
     }
 
     @Override
     public String getConnectionType() {
-        System.out.println("connection type");
         return this.connectionType;
     }
     public void setConnectionType(String typeConnection){
@@ -57,7 +67,6 @@ public class ClientGUI implements View {
             GUIApplication.showSceneName(SceneNames.USERNAME);
             isRunning = true;
         }
-        System.out.println("NAME:");
     }
 
     @Override
@@ -79,13 +88,39 @@ public class ClientGUI implements View {
     public void GameTitle() {
 
     }
+
     @Override
-    public void setBoardStartGame(){
+    public void showShelves(){
 
     }
 
     @Override
-    public void showShelves(){
+    public void showChat() {
+
+    }
+
+    @Override
+    public void hideChat() {
+
+    }
+
+    @Override
+    public void showCommands() {
+
+    }
+
+    @Override
+    public void hideCommands() {
+
+    }
+
+    @Override
+    public void showCommonGoalCards() {
+
+    }
+
+    @Override
+    public void hideCommonGoalCards() {
 
     }
 
@@ -118,11 +153,11 @@ public class ClientGUI implements View {
 
     @Override
     public void printError(String message) {
-
+        System.out.println("Errore: " + message);
     }
 
     @Override
-    public void setMyTurn(boolean b) {
+    public void setMyTurn(int b) {
 
     }
 
@@ -152,9 +187,11 @@ public class ClientGUI implements View {
 
     @Override
     public void serverSavedUsername(String name, boolean b, String token, boolean first) {
-        this.username = name;
         master.serverSavedUsername(name, b, token, first);
-        if(first){
+        if(b){
+            this.username = name;
+        }
+        if (first) {
             askAmountOfPlayers();
         }
     }
@@ -224,6 +261,7 @@ public class ClientGUI implements View {
     public void passTilesToView(ArrayList<Position> tiles) {
 
     }
+
 
 
 }

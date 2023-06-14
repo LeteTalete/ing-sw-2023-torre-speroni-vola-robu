@@ -34,7 +34,7 @@ public class ClientTUI implements View{
     private String ServerIP;
     private LinkedList<String> chatQueue = new LinkedList<>();
     private String username;
-    private boolean isStarGame;
+    private boolean isStarGame = false;
 
     public boolean isChatOpen = true;
     private boolean showCommonGoalCards = true;
@@ -66,19 +66,16 @@ public class ClientTUI implements View{
         this.frominput = new Scanner(System.in);
     }
 
-    public void setPGCandCGC() {
-        DrawTui.setStringPCG(gameView.getPlayersView().stream()
-                .filter(p -> p.getNickname().equals(master.getUsername())).findFirst().orElse(null).getPersonalGoalCard().getPositionTilePC(), 5);
-        this.gameView.getCommonGoalCards().forEach((idCGC) -> DrawTui.setStringCGC(idCGC.getID()));
-    }
-
+    @Override
     public void displayUpdatedModel(ModelUpdate modelUpdate) {
         //todo check this
         this.gameView = new GameView(modelUpdate);
         //
         if (!this.isStarGame) {
             this.isStarGame = true;
-            setPGCandCGC();
+            DrawTui.setStringPCG(gameView.getPlayersView().stream()
+                    .filter(p -> p.getNickname().equals(master.getUsername())).findFirst().orElse(null).getPersonalGoalCard().getPositionTilePC(), 5);
+            this.gameView.getCommonGoalCards().forEach((idCGC) -> DrawTui.setStringCGC(idCGC.getID()));
         }
         refreshBoard();
     }

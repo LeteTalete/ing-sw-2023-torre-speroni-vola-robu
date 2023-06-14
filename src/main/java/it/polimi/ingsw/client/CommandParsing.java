@@ -15,7 +15,13 @@ public class CommandParsing {
     private static final String HELP = "help";
     private static final String REARRANGE = "order";
     private static final String SHELFSHOW = "showshelves";
+    private static final String SHOWCARDS = "showcards";
+    private static final String HIDECARDS = "hidecards";
+    private static final String HIDECOMMANDS = "hidecommands";
+    private static final String SHOWCHAT = "showchat";
+    private static final String HIDECHAT = "hidechat";
     private static final String COLUMN = "column";
+
     private static final String BACK = "back";
     //for when it's the player's turn
     private boolean isPlaying;
@@ -37,9 +43,14 @@ public class CommandParsing {
 
     public void elaborateInput(String command) {
         if(initializingName) {
+            fileLog.debug("initializing name");
             //if asking for name
+            if(!checkUsernameFormat(command)){
+                return;
+            }
             master.askLogin(command);
             if ( master.getUsername() != null) {
+                fileLog.debug("the name has been set");
                 initializingName = false;
                 if ( master.isGameOn() ) {
                     initializingRoom = false;
@@ -74,6 +85,25 @@ public class CommandParsing {
             args.remove(0);
         }
         executeCom(command, args);
+    }
+
+    private boolean checkUsernameFormat(String command) {
+        if(command.length() > 20) {
+            master.errorFormat();
+            master.userLogin();
+            return false;
+        }
+        /*for(int i = 0; i < command.length(); i++) {
+            if(command.charAt(i) < 48 || command.charAt(i) > 122) {
+                master.errorFormat();
+            }
+        }*/
+        else if(command.contains(" ")) {
+            master.errorFormat();
+            master.userLogin();
+            return false;
+        }
+        return true;
     }
 
     private void executeCom(String command, List<String> args) {
@@ -118,7 +148,7 @@ public class CommandParsing {
                     master.gameNotStarted();
                     break;
                 }
-                executeShelfCommand();
+                master.showShelves();
             }
             case(HIDESHELF) -> {
                 if (!gameIsOn) {
@@ -127,7 +157,48 @@ public class CommandParsing {
                 }
                 master.hideShelves();
             }
-            case (HELP) -> master.printCommands();
+            case(SHOWCARDS) -> {
+                if (!gameIsOn) {
+                    master.gameNotStarted();
+                    break;
+                }
+                master.showCards();
+            }
+            case (HIDECARDS) -> {
+                if (!gameIsOn) {
+                    master.gameNotStarted();
+                    break;
+                }
+                master.hideCards();
+            }
+            case (HELP) -> {
+                if (!gameIsOn) {
+                    master.gameNotStarted();
+                    break;
+                }
+                master.showCommands();
+            }
+            case (HIDECOMMANDS) -> {
+                if (!gameIsOn) {
+                    master.gameNotStarted();
+                    break;
+                }
+                master.hideCommands();
+            }
+            case (SHOWCHAT) -> {
+                if (!gameIsOn) {
+                    master.gameNotStarted();
+                    break;
+                }
+                master.showChat();
+            }
+            case (HIDECHAT) -> {
+                if (!gameIsOn) {
+                    master.gameNotStarted();
+                    break;
+                }
+                master.hideChat();
+            }
             default -> {
                 if(command.startsWith("@")) {
                     if (!gameIsOn) {
@@ -184,7 +255,7 @@ public class CommandParsing {
             master.errorFormat();
             return;
         }
-
+        //todo print the tiles in the order they were chosen
         master.rearrangeTiles(multipleChoiceNumber);
     }
 
@@ -252,8 +323,13 @@ public class CommandParsing {
         return isPlaying;
     }
 
-    public void setPlaying(boolean playing) {
-        isPlaying = playing;
+    public void setPlaying(int playing) {
+        if(playing>0){
+            isPlaying = true;
+        }
+        else{
+            isPlaying = false;
+        }
     }
 
     public void setGameIsOn(boolean gameIsOn) {

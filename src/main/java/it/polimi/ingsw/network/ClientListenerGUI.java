@@ -5,12 +5,18 @@ import it.polimi.ingsw.model.board.Position;
 import it.polimi.ingsw.server.StaticStrings;
 import it.polimi.ingsw.view.ClientGUI;
 import it.polimi.ingsw.view.ClientTUI;
+import it.polimi.ingsw.view.GUIApplication;
+import it.polimi.ingsw.view.SceneNames;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 
 public class ClientListenerGUI extends UnicastRemoteObject implements IClientListener {
+    private static Logger fileLog = LogManager.getRootLogger();
+
     private String connectionType = "RMI";
     private transient final ClientGUI view;
     private String token;
@@ -37,6 +43,7 @@ public class ClientListenerGUI extends UnicastRemoteObject implements IClientLis
                 view.displayNotification("Waiting for other players to join...");
             }
             view.serverSavedUsername(name, true, token, first);
+            GUIApplication.showSceneName(SceneNames.WAITINGROOM); //forse è meglio creare una classe in ClientGui che mi mostro la WaitingRoom
         }
         else{
             view.displayNotification("Registration failed: "+name+" already exists. Try again");
@@ -78,7 +85,7 @@ public class ClientListenerGUI extends UnicastRemoteObject implements IClientLis
 
     @Override
     public void notifyEndTurn() throws RemoteException {
-        view.setMyTurn(false);
+        view.setMyTurn(0);
         view.displayNotification("Turn ended.");
     }
 
@@ -132,7 +139,7 @@ public class ClientListenerGUI extends UnicastRemoteObject implements IClientLis
 
     @Override
     public void notifyEndGame() throws RemoteException {
-        view.setMyTurn(false);
+        view.setMyTurn(0);
         //view.setGameOn(false);
         view.showEndResult();
     }
