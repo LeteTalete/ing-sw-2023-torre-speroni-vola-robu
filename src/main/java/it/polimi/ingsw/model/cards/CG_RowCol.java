@@ -61,6 +61,10 @@ public class CG_RowCol extends CommonGoalCard implements Serializable {
 
                     if ( cardNode.get("diffUpTo").asInt() < 0 || cardNode.get("diffUpTo").asInt() > T_Type.values().length ) {
                         throw new IllegalArgumentException("The number of different tile types must be between 0 and " + T_Type.values().length);
+                    } else if ( cardNode.get("diffUpTo").asInt() == 0 ) {
+                        if ( Shelf.COLUMNS > T_Type.values().length || Shelf.ROWS > T_Type.values().length ) {
+                            throw new IllegalArgumentException("The number of tile types (enum) must be equal or less to max(ROWS, COLUMNS) or vice-versa");
+                        }
                     } else this.diffUpTo = cardNode.get("diffUpTo").asInt();
 
                     if ( cardNode.get("horizontal").asInt() != 0 && cardNode.get("horizontal").asInt() != 1 ) {
@@ -108,7 +112,7 @@ public class CG_RowCol extends CommonGoalCard implements Serializable {
         // of one of the tile types in typesInside.
         int found = 0; // When the card requirements are met we set this flag to 1.
         int count = 0; // Keeps track of all the columns/rows that have satisfied the card requirements.
-        int notFull = 0; // When set to 1 it means that the current column/row has an empty tile, it triggers a break
+        int Full = 0; // When set to 1 it means that the current column/row has an empty tile, it triggers a break
         // to the next column/row.
 
         if ( !cardsAlreadyChecked.contains(this.ID) ) {
@@ -117,7 +121,7 @@ public class CG_RowCol extends CommonGoalCard implements Serializable {
                 for (int i = 0; i < Shelf.COLUMNS; i++) {
                     typesInside.clear(); // typesInside gets reset before checking each column.
                     for (int j = 0; j < Shelf.ROWS; j++) {
-                        notFull = 0; // Reset.
+                        Full = 0; // Reset.
                         flag = 0; // Reset.
                         if (!shelfsMatrix[j][i].getState().equals(State.EMPTY)) {
                             for (T_Type t_type : typesInside) { // We check if the current couple in the column has
@@ -133,11 +137,11 @@ public class CG_RowCol extends CommonGoalCard implements Serializable {
                                 typesInside.add(shelfsMatrix[j][i].getTile().getTileType());
                             }
                         } else {
-                            notFull = 1; // The current column is not full, break and go to the next one.
+                            Full = 1; // The current column is not full, break and go to the next one.
                             break;
                         }
                     }
-                    if ( notFull == 0 ) { // If the column is full we check if it satisfies the card requirements.
+                    if ( Full == 0 ) { // If the column is full we check if it satisfies the card requirements.
                         if ( this.diffUpTo == 0 && typesInside.size() == T_Type.values().length ) { // When diffUpTo
                             // is equal to 0 it means that the card requires the column to have one of each tile type.
                             // Since the game has 6 tile types then the column must have 6 different tile types.
@@ -156,7 +160,7 @@ public class CG_RowCol extends CommonGoalCard implements Serializable {
                 for (int i = 0; i < Shelf.ROWS; i++) {
                     typesInside.clear(); // typesInside gets reset before checking each row.
                     for (int j = 0; j < Shelf.COLUMNS; j++) {
-                        notFull = 0; // Reset.
+                        Full = 0; // Reset.
                         flag = 0; // Reset.
                         if (!shelfsMatrix[i][j].getState().equals(State.EMPTY)) {
                             for (T_Type t_type : typesInside) { // We check if the current couple in the row has
@@ -172,11 +176,11 @@ public class CG_RowCol extends CommonGoalCard implements Serializable {
                                 typesInside.add(shelfsMatrix[i][j].getTile().getTileType());
                             }
                         } else {
-                            notFull = 1; // The current row is not full, break and go to the next one,
+                            Full = 1; // The current row is not full, break and go to the next one,
                             break;
                         }
                     }
-                    if ( notFull == 0 ) { // If the row is full we check if it satisfies the card requirements.
+                    if ( Full == 0 ) { // If the row is full we check if it satisfies the card requirements.
                         if ( this.diffUpTo == 0 && typesInside.size() == T_Type.values().length - 1 ) { // When diffUpTo
                             // is equal to 0 it means that the card requires the row to have 5 different tile types.
                             count++; // This column counts towards the card requirements.
