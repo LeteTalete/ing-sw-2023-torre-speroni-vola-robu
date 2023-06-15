@@ -117,7 +117,7 @@ public class ClientTUI implements View{
             this.newChatMessage = false;
         } else {
             if (newChatMessage) {
-                System.out.println("You have new messages in the chat.");
+                System.out.println("\033[1;97;48;5;124m" + " You have new messages in the chat. " + "\033[0m");
             }
             System.out.println("Type 'showchat' to open the chat.");
         }
