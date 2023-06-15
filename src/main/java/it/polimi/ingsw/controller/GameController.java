@@ -167,6 +167,10 @@ public class GameController {
     public Game getModel(){
         return model;
     }
+    public void setModel(Game model)
+    {
+        this.model = model;
+    }
     public List<CommonGoalCard> getCommonGoalCards() { return  model.getCommonGoalCards(); }
 
     public void notifyOnStartTurn(String currentPlayer) {

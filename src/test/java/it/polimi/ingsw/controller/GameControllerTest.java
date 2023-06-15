@@ -348,6 +348,46 @@ public class GameControllerTest {
     }
 
     @Test
+    public void chooseTilesTest()
+    {
+        ArrayList<Player> players = new ArrayList<>();
+
+        Player player1 = new Player();
+        player1.setNickname("kiwi");
+        player1.setTokenId("1");
+        player1.setMyShelf(new Shelf());
+        player1.setGoalCard(1);
+        players.add(player1);
+
+        Player player2 = new Player();
+        player2.setNickname("mango");
+        player2.setTokenId("2");
+        player2.setMyShelf(new Shelf());
+        player2.setGoalCard(2);
+        players.add(player2);
+
+        gameController = new GameController(players,gameId, master);
+
+        LivingRoom board = new LivingRoom(2);
+        board.printBoard();
+
+        gameController.setModel(model);
+
+
+        //test1
+        ArrayList<String> choice = new ArrayList<>();
+        choice.add("3,7");
+        choice.add("4,7");
+
+        gameController.chooseTiles(player1.getTokenId(), choice);
+
+        assert(gameController.getChoiceOfTiles().get(0).getX() == 3);
+        assert(gameController.getChoiceOfTiles().get(0).getY() == 7);
+        assert(gameController.getChoiceOfTiles().get(1).getX() == 4);
+        assert(gameController.getChoiceOfTiles().get(1).getY() == 7);
+
+    }
+    @Test
     public void rearrangeTilesTest()
     {
         ArrayList<Player> players = new ArrayList<>();
