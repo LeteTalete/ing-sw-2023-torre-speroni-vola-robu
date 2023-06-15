@@ -1,24 +1,19 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.board.Position;
 import it.polimi.ingsw.model.board.Shelf;
 import it.polimi.ingsw.model.cards.PersonalGoalCard;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 public class Player implements Serializable {
 //attributes
     private boolean chair;
     private String nickname;
     private String tokenId;
-    private boolean isPlaying;
     private Shelf shelf;
     private PersonalGoalCard personalGoalCard;
     private int score = 0;
-    private boolean endGame;
 
-    private ArrayList<Position> tilesChosen;
 
     public Player(){
         this.shelf = new Shelf();
@@ -61,8 +56,6 @@ public class Player implements Serializable {
         this.score += myScore;
     }
 
-    //todo: those two last methods are server related
-    // I don't know if they need to be tested
     public String getTokenId() {
         return tokenId;
     }

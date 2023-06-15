@@ -10,6 +10,7 @@ import java.util.List;
 
 public class CommandParsing {
     private static Logger fileLog = LogManager.getRootLogger();
+    private static final String QUIT = "quit";
     private static final String TILES = "tiles";
     private static final String HIDESHELF = "hideshelves";
     private static final String HELP = "help";
@@ -115,8 +116,6 @@ public class CommandParsing {
                 }
                 //if choosing tiles
                 parseMultipleInteger(args);
-                /**todo this has a bug in which the second player won't be shown the command to re-arrange
-                 * even if they chose multiple tiles. not sure if the bug is here but it`s worth signaling**/
                 executeTileCommand();
             }
             case (REARRANGE) -> {
@@ -185,6 +184,13 @@ public class CommandParsing {
                 }
                 master.hideCommands();
             }
+            case (QUIT) -> {
+                if (!gameIsOn) {
+                    master.gameNotStarted();
+                    break;
+                }
+                master.quit();
+            }
             case (SHOWCHAT) -> {
                 if (!gameIsOn) {
                     master.gameNotStarted();
@@ -235,10 +241,6 @@ public class CommandParsing {
     }
 
 
-    private void executeShelfCommand() {
-        master.showShelves();
-    }
-
     private void executeColumnCommand() {
         if(choiceNumber > 5 || choiceNumber <0 ){
             master.errorFormat();
@@ -255,7 +257,6 @@ public class CommandParsing {
             master.errorFormat();
             return;
         }
-    //todo print the tiles in the order they were chosen
         master.rearrangeTiles(multipleChoiceNumber);
     }
 
@@ -319,9 +320,6 @@ public class CommandParsing {
         }
     }
 
-    public boolean isPlaying() {
-        return isPlaying;
-    }
 
     public void setPlaying(int playing) {
         if(playing>0){

@@ -22,4 +22,6 @@ public interface IRemoteController extends Remote {
     void sendPing(String token) throws RemoteException;
 
     void setPlayersWaitingRoom(String token, int num) throws RemoteException;
+
+    void disconnect(String token) throws RemoteException;
 }

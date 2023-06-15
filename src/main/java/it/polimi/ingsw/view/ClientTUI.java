@@ -30,7 +30,6 @@ public class ClientTUI implements View{
     private String connectionType;
     private String command;
     private boolean isRunning;
-    private String colorError; //todo please, make this red
     private String ServerIP;
     private LinkedList<String> chatQueue = new LinkedList<>();
     private String username;
@@ -74,7 +73,6 @@ public class ClientTUI implements View{
     }
 
     public void displayUpdatedModel(ModelUpdate modelUpdate) {
-        //todo check this
         this.gameView = new GameView(modelUpdate);
         //
         if (!this.isStarGame) {

@@ -7,26 +7,21 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChooseTilesRequest extends Request
-{
+public class ChooseTilesRequest extends Request {
     public final String token;
     public final List<String> tiles;
-    public ChooseTilesRequest(String name, List<String> tilesChosen)
-    {
+    public ChooseTilesRequest(String name, List<String> tilesChosen) {
         this.token = name;
         this.tiles = tilesChosen;
     }
 
     @Override
-    public void handleRequest(ServerSocketClientHandler socketClientHandler, ServerManager serverManager)
-    {
-        try
-        {
+    public void handleRequest(ServerSocketClientHandler socketClientHandler, ServerManager serverManager) {
+        try {
             serverManager.pickedTiles(token,tiles);
         }
-        catch (RemoteException e)
-        {
-            System.out.println(e.getMessage());
+        catch (RemoteException e) {
+           throw new RuntimeException(e);
         }
     }
 }

@@ -1,6 +1,5 @@
 package it.polimi.ingsw.client;
 
-import it.polimi.ingsw.model.board.Position;
 import it.polimi.ingsw.network.ConnectionClientTimer;
 import it.polimi.ingsw.network.IRemoteController;
 import it.polimi.ingsw.view.View;
@@ -10,7 +9,6 @@ import org.apache.logging.log4j.Logger;
 import java.io.Serializable;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 
@@ -109,11 +107,6 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
     }
 
     @Override
-    public void passTiles(ArrayList<Position> tilesChosen) {
-        master.passTiles(tilesChosen);
-    }
-
-    @Override
     public void sendChat(String username, String toString, String choice) {
         try {
             remoteController.sendChat(username, toString, choice);
@@ -126,6 +119,15 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
     public void sendPing(String token) {
         try {
             remoteController.sendPing(token);
+        } catch (RemoteException e) {
+            fileLog.error(e.getMessage());
+        }
+    }
+
+    @Override
+    public void quit(String token) {
+        try {
+            remoteController.disconnect(token);
         } catch (RemoteException e) {
             fileLog.error(e.getMessage());
         }
@@ -163,10 +165,6 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
 
     public String getName() {
         return username;
-    }
-
-    public String getUserToken() {
-        return userToken;
     }
 
     public void setConnected(boolean connected) {

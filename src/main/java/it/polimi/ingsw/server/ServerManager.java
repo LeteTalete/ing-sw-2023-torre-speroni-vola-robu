@@ -4,7 +4,6 @@ import it.polimi.ingsw.Updates.ModelUpdate;
 import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.board.Position;
-import it.polimi.ingsw.network.ClientListenerTUI;
 import it.polimi.ingsw.network.IClientListener;
 import it.polimi.ingsw.network.IRemoteController;
 import org.apache.logging.log4j.LogManager;
@@ -25,8 +24,8 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
     //constructor
     public ServerManager() throws RemoteException{
         super();
-        activeGames = new HashMap<String, GameController>();
-        activeUsers = new HashMap<String,String>();
+        activeGames = new HashMap<>();
+        activeUsers = new HashMap<>();
     }
 
     public synchronized String putInWaitingRoom(String name, String token) throws RemoteException {
@@ -244,6 +243,7 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
             ConnectionManager.get().viewListenerMap.get(token).showTextNotification("Waiting room created! Waiting for other players to join...");
         }
     }
+
 
     public void notifyAboutRearrange(String token, boolean b, ArrayList<Position> tiles) {
         try {

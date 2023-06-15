@@ -1,10 +1,9 @@
 package it.polimi.ingsw.server;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import it.polimi.ingsw.network.ConnectionServerPingTimer;
 import it.polimi.ingsw.network.ConnectionServerTimer;
 import it.polimi.ingsw.network.ConnectionTimer;
 import it.polimi.ingsw.network.IClientListener;
-import it.polimi.ingsw.network.ConnectionServerPingTimer;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
@@ -53,10 +52,6 @@ public class ConnectionManager implements Serializable {
 
     synchronized IClientListener getLocalView(String token){
         return viewListenerMap.get(token);
-    }
-
-    synchronized String getNameToken(String token){
-        return tokenNames.get(token);
     }
 
     public void disconnectToken(String token) {

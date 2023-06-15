@@ -166,11 +166,6 @@ public class ClientController {
         currentConnection.close();
     }
 
-    public IClientConnection getCurrentConnection() {
-        return currentConnection;
-    }
-
-
     public boolean isConnected() {
         return currentConnection.isConnected();
     }
@@ -181,10 +176,6 @@ public class ClientController {
 
     public void wrongCommand() {
         currentView.printError("Wrong command, please type 'help' for a list of commands");
-    }
-
-    public void printCommands() {
-        currentView.printCommands();
     }
 
     public void isItMyTurn(String name) {
@@ -201,10 +192,6 @@ public class ClientController {
 
     public void invalidNotMyTurn() {
         currentView.displayNotification("It's not your turn, yet!");
-    }
-
-    public void passTiles(ArrayList<Position> tilesChosen) {
-        myTurn = 2;
     }
 
     public void errorFormat() {
@@ -260,5 +247,8 @@ public class ClientController {
     public void hideChat() {
         currentView.hideChat();
     }
+
+    public void quit() { currentConnection.quit(userToken); }
+
 }
 

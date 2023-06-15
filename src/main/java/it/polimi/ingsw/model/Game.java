@@ -195,9 +195,6 @@ public class Game {
         return currentPlayer;
     }
 
-    public void setPreviousPlayer(Player previousPlayerPlayer) {
-        this.previousPlayer = currentPlayer;
-    }
     public Player getPreviousPlayer(){
         return this.previousPlayer;
     }
