@@ -41,6 +41,7 @@ public class ClientTUI implements View{
     private boolean showCommandsList;
 
     private boolean showOtherShelves;
+    private boolean newChatMessage;
     private ArrayList<Position> tiles;
 
     //constructor
@@ -86,6 +87,7 @@ public class ClientTUI implements View{
     public void refreshBoard(){
 
         clearConsole();
+        clearConsole();
 
         System.out.println("Type 'help' to see the list of commands." + "\n");
         if (showCommandsList) {
@@ -114,11 +116,16 @@ public class ClientTUI implements View{
 
         if ( isChatOpen ) {
             printChatQueue();
+            this.newChatMessage = false;
+        } else {
+            if (newChatMessage) {
+                System.out.println("You have new messages in the chat.");
+            }
+            System.out.println("Type 'showchat' to open the chat.");
         }
+
         System.out.println("----------------------------------------");
-
         turnPhase();
-
         System.out.println("----------------------------------------");
     }
 
@@ -528,9 +535,8 @@ public class ClientTUI implements View{
             chatQueue.removeFirst();
         }
         chatQueue.add(s);
-        if (isChatOpen){
-            refreshBoard();
-        }
+        this.newChatMessage = true;
+        refreshBoard();
         //todo
         //writeText(s);
     }
