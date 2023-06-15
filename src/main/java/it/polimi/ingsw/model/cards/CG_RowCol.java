@@ -61,11 +61,13 @@ public class CG_RowCol extends CommonGoalCard implements Serializable {
 
                     if ( cardNode.get("diffUpTo").asInt() < 0 || cardNode.get("diffUpTo").asInt() > T_Type.values().length ) {
                         throw new IllegalArgumentException("The number of different tile types must be between 0 and " + T_Type.values().length);
-                    } else if ( cardNode.get("diffUpTo").asInt() == 0 ) {
-                        if ( Shelf.COLUMNS > T_Type.values().length || Shelf.ROWS > T_Type.values().length ) {
+                    } else this.diffUpTo = cardNode.get("diffUpTo").asInt();
+
+                    if ( cardNode.get("diffUpTo").asInt() == 0 ){
+                        if (Shelf.COLUMNS > T_Type.values().length || Shelf.ROWS > T_Type.values().length) {
                             throw new IllegalArgumentException("The number of tile types (enum) must be equal or less to max(ROWS, COLUMNS) or vice-versa");
                         }
-                    } else this.diffUpTo = cardNode.get("diffUpTo").asInt();
+                    }
 
                     if ( cardNode.get("horizontal").asInt() != 0 && cardNode.get("horizontal").asInt() != 1 ) {
                         throw new IllegalArgumentException("The horizontal value must be either 0 or 1");
