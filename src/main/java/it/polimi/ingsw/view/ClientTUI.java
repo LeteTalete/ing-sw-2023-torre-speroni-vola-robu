@@ -141,8 +141,9 @@ public class ClientTUI implements View{
             case 2 -> {
                 displayNotification(StaticStrings.YOUR_TURN);
                 displayNotification("You can now re-arrange the tiles or choose the column. Here are the commands:");
-                chooseOrder(tiles);
+                writeText("Choose order: [order 'first number' 'second number' 'third number']");
                 chooseColumn();
+                chooseOrder(tiles);
             }
         }
     }
@@ -465,7 +466,6 @@ public class ClientTUI implements View{
         ArrayList<Couple> tilesChoose = new ArrayList<>();
         LivingRoomView livingRoomView = this.gameView.getGameBoardView();
         tilesPosition.forEach(position -> tilesChoose.add(livingRoomView.getCouple(position)));
-        writeText("Choose order: [order 'first number' 'second number' 'third number']");
         DrawTui.graphicsOrderTiles(tilesChoose);
     }
 
