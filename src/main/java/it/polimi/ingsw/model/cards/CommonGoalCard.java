@@ -43,12 +43,13 @@ public class CommonGoalCard extends GoalCard implements Serializable {
                 }
             }
 
-            if (cardType.equals("RowCol")) {
-                return new CG_RowCol(this.ID);
-            } else if (cardType.equals("Shape")) {
-                return new CG_Shape(this.ID);
-            } else if (cardType.equals("Groups")) {
-                return new CG_Groups(this.ID);
+            switch (cardType) {
+                case "RowCol":
+                    return new CG_RowCol(this.ID);
+                case "Shape":
+                    return new CG_Shape(this.ID);
+                case "Groups":
+                    return new CG_Groups(this.ID);
             }
 
         } catch (IOException e) {

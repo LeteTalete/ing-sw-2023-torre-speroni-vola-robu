@@ -51,12 +51,30 @@ public class CG_RowCol extends CommonGoalCard implements Serializable {
                 int cardId = cardNode.get("id").asInt();
                 if (cardId == this.ID) {
 
-                    this.type = cardNode.get("type").asText();
-                    this.numOfOccurrences = cardNode.get("numOfOccurrences").asInt();
-                    this.diffUpTo = cardNode.get("diffUpTo").asInt();
-                    this.horizontal = cardNode.get("horizontal").asInt();
-                    this.vertical = cardNode.get("vertical").asInt();
-                    this.description = cardNode.get("description").asText();
+                    if ( !cardNode.get("type").asText().equals("RowCol") ) {
+                        throw new IllegalArgumentException("The card ID does not correspond to a card of this type");
+                    } else this.type = cardNode.get("type").asText();
+
+                    if ( cardNode.get("numOfOccurrences").asInt() < 1 ) {
+                        throw new IllegalArgumentException("The number of occurrences must be greater than 0");
+                    } else this.numOfOccurrences = cardNode.get("numOfOccurrences").asInt();
+
+                    if ( cardNode.get("diffUpTo").asInt() < 0 || cardNode.get("diffUpTo").asInt() > T_Type.values().length ) {
+                        throw new IllegalArgumentException("The number of different tile types must be between 0 and " + T_Type.values().length);
+                    } else this.diffUpTo = cardNode.get("diffUpTo").asInt();
+
+                    if ( cardNode.get("horizontal").asInt() != 0 && cardNode.get("horizontal").asInt() != 1 ) {
+                        throw new IllegalArgumentException("The horizontal value must be either 0 or 1");
+                    } else this.horizontal = cardNode.get("horizontal").asInt();
+
+                    if ( cardNode.get("vertical").asInt() != 0 && cardNode.get("vertical").asInt() != 1 ) {
+                        throw new IllegalArgumentException("The vertical value must be either 0 or 1");
+                    } else this.vertical = cardNode.get("vertical").asInt();
+
+                    if ( cardNode.get("description").asText().equals("") || cardNode.get("description") == null ) {
+                        throw new IllegalArgumentException("The description cannot be empty");
+                    } else this.description = cardNode.get("description").asText();
+
                     break;
                 }
             }
@@ -65,6 +83,9 @@ public class CG_RowCol extends CommonGoalCard implements Serializable {
             System.out.println("Error reading from file: " + e.getMessage());
             e.printStackTrace();
 
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 

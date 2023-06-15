@@ -55,12 +55,35 @@ public class CG_Shape extends CommonGoalCard implements Serializable {
                 int cardId = cardNode.get("id").asInt();
                 if (cardId == this.ID) {
 
-                    this.type = cardNode.get("type").asText();
-                    this.numOfOccurrences = cardNode.get("numOfOccurrences").asInt();
-                    this.diffType = cardNode.get("diffType").asInt();
-                    this.surrounded = cardNode.get("surrounded").asInt();
-                    this.stairs = cardNode.get("stairs").asInt();
-                    this.description = cardNode.get("description").asText();
+                    if ( !cardNode.get("type").asText().equals("Shape") ) {
+                        throw new IllegalArgumentException("The card ID does not correspond to a card of this type");
+                    } else this.type = cardNode.get("type").asText();
+
+                    if ( cardNode.get("numOfOccurrences").asInt() < 1 ) {
+                        throw new IllegalArgumentException("The number of occurrences must be greater than 0");
+                    } else this.numOfOccurrences = cardNode.get("numOfOccurrences").asInt();
+
+                    if ( cardNode.get("diffType").asInt() != 0 && cardNode.get("diffType").asInt() != 1 ) {
+                        throw new IllegalArgumentException("The diffType value must be either 0 or 1");
+                    } else this.diffType = cardNode.get("diffType").asInt();
+
+                    if ( cardNode.get("surrounded").asInt() != 0 && cardNode.get("surrounded").asInt() != 1
+                            && cardNode.get("surrounded").asInt() != 2) {
+                        throw new IllegalArgumentException("The surrounded value must be either 0, 1 or 2");
+                    } else this.surrounded = cardNode.get("surrounded").asInt();
+
+                    if ( cardNode.get("stairs").asInt() != 0 && cardNode.get("stairs").asInt() != 1 ) {
+                        throw new IllegalArgumentException("The stairs value must be either 0 or 1");
+                    } else if ( cardNode.get("stairs").asInt() == 1 ) {
+                        if ( cardNode.get("surrounded").asInt() != 0 || cardNode.get("numOfOccurrences").asInt() != 1 ) {
+                            throw new IllegalArgumentException("The surrounded value must be 0 and the number of occurrences must be 1 for the stairs card");
+                        } else this.stairs = cardNode.get("stairs").asInt();
+                    }
+
+                    if ( cardNode.get("description").asText().equals("") || cardNode.get("description") == null ) {
+                        throw new IllegalArgumentException("The description cannot be empty");
+                    } else this.description = cardNode.get("description").asText();
+
 
                     JsonNode allShapes = cardNode.get("coordinates");
                     for (JsonNode singleShape : allShapes ) {
@@ -73,6 +96,10 @@ public class CG_Shape extends CommonGoalCard implements Serializable {
                         this.positions.add(dummy);
                     }
 
+                    if ( !this.positions.stream().allMatch(o -> o.stream().anyMatch(e -> (e.getX() == 0 && e.getY() == 0)) ) ) {
+                        throw new IllegalArgumentException("The coordinates must contain the (0,0) position");
+                    }
+
                     break;
                 }
             }
@@ -81,6 +108,9 @@ public class CG_Shape extends CommonGoalCard implements Serializable {
             System.out.println("Error reading from file: " + e.getMessage());
             e.printStackTrace();
 
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 

@@ -44,10 +44,22 @@ public class CG_Groups extends CommonGoalCard implements Serializable {
                 int cardId = cardNode.get("id").asInt();
                 if (cardId == this.ID) {
 
-                    this.type = cardNode.get("type").asText();
-                    this.numOfOccurrences = cardNode.get("numOfOccurrences").asInt();
-                    this.atLeast = cardNode.get("atLeast").asInt();
-                    this.description = cardNode.get("description").asText();
+                    if ( !cardNode.get("type").asText().equals("Groups") ) {
+                        throw new IllegalArgumentException("The card ID does not correspond to a card of this type");
+                    } else this.type = cardNode.get("type").asText();
+
+                    if ( cardNode.get("numOfOccurrences").asInt() < 1 ) {
+                        throw new IllegalArgumentException("The number of occurrences must be at least 1");
+                    } else this.numOfOccurrences = cardNode.get("numOfOccurrences").asInt();
+
+                    if ( cardNode.get("atLeast").asInt() < 1 ) {
+                        throw new IllegalArgumentException("The number of tiles must be at least 1");
+                    } else this.atLeast = cardNode.get("atLeast").asInt();
+
+                    if ( cardNode.get("description").asText().equals("") || cardNode.get("description") == null ) {
+                        throw new IllegalArgumentException("The card must have a description");
+                    } else this.description = cardNode.get("description").asText();
+
                     break;
                 }
             }
@@ -56,6 +68,9 @@ public class CG_Groups extends CommonGoalCard implements Serializable {
             System.out.println("Error reading from file: " + e.getMessage());
             e.printStackTrace();
 
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
