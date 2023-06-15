@@ -42,10 +42,9 @@ public class ConnectionPlayer extends GenericController {
 
     //Si attiva quando premo sul bottone buttonConnetionOK e deve attivare la connessione con il server
     public void clickedButtonConnetionOK(MouseEvent mouseEvent){
+        }
 
-    }
-
-    //Si arriva quando il giocatore che ha sta creando la partita ha deciso quale sia il numero dei dei partecipanti
+    //Si attiva quando il giocatore che sta creando la partita ha deciso quale sia il numero dei partecipanti
     public void clickedButtonNumPlayers(MouseEvent mouseEvent){
 
     }

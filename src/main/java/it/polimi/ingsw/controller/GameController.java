@@ -49,10 +49,10 @@ public class GameController {
             String[] pos = sub.split(","); //[5] [4]
             Position p = new Position(Integer.parseInt(pos[0]),Integer.parseInt(pos[1])); //(5,4)
             choice.add(p);
-            if(p.getX()>=model.getGameBoard().getBoard().length || p.getY()>=getGameBoard().getBoard()[0].length) valid = false;
+            if(p.getX()>=model.getGameBoard().getBoard().length || p.getY()>=model.getGameBoard().getBoard()[0].length) valid = false;
         }
 
-        if (valid && model.getCurrentPlayer().getMyShelf().checkEnoughSpace(choice) && this.getGameBoard().checkPlayerChoice(choice))
+        if (valid && model.getCurrentPlayer().getMyShelf().checkEnoughSpace(choice) && this.model.getGameBoard().checkPlayerChoice(choice))
         {
             this.choiceOfTiles = choice;
             master.notifyAboutTiles(token, true, choice);
@@ -104,28 +104,26 @@ public class GameController {
         }
     }
 
-    public void chooseColumn(String token, int column)
-    {
-        if(this.choiceOfTiles != null && this.choiceOfTiles.size() <= model.getCurrentPlayer().getMyShelf().getMaxFree(column))
-        {
+    public void chooseColumn(String token, int column) {
+        if(this.choiceOfTiles != null && this.choiceOfTiles.size() <= model.getCurrentPlayer().getMyShelf().getMaxFree(column)) {
+
             ArrayList<Tile> tiles = new ArrayList<>();
-            for(int i=0;i<this.choiceOfTiles.size();i++)
-            {
+
+            for(int i=0;i<this.choiceOfTiles.size();i++) {
                 tiles.add(model.getGameBoard().getCouple(this.choiceOfTiles.get(i)).getTile());
             }
+
             fileLog.debug("i'm in choose column and i'm about to notify player: "+token+" about the move ok");
             master.notifyAboutColumn(token, true);
             updateGame(token,column,tiles);
         }
-        else
-        {
+        else {
             master.notifyAboutColumn(token, false);
         }
     }
 
     public void updateGame(String token, int column, ArrayList<Tile> tiles){
-
-        insertTilesInShelf(column, tiles);
+        model.insertTiles(column, tiles);
         checkCGCs();
         updateBoardCouples();
 
@@ -153,10 +151,6 @@ public class GameController {
         }
     }
 
-    public void insertTilesInShelf(int column, ArrayList<Tile> tiles){
-        model.insertTiles(column,tiles);
-    }
-
     public void updateBoardCouples(){
         model.getGameBoard().updateCouples(this.choiceOfTiles);
         this.choiceOfTiles = null;
@@ -173,47 +167,7 @@ public class GameController {
     public Game getModel(){
         return model;
     }
-    public void startGame(){
-        model.startGame();
-    }
-    public void calculateScore(){
-        model.calculateScore();
-    }
-    public void setCurrentPlayer(Player currentPlayer) {
-        model.setCurrentPlayer(currentPlayer);
-    }
-    public Player getCurrentPlayer(){
-        return model.getCurrentPlayer();
-    }
-
-    public void setPreviousPlayer(Player previousPlayerPlayer) {
-        model.setPreviousPlayer(model.getCurrentPlayer());
-    }
-    public Player getPreviousPlayer(){
-        return model.getPreviousPlayer();
-    }
-    public void setNumOfPlayers(int num){
-       model.setNumOfPlayers(num);
-    }
-    public LivingRoom getGameBoard(){
-        return model.getGameBoard();
-    }
     public List<CommonGoalCard> getCommonGoalCards() { return  model.getCommonGoalCards(); }
-
-    public ArrayList<Player> getPlayers(){
-        return model.getPlayers();
-    }
-    public String getGameId(){
-        return this.gameId;
-    }
-
-    public ArrayList<Position> getChoiceOfTiles() {
-        return choiceOfTiles;
-    }
-
-    public void notifyAllPlayers(ModelUpdate modelUpdate) {
-        master.notifyAllPlayers(gameId, modelUpdate);
-    }
 
     public void notifyOnStartTurn(String currentPlayer) {
         master.notifyOnStartTurn(gameId, currentPlayer);
