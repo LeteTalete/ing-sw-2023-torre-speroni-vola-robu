@@ -6,7 +6,6 @@ import it.polimi.ingsw.view.View;
 import java.util.List;
 
 public interface IClientConnection {
-     void setName(String name);
      void setViewClient(View view);
      void chooseTiles(String username, List<String> tilesChosen);
 

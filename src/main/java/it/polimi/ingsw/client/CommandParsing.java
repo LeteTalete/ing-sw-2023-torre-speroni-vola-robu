@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class CommandParsing {
-    private static Logger fileLog = LogManager.getRootLogger();
+    private static final Logger fileLog = LogManager.getRootLogger();
     private static final String QUIT = "quit";
     private static final String TILES = "tiles";
     private static final String HIDESHELF = "hideshelves";
@@ -44,14 +44,12 @@ public class CommandParsing {
 
     public void elaborateInput(String command) {
         if(initializingName) {
-            fileLog.debug("initializing name");
             //if asking for name
             if(!checkUsernameFormat(command)){
                 return;
             }
             master.askLogin(command);
             if ( master.getUsername() != null) {
-                fileLog.debug("the name has been set");
                 initializingName = false;
                 if ( master.isGameOn() ) {
                     initializingRoom = false;
@@ -290,11 +288,6 @@ public class CommandParsing {
                 master.errorFormat();
                 return;
             }
-        }
-        if(multipleChoiceNumber.size() == 1)
-        {
-            fileLog.debug("multipleChoiceNumber's size is "+multipleChoiceNumber.size());
-            master.setOnlyOneTile(true);
         }
         master.chooseTiles(multipleChoiceNumber);
     }

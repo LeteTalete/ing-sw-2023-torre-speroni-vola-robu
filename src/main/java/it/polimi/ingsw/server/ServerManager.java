@@ -14,12 +14,12 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 
 public class ServerManager extends UnicastRemoteObject implements IRemoteController {
-    private static Logger fileLog = LogManager.getRootLogger();
-    private Map<String, GameController> activeGames;
+    private static final Logger fileLog = LogManager.getRootLogger();
+    private final Map<String, GameController> activeGames;
     private WaitingRoom waitingRoom;
     //network manager: to instantiate RMI and socket
     //these are all the usernames and the respective rooms
-    private Map<String, String> activeUsers;
+    private final Map<String, String> activeUsers;
 
     //constructor
     public ServerManager() throws RemoteException{

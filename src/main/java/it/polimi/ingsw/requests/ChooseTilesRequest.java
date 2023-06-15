@@ -4,7 +4,6 @@ import it.polimi.ingsw.server.ServerManager;
 import it.polimi.ingsw.server.ServerSocketClientHandler;
 
 import java.rmi.RemoteException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ChooseTilesRequest extends Request {

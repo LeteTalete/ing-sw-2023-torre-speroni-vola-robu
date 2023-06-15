@@ -13,21 +13,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClientController {
-    private static Logger fileLog = LogManager.getRootLogger();
+    private static final Logger fileLog = LogManager.getRootLogger();
     private static String HOSTNAME = "ingsw.server.hostname";
-    private View currentView;
+    private final View currentView;
     private boolean gameOn;
     private int myTurn;
     private String username;
-    private CommandParsing commPars;
+    private final CommandParsing commPars;
     private IClientConnection currentConnection;
-    private IClientListener listenerClient;
+    private final IClientListener listenerClient;
     private ResponseDecoder responseDecoder;
     private Registry registry;
     private IRemoteController remoteController;
     private String userToken;
     private boolean toCLose;
-    private boolean onlyOneTile;
 
     //constructor
     public ClientController(View currentView) {
@@ -44,19 +43,15 @@ public class ClientController {
         //todo uncomment this and place SIP instead of null when initializing connections
         //currentView.askServerIP();
         //String SIP = currentView.getServerIP();
-        String connectionStatus = "Connecting...";
         if(currentView.getConnectionType().equals("RMI")) {
-            connectionStatus = setupRMI(System.getProperty(HOSTNAME));
+            setupRMI(System.getProperty(HOSTNAME));
         }
         else if(currentView.getConnectionType().equals("SOCKET")){
-            connectionStatus = setupSocket(System.getProperty(HOSTNAME));
-        }
-        else if(connectionStatus!=null){
-            this.currentView.displayNotification(connectionStatus);
+            setupSocket(System.getProperty(HOSTNAME));
         }
     }
 
-    public String setupSocket(String serverIP) {
+    public void setupSocket(String serverIP) {
         try {
             //you have to pass 'this' to the client socket
             ClientSocket clientSocket = new ClientSocket(serverIP, 8899, this);
@@ -69,15 +64,14 @@ public class ClientController {
         } catch (Exception e) {
             fileLog.error(e);
         }
-        return null;
     }
 
-    private String setupRMI(String serverIP) {
+    private void setupRMI(String serverIP) {
         try{
             //TODO put serverip in host field of locateregisty
             this.registry = LocateRegistry.getRegistry(serverIP,8089);
             this.remoteController = (IRemoteController) registry.lookup("Login");
-            ClientRMI clientRMI = new ClientRMI(this, remoteController);
+            ClientRMI clientRMI = new ClientRMI(remoteController);
             this.currentConnection = clientRMI;
             clientRMI.setViewClient(currentView);
             this.responseDecoder = new ResponseDecoder(listenerClient, currentConnection);
@@ -88,7 +82,6 @@ public class ClientController {
         }catch(Exception e){
             fileLog.error(e.getMessage());
         }
-        return null;
     }
 
     public void userLogin () {
@@ -214,10 +207,6 @@ public class ClientController {
         //currentView.addToChatQueue(message, receiver);
     }
 
-
-    public void setOnlyOneTile(boolean b) {
-        this.onlyOneTile= b;
-    }
 
     public void pingSyn() {
         currentConnection.setPing(true);

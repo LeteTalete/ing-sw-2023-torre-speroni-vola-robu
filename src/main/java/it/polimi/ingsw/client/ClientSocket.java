@@ -18,14 +18,12 @@ import java.util.Timer;
 
 public class ClientSocket implements IClientConnection
 {
-    private static Logger fileLog = LogManager.getRootLogger();
+    private static final Logger fileLog = LogManager.getRootLogger();
 
     private final ClientController master;
-    private String username;
     private String token;
-    private String ip;
-    private int port;
-    private View viewClient;
+    private final String ip;
+    private final int port;
     private Socket socket;
     private ObjectInputStream socketIn;
     private  ObjectOutputStream socketOut;
@@ -113,15 +111,10 @@ public class ClientSocket implements IClientConnection
         socketOut.close();
     }
 
-    @Override
-    public void setName(String name) {
-        this.username=name;
-    }
 
     @Override
     public void setViewClient(View currentView)
     {
-        this.viewClient = currentView;
     }
 
     @Override
@@ -185,7 +178,6 @@ public class ClientSocket implements IClientConnection
     public synchronized void numberOfPlayers(String name, String tokenA, int number) {
         fileLog.debug("numberOfPlayers");
         setUserToken(tokenA);
-        setName(name);
         setReceivedResponse(true);
         fileLog.debug("Sending request for waiting room");
         request(new WaitingRoomRequest(tokenA, name, number));

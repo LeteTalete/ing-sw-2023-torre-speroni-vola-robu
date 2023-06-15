@@ -14,20 +14,16 @@ import java.util.Timer;
 
 
 public class ClientRMI implements IClientConnection, Remote, Serializable {
-    private static Logger fileLog = LogManager.getRootLogger();
-    private String username;
-    private ClientController master;
+    private static final Logger fileLog = LogManager.getRootLogger();
     private final IRemoteController remoteController;
     private View viewClient;
     private String userToken;
-    private ResponseDecoder responseDecoder;
     private boolean isConnected;
     private boolean syn;
     private Timer checkTimer;
     private final int synCheckTime = 1000;
 
-    public ClientRMI(ClientController clientHandler, IRemoteController rc) {
-        this.master = clientHandler;
+    public ClientRMI(IRemoteController rc) {
         this.remoteController = rc;
     }
 
@@ -89,7 +85,7 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
 
     @Override
     public void setResponseDecoder(ResponseDecoder responseDecoder) {
-        this.responseDecoder = responseDecoder;
+        //only for socket
     }
 
     @Override
@@ -145,11 +141,6 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
         }
     }
 
-    @Override
-    public void setName(String name) {
-        this.username=name;
-    }
-
     public void setViewClient(View currentView) {
         this.viewClient = currentView;
     }
@@ -163,9 +154,6 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
         }
     }
 
-    public String getName() {
-        return username;
-    }
 
     public void setConnected(boolean connected) {
         isConnected = connected;

@@ -2,7 +2,6 @@ package it.polimi.ingsw.responses;
 
 import it.polimi.ingsw.model.board.Position;
 
-import java.lang.reflect.Array;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 

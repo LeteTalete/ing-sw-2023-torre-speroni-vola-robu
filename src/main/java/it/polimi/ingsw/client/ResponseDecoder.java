@@ -9,7 +9,7 @@ import org.apache.logging.log4j.Logger;
 import java.rmi.RemoteException;
 
 public class ResponseDecoder implements ResponseHandler {
-    private static Logger fileLog = LogManager.getRootLogger();
+    private static final Logger fileLog = LogManager.getRootLogger();
 
     private final IClientListener clientListener;
     private final IClientConnection client;
@@ -32,7 +32,6 @@ public class ResponseDecoder implements ResponseHandler {
     @Override
     public void handle(LoginResponse loginResponse) throws RemoteException {
         clientListener.notifySuccessfulRegistration(loginResponse.name, loginResponse.b, loginResponse.token, loginResponse.first);
-        fileLog.debug("Login response received, about to set receivedresponse false");
         client.setReceivedResponse(false);
         synchronized (client) {
             client.notifyAll();

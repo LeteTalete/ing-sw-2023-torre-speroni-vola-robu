@@ -12,9 +12,8 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 
 public class ClientListenerTUI extends UnicastRemoteObject implements IClientListener {
-    private static Logger fileLog = LogManager.getRootLogger();
-
-    private String connectionType = "RMI";
+    private static final Logger fileLog = LogManager.getRootLogger();
+    private final String connectionType = "RMI";
     private transient final ClientTUI view;
     private String token;
     public ClientListenerTUI(ClientTUI currentView) throws RemoteException{
