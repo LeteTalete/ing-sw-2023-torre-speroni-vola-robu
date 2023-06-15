@@ -383,6 +383,76 @@ public class GameControllerTest {
         assert(gameController.getChoiceOfTiles().get(1).getX() == 4);
         assert(gameController.getChoiceOfTiles().get(1).getY() == 7);
 
+
+        //test2
+        gameController.setChoiceOfTiles(null);
+        choice.clear();
+
+        choice.add("15,7");
+
+        gameController.chooseTiles(player1.getTokenId(), choice);
+
+        assert(gameController.getChoiceOfTiles() == null);
+
+
+        //test3
+        gameController.setChoiceOfTiles(null);
+        choice.clear();
+
+        choice.add("3,9");
+
+        gameController.chooseTiles(player1.getTokenId(), choice);
+
+        assert(gameController.getChoiceOfTiles() == null);
+
+
+        //test4
+        gameController.setChoiceOfTiles(null);
+        choice.clear();
+
+        ArrayList<Tile> t = new ArrayList<>();
+        for(int i=0;i<player1.getMyShelf().getShelfsMatrix()[0].length;i++)
+        {
+            t.clear();
+            for(int j=0;j<player1.getMyShelf().getShelfsMatrix().length-1;j++)
+            {
+                t.add(new Tile(T_Type.CAT,0));
+            }
+            player1.getMyShelf().insertTiles(i,t);
+        }
+        player1.getMyShelf().printShelf();
+
+        choice.add("3,7");
+        choice.add("4,7");
+
+        gameController.chooseTiles(player1.getTokenId(), choice);
+
+        assert(gameController.getChoiceOfTiles() == null);
+
+
+        //test5
+        gameController.setChoiceOfTiles(null);
+        choice.clear();
+        player1.getMyShelf().clearShelf();
+
+        for(int i=0;i<player1.getMyShelf().getShelfsMatrix()[0].length;i++)
+        {
+            t.clear();
+            for(int j=0;j<player1.getMyShelf().getShelfsMatrix().length-1;j++)
+            {
+                t.add(new Tile(T_Type.CAT,0));
+            }
+            player1.getMyShelf().insertTiles(i,t);
+        }
+        player1.getMyShelf().printShelf();
+
+        choice.add("3,7");
+
+        gameController.chooseTiles(player1.getTokenId(), choice);
+
+        assert(gameController.getChoiceOfTiles().get(0).getX() == 3);
+        assert(gameController.getChoiceOfTiles().get(0).getY() == 7);
+
     }
     @Test
     public void rearrangeTilesTest()
