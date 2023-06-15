@@ -6,25 +6,15 @@ import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.board.LivingRoom;
 import it.polimi.ingsw.model.board.Position;
 import it.polimi.ingsw.model.board.Shelf;
+import it.polimi.ingsw.model.board.Tile;
 import it.polimi.ingsw.model.cards.CG_RowCol;
 import it.polimi.ingsw.model.cards.CG_Shape;
 import it.polimi.ingsw.model.cards.CommonGoalCard;
 import it.polimi.ingsw.model.enumerations.T_Type;
-import it.polimi.ingsw.model.board.Tile;
 import it.polimi.ingsw.server.ServerManager;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import static net.bytebuddy.matcher.ElementMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -32,9 +22,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
 @ExtendWith(MockitoExtension.class)
 public class GameControllerTest {
     private GameController gameController;
+    GameController gC = mock(GameController.class);
     ServerManager master = mock(ServerManager.class);
     Game model = mock(Game.class);
     String gameId = "0";
@@ -262,7 +256,7 @@ public class GameControllerTest {
     public void notifyOnStartTurnTest(){
         ArrayList<Player> players = new ArrayList<>();
         gameController = new GameController(players,gameId, master);
-        String nameTest = new String("kiwi");
+        String nameTest = "kiwi";
         doNothing().when(master).notifyOnStartTurn(gameId, nameTest);
         gameController.notifyOnStartTurn(nameTest);
         verify(master, times(1)).notifyOnStartTurn(gameId, nameTest);
@@ -290,7 +284,7 @@ public class GameControllerTest {
     @Test
     public void notifyOnLastTurnTest(){
         ArrayList<Player> players = new ArrayList<>();
-        String nameTest = new String("kiwi");
+        String nameTest = "kiwi";
         gameController = new GameController(players,gameId, master);
         doNothing().when(master).notifyOnLastTurn(gameId, nameTest);
         gameController.notifyOnLastTurn(nameTest);
@@ -366,12 +360,15 @@ public class GameControllerTest {
         player2.setGoalCard(2);
         players.add(player2);
 
+
         gameController = new GameController(players,gameId, master);
 
         LivingRoom board = new LivingRoom(2);
-        board.printBoard();
 
-        gameController.setModel(model);
+        Game gameModel = gameController.getModel();
+        gameModel.setBoard(board);
+        gameModel.getGameBoard().printBoard();
+        gameModel.setCurrentPlayer(player1);
 
 
         //test1

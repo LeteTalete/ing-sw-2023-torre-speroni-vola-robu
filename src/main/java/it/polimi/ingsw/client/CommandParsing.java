@@ -22,8 +22,6 @@ public class CommandParsing {
     private static final String SHOWCHAT = "showchat";
     private static final String HIDECHAT = "hidechat";
     private static final String COLUMN = "column";
-
-    private static final String BACK = "back";
     //for when it's the player's turn
     private boolean isPlaying;
     private boolean gameIsOn;

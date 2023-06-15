@@ -3,16 +3,13 @@ package it.polimi.ingsw.controller;
 import it.polimi.ingsw.Updates.ModelUpdate;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.model.board.LivingRoom;
 import it.polimi.ingsw.model.board.Position;
 import it.polimi.ingsw.model.board.Tile;
 import it.polimi.ingsw.model.cards.CommonGoalCard;
-import it.polimi.ingsw.responses.RearrangeOk;
 import it.polimi.ingsw.server.ServerManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,12 +27,6 @@ public class GameController {
         gameId = id;
         master = serverMaster;
     }
-
-    public void initialize() throws RemoteException {
-        model.initialize();
-    }
-
-
 
     public void chooseTiles(String token, List<String> userInput)
     {

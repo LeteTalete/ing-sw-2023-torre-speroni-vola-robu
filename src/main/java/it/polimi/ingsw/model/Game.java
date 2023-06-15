@@ -234,4 +234,7 @@ public class Game {
         return scoreBoard;
     }
 
+    public void setBoard(LivingRoom board) {
+        this.gameBoard = board;
+    }
 }
