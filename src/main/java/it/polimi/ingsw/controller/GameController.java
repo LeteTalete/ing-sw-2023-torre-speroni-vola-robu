@@ -37,7 +37,7 @@ public class GameController {
 
 
 
-    public void chooseTiles(String token, List<String> userInput) throws RemoteException
+    public void chooseTiles(String token, List<String> userInput)
     {
         ArrayList<Position> choice = new ArrayList<>();
         boolean valid = true;
@@ -183,5 +183,15 @@ public class GameController {
 
     public void notifyOnLastTurn(String nickname) {
         master.notifyOnLastTurn(gameId, nickname);
+    }
+
+    public void setChoiceOfTiles(ArrayList<Position> choiceOfTiles)
+    {
+        this.choiceOfTiles = choiceOfTiles;
+    }
+
+    public ArrayList<Position> getChoiceOfTiles()
+    {
+        return this.choiceOfTiles;
     }
 }

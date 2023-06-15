@@ -348,6 +348,94 @@ public class GameControllerTest {
     }
 
     @Test
+    public void rearrangeTilesTest()
+    {
+        ArrayList<Player> players = new ArrayList<>();
+
+        Player player1 = new Player();
+        player1.setNickname("kiwi");
+        player1.setTokenId("1");
+        player1.setMyShelf(new Shelf());
+        player1.setGoalCard(1);
+        players.add(player1);
+
+        Player player2 = new Player();
+        player2.setNickname("mango");
+        player2.setTokenId("2");
+        player2.setMyShelf(new Shelf());
+        player2.setGoalCard(2);
+        players.add(player2);
+
+        gameController = new GameController(players,gameId, master);
+
+        LivingRoom board = new LivingRoom(2);
+        board.printBoard();
+
+        //test 1
+        choiceOfTiles.clear();
+        choiceOfTiles.add(0, new Position(3,7));
+        choiceOfTiles.add(1, new Position(4,7));
+
+        gameController.setChoiceOfTiles(choiceOfTiles);
+
+        ArrayList<String> order = new ArrayList<>();
+        order.add("2");
+        order.add("1");
+
+        gameController.rearrangeTiles(player1.getTokenId(), order);
+
+        assert(gameController.getChoiceOfTiles().get(0).getX() == choiceOfTiles.get(1).getX());
+        assert(gameController.getChoiceOfTiles().get(0).getY() == choiceOfTiles.get(1).getY());
+        assert(gameController.getChoiceOfTiles().get(1).getX() == choiceOfTiles.get(0).getX());
+        assert(gameController.getChoiceOfTiles().get(1).getY() == choiceOfTiles.get(0).getY());
+
+        choiceOfTiles.clear();
+        order.clear();
+
+
+        //test 2
+        choiceOfTiles.add(0, new Position(3,7));
+        choiceOfTiles.add(1, new Position(4,7));
+
+        gameController.setChoiceOfTiles(choiceOfTiles);
+
+        order = new ArrayList<>();
+        order.add("3");
+        order.add("1");
+
+        gameController.rearrangeTiles(player1.getTokenId(), order);
+
+        assert(gameController.getChoiceOfTiles().get(0).getX() == choiceOfTiles.get(0).getX());
+        assert(gameController.getChoiceOfTiles().get(0).getY() == choiceOfTiles.get(0).getY());
+        assert(gameController.getChoiceOfTiles().get(1).getX() == choiceOfTiles.get(1).getX());
+        assert(gameController.getChoiceOfTiles().get(1).getY() == choiceOfTiles.get(1).getY());
+
+        choiceOfTiles.clear();
+        order.clear();
+
+        //test 3
+        choiceOfTiles.add(0, new Position(3,7));
+        choiceOfTiles.add(1, new Position(4,7));
+
+        gameController.setChoiceOfTiles(choiceOfTiles);
+
+        order = new ArrayList<>();
+        order.add("1");
+        order.add("1");
+
+        gameController.rearrangeTiles(player1.getTokenId(), order);
+
+        assert(gameController.getChoiceOfTiles().get(0).getX() == choiceOfTiles.get(0).getX());
+        assert(gameController.getChoiceOfTiles().get(0).getY() == choiceOfTiles.get(0).getY());
+        assert(gameController.getChoiceOfTiles().get(1).getX() == choiceOfTiles.get(1).getX());
+        assert(gameController.getChoiceOfTiles().get(1).getY() == choiceOfTiles.get(1).getY());
+
+        choiceOfTiles.clear();
+        order.clear();
+
+    }
+
+    @Test
     public void nextTurnTest(){
         ArrayList<Player> players = new ArrayList<>();
         Player player1 = new Player();
