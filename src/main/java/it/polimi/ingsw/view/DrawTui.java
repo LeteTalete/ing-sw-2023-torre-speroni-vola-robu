@@ -39,7 +39,7 @@ public class DrawTui {
         print.println(string);
     }
     public static void askWhat(String whatString){
-        print.print(whatString + "\n#: ");
+        print.println(whatString);
     }
 
     static String getNextLine() {

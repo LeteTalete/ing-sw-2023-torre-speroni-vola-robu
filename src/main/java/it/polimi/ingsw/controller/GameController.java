@@ -105,8 +105,9 @@ public class GameController {
             }
 
             fileLog.debug("i'm in choose column and i'm about to notify player: "+token+" about the move ok");
-            master.notifyAboutColumn(token, true);
             updateGame(token,column,tiles);
+            master.notifyAboutColumn(token, true);
+            master.notifyOnEndTurn(token);
         }
         else {
             master.notifyAboutColumn(token, false);
@@ -122,7 +123,6 @@ public class GameController {
     }
 
     public void nextTurn(String token){
-        master.notifyOnEndTurn(token);
         if ( model.getEndGame() != null && model.getPreviousPlayer().getChair() ){
             model.gameHasEnded();
         } else {
