@@ -91,7 +91,7 @@ public class DrawTui {
 
     //Ritorna la stringa della tile specifica a seconda della tipologia della Tile letta
     private static String slotTile(Couple tile){
-        if(tile.getState().equals(State.INVALID) || tile.getState().equals(State.EMPTY) || tile.getState().equals(State.EMPTY_AND_UNUSABLE) ){
+        if(tile.getState().equals(State.INVALID) || tile.getState().equals(State.EMPTY) ){
             return stringRepeat(empty, sizeSlotTile);
         } else {
             T_Type typeTile = tile.getTile().getTileType();

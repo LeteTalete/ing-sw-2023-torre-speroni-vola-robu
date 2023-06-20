@@ -173,7 +173,7 @@ public class LivingRoom implements Serializable {
         for( int i = 0; i < board.length; i++) {
             for( int j = 0 ; j < board[0].length; j++) {
 
-                if (getCouple(new Position(i,j)).getState().equals(State.EMPTY) || getCouple(new Position(i,j)).getState().equals(State.EMPTY_AND_UNUSABLE)) {
+                if (getCouple(new Position(i,j)).getState().equals(State.EMPTY) ) {
                     System.out.print( " " + " " + " ");
                 } else if (getCouple(new Position(i,j)).getState().equals(State.INVALID)) {
                     System.out.print( "\033[0;100m" + " " + " " + " " + "\033[0m" );
@@ -255,14 +255,13 @@ public class LivingRoom implements Serializable {
 
             this.board = new Couple[jsonMatrixCopy.length][jsonMatrixCopy[0].length];
             deck = new Deck();
-            int emptyUnusableCheck;
 
             for (int i = 0; i < jsonMatrixCopy.length; i++) {
                 for (int j = 0; j < jsonMatrixCopy[i].length; j++) {
 
                     if (jsonMatrixCopy[i][j] == 0) {
-                        emptyUnusableCheck = 1;
-                        Couple couple = new Couple(emptyUnusableCheck);
+                        Couple couple = new Couple();
+                        couple.setState(State.INVALID);
                         this.board[i][j] = couple;
                     } else if (jsonMatrixCopy[i][j] == 2) {
                         Couple couple = new Couple(deck.draw());
@@ -273,9 +272,9 @@ public class LivingRoom implements Serializable {
                     } else if (( jsonMatrixCopy[i][j] == 4 ) && ( numberOfPlayers == 4 )) {
                         Couple couple = new Couple(deck.draw());
                         this.board[i][j] = couple;
-                    } else { // If a space is not INVALID and doesn't meet any of the requirements then it set to EMPTY_AND_UNUSABLE (rework needed)
-                        emptyUnusableCheck = 0;
-                        Couple couple = new Couple(emptyUnusableCheck);
+                    } else {
+                        Couple couple = new Couple();
+                        couple.setState(State.INVALID);
                         this.board[i][j] = couple;
                     }
                 }
