@@ -16,6 +16,7 @@ public class Deck implements Serializable {
 
     private Stack<Tile> tiles;
 
+    /** Constructor Deck creates a new Deck instance, it adds 132 tiles to the deck's tiles stack and shuffles them. */
     public Deck()
     {
         tiles = new Stack<>();
@@ -33,20 +34,33 @@ public class Deck implements Serializable {
         this.shuffle();
     }
 
+    /**
+     * Method getTiles returns the tiles of this Deck object.
+     * @return - tiles.
+     */
     public Stack<Tile> getTiles() {
         return tiles;
     }
 
+    /** Method shuffle shuffles the tiles of the deck. */
     public void shuffle(){
         //this method shuffles the deck so tiles will be drawn randomly
         Collections.shuffle(tiles);
    }
 
+    /**
+     * Method draw returns the last tile of the deck.
+     * @return - the last tile of the deck.
+     */
    public Tile draw()
    {
        return tiles.pop();
    }
 
+    /**
+     * Method getSize returns the size of the deck.
+     * @return - the size of the deck.
+     */
    public int getSize()
    {
        return this.tiles.size();

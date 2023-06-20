@@ -27,7 +27,7 @@ public class CG_RowCol extends CommonGoalCard implements Serializable {
     private String description;
 
     /**
-     * Constructor for CG_RowCol saves the CGC parameters given the card ID.
+     * Constructor for CG_RowCol given the card ID reads CommonGoalCards.json and saves the CGC parameters.
      *
      * @param id - Card ID used to identify the card.
      * type - The card's type.
@@ -105,8 +105,8 @@ public class CG_RowCol extends CommonGoalCard implements Serializable {
     @Override
     public int checkConditions(Shelf shelf){
 
-        Couple[][] shelfsMatrix = shelf.getShelfsMatrix();
-        List<Integer> cardsAlreadyChecked = shelf.getCardsAlreadyChecked(); // This array keeps track of all the cards which
+        Couple[][] shelfsMatrix = shelf.getShelfMatrix();
+        List<Integer> cardsAlreadyChecked = shelf.getCardsAlreadyClaimed(); // This array keeps track of all the cards which
         // conditions have already been met inside the player's shelf.
         List<T_Type> typesInside = new ArrayList<>(); // This list keeps track of all the tile types that have been found
         // inside the current column/row.

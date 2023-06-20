@@ -14,7 +14,7 @@ public class Player implements Serializable {
     private PersonalGoalCard personalGoalCard;
     private int score = 0;
 
-
+    /** Constructor for the player class. It creates a new shelf for the player. */
     public Player(){
         this.shelf = new Shelf();
     }
