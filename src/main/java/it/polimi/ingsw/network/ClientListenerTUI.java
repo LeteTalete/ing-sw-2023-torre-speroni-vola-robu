@@ -80,7 +80,6 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
 
     @Override
     public void notifyEndTurn() throws RemoteException {
-        view.setMyTurn(0);
         view.displayNotification("Turn ended.");
     }
 

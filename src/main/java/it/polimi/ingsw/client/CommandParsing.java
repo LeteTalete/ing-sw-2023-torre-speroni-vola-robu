@@ -238,7 +238,7 @@ public class CommandParsing {
 
 
     private void executeColumnCommand() {
-        if(choiceNumber > 5 || choiceNumber <0 ){
+        if(choiceNumber > 4 || choiceNumber <0 ){
             master.errorFormat();
         }
         else{

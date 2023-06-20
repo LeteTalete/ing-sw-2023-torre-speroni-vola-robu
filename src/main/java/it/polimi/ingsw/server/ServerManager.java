@@ -169,7 +169,7 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
 
         fileLog.info("I created a new game with id: " + waitingRoom.getId() + "and started the game!");
 
-        game.getModel().initialize();
+        game.getModel().startGame();
 
         waitingRoom=null;
     }
