@@ -62,9 +62,9 @@ public class CGC1Test {
         shelf.printShelf();
         System.out.println();
 
-        assertTrue(shelf.getCardsAlreadyChecked().isEmpty());
+        assertTrue(shelf.getCardsAlreadyClaimed().isEmpty());
         assertEquals(0, CGC1.checkConditions(shelf));
-        assertFalse(shelf.getCardsAlreadyChecked().contains(CGC1.getID()));
+        assertFalse(shelf.getCardsAlreadyClaimed().contains(CGC1.getID()));
     }
 
     /**
@@ -121,9 +121,9 @@ public class CGC1Test {
         shelf.printShelf();
         System.out.println();
 
-        assertTrue(shelf.getCardsAlreadyChecked().isEmpty());
+        assertTrue(shelf.getCardsAlreadyClaimed().isEmpty());
         assertEquals(1, CGC1.checkConditions(shelf));
-        assertTrue(shelf.getCardsAlreadyChecked().contains(CGC1.getID()));
+        assertTrue(shelf.getCardsAlreadyClaimed().contains(CGC1.getID()));
         assertEquals(0, CGC1.checkConditions(shelf));
     }
 
@@ -182,9 +182,9 @@ public class CGC1Test {
         shelf.printShelf();
         System.out.println();
 
-        assertTrue(shelf.getCardsAlreadyChecked().isEmpty());
+        assertTrue(shelf.getCardsAlreadyClaimed().isEmpty());
         assertEquals(0, CGC1.checkConditions(shelf));
-        assertFalse(shelf.getCardsAlreadyChecked().contains(CGC1.getID()));
+        assertFalse(shelf.getCardsAlreadyClaimed().contains(CGC1.getID()));
     }
 
     /**
@@ -240,9 +240,9 @@ public class CGC1Test {
         shelf.printShelf();
         System.out.println();
 
-        assertTrue(shelf.getCardsAlreadyChecked().isEmpty());
+        assertTrue(shelf.getCardsAlreadyClaimed().isEmpty());
         assertEquals(0, CGC1.checkConditions(shelf));
-        assertFalse(shelf.getCardsAlreadyChecked().contains(CGC1.getID()));
+        assertFalse(shelf.getCardsAlreadyClaimed().contains(CGC1.getID()));
     }
 
 }

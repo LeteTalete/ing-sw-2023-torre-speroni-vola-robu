@@ -27,7 +27,7 @@ public class PersonalGoalCard extends GoalCard implements Serializable {
         char type; // Type of Tile to search, read: positionTilePC
         T_Type typeTile; //Type of Tile read from myShelf
         String[] positionTileRow; // the Array of String containing the position and the type of Tile to search for in a given row
-        Couple[][] shelfCopy = myShelf.getShelfsMatrix();
+        Couple[][] shelfCopy = myShelf.getShelfMatrix();
         for (int row = 0; row < Shelf.ROWS; row++) {
             positionTileRow = this.positionTilePGC.get(row).split(":"); // Split the string to have the tile position and type, separately.
             lenPos = positionTileRow.length; //To know the number of Tiles that are in a row

@@ -56,9 +56,9 @@ public class CGC7Test {
         shelf.printShelf();
         System.out.println();
 
-        assertTrue(shelf.getCardsAlreadyChecked().isEmpty());
+        assertTrue(shelf.getCardsAlreadyClaimed().isEmpty());
         assertEquals(0, CGC7.checkConditions(shelf));
-        assertFalse(shelf.getCardsAlreadyChecked().contains(CGC7.getID()));
+        assertFalse(shelf.getCardsAlreadyClaimed().contains(CGC7.getID()));
     }
 
     /**
@@ -94,9 +94,9 @@ public class CGC7Test {
         shelf.printShelf();
         System.out.println();
 
-        assertTrue(shelf.getCardsAlreadyChecked().isEmpty());
+        assertTrue(shelf.getCardsAlreadyClaimed().isEmpty());
         assertEquals(1, CGC7.checkConditions(shelf));
-        assertTrue(shelf.getCardsAlreadyChecked().contains(CGC7.getID()));
+        assertTrue(shelf.getCardsAlreadyClaimed().contains(CGC7.getID()));
         assertEquals(0, CGC7.checkConditions(shelf));
     }
 
@@ -155,9 +155,9 @@ public class CGC7Test {
         shelf.printShelf();
         System.out.println();
 
-        assertTrue(shelf.getCardsAlreadyChecked().isEmpty());
+        assertTrue(shelf.getCardsAlreadyClaimed().isEmpty());
         assertEquals(1, CGC7.checkConditions(shelf));
-        assertTrue(shelf.getCardsAlreadyChecked().contains(CGC7.getID()));
+        assertTrue(shelf.getCardsAlreadyClaimed().contains(CGC7.getID()));
         assertEquals(0, CGC7.checkConditions(shelf));
     }
 
@@ -217,9 +217,9 @@ public class CGC7Test {
         shelf.printShelf();
         System.out.println();
 
-        assertTrue(shelf.getCardsAlreadyChecked().isEmpty());
+        assertTrue(shelf.getCardsAlreadyClaimed().isEmpty());
         assertEquals(0, CGC7.checkConditions(shelf));
-        assertFalse(shelf.getCardsAlreadyChecked().contains(CGC7.getID()));
+        assertFalse(shelf.getCardsAlreadyClaimed().contains(CGC7.getID()));
     }
 
 

@@ -53,9 +53,9 @@ public class CGC5Test {
         shelf.printShelf();
         System.out.println();
 
-        assertTrue(shelf.getCardsAlreadyChecked().isEmpty());
+        assertTrue(shelf.getCardsAlreadyClaimed().isEmpty());
         assertEquals(0, CGC5.checkConditions(shelf));
-        assertFalse(shelf.getCardsAlreadyChecked().contains(CGC5.getID()));
+        assertFalse(shelf.getCardsAlreadyClaimed().contains(CGC5.getID()));
     }
 
     /**
@@ -95,9 +95,9 @@ public class CGC5Test {
         shelf.printShelf();
         System.out.println();
 
-        assertTrue(shelf.getCardsAlreadyChecked().isEmpty());
+        assertTrue(shelf.getCardsAlreadyClaimed().isEmpty());
         assertEquals(1, CGC5.checkConditions(shelf));
-        assertTrue(shelf.getCardsAlreadyChecked().contains(CGC5.getID()));
+        assertTrue(shelf.getCardsAlreadyClaimed().contains(CGC5.getID()));
         assertEquals(0, CGC5.checkConditions(shelf));
     }
 
@@ -146,9 +146,9 @@ public class CGC5Test {
         shelf.printShelf();
         System.out.println();
 
-        assertTrue(shelf.getCardsAlreadyChecked().isEmpty());
+        assertTrue(shelf.getCardsAlreadyClaimed().isEmpty());
         assertEquals(1, CGC5.checkConditions(shelf));
-        assertTrue(shelf.getCardsAlreadyChecked().contains(CGC5.getID()));
+        assertTrue(shelf.getCardsAlreadyClaimed().contains(CGC5.getID()));
         assertEquals(0, CGC5.checkConditions(shelf));
     }
 
@@ -197,9 +197,9 @@ public class CGC5Test {
         shelf.printShelf();
         System.out.println();
 
-        assertTrue(shelf.getCardsAlreadyChecked().isEmpty());
+        assertTrue(shelf.getCardsAlreadyClaimed().isEmpty());
         assertEquals(1, CGC5.checkConditions(shelf));
-        assertTrue(shelf.getCardsAlreadyChecked().contains(CGC5.getID()));
+        assertTrue(shelf.getCardsAlreadyClaimed().contains(CGC5.getID()));
         assertEquals(0, CGC5.checkConditions(shelf));
     }
 
@@ -239,9 +239,9 @@ public class CGC5Test {
         shelf.printShelf();
         System.out.println();
 
-        assertTrue(shelf.getCardsAlreadyChecked().isEmpty());
+        assertTrue(shelf.getCardsAlreadyClaimed().isEmpty());
         assertEquals(0, CGC5.checkConditions(shelf));
-        assertFalse(shelf.getCardsAlreadyChecked().contains(CGC5.getID()));
+        assertFalse(shelf.getCardsAlreadyClaimed().contains(CGC5.getID()));
     }
     /**
      * Test failTest2 checks if checkConditions returns 0 when there are 5 groups with at least 2 elements and one group
@@ -287,9 +287,9 @@ public class CGC5Test {
         shelf.printShelf();
         System.out.println();
 
-        assertTrue(shelf.getCardsAlreadyChecked().isEmpty());
+        assertTrue(shelf.getCardsAlreadyClaimed().isEmpty());
         assertEquals(0, CGC5.checkConditions(shelf));
-        assertFalse(shelf.getCardsAlreadyChecked().contains(CGC5.getID()));
+        assertFalse(shelf.getCardsAlreadyClaimed().contains(CGC5.getID()));
     }
 
     /**
@@ -335,9 +335,9 @@ public class CGC5Test {
         shelf.printShelf();
         System.out.println();
 
-        assertTrue(shelf.getCardsAlreadyChecked().isEmpty());
+        assertTrue(shelf.getCardsAlreadyClaimed().isEmpty());
         assertEquals(0, CGC5.checkConditions(shelf));
-        assertFalse(shelf.getCardsAlreadyChecked().contains(CGC5.getID()));
+        assertFalse(shelf.getCardsAlreadyClaimed().contains(CGC5.getID()));
     }
 
 }

@@ -91,7 +91,7 @@ class ShelfMaxTest {
         dummy.setState(State.PICKED);
         for(int i=0; i<Shelf.COLUMNS; i++)
         {
-            s.getShelfsMatrix()[0][i]=dummy;
+            s.getShelfMatrix()[0][i]=dummy;
         }
         assertEquals(5,s.getMaxFree(5));
     }
@@ -103,7 +103,7 @@ class ShelfMaxTest {
         dummy.setState(State.PICKED);
         for(int i=0; i<Shelf.ROWS; i++) {
             for(int j=0; j<Shelf.COLUMNS; j++) {
-                s.getShelfsMatrix()[i][j] = dummy;
+                s.getShelfMatrix()[i][j] = dummy;
             }
         }
         assertTrue(s.checkShelfFull());

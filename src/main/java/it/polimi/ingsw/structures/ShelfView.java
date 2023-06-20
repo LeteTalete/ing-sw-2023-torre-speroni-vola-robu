@@ -9,7 +9,7 @@ public class ShelfView implements Serializable {
     private Couple[][] shelfsMatrixView;
 
     public ShelfView(Shelf shelf){
-        this.shelfsMatrixView = shelf.getShelfsMatrix();
+        this.shelfsMatrixView = shelf.getShelfMatrix();
     }
 
     public Couple[][] getShelfsMatrixView(){

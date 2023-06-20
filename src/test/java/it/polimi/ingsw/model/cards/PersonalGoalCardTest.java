@@ -85,7 +85,7 @@ class PersonalGoalCardTest extends GoalCard{
 
         assertTrue(numPersonalCard > 0 && numPersonalCard <= 12);
         assertNotNull(myShelf);
-        Couple[][] shelfCopy = myShelf.getShelfsMatrix();
+        Couple[][] shelfCopy = myShelf.getShelfMatrix();
         try {
             //Read JSON file
             InputStream inputStream = PersonalGoalCard.class.getClassLoader().getResourceAsStream("JSON/PersonalGoals.json");
