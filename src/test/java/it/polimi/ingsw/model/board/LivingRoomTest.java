@@ -39,7 +39,6 @@ public class LivingRoomTest {
 
             testBoard = new Couple[jsonMatrixCopy.length][jsonMatrixCopy[0].length];
             Deck deck = new Deck();
-            int emptyUnusableCheck;
 
             assertNotNull(deck);
 
@@ -47,8 +46,8 @@ public class LivingRoomTest {
                 for (int j = 0; j < jsonMatrixCopy[i].length; j++) {
 
                     if (jsonMatrixCopy[i][j] == 0) {
-                        emptyUnusableCheck = 1;
-                        Couple couple = new Couple(emptyUnusableCheck);
+                        Couple couple = new Couple();
+                        couple.setState(State.INVALID);
                         testBoard[i][j] = couple;
 
                         assertEquals(State.INVALID, testBoard[i][j].getState());
@@ -78,12 +77,12 @@ public class LivingRoomTest {
                         assertNotNull(testBoard[i][j].getTile());
 
 
-                    } else { // If a space is not INVALID and doesn't meet any of the requirements then it set to EMPTY_AND_UNUSABLE (rework needed)
-                        emptyUnusableCheck = 0;
-                        Couple couple = new Couple(emptyUnusableCheck);
+                    } else {
+                        Couple couple = new Couple();
+                        couple.setState(State.INVALID);
                         testBoard[i][j] = couple;
 
-                        assertEquals(State.EMPTY_AND_UNUSABLE, testBoard[i][j].getState());
+                        assertEquals(State.INVALID, testBoard[i][j].getState());
                         assertNull(testBoard[i][j].getTile());
 
                     }
