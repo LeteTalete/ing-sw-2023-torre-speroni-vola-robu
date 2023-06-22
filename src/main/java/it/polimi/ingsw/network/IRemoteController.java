@@ -10,8 +10,7 @@ public interface IRemoteController extends Remote {
     void login (String name, IClientListener viewListener) throws RemoteException;
     void pickedTiles(String token, List<String> tilesCoordinates) throws RemoteException;
     void rearrangeTiles(String token, List<String> tilesOrdered) throws RemoteException;
-    /**selectColumn also calls endTurn method, which notifies the player about the end of their turn,
-    changes the currentPlayer, and checks if it;s the last turn*/
+
     void selectColumn (String token, int column) throws RemoteException;
     void createWaitingRoom(String username, String userToken) throws RemoteException;
 

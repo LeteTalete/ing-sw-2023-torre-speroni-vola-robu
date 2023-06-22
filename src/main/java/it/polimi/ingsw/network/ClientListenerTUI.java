@@ -11,11 +11,16 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 
+/**this class is used by the server to communicate with the client via RMI*/
+
 public class ClientListenerTUI extends UnicastRemoteObject implements IClientListener {
     private static Logger fileLog = LogManager.getRootLogger();
     private String connectionType = "RMI";
     private transient final ClientTUI view;
     private String token;
+
+    /**ClientListenerTUI constructor.
+     * @param currentView - used to invoke the methods of the view.*/
     public ClientListenerTUI(ClientTUI currentView) throws RemoteException{
         this.view = currentView;
     }
@@ -25,14 +30,20 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
         return connectionType;
     }
 
+    /**method sendUpdatedModel to send the model update to the view.
+     * @param message - contains the model update*/
     @Override
     public void sendUpdatedModel(ModelUpdate message) throws RemoteException {
         view.displayUpdatedModel(message);
     }
 
+    /**notifySuccessfulRegistration method is used to notify about the success (or failure) of the client's login.
+     * @param name - username of the client.
+     * @param token - token used to identify the client.
+     * @param b - boolean signalling the success or failure of the login procedure.
+     * @param first - boolean used to signal whether the player needs to create a waiting room or not.*/
     @Override
     public void notifySuccessfulRegistration(String name, boolean b, String token, boolean first) throws RemoteException {
-        fileLog.debug("I'm in clientListenerTUI");
         if(b) {
             view.displayNotification("Registration Successful!");
             setToken(token);
@@ -50,6 +61,10 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
     public void setToken(String token) {
         this.token = token;
     }
+    public String getToken() {
+        return token;
+    }
+
 
     @Override
     public void setGameOn() throws RemoteException {
@@ -57,17 +72,22 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
         view.setGameOn(true);
     }
 
+    /**changeTurn method is used to signal the start of a new turn.
+     * @param name - the username of the current player.*/
     @Override
     public void changeTurn(String name) throws RemoteException {
         view.changeTurn(name);
     }
 
+    /**showTextNotificationMethod is used to display a generic text notification on the view.
+     * @param message - containst the text notification.*/
     @Override
     public void showTextNotification(String message) throws RemoteException {
         view.displayNotification(message);
     }
 
-
+    /**method notifyColumnsOk used to notify about the success or failure of the column choice.
+     * @param ok - boolean signalling the success or failure of the move.*/
     @Override
     public void notifyColumnOk(boolean ok) throws RemoteException {
         if(ok){
@@ -78,27 +98,39 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
         }
     }
 
+    /**method notifyEndTurn used to notify the player about the end of their turn*/
     @Override
     public void notifyEndTurn() throws RemoteException {
         view.displayNotification("Turn ended.");
     }
 
+    /**method notifyLastTurn used to notify the players about the start of the last turn.
+     * @param firstDoneUser - username of the player who first completed their shelf.*/
     @Override
     public void notifyLastTurn(String firstDoneUser) throws RemoteException {
         view.displayNotification(firstDoneUser + "completed their Shelfie. Last round starts now!");
     }
 
+    /**method notifyChatMessage used to display a chat message.
+     * @param message - text of the chat message.
+     * @param receiver - receiver of the message.
+     * @param sender - sender of the message.*/
     @Override
     public void notifyChatMessage(String sender, String message, String receiver) throws RemoteException {
         view.displayChatNotification("@"+sender + " to " + receiver +": " + message);
 
     }
 
+    /**method sendUpdatedModel to send the model update to the view.
+     * @param modelUpdate - contains the model update*/
     @Override
     public void updateModel(ModelUpdate modelUpdate) throws RemoteException {
         view.displayUpdatedModel(modelUpdate);
     }
 
+    /**method notifyRearrangeOk used to notify the player about the success or failure of the re-arrange.
+     * @param ok - boolean signalling the success or failure of the move.
+     * @param tiles - contains the re-arranged tiles so that the player can view them.*/
     @Override
     public void notifyRearrangeOk(boolean ok, ArrayList<Position> tiles) throws RemoteException {
         if(ok){
@@ -111,6 +143,9 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
         }
     }
 
+    /**method notifyTilesOk used to notify the player whether the choice of tiles was a success or a failure.
+     * @param ok - boolean signalling the success or failure of the move.
+     * @param tiles - contains the tiles chosen by the client.*/
     @Override
     public void notifyTilesOk(boolean ok, ArrayList<Position> tiles) throws RemoteException {
         if(ok){
@@ -122,16 +157,20 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
         }
     }
 
+    /**method notifyGameStart used to notify about the start of the game*/
     @Override
     public void notifyGameStart() throws RemoteException {
         setGameOn();
     }
 
+    /**method notifyStartTurn used to notify about the start of a turn.
+     * @param currentPlayer - username of the current player.*/
     @Override
     public void notifyStartTurn(String currentPlayer) throws RemoteException {
         view.changeTurn(currentPlayer);
     }
 
+    /**method notifyEndGame notifies about the end of a match.*/
     @Override
     public void notifyEndGame() throws RemoteException {
         view.setMyTurn(0);
@@ -139,22 +178,26 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
         view.showEndResult();
     }
 
+
+    /**method notifyOnCGC notifies about the gain of a common goal card.
+     * @param nickname - username of the player who won the card.
+     * @param id - id of the common goal card.*/
     @Override
     public void notifyOnCGC(String nickname, int id) throws RemoteException {
         view.displayNotification(nickname + " gained Common Goal Card " + id + "!");
     }
 
+    /**method notifyAboutDisconnection notifies about the disconnection of a user.
+     * @param disconnectedUser - username of the disconnected player.*/
     @Override
     public void notifyAboutDisconnection(String disconnectedUser) throws RemoteException {
         view.displayNotification(disconnectedUser + " disconnected. The game is now over.");
     }
 
+    /**sendPingSyn is used to receive the ping of synchronization from the server*/
     @Override
     public void sendPingSyn() throws RemoteException {
         view.pingSyn();
     }
 
-    public String getToken() {
-        return token;
-    }
 }

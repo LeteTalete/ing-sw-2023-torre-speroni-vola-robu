@@ -8,15 +8,21 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
+/**this interface's methods are called mainly by the server to communicate with the client via RMI (using
+ * ClientListenerGUI and ClientListenerTUI) or via Socket (using ServerSocketClientHandler)*/
+
 public interface IClientListener extends Remote, Serializable {
 
     String getTypeConnection() throws RemoteException;
+
+    //todo check if this is necessary! there is already a method named start turn
     void sendUpdatedModel(ModelUpdate message) throws RemoteException;
 
     void notifySuccessfulRegistration(String name, boolean b, String token, boolean first) throws RemoteException;
 
     void setGameOn() throws RemoteException;
 
+    //todo check if this is necessary! there is already a method named start turn
     void changeTurn(String currentPlayer) throws RemoteException;
 
     void showTextNotification(String waitingRoomCreated) throws RemoteException;

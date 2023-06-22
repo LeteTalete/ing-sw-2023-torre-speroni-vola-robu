@@ -12,6 +12,7 @@ import java.rmi.RemoteException;
 import java.util.List;
 import java.util.Timer;
 
+/**ClientRMI class used to manage the RMI connection to the server.*/
 
 public class ClientRMI implements IClientConnection, Remote, Serializable {
     private static final Logger fileLog = LogManager.getRootLogger();

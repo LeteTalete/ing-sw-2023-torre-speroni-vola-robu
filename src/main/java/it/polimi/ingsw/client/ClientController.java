@@ -12,6 +12,9 @@ import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.List;
 
+/**the ClientController class manages the client: it re-directs requests between the view, the responseDecoder,
+ * the commandParsing and the network.*/
+
 public class ClientController {
     private static final Logger fileLog = LogManager.getRootLogger();
     private static String HOSTNAME = "ingsw.server.hostname";
@@ -39,6 +42,49 @@ public class ClientController {
         currentView.setMaster(this, commPars);
         //setupConnection();
         this.currentView.chooseConnection();
+    }
+
+    public String getUsername() {
+        return username;
+    }
+    public void setUsername(String username){ this.username = new String(username); }
+
+    public void setUserToken(String userToken) {
+        this.userToken = userToken;
+    }
+
+    /**this boolean signals whether the connection needs to be closed or not*/
+    public boolean isToClose() {
+        return toCLose;
+    }
+    public void setToCLose(boolean toCLose) {
+        this.toCLose = toCLose;
+    }
+
+    /**this boolean is used on the client's side to know if a game has started or not*/
+    public boolean isGameOn() {
+        return gameOn;
+    }
+    public void setGameOn(boolean gameOn) {
+        this.gameOn = gameOn;
+        commPars.setGameIsOn(gameOn);
+    }
+
+    public boolean isConnected() {
+        return currentConnection.isConnected();
+    }
+
+
+    /**this int is used on the client's side to know at which stage of the turn they are playing (0 when it's not
+     * the client's turn, 1 when they are choosing tiles, 2 if they are either choosing a column or
+     * re-arranging the tiles*/
+    public int isMyTurn() {
+        return myTurn;
+    }
+
+    public void setMyTurn(int turn) {
+        this.myTurn = turn;
+        commPars.setPlaying(turn);
     }
 
     /**method setupConnection sets up the connection of the client, choosing between RMI and Socket.
@@ -105,37 +151,11 @@ public class ClientController {
         currentView.getUsername();
     }
 
-    public String getUsername() {
-        return username;
-    }
-
     /**method to pass the chosen tiles from the view to the connection. It also passes the user's token
      * @param tilesChosen - the list of tiles chosen by the user.
      * */
     public void chooseTiles(List<String> tilesChosen) {
         currentConnection.chooseTiles(userToken, tilesChosen);
-    }
-
-    /**this boolean is used on the client's side to know if a game has started or not*/
-    public boolean isGameOn() {
-        return gameOn;
-    }
-
-    public void setGameOn(boolean gameOn) {
-        this.gameOn = gameOn;
-        commPars.setGameIsOn(gameOn);
-    }
-
-    /**this int is used on the client's side to know at which stage of the turn they are playing (0 when it's not
-     * the client's turn, 1 when they are choosing tiles, 2 if they are either choosing a column or
-     * re-arranging the tiles*/
-    public int isMyTurn() {
-        return myTurn;
-    }
-
-    public void setMyTurn(int turn) {
-        this.myTurn = turn;
-        commPars.setPlaying(turn);
     }
 
     /**method serverSavedUsername takes the reply of the server after the login and saves useful information for the
@@ -158,20 +178,6 @@ public class ClientController {
         }
     }
 
-    public void setUsername(String username){ this.username = new String(username); }
-
-    public void setUserToken(String userToken) {
-        this.userToken = userToken;
-    }
-
-    /**this boolean signals whether the connection needs to be closed or not*/
-    public boolean isToClose() {
-        return toCLose;
-    }
-
-    public void setToCLose(boolean toCLose) {
-        this.toCLose = toCLose;
-    }
 
     /**method numberOfPlayers checks whether the input from the view is valid. If it is, it sends the number
      * of players to the server so that it will create a waiting room.
@@ -194,10 +200,6 @@ public class ClientController {
     /**method close closes the connection with the server.*/
     public void close() {
         currentConnection.close();
-    }
-
-    public boolean isConnected() {
-        return currentConnection.isConnected();
     }
 
     /**askLogin method is invoked by the ResponseDecoder to send the username to the server.
@@ -257,7 +259,6 @@ public class ClientController {
         currentConnection.sendChat(username, message, receiver);
         //currentView.addToChatQueue(message, receiver);
     }
-
 
     /**todo*/
     public void pingSyn() {

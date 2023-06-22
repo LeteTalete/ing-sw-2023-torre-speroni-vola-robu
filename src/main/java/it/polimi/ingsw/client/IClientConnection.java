@@ -5,6 +5,8 @@ import it.polimi.ingsw.view.View;
 
 import java.util.List;
 
+/**connection interface which is implemented by ClientRMI and ClientSocket*/
+
 public interface IClientConnection {
      void setViewClient(View view);
      void chooseTiles(String username, List<String> tilesChosen);

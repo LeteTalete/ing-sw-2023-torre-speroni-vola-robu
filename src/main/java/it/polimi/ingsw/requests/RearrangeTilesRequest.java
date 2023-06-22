@@ -1,7 +1,7 @@
 package it.polimi.ingsw.requests;
 
 import it.polimi.ingsw.server.ServerManager;
-import it.polimi.ingsw.server.ServerSocketClientHandler;
+import it.polimi.ingsw.network.ServerSocketClientHandler;
 
 import java.rmi.RemoteException;
 import java.util.List;

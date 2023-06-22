@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.Timer;
 
+/**ClientSocket class used to manage the Socket connection to the server.*/
+
 public class ClientSocket implements IClientConnection
 {
     private static final Logger fileLog = LogManager.getRootLogger();

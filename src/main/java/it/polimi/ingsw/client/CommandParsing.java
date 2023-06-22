@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**CommandParsing class is used to parse the user's input*/
+
 public class CommandParsing {
     private static final Logger fileLog = LogManager.getRootLogger();
     private static final String QUIT = "quit";

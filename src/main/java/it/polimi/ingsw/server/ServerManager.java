@@ -6,6 +6,7 @@ import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.board.Position;
 import it.polimi.ingsw.network.IClientListener;
 import it.polimi.ingsw.network.IRemoteController;
+import it.polimi.ingsw.network.ServerSocketClientHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -21,13 +22,27 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
     //these are all the usernames and the respective rooms
     private final Map<String, String> activeUsers;
 
-    //constructor
+    /**ServerManager constructor*/
     public ServerManager() throws RemoteException{
         super();
         activeGames = new HashMap<>();
         activeUsers = new HashMap<>();
     }
 
+    /**method setPlayersWaitingRoom to set a maximum number of players to a waiting room.
+     * @param token - token to notify the client about the correct creation of the waiting room.
+     * @param num - number of players expected to be in the next match.*/
+    @Override
+    public void setPlayersWaitingRoom(String token, int num) throws RemoteException {
+        waitingRoom.setMaxPLayers(num);
+        if(activeGames.isEmpty()){
+            ConnectionManager.get().viewListenerMap.get(token).showTextNotification("Waiting room created! Waiting for other players to join...");
+        }
+    }
+
+    /**putInWaitingRoom method is used to place the players inside the waiting room.
+     * @param name - name of the player.
+     * @param token - token used to identify the player.*/
     public synchronized String putInWaitingRoom(String name, String token) throws RemoteException {
         if(waitingRoom==null){
             fileLog.info("No waiting room found... I'm going to create one");
@@ -44,20 +59,9 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
         }
     }
 
-
-    public synchronized void notifyAllPlayers(String id, ModelUpdate something) {
-        activeUsers.entrySet()
-                .stream()
-                .filter(e -> e.getValue().equals(id))
-                .forEach(e -> {
-                    try {
-                        ConnectionManager.get().viewListenerMap.get(e.getKey()).sendUpdatedModel(something);
-                    } catch (RemoteException ex) {
-                        fileLog.error(ex.getMessage());
-                    }
-                });
-    }
-
+    /**createWaitingRoom method to create a waiting room and assign it an id.
+     * @param token - token of the first player to be placed in the waiting room.
+     * @param name - username of the first player to be placed in the waiting room.*/
     public synchronized void createWaitingRoom (String name, String token){
         Random rand = new Random();
         int id = rand.nextInt(1000);
@@ -66,6 +70,10 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
         activeUsers.put(token, String.valueOf(id));
     }
 
+    /**method sendChat used to send a message to either all the players or to a single one.
+     * @param receiver - receiver of the message.
+     * @param sender - sender of the message.
+     * @param message - the text of the message.*/
     @Override
     public void sendChat(String sender, String message, String receiver) throws RemoteException {
         fileLog.info("Received a chat message from "+sender+" to "+receiver+": "+message);
@@ -101,6 +109,7 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
         //if the game is shut down, the server will notify all the players about it
     }
 
+    /**generateToken methods create a random token to assign to a player*/
     public synchronized String generateToken(){
         Random rand = new Random();
         int id = rand.nextInt(1000);
@@ -108,6 +117,11 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
         return token;
     }
 
+    /**login method used to log a client in. It then notifies the client about the success or the failure of
+     * the login procedure.
+     * @param name - username of the client.
+     * @param viewListener - listener of the client, which will be used from now on to send them notifications
+     * and responses.*/
     @Override
     public void login(String name, IClientListener viewListener) throws RemoteException {
         if(ConnectionManager.get().tokenNames.containsValue(name)){
@@ -141,6 +155,9 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
         }
     }
 
+    /**method createGame used to create the game. It adds the players to the match. If there are still users waiting,
+     * it notifies them that there is no game active (since there can only be one active at a time.
+     * @param id - identification of the room.*/
     public void createGame(String id) {
         //i have to create the players when creating the game
         ArrayList<Player> playersReady = new ArrayList<>();
@@ -172,17 +189,9 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
         waitingRoom=null;
     }
 
-    public void notifyAboutGameStart(ArrayList<Player> playersReady) {
-        playersReady.stream().forEach(p -> {
-            try {
-                ConnectionManager.get().viewListenerMap.get(p.getTokenId()).notifyGameStart();
-            } catch (RemoteException e) {
-                throw new RuntimeException(e);
-            }
-        });
-    }
-
-
+    /**method used to pass the choice of tiles to the gameController.
+     * @param token - token of the client who made the move.
+     * @param tilesCoordinates - coordinates of the tiles chosen by the client.*/
     @Override
     public void pickedTiles(String token, List<String> tilesCoordinates) throws RemoteException {
         fileLog.info("I received user: " + token + "  and tiles coordinates: " + tilesCoordinates);
@@ -190,21 +199,30 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
         fileLog.info("Finished picking tiles: " + tilesCoordinates + " for token: " + token );
     }
 
+    /**method used to pass the choice of re-arranged tiles to the gameController.
+     * @param token - token of the client who made the move.
+     * @param tilesOrdered - order of the tiles re-arranged by the client.*/
     @Override
     public synchronized void rearrangeTiles(String token, List<String> tilesOrdered) throws RemoteException {
         activeGames.get(activeUsers.get(token)).rearrangeTiles(token, tilesOrdered);
     }
 
+    /**method used to pass the choice of column to the gameController.
+     * @param token - token of the client who made the move.
+     * @param column - column chosen by the client.*/
     @Override
     public synchronized void selectColumn(String token, int column) throws RemoteException {
         activeGames.get(activeUsers.get(token)).chooseColumn(token, column);
     }
 
+    /**disconnect method to disconnect a user.
+     * @param token - token to identify the disconnecting client.*/
     public void disconnect(String token) {
-        fileLog.debug("I am disconnecting user: " + token);
         ConnectionManager.get().disconnectToken(token);
     }
 
+    /**method used to get the token from a serverSocketClientHandler, mainly used disconnect.
+     * @param serverSocketClientHandler - the listener of the client.*/
     public String getTokenFromHandler(ServerSocketClientHandler serverSocketClientHandler) {
         for(String token : ConnectionManager.get().viewListenerMap.keySet()){
             if(ConnectionManager.get().viewListenerMap.get(token).equals(serverSocketClientHandler)){
@@ -214,12 +232,20 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
         return "error!";
     }
 
+    /**createToken is used to add the token and the socket handler of a client to the map of all the client
+     * listeners. It also starts the timers.
+     * @param socketClientHandler - the listener of the client.
+     * @param token - the token to identify the client*/
     public void createToken(ServerSocketClientHandler socketClientHandler, String token) {
         ConnectionManager.get().viewListenerMap.put(token, socketClientHandler);
         ConnectionManager.get().startPingTimer(token);
         ConnectionManager.get().startSynTimer(token);
     }
 
+    /**createToken is used to add the token and the viewListener of a client to the map of all the client
+     * listeners. It also starts the timers.
+     * @param viewListener - the listener of the client.
+     * @param token - the token to identify the client*/
     public void generateTokenRMI(IClientListener viewListener, String token) throws RemoteException {
         ConnectionManager.get().viewListenerMap.put(token, viewListener);
         ConnectionManager.get().startPingTimer(token);
@@ -231,15 +257,26 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
         ConnectionManager.get().setPingMap(token, true);
     }
 
-    @Override
-    public void setPlayersWaitingRoom(String token, int num) throws RemoteException {
-        waitingRoom.setMaxPLayers(num);
-        if(activeGames.isEmpty()){
-            ConnectionManager.get().viewListenerMap.get(token).showTextNotification("Waiting room created! Waiting for other players to join...");
-        }
+
+
+
+    /**method used to notify all the players of a room about the start of the game.
+     * @param playersReady - list of players to be notified.*/
+    public void notifyAboutGameStart(ArrayList<Player> playersReady) {
+        playersReady.stream().forEach(p -> {
+            try {
+                ConnectionManager.get().viewListenerMap.get(p.getTokenId()).notifyGameStart();
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
 
+    /**method notifyAboutRearrange used to notify the client about a successful (or failed) re-arrange.
+     * @param token - token to identify the client.
+     * @param b - boolean signaling whether the move was successful or not.
+     * @param tiles - list of tiles re-arranged, so that the client can view them.*/
     public void notifyAboutRearrange(String token, boolean b, ArrayList<Position> tiles) {
         try {
             ConnectionManager.get().viewListenerMap.get(token).notifyRearrangeOk(b, tiles);
@@ -248,6 +285,9 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
         }
     }
 
+    /**notifyAboutColumn method used to notify the client about a successful (or failed) choice of column.
+     * @param b - boolean signaling whether the move was succesful or not.
+     * @param token - token used to identify the client.*/
     public void notifyAboutColumn(String token, boolean b) {
         try {
             ConnectionManager.get().viewListenerMap.get(token).notifyColumnOk(b);
@@ -256,6 +296,9 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
         }
     }
 
+    /**notifyOnStartTurn method to notify the players about the start of a new turn.
+     * @param currentPlayer - the username of the current player.
+     * @param gameId - id of the room.*/
     public void notifyOnStartTurn(String gameId, String currentPlayer) {
         activeUsers.entrySet()
                 .stream()
@@ -269,6 +312,8 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
                 });
     }
 
+    /**notifyOnEndTurn method used to notify a single player about the end of their turn.
+     * @param token - token used to identify the player.*/
     public void notifyOnEndTurn(String token) {
         try {
             ConnectionManager.get().viewListenerMap.get(token).notifyEndTurn();
@@ -276,6 +321,11 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
             fileLog.error(e.getMessage());
         }
     }
+
+    /**notifyAboutTiles method used to notify a player about a successful (or failed) choice of tiles.
+     * @param b - boolean signaling whether the move was successful or not.
+     * @param token - token used to identify the client.
+     * @param choice - choice of tiles passed to the client so that they can view them.*/
     public void notifyAboutTiles(String token, boolean b, ArrayList<Position> choice) {
         try {
             ConnectionManager.get().viewListenerMap.get(token).notifyTilesOk(b, choice);
@@ -284,6 +334,8 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
         }
     }
 
+    /**method used to identify the players about the end of a match.
+     * @param gameId - id of the room.*/
     public void notifyOnEndGame(String gameId) {
         activeUsers.entrySet()
                 .stream()
@@ -297,6 +349,9 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
                 });
     }
 
+    /**method used to notify the players about the beginning of the last turn.
+     * @param gameId - id of the room.
+     * @param nickname - username of the player who first completed their shelf.*/
     public void notifyOnLastTurn(String gameId, String nickname) {
         activeUsers.entrySet()
                 .stream()
@@ -310,6 +365,10 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
                 });
     }
 
+    /**method used to notify the players about someone getting a common goal card.
+     * @param gameId - id of the room.
+     * @param nickname - username of the players who won the card.
+     * @param id - id of the common goal card gained.*/
     public void notifyOnCGC(String gameId, String nickname, int id) {
         activeUsers.entrySet()
                 .stream()
@@ -317,6 +376,23 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
                 .forEach(e -> {
                     try {
                         ConnectionManager.get().viewListenerMap.get(e.getKey()).notifyOnCGC(nickname, id);
+                    } catch (RemoteException ex) {
+                        fileLog.error(ex.getMessage());
+                    }
+                });
+    }
+
+
+    /**method notifyAllPlayers is used to send a model update to all the players in a match.
+     * @param id - id of the match.
+     * @param something - contains the model update*/
+    public synchronized void notifyAllPlayers(String id, ModelUpdate something) {
+        activeUsers.entrySet()
+                .stream()
+                .filter(e -> e.getValue().equals(id))
+                .forEach(e -> {
+                    try {
+                        ConnectionManager.get().viewListenerMap.get(e.getKey()).sendUpdatedModel(something);
                     } catch (RemoteException ex) {
                         fileLog.error(ex.getMessage());
                     }

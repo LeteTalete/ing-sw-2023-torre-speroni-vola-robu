@@ -8,6 +8,8 @@ import org.apache.logging.log4j.Logger;
 
 import java.rmi.RemoteException;
 
+/**this class is used to decode and handle the messages incoming from the server (only for Socket purposes)*/
+
 public class ResponseDecoder implements ResponseHandler {
     private static final Logger fileLog = LogManager.getRootLogger();
 
