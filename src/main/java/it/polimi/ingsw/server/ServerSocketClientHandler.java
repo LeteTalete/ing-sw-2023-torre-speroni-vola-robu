@@ -20,14 +20,14 @@ import java.util.ArrayList;
 //this class handles the communication with the client associated to the assigned socket
 public class ServerSocketClientHandler implements Runnable, IClientListener
 {
-    private static Logger fileLog = LogManager.getRootLogger();
-    private Socket socket;
+    private static final Logger fileLog = LogManager.getRootLogger();
+    private final Socket socket;
     private ServerManager serverManager;
     private ObjectInputStream in;
     private ObjectOutputStream out;
     private boolean stop;
     private String token;
-    private String connectionType = "SOCKET";
+    private final String connectionType = "SOCKET";
 
     public ServerSocketClientHandler(Socket socket)
     {
@@ -88,8 +88,7 @@ public class ServerSocketClientHandler implements Runnable, IClientListener
     }
 
     @Override
-    public void sendUpdatedModel(ModelUpdate updated) throws RemoteException
-    {
+    public void sendUpdatedModel(ModelUpdate updated) throws RemoteException {
         respond(new ModelUpdateNotification(updated));
     }
 
@@ -102,7 +101,7 @@ public class ServerSocketClientHandler implements Runnable, IClientListener
 
     @Override
     public void setGameOn() throws RemoteException {
-        //only for rmi?
+        //only for rmi
     }
 
     @Override

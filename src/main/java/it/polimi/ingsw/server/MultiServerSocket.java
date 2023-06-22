@@ -13,12 +13,12 @@ import java.util.concurrent.Executors;
 //this is the principal class of server socket which only instantiate the ServerSocket, execute accept(),
 //and create threads to handle accepted connections
 public class MultiServerSocket {
-    private static Logger fileLog = LogManager.getRootLogger();
+    private static final Logger fileLog = LogManager.getRootLogger();
 
     private final ServerSocket serverSocket;
     private final ExecutorService pool;
-    private int port;
-    private ServerManager serverManager;
+    private final int port;
+    private final ServerManager serverManager;
 
     public MultiServerSocket(int port, ServerManager serverManager) throws IOException {
         serverSocket = new ServerSocket(port);

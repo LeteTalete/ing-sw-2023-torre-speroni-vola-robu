@@ -3,16 +3,13 @@ package it.polimi.ingsw.controller;
 import it.polimi.ingsw.Updates.ModelUpdate;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.model.board.LivingRoom;
 import it.polimi.ingsw.model.board.Position;
 import it.polimi.ingsw.model.board.Tile;
 import it.polimi.ingsw.model.cards.CommonGoalCard;
-import it.polimi.ingsw.responses.RearrangeOk;
 import it.polimi.ingsw.server.ServerManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +20,12 @@ public class GameController {
     private ArrayList<Position> choiceOfTiles;
     private ServerManager master;
 
+    /**
+     * Constructor GameController creates a new GameController instance.
+     * @param playersList - list of players that are playing the game.
+     * @param id - id of the game.
+     * @param serverMaster - serverManager that manages the server.
+     */
     public GameController(ArrayList<Player> playersList, String id, ServerManager serverMaster) {
         model = new Game(id, this);
         model.setPlayers(playersList);
@@ -31,13 +34,13 @@ public class GameController {
         master = serverMaster;
     }
 
-    public void initialize() throws RemoteException {
-        model.initialize();
-    }
-
-
-
-    public void chooseTiles(String token, List<String> userInput) throws RemoteException
+    /**
+     * Method chooseTiles saves the choice of tiles made by the player if it's valid and notifies the player, otherwise
+     * it doesn't save the choice and notifies the player that the choice is invalid.
+     * @param token - token that identifies the player.
+     * @param userInput - list of strings that represent the positions of the tiles chosen by the player.
+     */
+    public void chooseTiles(String token, List<String> userInput)
     {
         ArrayList<Position> choice = new ArrayList<>();
         boolean valid = true;
@@ -49,10 +52,10 @@ public class GameController {
             String[] pos = sub.split(","); //[5] [4]
             Position p = new Position(Integer.parseInt(pos[0]),Integer.parseInt(pos[1])); //(5,4)
             choice.add(p);
-            if(p.getX()>=model.getGameBoard().getBoard().length || p.getY()>=getGameBoard().getBoard()[0].length) valid = false;
+            if(p.getX()>=model.getGameBoard().getBoard().length || p.getY()>=model.getGameBoard().getBoard()[0].length) valid = false;
         }
 
-        if (valid && model.getCurrentPlayer().getMyShelf().checkEnoughSpace(choice) && this.getGameBoard().checkPlayerChoice(choice))
+        if (valid && model.getCurrentPlayer().getMyShelf().checkEnoughSpace(choice) && this.model.getGameBoard().checkPlayerChoice(choice))
         {
             this.choiceOfTiles = choice;
             master.notifyAboutTiles(token, true, choice);
@@ -66,6 +69,12 @@ public class GameController {
         }
     }
 
+    /**
+     * Method rearrangeTiles saves the rearrangement of the tiles made by the player if it's valid and notifies the player,
+     * otherwise it doesn't save the rearrangement and notifies the player that the rearrangement is invalid.
+     * @param token - token that identifies the player.
+     * @param order - list of strings that represent the new order of the tiles chosen by the player.
+     */
     public void rearrangeTiles(String token, List<String> order)
     {
         boolean valid = true;
@@ -104,36 +113,44 @@ public class GameController {
         }
     }
 
-    public void chooseColumn(String token, int column)
-    {
-        if(this.choiceOfTiles != null && this.choiceOfTiles.size() <= model.getCurrentPlayer().getMyShelf().getMaxFree(column))
-        {
+    /**
+     * Method chooseColumn inserts the tiles chosen by the player in the column chosen by the player if it's valid and
+     * notifies the player, otherwise it doesn't insert the tiles and notifies the player that the choice is invalid.
+     * If the choice is valid it also triggers the update of the game.
+     * @param token - token that identifies the player.
+     * @param column - integer that represents the column chosen by the player.
+     */
+    public void chooseColumn(String token, int column) {
+        if(this.choiceOfTiles != null && this.choiceOfTiles.size() <= model.getCurrentPlayer().getMyShelf().getMaxFree(column)) {
+
             ArrayList<Tile> tiles = new ArrayList<>();
-            for(int i=0;i<this.choiceOfTiles.size();i++)
-            {
+
+            for(int i=0;i<this.choiceOfTiles.size();i++) {
                 tiles.add(model.getGameBoard().getCouple(this.choiceOfTiles.get(i)).getTile());
             }
+            model.insertTiles(column, tiles);
+
             fileLog.debug("i'm in choose column and i'm about to notify player: "+token+" about the move ok");
+
+            updateGame();
             master.notifyAboutColumn(token, true);
-            updateGame(token,column,tiles);
+            master.notifyOnEndTurn(token);
         }
-        else
-        {
+        else {
             master.notifyAboutColumn(token, false);
         }
     }
 
-    public void updateGame(String token, int column, ArrayList<Tile> tiles){
-
-        insertTilesInShelf(column, tiles);
+    /** Method updateGame updates the game by checking the CGCs, updating the board couples and changing the current player. */
+    public void updateGame(){
         checkCGCs();
         updateBoardCouples();
 
-        nextTurn(token);
+        nextTurn();
     }
 
-    public void nextTurn(String token){
-        master.notifyOnEndTurn(token);
+    /** Method nextTurn changes the current player and if the game has ended it notifies the players. */
+    public void nextTurn(){
         if ( model.getEndGame() != null && model.getPreviousPlayer().getChair() ){
             model.gameHasEnded();
         } else {
@@ -141,6 +158,10 @@ public class GameController {
         }
     }
 
+    /**
+     * Method checkCGCs checks if the current player has completed any CGC and if so it gives him the points, then it
+     * notifies all players.
+     */
     public void checkCGCs(){
 
         for (CommonGoalCard card : model.getCommonGoalCards() ) {
@@ -153,10 +174,10 @@ public class GameController {
         }
     }
 
-    public void insertTilesInShelf(int column, ArrayList<Tile> tiles){
-        model.insertTiles(column,tiles);
-    }
-
+    /**
+     * Method updateBoardCouples updates the couples on the board by removing the tiles that have been chosen by the player.
+     * It then checks if the board needs to be refilled and if so it refills it.
+     */
     public void updateBoardCouples(){
         model.getGameBoard().updateCouples(this.choiceOfTiles);
         this.choiceOfTiles = null;
@@ -166,68 +187,66 @@ public class GameController {
         }
     }
 
+    // todo: no usages found, should be deleted
     public void generateCGC(){
         model.generateCGC(model.getPlayers().size());
     }
 
+    /**
+     * Method getModel returns the model of the game.
+     * @return - model of the game.
+     */
     public Game getModel(){
         return model;
     }
-    public void startGame(){
-        model.startGame();
-    }
-    public void calculateScore(){
-        model.calculateScore();
-    }
-    public void setCurrentPlayer(Player currentPlayer) {
-        model.setCurrentPlayer(currentPlayer);
-    }
-    public Player getCurrentPlayer(){
-        return model.getCurrentPlayer();
+
+    //todo: no usages found, should be deleted
+    public void setModel(Game model)
+    {
+        this.model = model;
     }
 
-    public void setPreviousPlayer(Player previousPlayerPlayer) {
-        model.setPreviousPlayer(model.getCurrentPlayer());
-    }
-    public Player getPreviousPlayer(){
-        return model.getPreviousPlayer();
-    }
-    public void setNumOfPlayers(int num){
-       model.setNumOfPlayers(num);
-    }
-    public LivingRoom getGameBoard(){
-        return model.getGameBoard();
-    }
+    //todo: no usages found, should be deleted
     public List<CommonGoalCard> getCommonGoalCards() { return  model.getCommonGoalCards(); }
 
-    public ArrayList<Player> getPlayers(){
-        return model.getPlayers();
-    }
-    public String getGameId(){
-        return this.gameId;
-    }
-
-    public ArrayList<Position> getChoiceOfTiles() {
-        return choiceOfTiles;
-    }
-
-    public void notifyAllPlayers(ModelUpdate modelUpdate) {
-        master.notifyAllPlayers(gameId, modelUpdate);
-    }
-
+    /**
+     * Method notifyOnStartTurn notifies the players that it's the turn of the current player.
+     * @param currentPlayer - nickname of the current player.
+     */
     public void notifyOnStartTurn(String currentPlayer) {
         master.notifyOnStartTurn(gameId, currentPlayer);
     }
 
+    /**
+     * Method notifyOnModelUpdate notifies the players that the model has been updated.
+     * @param modelUpdate - updated model.
+     */
     public void notifyOnModelUpdate(ModelUpdate modelUpdate) {
         master.notifyAllPlayers(gameId, modelUpdate);
     }
 
+    /** Method notifyOnEndTurn notifies the players that the last turn has ended. */
     public void notifyOnGameEnd() {
         master.notifyOnEndGame(gameId);
     }
 
+    /**
+     * Method notifyOnLastTurn notifies the players that the last turn has started.
+     * @param nickname - nickname of the player that has completed their shelf.
+     */
     public void notifyOnLastTurn(String nickname) {
         master.notifyOnLastTurn(gameId, nickname);
+    }
+
+    //todo: used only for testing
+    public void setChoiceOfTiles(ArrayList<Position> choiceOfTiles)
+    {
+        this.choiceOfTiles = choiceOfTiles;
+    }
+
+    //todo: used only for testing
+    public ArrayList<Position> getChoiceOfTiles()
+    {
+        return this.choiceOfTiles;
     }
 }

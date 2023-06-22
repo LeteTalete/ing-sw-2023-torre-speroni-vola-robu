@@ -1,6 +1,5 @@
 package it.polimi.ingsw.client;
 
-import it.polimi.ingsw.model.board.Position;
 import it.polimi.ingsw.network.ConnectionClientTimer;
 import it.polimi.ingsw.requests.*;
 import it.polimi.ingsw.responses.Response;
@@ -13,21 +12,18 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Timer;
 
 public class ClientSocket implements IClientConnection
 {
-    private static Logger fileLog = LogManager.getRootLogger();
+    private static final Logger fileLog = LogManager.getRootLogger();
 
     private final ClientController master;
-    private String username;
     private String token;
-    private String ip;
-    private int port;
-    private View viewClient;
+    private final String ip;
+    private final int port;
     private Socket socket;
     private ObjectInputStream socketIn;
     private  ObjectOutputStream socketOut;
@@ -115,15 +111,10 @@ public class ClientSocket implements IClientConnection
         socketOut.close();
     }
 
-    @Override
-    public void setName(String name) {
-        this.username=name;
-    }
 
     @Override
     public void setViewClient(View currentView)
     {
-        this.viewClient = currentView;
     }
 
     @Override
@@ -187,7 +178,6 @@ public class ClientSocket implements IClientConnection
     public synchronized void numberOfPlayers(String name, String tokenA, int number) {
         fileLog.debug("numberOfPlayers");
         setUserToken(tokenA);
-        setName(name);
         setReceivedResponse(true);
         fileLog.debug("Sending request for waiting room");
         request(new WaitingRoomRequest(tokenA, name, number));
@@ -253,11 +243,6 @@ public class ClientSocket implements IClientConnection
     }
 
     @Override
-    public void passTiles(ArrayList<Position> tilesChosen) {
-        master.passTiles(tilesChosen);
-    }
-
-    @Override
     public void sendChat(String username, String toString, String choice) {
         setReceivedResponse(true);
         request(new ChatMessageRequest(username, toString, choice));
@@ -267,6 +252,12 @@ public class ClientSocket implements IClientConnection
     public void sendPing(String token) {
         setReceivedResponse(true);
         request(new PingRequest(token));
+    }
+
+    @Override
+    public void quit(String token) {
+        setReceivedResponse(true);
+        request(new QuitRequest(token));
     }
 
     @Override

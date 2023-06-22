@@ -4,7 +4,6 @@ import it.polimi.ingsw.Updates.ModelUpdate;
 import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.board.Position;
-import it.polimi.ingsw.network.ClientListenerTUI;
 import it.polimi.ingsw.network.IClientListener;
 import it.polimi.ingsw.network.IRemoteController;
 import org.apache.logging.log4j.LogManager;
@@ -15,18 +14,18 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 
 public class ServerManager extends UnicastRemoteObject implements IRemoteController {
-    private static Logger fileLog = LogManager.getRootLogger();
-    private Map<String, GameController> activeGames;
+    private static final Logger fileLog = LogManager.getRootLogger();
+    private final Map<String, GameController> activeGames;
     private WaitingRoom waitingRoom;
     //network manager: to instantiate RMI and socket
     //these are all the usernames and the respective rooms
-    private Map<String, String> activeUsers;
+    private final Map<String, String> activeUsers;
 
     //constructor
     public ServerManager() throws RemoteException{
         super();
-        activeGames = new HashMap<String, GameController>();
-        activeUsers = new HashMap<String,String>();
+        activeGames = new HashMap<>();
+        activeUsers = new HashMap<>();
     }
 
     public synchronized String putInWaitingRoom(String name, String token) throws RemoteException {
@@ -168,11 +167,8 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
 
         fileLog.info("I created a new game with id: " + waitingRoom.getId() + "and started the game!");
 
-        try {
-            game.initialize();
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
+        game.getModel().startGame();
+
         waitingRoom=null;
     }
 
@@ -242,6 +238,7 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
             ConnectionManager.get().viewListenerMap.get(token).showTextNotification("Waiting room created! Waiting for other players to join...");
         }
     }
+
 
     public void notifyAboutRearrange(String token, boolean b, ArrayList<Position> tiles) {
         try {

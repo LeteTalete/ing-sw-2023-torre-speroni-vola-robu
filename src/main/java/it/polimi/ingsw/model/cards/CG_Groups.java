@@ -22,7 +22,7 @@ public class CG_Groups extends CommonGoalCard implements Serializable {
     private String description;
 
     /**
-     * Constructor for CG_Groups saves the CGC parameters given the card ID.
+     * Constructor for CG_Groups given the card ID reads CommonGoalCards.json and saves the CGC parameters.
      *
      * @param id - Card ID used to identify the card.
      * type - The card's type.
@@ -44,10 +44,22 @@ public class CG_Groups extends CommonGoalCard implements Serializable {
                 int cardId = cardNode.get("id").asInt();
                 if (cardId == this.ID) {
 
-                    this.type = cardNode.get("type").asText();
-                    this.numOfOccurrences = cardNode.get("numOfOccurrences").asInt();
-                    this.atLeast = cardNode.get("atLeast").asInt();
-                    this.description = cardNode.get("description").asText();
+                    if ( !cardNode.get("type").asText().equals("Groups") ) {
+                        throw new IllegalArgumentException("The card ID does not correspond to a card of this type");
+                    } else this.type = cardNode.get("type").asText();
+
+                    if ( cardNode.get("numOfOccurrences").asInt() < 1 ) {
+                        throw new IllegalArgumentException("The number of occurrences must be at least 1");
+                    } else this.numOfOccurrences = cardNode.get("numOfOccurrences").asInt();
+
+                    if ( cardNode.get("atLeast").asInt() < 1 ) {
+                        throw new IllegalArgumentException("The number of tiles must be at least 1");
+                    } else this.atLeast = cardNode.get("atLeast").asInt();
+
+                    if ( cardNode.get("description").asText().equals("") || cardNode.get("description") == null ) {
+                        throw new IllegalArgumentException("The card must have a description");
+                    } else this.description = cardNode.get("description").asText();
+
                     break;
                 }
             }
@@ -56,6 +68,9 @@ public class CG_Groups extends CommonGoalCard implements Serializable {
             System.out.println("Error reading from file: " + e.getMessage());
             e.printStackTrace();
 
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -74,14 +89,14 @@ public class CG_Groups extends CommonGoalCard implements Serializable {
         ArrayList<ArrayList<Position>> groups = new ArrayList<>();
         ArrayList<Couple> visited = new ArrayList<>();
 
-        if (!shelf.getCardsAlreadyChecked().contains(this.ID)) {
+        if (!shelf.getCardsAlreadyClaimed().contains(this.ID)) {
 
             for (int i = 0; i < Shelf.ROWS; i++) {
                 for (int j = 0; j < Shelf.COLUMNS; j++) {
-                    if (( shelf.getShelfsMatrix()[i][j].getState() == State.PICKABLE ) && ( !visited.contains(shelf.getShelfsMatrix()[i][j]) )) {
+                    if (( shelf.getShelfMatrix()[i][j].getState() == State.PICKABLE ) && ( !visited.contains(shelf.getShelfMatrix()[i][j]) )) {
                         group = new ArrayList<>();
                         group.add(new Position(i, j));
-                        visited.add(shelf.getShelfsMatrix()[i][j]);
+                        visited.add(shelf.getShelfMatrix()[i][j]);
                         for (int k = 0; k < group.size(); k++) {
                             x = group.get(k).getX();
                             y = group.get(k).getY();
@@ -91,7 +106,7 @@ public class CG_Groups extends CommonGoalCard implements Serializable {
                                         ( shelf.getCoordinate(x, y + 1).getTile().getTileType() == shelf.getCoordinate(x, y).getTile().getTileType() ) &&
                                         ( !visited.contains(shelf.getCoordinate(x, y + 1)) )) {
                                     group.add(new Position(x, y + 1));
-                                    visited.add(shelf.getShelfsMatrix()[x][y + 1]);
+                                    visited.add(shelf.getShelfMatrix()[x][y + 1]);
                                 }
                             }
                             if (x + 1 < Shelf.ROWS) {
@@ -99,7 +114,7 @@ public class CG_Groups extends CommonGoalCard implements Serializable {
                                         ( shelf.getCoordinate(x + 1, y).getTile().getTileType() == shelf.getCoordinate(x, y).getTile().getTileType() ) &&
                                         ( !visited.contains(shelf.getCoordinate(x + 1, y)) )) {
                                     group.add(new Position(x + 1, y));
-                                    visited.add(shelf.getShelfsMatrix()[x + 1][y]);
+                                    visited.add(shelf.getShelfMatrix()[x + 1][y]);
                                 }
                             }
                             if (y - 1 >= 0) {
@@ -107,7 +122,7 @@ public class CG_Groups extends CommonGoalCard implements Serializable {
                                         ( shelf.getCoordinate(x, y - 1).getTile().getTileType() == shelf.getCoordinate(x, y).getTile().getTileType() ) &&
                                         ( !visited.contains(shelf.getCoordinate(x, y - 1)) )) {
                                     group.add(new Position(x, y - 1));
-                                    visited.add(shelf.getShelfsMatrix()[x][y - 1]);
+                                    visited.add(shelf.getShelfMatrix()[x][y - 1]);
                                 }
                             }
                             if (x - 1 >= 0) {
@@ -115,7 +130,7 @@ public class CG_Groups extends CommonGoalCard implements Serializable {
                                         ( shelf.getCoordinate(x - 1, y).getTile().getTileType() == shelf.getCoordinate(x, y).getTile().getTileType() ) &&
                                         ( !visited.contains(shelf.getCoordinate(x - 1, y)) )) {
                                     group.add(new Position(x - 1, y));
-                                    visited.add(shelf.getShelfsMatrix()[x - 1][y]);
+                                    visited.add(shelf.getShelfMatrix()[x - 1][y]);
                                 }
                             }
                         }
@@ -123,15 +138,15 @@ public class CG_Groups extends CommonGoalCard implements Serializable {
                             groups.add(group);
                         }
                     } else {
-                        visited.add(shelf.getShelfsMatrix()[i][j]);
+                        visited.add(shelf.getShelfMatrix()[i][j]);
                     }
                 }
             }
         }
 
 
-        if ( groups.size() >= this.numOfOccurrences && !shelf.getCardsAlreadyChecked().contains(this.ID) ) {
-            shelf.getCardsAlreadyChecked().add(this.ID);
+        if ( groups.size() >= this.numOfOccurrences && !shelf.getCardsAlreadyClaimed().contains(this.ID) ) {
+            shelf.getCardsAlreadyClaimed().add(this.ID);
             return 1;
         } else {
             return 0;

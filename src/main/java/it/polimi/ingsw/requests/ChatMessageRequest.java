@@ -1,7 +1,5 @@
 package it.polimi.ingsw.requests;
 
-import it.polimi.ingsw.responses.Response;
-import it.polimi.ingsw.responses.ResponseHandler;
 import it.polimi.ingsw.server.ServerManager;
 import it.polimi.ingsw.server.ServerSocketClientHandler;
 

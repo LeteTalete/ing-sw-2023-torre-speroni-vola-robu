@@ -9,7 +9,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class CommandParsing {
-    private static Logger fileLog = LogManager.getRootLogger();
+    private static final Logger fileLog = LogManager.getRootLogger();
+    private static final String QUIT = "quit";
     private static final String TILES = "tiles";
     private static final String HIDESHELF = "hideshelves";
     private static final String HELP = "help";
@@ -21,8 +22,6 @@ public class CommandParsing {
     private static final String SHOWCHAT = "showchat";
     private static final String HIDECHAT = "hidechat";
     private static final String COLUMN = "column";
-
-    private static final String BACK = "back";
     //for when it's the player's turn
     private boolean isPlaying;
     private boolean gameIsOn;
@@ -43,14 +42,12 @@ public class CommandParsing {
 
     public void elaborateInput(String command) {
         if(initializingName) {
-            fileLog.debug("initializing name");
             //if asking for name
             if(!checkUsernameFormat(command)){
                 return;
             }
             master.askLogin(command);
             if ( master.getUsername() != null) {
-                fileLog.debug("the name has been set");
                 initializingName = false;
                 if ( master.isGameOn() ) {
                     initializingRoom = false;
@@ -115,8 +112,6 @@ public class CommandParsing {
                 }
                 //if choosing tiles
                 parseMultipleInteger(args);
-                /**todo this has a bug in which the second player won't be shown the command to re-arrange
-                 * even if they chose multiple tiles. not sure if the bug is here but it`s worth signaling**/
                 executeTileCommand();
             }
             case (REARRANGE) -> {
@@ -185,6 +180,13 @@ public class CommandParsing {
                 }
                 master.hideCommands();
             }
+            case (QUIT) -> {
+                if (!gameIsOn) {
+                    master.gameNotStarted();
+                    break;
+                }
+                master.quit();
+            }
             case (SHOWCHAT) -> {
                 if (!gameIsOn) {
                     master.gameNotStarted();
@@ -235,12 +237,8 @@ public class CommandParsing {
     }
 
 
-    private void executeShelfCommand() {
-        master.showShelves();
-    }
-
     private void executeColumnCommand() {
-        if(choiceNumber > 5 || choiceNumber <0 ){
+        if(choiceNumber > 4 || choiceNumber <0 ){
             master.errorFormat();
         }
         else{
@@ -255,7 +253,6 @@ public class CommandParsing {
             master.errorFormat();
             return;
         }
-        //todo print the tiles in the order they were chosen
         master.rearrangeTiles(multipleChoiceNumber);
     }
 
@@ -290,11 +287,6 @@ public class CommandParsing {
                 return;
             }
         }
-        if(multipleChoiceNumber.size() == 1)
-        {
-            fileLog.debug("multipleChoiceNumber's size is "+multipleChoiceNumber.size());
-            master.setOnlyOneTile(true);
-        }
         master.chooseTiles(multipleChoiceNumber);
     }
 
@@ -319,9 +311,6 @@ public class CommandParsing {
         }
     }
 
-    public boolean isPlaying() {
-        return isPlaying;
-    }
 
     public void setPlaying(int playing) {
         if(playing>0){

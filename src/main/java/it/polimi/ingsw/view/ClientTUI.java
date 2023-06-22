@@ -30,7 +30,6 @@ public class ClientTUI implements View{
     private String connectionType;
     private String command;
     private boolean isRunning;
-    private String colorError; //todo please, make this red
     private String ServerIP;
     private LinkedList<String> chatQueue = new LinkedList<>();
     private String username;
@@ -41,6 +40,7 @@ public class ClientTUI implements View{
     private boolean showCommandsList;
 
     private boolean showOtherShelves;
+    private boolean newChatMessage;
     private ArrayList<Position> tiles;
 
     //constructor
@@ -68,7 +68,6 @@ public class ClientTUI implements View{
 
     @Override
     public void displayUpdatedModel(ModelUpdate modelUpdate) {
-        //todo check this
         this.gameView = new GameView(modelUpdate);
         //
         if (!this.isStarGame) {
@@ -82,6 +81,7 @@ public class ClientTUI implements View{
 
     public void refreshBoard(){
 
+        clearConsole();
         clearConsole();
 
         System.out.println("Type 'help' to see the list of commands." + "\n");
@@ -111,11 +111,16 @@ public class ClientTUI implements View{
 
         if ( isChatOpen ) {
             printChatQueue();
+            this.newChatMessage = false;
+        } else {
+            if (newChatMessage) {
+                System.out.println("\033[1;97;48;5;124m" + " You have new messages in the chat. " + "\033[0m");
+            }
+            System.out.println("Type 'showchat' to open the chat.");
         }
+
         System.out.println("----------------------------------------");
-
         turnPhase();
-
         System.out.println("----------------------------------------");
     }
 
@@ -131,8 +136,9 @@ public class ClientTUI implements View{
             case 2 -> {
                 displayNotification(StaticStrings.YOUR_TURN);
                 displayNotification("You can now re-arrange the tiles or choose the column. Here are the commands:");
-                chooseOrder(tiles);
+                writeText("Choose order: [order 'first number' 'second number' 'third number']");
                 chooseColumn();
+                chooseOrder(tiles);
             }
         }
     }
@@ -453,7 +459,6 @@ public class ClientTUI implements View{
         ArrayList<Couple> tilesChoose = new ArrayList<>();
         LivingRoomView livingRoomView = this.gameView.getGameBoardView();
         tilesPosition.forEach(position -> tilesChoose.add(livingRoomView.getCouple(position)));
-        writeText("Choose order: [order 'first number' 'second number' 'third number']");
         DrawTui.graphicsOrderTiles(tilesChoose);
     }
 
@@ -523,9 +528,8 @@ public class ClientTUI implements View{
             chatQueue.removeFirst();
         }
         chatQueue.add(s);
-        if (isChatOpen){
-            refreshBoard();
-        }
+        this.newChatMessage = true;
+        refreshBoard();
         //todo
         //writeText(s);
     }

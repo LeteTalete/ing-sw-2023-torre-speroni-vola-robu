@@ -9,7 +9,7 @@ import org.apache.logging.log4j.Logger;
 import java.rmi.RemoteException;
 
 public class ResponseDecoder implements ResponseHandler {
-    private static Logger fileLog = LogManager.getRootLogger();
+    private static final Logger fileLog = LogManager.getRootLogger();
 
     private final IClientListener clientListener;
     private final IClientConnection client;

@@ -99,7 +99,7 @@ public class GameTest {
             assertNull(game.getPlayers().get(i).getGoalCard());
         }
 
-        game.initialize();
+        game.startGame();
 
         assertNotNull(game.getGameBoard());
         assertNull(game.getEndGame());
@@ -139,7 +139,7 @@ public class GameTest {
     public void nextTurnTest() {
 
         assertNull(game.getCurrentPlayer());
-        game.initialize();
+        game.startGame();
         assertNotNull(game.getCurrentPlayer());
 
         Player currentPlayer = game.getCurrentPlayer();
@@ -156,7 +156,7 @@ public class GameTest {
     @Test
     public void scoreboardTest(){
 
-        game.initialize();
+        game.startGame();
 
         game.getPlayers().get(0).setScore(3);
         assertEquals(3, game.getPlayers().get(0).getScore());
@@ -193,7 +193,7 @@ public class GameTest {
             assertNull(game.getPlayers().get(i).getGoalCard());
         }
 
-        game.startGame();
+        game.initialize();
 
         assertNotNull(game.getCommonGoalCards());
         assertEquals(2, game.getCommonGoalCards().size());
@@ -212,7 +212,7 @@ public class GameTest {
     @Test
     public void gameHasEndedTest(){
 
-        game.initialize();
+        game.startGame();
 
         ArrayList<Tile> tiles = new ArrayList<>();
 
@@ -270,7 +270,7 @@ public class GameTest {
     @Test
     public void calculateScoreTest(){
 
-        game.initialize();
+        game.startGame();
 
         ArrayList<Tile> tiles = new ArrayList<>();
         tiles.add(new Tile(T_Type.GAMES,1));
@@ -383,7 +383,7 @@ public class GameTest {
     @Test
     public void insertTilesTest(){
 
-        game.initialize();
+        game.startGame();
 
         ArrayList<Tile> tiles = new ArrayList<>();
         tiles.add(new Tile(T_Type.CAT,1));

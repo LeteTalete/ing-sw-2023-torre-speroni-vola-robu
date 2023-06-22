@@ -3,42 +3,35 @@ package it.polimi.ingsw.client;
 import it.polimi.ingsw.model.board.Position;
 import it.polimi.ingsw.network.IClientListener;
 import it.polimi.ingsw.network.IRemoteController;
-import it.polimi.ingsw.responses.Response;
-import it.polimi.ingsw.server.StaticStrings;
-import it.polimi.ingsw.view.GUIApplication;
-import it.polimi.ingsw.view.SceneNames;
 import it.polimi.ingsw.view.View;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ClientController {
-    private static Logger fileLog = LogManager.getRootLogger();
+    private static final Logger fileLog = LogManager.getRootLogger();
     private static String HOSTNAME = "ingsw.server.hostname";
-    private View currentView;
+    private final View currentView;
     private boolean gameOn;
     private int myTurn;
     private String username;
-    private CommandParsing commPars;
+    private final CommandParsing commPars;
     private IClientConnection currentConnection;
-    private IClientListener listenerClient;
+    private final IClientListener listenerClient;
     private ResponseDecoder responseDecoder;
     private Registry registry;
     private IRemoteController remoteController;
     private String userToken;
     private boolean toCLose;
-    private boolean onlyOneTile;
 
     //constructor
     public ClientController(View currentView) {
         this.currentView = currentView;
         this.listenerClient = currentView.getListener();
-        this.username = new String();
         //not sure if we need the command parsing anyway
         this.commPars = new CommandParsing(this);
         currentView.setMaster(this, commPars);
@@ -46,27 +39,20 @@ public class ClientController {
         this.currentView.chooseConnection();
     }
 
-
     public void setupConnection() {
         //currentView.chooseConnection();
         //todo uncomment this and place SIP instead of null when initializing connections
         //currentView.askServerIP();
         //String SIP = currentView.getServerIP();
-        String connectionStatus = "Connecting...";
-        System.out.println("setupConnection");
         if(currentView.getConnectionType().equals("RMI")) {
-            connectionStatus = setupRMI(System.getProperty(HOSTNAME));
+            setupRMI(System.getProperty(HOSTNAME));
         }
         else if(currentView.getConnectionType().equals("SOCKET")){
-            connectionStatus = setupSocket(System.getProperty(HOSTNAME));
-        }
-        else if(connectionStatus!=null){
-            this.currentView.displayNotification(connectionStatus);
-            GUIApplication.showSceneName(SceneNames.WAITINGROOM);
+            setupSocket(System.getProperty(HOSTNAME));
         }
     }
 
-    public String setupSocket(String serverIP) {
+    public void setupSocket(String serverIP) {
         try {
             //you have to pass 'this' to the client socket
             ClientSocket clientSocket = new ClientSocket(serverIP, 8899, this);
@@ -79,15 +65,14 @@ public class ClientController {
         } catch (Exception e) {
             fileLog.error(e);
         }
-        return null;
     }
 
-    private String setupRMI(String serverIP) {
+    private void setupRMI(String serverIP) {
         try{
             //TODO put serverip in host field of locateregisty
             this.registry = LocateRegistry.getRegistry(serverIP,8089);
             this.remoteController = (IRemoteController) registry.lookup("Login");
-            ClientRMI clientRMI = new ClientRMI(this, remoteController);
+            ClientRMI clientRMI = new ClientRMI(remoteController);
             this.currentConnection = clientRMI;
             clientRMI.setViewClient(currentView);
             this.responseDecoder = new ResponseDecoder(listenerClient, currentConnection);
@@ -98,7 +83,6 @@ public class ClientController {
         }catch(Exception e){
             fileLog.error(e.getMessage());
         }
-        return null;
     }
 
     public void userLogin () {
@@ -176,11 +160,6 @@ public class ClientController {
         currentConnection.close();
     }
 
-    public IClientConnection getCurrentConnection() {
-        return currentConnection;
-    }
-
-
     public boolean isConnected() {
         return currentConnection.isConnected();
     }
@@ -191,10 +170,6 @@ public class ClientController {
 
     public void wrongCommand() {
         currentView.printError("Wrong command, please type 'help' for a list of commands");
-    }
-
-    public void printCommands() {
-        currentView.printCommands();
     }
 
     public void isItMyTurn(String name) {
@@ -211,10 +186,6 @@ public class ClientController {
 
     public void invalidNotMyTurn() {
         currentView.displayNotification("It's not your turn, yet!");
-    }
-
-    public void passTiles(ArrayList<Position> tilesChosen) {
-        myTurn = 2;
     }
 
     public void errorFormat() {
@@ -237,10 +208,6 @@ public class ClientController {
         //currentView.addToChatQueue(message, receiver);
     }
 
-
-    public void setOnlyOneTile(boolean b) {
-        this.onlyOneTile= b;
-    }
 
     public void pingSyn() {
         currentConnection.setPing(true);
@@ -270,4 +237,8 @@ public class ClientController {
     public void hideChat() {
         currentView.hideChat();
     }
+
+    public void quit() { currentConnection.quit(userToken); }
+
 }
+

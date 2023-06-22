@@ -13,7 +13,6 @@ import java.util.ArrayList;
 
 public class ClientListenerTUI extends UnicastRemoteObject implements IClientListener {
     private static Logger fileLog = LogManager.getRootLogger();
-
     private String connectionType = "RMI";
     private transient final ClientTUI view;
     private String token;
@@ -81,7 +80,6 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
 
     @Override
     public void notifyEndTurn() throws RemoteException {
-        view.setMyTurn(0);
         view.displayNotification("Turn ended.");
     }
 

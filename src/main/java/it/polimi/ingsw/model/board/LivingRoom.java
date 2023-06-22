@@ -30,6 +30,12 @@ public class LivingRoom implements Serializable {
     }
 
 
+    /**
+     * Method checkPlayerChoice checks if the choice made by player is a valid choice or not.
+     * The tiles chosen must be PICKABLE, must be adjacent and must have at least one side free.
+     * @param choice - the tiles chosen by the player.
+     * @return - true if the choice is valid, false otherwise.
+     */
     public boolean checkPlayerChoice(ArrayList<Position> choice)
     {
         //this method should check if the choice made by player is a valid choice or not
@@ -77,6 +83,12 @@ public class LivingRoom implements Serializable {
         return true;
     }
 
+    /**
+     * Method atLeastOneSideFree checks if the couple passed as an argument has at least one side that is not
+     * occupied by another couple with state PICKABLE.
+     * @param p - the position of the couple.
+     * @return - true if the couple has at least one side free, false otherwise.
+     */
     public boolean atLeastOneSideFree(Position p)
     {
         int x = p.getX();
@@ -102,6 +114,10 @@ public class LivingRoom implements Serializable {
         return false;
     }
 
+    /**
+     * Method updateCouples removes the tiles chosen by the player from the board.
+     * @param choice - the tiles chosen by the player.
+     */
     public void updateCouples(ArrayList<Position> choice)
     {
         //this method should set the couples state chosen by the player as EMPTY
@@ -112,6 +128,10 @@ public class LivingRoom implements Serializable {
         }
     }
 
+    /**
+     * Method checkForRefill checks if there are at least two adjacent couples, if not a refill is needed.
+     * @return - true if a refill is needed, false otherwise.
+     */
     public boolean checkForRefill()
     {
         //this method returns false if there are at least two couples adjacent containing a tile
@@ -146,13 +166,14 @@ public class LivingRoom implements Serializable {
         return true;
     }
 
+    //todo: used only for testing
     public void printBoard()
     {
         //this method is only used for testing
         for( int i = 0; i < board.length; i++) {
             for( int j = 0 ; j < board[0].length; j++) {
 
-                if (getCouple(new Position(i,j)).getState().equals(State.EMPTY) || getCouple(new Position(i,j)).getState().equals(State.EMPTY_AND_UNUSABLE)) {
+                if (getCouple(new Position(i,j)).getState().equals(State.EMPTY) ) {
                     System.out.print( " " + " " + " ");
                 } else if (getCouple(new Position(i,j)).getState().equals(State.INVALID)) {
                     System.out.print( "\033[0;100m" + " " + " " + " " + "\033[0m" );
@@ -185,6 +206,7 @@ public class LivingRoom implements Serializable {
 
     }
 
+    //todo: used only for testing
     public void clearBoard()
     {
         for(int i=0;i<board.length;i++)
@@ -199,6 +221,7 @@ public class LivingRoom implements Serializable {
         }
     }
 
+    /** Method refill refills the board with tiles from the deck. */
     public void refill()
     {
         //this method refills the board in this way:
@@ -217,6 +240,11 @@ public class LivingRoom implements Serializable {
         }
     }
 
+    /**
+     * Constructor for the LivingRoom class given the number of players it reads the LivingRoom.json file and creates
+     * the board and the deck. Based on the number of players it sets certain tiles as unusable.
+     * @param numberOfPlayers - the number of players in the game.
+     */
     public LivingRoom(int numberOfPlayers) {
 
         try {
@@ -227,14 +255,13 @@ public class LivingRoom implements Serializable {
 
             this.board = new Couple[jsonMatrixCopy.length][jsonMatrixCopy[0].length];
             deck = new Deck();
-            int emptyUnusableCheck;
 
             for (int i = 0; i < jsonMatrixCopy.length; i++) {
                 for (int j = 0; j < jsonMatrixCopy[i].length; j++) {
 
                     if (jsonMatrixCopy[i][j] == 0) {
-                        emptyUnusableCheck = 1;
-                        Couple couple = new Couple(emptyUnusableCheck);
+                        Couple couple = new Couple();
+                        couple.setState(State.INVALID);
                         this.board[i][j] = couple;
                     } else if (jsonMatrixCopy[i][j] == 2) {
                         Couple couple = new Couple(deck.draw());
@@ -245,9 +272,9 @@ public class LivingRoom implements Serializable {
                     } else if (( jsonMatrixCopy[i][j] == 4 ) && ( numberOfPlayers == 4 )) {
                         Couple couple = new Couple(deck.draw());
                         this.board[i][j] = couple;
-                    } else { // If a space is not INVALID and doesn't meet any of the requirements then it set to EMPTY_AND_UNUSABLE (rework needed)
-                        emptyUnusableCheck = 0;
-                        Couple couple = new Couple(emptyUnusableCheck);
+                    } else {
+                        Couple couple = new Couple();
+                        couple.setState(State.INVALID);
                         this.board[i][j] = couple;
                     }
                 }

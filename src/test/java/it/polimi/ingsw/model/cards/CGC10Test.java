@@ -54,9 +54,9 @@ public class CGC10Test {
         shelf.printShelf();
         System.out.println();
 
-        assertTrue(shelf.getCardsAlreadyChecked().isEmpty());
+        assertTrue(shelf.getCardsAlreadyClaimed().isEmpty());
         assertEquals(0, CGC10.checkConditions(shelf));
-        assertFalse(shelf.getCardsAlreadyChecked().contains(CGC10.getID()));
+        assertFalse(shelf.getCardsAlreadyClaimed().contains(CGC10.getID()));
     }
 
     /**
@@ -79,9 +79,9 @@ public class CGC10Test {
         shelf.printShelf();
         System.out.println();
 
-        assertTrue(shelf.getCardsAlreadyChecked().isEmpty());
+        assertTrue(shelf.getCardsAlreadyClaimed().isEmpty());
         assertEquals(1, CGC10.checkConditions(shelf));
-        assertTrue(shelf.getCardsAlreadyChecked().contains(CGC10.getID()));
+        assertTrue(shelf.getCardsAlreadyClaimed().contains(CGC10.getID()));
         assertEquals(0, CGC10.checkConditions(shelf));
     }
 
@@ -132,9 +132,9 @@ public class CGC10Test {
         shelf.printShelf();
         System.out.println();
 
-        assertTrue(shelf.getCardsAlreadyChecked().isEmpty());
+        assertTrue(shelf.getCardsAlreadyClaimed().isEmpty());
         assertEquals(1, CGC10.checkConditions(shelf));
-        assertTrue(shelf.getCardsAlreadyChecked().contains(CGC10.getID()));
+        assertTrue(shelf.getCardsAlreadyClaimed().contains(CGC10.getID()));
         assertEquals(0, CGC10.checkConditions(shelf));
     }
 
@@ -166,9 +166,9 @@ public class CGC10Test {
         shelf.printShelf();
         System.out.println();
 
-        assertTrue(shelf.getCardsAlreadyChecked().isEmpty());
+        assertTrue(shelf.getCardsAlreadyClaimed().isEmpty());
         assertEquals(0, CGC10.checkConditions(shelf));
-        assertFalse(shelf.getCardsAlreadyChecked().contains(CGC10.getID()));
+        assertFalse(shelf.getCardsAlreadyClaimed().contains(CGC10.getID()));
     }
 
     /**
@@ -226,9 +226,9 @@ public class CGC10Test {
         shelf.printShelf();
         System.out.println();
 
-        assertTrue(shelf.getCardsAlreadyChecked().isEmpty());
+        assertTrue(shelf.getCardsAlreadyClaimed().isEmpty());
         assertEquals(0, CGC10.checkConditions(shelf));
-        assertFalse(shelf.getCardsAlreadyChecked().contains(CGC10.getID()));
+        assertFalse(shelf.getCardsAlreadyClaimed().contains(CGC10.getID()));
     }
 
 }

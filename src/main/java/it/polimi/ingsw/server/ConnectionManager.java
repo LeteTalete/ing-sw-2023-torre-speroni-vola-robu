@@ -1,10 +1,9 @@
 package it.polimi.ingsw.server;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import it.polimi.ingsw.network.ConnectionServerPingTimer;
 import it.polimi.ingsw.network.ConnectionServerTimer;
 import it.polimi.ingsw.network.ConnectionTimer;
 import it.polimi.ingsw.network.IClientListener;
-import it.polimi.ingsw.network.ConnectionServerPingTimer;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
@@ -30,9 +29,8 @@ public class ConnectionManager implements Serializable {
     Map<String, String> namesTokens = new HashMap<>();
     //tokens and timers
     private final Map<String, ConnectionTimer> timers = new HashMap<>();
-    private final int synTime=100000;
     private final int ackTime = 200000;
-    private Map<String, Boolean> pingCheck = new HashMap<>();
+    private final Map<String, Boolean> pingCheck = new HashMap<>();
     private final Map<String, ConnectionTimer> synTimers = new HashMap<>();
 
     private ConnectionManager(){
@@ -44,19 +42,14 @@ public class ConnectionManager implements Serializable {
         return instance;
     }
 
-    synchronized String addClientView(String token, String name, IClientListener viewListener) {
+    synchronized void addClientView(String token, String name, IClientListener viewListener) {
         viewListenerMap.put(token, viewListener);
         tokenNames.put(token, name);
         namesTokens.put(name, token);
-        return StaticStrings.LOGIN_OK_NEW_ROOM;
     }
 
     synchronized IClientListener getLocalView(String token){
         return viewListenerMap.get(token);
-    }
-
-    synchronized String getNameToken(String token){
-        return tokenNames.get(token);
     }
 
     public void disconnectToken(String token) {
@@ -83,6 +76,7 @@ public class ConnectionManager implements Serializable {
 
     void startSynTimer(String token){
         synTimers.put(token, new ConnectionTimer());
+        int synTime = 100000;
         synTimers.get(token).scheduleAtFixedRate(new ConnectionServerTimer(viewListenerMap.get(token)), synTime, synTime);
     }
 

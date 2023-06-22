@@ -18,8 +18,8 @@ public class ColumnRequest extends Request{
     public void handleRequest(ServerSocketClientHandler socketClientHandler, ServerManager serverManager) {
         try{
             serverManager.selectColumn(token, column);
-        }catch (RemoteException e){
-            System.out.println(e.getMessage());
+        }catch (RemoteException e) {
+            throw new RuntimeException(e);
         }
     }
 }

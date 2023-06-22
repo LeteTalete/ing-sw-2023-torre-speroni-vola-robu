@@ -1,14 +1,11 @@
 package it.polimi.ingsw.client;
 
 
-import it.polimi.ingsw.model.board.Position;
 import it.polimi.ingsw.view.View;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public interface IClientConnection {
-     void setName(String name);
      void setViewClient(View view);
      void chooseTiles(String username, List<String> tilesChosen);
 
@@ -34,10 +31,10 @@ public interface IClientConnection {
 
     void rearrangeTiles(String userToken, List<String> multipleChoiceNumber);
 
-    void passTiles(ArrayList<Position> tilesChosen);
-
     void sendChat(String username, String toString, String choice);
     void sendPing(String token);
+
+    void quit(String token);
 
     void setCheckTimer(boolean b);
 }

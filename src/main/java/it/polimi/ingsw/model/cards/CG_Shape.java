@@ -26,7 +26,7 @@ public class CG_Shape extends CommonGoalCard implements Serializable {
     private String description;
 
     /**
-     * Constructor for CG_Shape saves the CGC parameters given the card ID.
+     * Constructor for CG_Shape given the card ID reads CommonGoalCards.json and saves the CGC parameters.
      *
      * @param id - Card ID used to identify the card.
      * type - The card's type.
@@ -55,12 +55,35 @@ public class CG_Shape extends CommonGoalCard implements Serializable {
                 int cardId = cardNode.get("id").asInt();
                 if (cardId == this.ID) {
 
-                    this.type = cardNode.get("type").asText();
-                    this.numOfOccurrences = cardNode.get("numOfOccurrences").asInt();
-                    this.diffType = cardNode.get("diffType").asInt();
-                    this.surrounded = cardNode.get("surrounded").asInt();
-                    this.stairs = cardNode.get("stairs").asInt();
-                    this.description = cardNode.get("description").asText();
+                    if ( !cardNode.get("type").asText().equals("Shape") ) {
+                        throw new IllegalArgumentException("The card ID does not correspond to a card of this type");
+                    } else this.type = cardNode.get("type").asText();
+
+                    if ( cardNode.get("numOfOccurrences").asInt() < 1 ) {
+                        throw new IllegalArgumentException("The number of occurrences must be greater than 0");
+                    } else this.numOfOccurrences = cardNode.get("numOfOccurrences").asInt();
+
+                    if ( cardNode.get("diffType").asInt() != 0 && cardNode.get("diffType").asInt() != 1 ) {
+                        throw new IllegalArgumentException("The diffType value must be either 0 or 1");
+                    } else this.diffType = cardNode.get("diffType").asInt();
+
+                    if ( cardNode.get("surrounded").asInt() != 0 && cardNode.get("surrounded").asInt() != 1
+                            && cardNode.get("surrounded").asInt() != 2) {
+                        throw new IllegalArgumentException("The surrounded value must be either 0, 1 or 2");
+                    } else this.surrounded = cardNode.get("surrounded").asInt();
+
+                    if ( cardNode.get("stairs").asInt() != 0 && cardNode.get("stairs").asInt() != 1 ) {
+                        throw new IllegalArgumentException("The stairs value must be either 0 or 1");
+                    } else if ( cardNode.get("stairs").asInt() == 1 ) {
+                        if ( cardNode.get("surrounded").asInt() != 0 || cardNode.get("numOfOccurrences").asInt() != 1 ) {
+                            throw new IllegalArgumentException("The surrounded value must be 0 and the number of occurrences must be 1 for the stairs card");
+                        } else this.stairs = cardNode.get("stairs").asInt();
+                    }
+
+                    if ( cardNode.get("description").asText().equals("") || cardNode.get("description") == null ) {
+                        throw new IllegalArgumentException("The description cannot be empty");
+                    } else this.description = cardNode.get("description").asText();
+
 
                     JsonNode allShapes = cardNode.get("coordinates");
                     for (JsonNode singleShape : allShapes ) {
@@ -73,6 +96,10 @@ public class CG_Shape extends CommonGoalCard implements Serializable {
                         this.positions.add(dummy);
                     }
 
+                    if ( !this.positions.stream().allMatch(o -> o.stream().anyMatch(e -> (e.getX() == 0 && e.getY() == 0)) ) ) {
+                        throw new IllegalArgumentException("The coordinates must contain the (0,0) position");
+                    }
+
                     break;
                 }
             }
@@ -81,6 +108,9 @@ public class CG_Shape extends CommonGoalCard implements Serializable {
             System.out.println("Error reading from file: " + e.getMessage());
             e.printStackTrace();
 
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -98,7 +128,7 @@ public class CG_Shape extends CommonGoalCard implements Serializable {
         T_Type tile;
         List<List<Position>> allOccPos = new ArrayList<>();
 
-        if ( !shelf.getCardsAlreadyChecked().contains(this.ID) ) {
+        if ( !shelf.getCardsAlreadyClaimed().contains(this.ID) ) {
 
             for (T_Type t_type : T_Type.values()) {
                 tile = t_type;
@@ -107,7 +137,7 @@ public class CG_Shape extends CommonGoalCard implements Serializable {
 
                     for (int i = 0; i < Shelf.ROWS && found != 1; i++) {
                         for (int j = 0; j < Shelf.COLUMNS; j++) {
-                            if (!shelf.getShelfsMatrix()[i][j].getState().equals(State.EMPTY) && shelf.getShelfsMatrix()[i][j].getTile().getTileType().equals(tile)) {
+                            if (!shelf.getShelfMatrix()[i][j].getState().equals(State.EMPTY) && shelf.getShelfMatrix()[i][j].getTile().getTileType().equals(tile)) {
                                 if ( shapeFinder(shelf, singleShape, i, j) && requirementsCheck(shelf, allOccPos, singleShape, i, j) ) {
                                     found = 1;
                                     break;
@@ -128,8 +158,8 @@ public class CG_Shape extends CommonGoalCard implements Serializable {
             }
         }
 
-        if ( found == 1 && !shelf.getCardsAlreadyChecked().contains(this.ID) ) {
-            shelf.getCardsAlreadyChecked().add(this.ID);
+        if ( found == 1 && !shelf.getCardsAlreadyClaimed().contains(this.ID) ) {
+            shelf.getCardsAlreadyClaimed().add(this.ID);
             return 1;
         } else {
             return 0;
@@ -155,12 +185,12 @@ public class CG_Shape extends CommonGoalCard implements Serializable {
 
             if (rowCheck < Shelf.ROWS && columnCheck < Shelf.COLUMNS && rowCheck >= 0 && columnCheck >= 0 ) {
                 if (this.stairs != 1) {
-                    if (shelf.getShelfsMatrix()[rowCheck][columnCheck].getState().equals(State.EMPTY) || !shelf.getShelfsMatrix()[i][j].getTile().getTileType().equals(shelf.getShelfsMatrix()[rowCheck][columnCheck].getTile().getTileType())) {
+                    if (shelf.getShelfMatrix()[rowCheck][columnCheck].getState().equals(State.EMPTY) || !shelf.getShelfMatrix()[i][j].getTile().getTileType().equals(shelf.getShelfMatrix()[rowCheck][columnCheck].getTile().getTileType())) {
                         return false;
                     }
                 } else {
                     if (rowCheck >= 1) {
-                        if (shelf.getShelfsMatrix()[rowCheck][columnCheck].getState().equals(State.EMPTY) || !( shelf.getShelfsMatrix()[rowCheck - 1][columnCheck].getState().equals(State.EMPTY) )) {
+                        if (shelf.getShelfMatrix()[rowCheck][columnCheck].getState().equals(State.EMPTY) || !( shelf.getShelfMatrix()[rowCheck - 1][columnCheck].getState().equals(State.EMPTY) )) {
                             return false;
                         }
                     } else {
@@ -187,9 +217,9 @@ public class CG_Shape extends CommonGoalCard implements Serializable {
 
 
             if (position.getY() - 1 >= 0 && position.getX() >= 0 && position.getY() - 1 < Shelf.ROWS && position.getX() < Shelf.COLUMNS) {
-                if (!shelf.getShelfsMatrix()[position.getY() - 1][position.getX()].getState().equals(State.EMPTY) &&
-                        shelf.getShelfsMatrix()[dummy.get(0).getY()][dummy.get(0).getX()].getTile().getTileType()
-                                .equals(shelf.getShelfsMatrix()[position.getY() - 1][position.getX()].getTile().getTileType())) {
+                if (!shelf.getShelfMatrix()[position.getY() - 1][position.getX()].getState().equals(State.EMPTY) &&
+                        shelf.getShelfMatrix()[dummy.get(0).getY()][dummy.get(0).getX()].getTile().getTileType()
+                                .equals(shelf.getShelfMatrix()[position.getY() - 1][position.getX()].getTile().getTileType())) {
                     if (dummy.stream().noneMatch(o -> ( o.getX() == position.getX() ) && ( o.getY() == position.getY() - 1 ))) {
                         return false;
                     }
@@ -199,9 +229,9 @@ public class CG_Shape extends CommonGoalCard implements Serializable {
 
 
             if (position.getY() >= 0 && position.getX() + 1 >= 0 && position.getY() < Shelf.ROWS && position.getX() + 1 < Shelf.COLUMNS) {
-                if (!shelf.getShelfsMatrix()[position.getY()][position.getX() + 1].getState().equals(State.EMPTY) &&
-                        shelf.getShelfsMatrix()[dummy.get(0).getY()][dummy.get(0).getX()].getTile().getTileType()
-                                .equals(shelf.getShelfsMatrix()[position.getY()][position.getX() + 1].getTile().getTileType())) {
+                if (!shelf.getShelfMatrix()[position.getY()][position.getX() + 1].getState().equals(State.EMPTY) &&
+                        shelf.getShelfMatrix()[dummy.get(0).getY()][dummy.get(0).getX()].getTile().getTileType()
+                                .equals(shelf.getShelfMatrix()[position.getY()][position.getX() + 1].getTile().getTileType())) {
                     if (dummy.stream().noneMatch(o -> ( o.getX() == position.getX() + 1 ) && ( o.getY() == position.getY() ))) {
                         return false;
                     }
@@ -210,9 +240,9 @@ public class CG_Shape extends CommonGoalCard implements Serializable {
             }
 
             if (position.getY() + 1 >= 0 && position.getX() >= 0 && position.getY() + 1 < Shelf.ROWS && position.getX() < Shelf.COLUMNS) {
-                if (!shelf.getShelfsMatrix()[position.getY() + 1][position.getX()].getState().equals(State.EMPTY) &&
-                        shelf.getShelfsMatrix()[dummy.get(0).getY()][dummy.get(0).getX()].getTile().getTileType()
-                                .equals(shelf.getShelfsMatrix()[position.getY() + 1][position.getX()].getTile().getTileType())) {
+                if (!shelf.getShelfMatrix()[position.getY() + 1][position.getX()].getState().equals(State.EMPTY) &&
+                        shelf.getShelfMatrix()[dummy.get(0).getY()][dummy.get(0).getX()].getTile().getTileType()
+                                .equals(shelf.getShelfMatrix()[position.getY() + 1][position.getX()].getTile().getTileType())) {
                     if (dummy.stream().noneMatch(o -> ( o.getX() == position.getX() ) && ( o.getY() == position.getY() + 1 ))) {
                         return false;
                     }
@@ -221,9 +251,9 @@ public class CG_Shape extends CommonGoalCard implements Serializable {
             }
 
             if (position.getY() >= 0 && position.getX() - 1 >= 0 && position.getY() < Shelf.ROWS && position.getX() - 1 < Shelf.COLUMNS) {
-                if (!shelf.getShelfsMatrix()[position.getY()][position.getX() - 1].getState().equals(State.EMPTY) &&
-                        shelf.getShelfsMatrix()[dummy.get(0).getY()][dummy.get(0).getX()].getTile().getTileType()
-                                .equals(shelf.getShelfsMatrix()[position.getY()][position.getX() - 1].getTile().getTileType())) {
+                if (!shelf.getShelfMatrix()[position.getY()][position.getX() - 1].getState().equals(State.EMPTY) &&
+                        shelf.getShelfMatrix()[dummy.get(0).getY()][dummy.get(0).getX()].getTile().getTileType()
+                                .equals(shelf.getShelfMatrix()[position.getY()][position.getX() - 1].getTile().getTileType())) {
                     if (dummy.stream().noneMatch(o -> ( ( o.getX() == position.getX() - 1 ) && ( o.getY() == position.getY() ) ))) {
                         return false;
                     }
@@ -235,9 +265,9 @@ public class CG_Shape extends CommonGoalCard implements Serializable {
             if (this.surrounded == 2) {
 
                 if (position.getY() - 1 >= 0 && position.getX() - 1 >= 0 && position.getY() - 1 < Shelf.ROWS && position.getX() - 1 < Shelf.COLUMNS) {
-                    if (!shelf.getShelfsMatrix()[position.getY() - 1][position.getX() - 1].getState().equals(State.EMPTY) &&
-                            shelf.getShelfsMatrix()[dummy.get(0).getY()][dummy.get(0).getX()].getTile().getTileType()
-                                    .equals(shelf.getShelfsMatrix()[position.getY() - 1][position.getX() - 1].getTile().getTileType())) {
+                    if (!shelf.getShelfMatrix()[position.getY() - 1][position.getX() - 1].getState().equals(State.EMPTY) &&
+                            shelf.getShelfMatrix()[dummy.get(0).getY()][dummy.get(0).getX()].getTile().getTileType()
+                                    .equals(shelf.getShelfMatrix()[position.getY() - 1][position.getX() - 1].getTile().getTileType())) {
                         if (dummy.stream().noneMatch(o -> ( o.getX() == position.getX() - 1 ) && ( o.getY() == position.getY() - 1 ))) {
                             return false;
                         }
@@ -246,9 +276,9 @@ public class CG_Shape extends CommonGoalCard implements Serializable {
                 }
 
                 if (position.getY() - 1 >= 0 && position.getX() + 1 >= 0 && position.getY() - 1 < Shelf.ROWS && position.getX() + 1 < Shelf.COLUMNS) {
-                    if (!shelf.getShelfsMatrix()[position.getY() - 1][position.getX() + 1].getState().equals(State.EMPTY) &&
-                            shelf.getShelfsMatrix()[dummy.get(0).getY()][dummy.get(0).getX()].getTile().getTileType()
-                                    .equals(shelf.getShelfsMatrix()[position.getY() - 1][position.getX() + 1].getTile().getTileType())) {
+                    if (!shelf.getShelfMatrix()[position.getY() - 1][position.getX() + 1].getState().equals(State.EMPTY) &&
+                            shelf.getShelfMatrix()[dummy.get(0).getY()][dummy.get(0).getX()].getTile().getTileType()
+                                    .equals(shelf.getShelfMatrix()[position.getY() - 1][position.getX() + 1].getTile().getTileType())) {
                         if (dummy.stream().noneMatch(o -> ( o.getX() == position.getX() + 1 ) && ( o.getY() == position.getY() - 1 ))) {
                             return false;
                         }
@@ -257,9 +287,9 @@ public class CG_Shape extends CommonGoalCard implements Serializable {
                 }
 
                 if (position.getY() + 1 >= 0 && position.getX() + 1 >= 0 && position.getY() + 1 < Shelf.ROWS && position.getX() + 1 < Shelf.COLUMNS) {
-                    if (!shelf.getShelfsMatrix()[position.getY() + 1][position.getX() + 1].getState().equals(State.EMPTY) &&
-                            shelf.getShelfsMatrix()[dummy.get(0).getY()][dummy.get(0).getX()].getTile().getTileType()
-                                    .equals(shelf.getShelfsMatrix()[position.getY() + 1][position.getX() + 1].getTile().getTileType())) {
+                    if (!shelf.getShelfMatrix()[position.getY() + 1][position.getX() + 1].getState().equals(State.EMPTY) &&
+                            shelf.getShelfMatrix()[dummy.get(0).getY()][dummy.get(0).getX()].getTile().getTileType()
+                                    .equals(shelf.getShelfMatrix()[position.getY() + 1][position.getX() + 1].getTile().getTileType())) {
                         if (dummy.stream().noneMatch(o -> ( o.getX() == position.getX() + 1 ) && ( o.getY() == position.getY() + 1 ))) {
                             return false;
                         }
@@ -268,9 +298,9 @@ public class CG_Shape extends CommonGoalCard implements Serializable {
                 }
 
                 if (position.getY() + 1 >= 0 && position.getX() - 1 >= 0 && position.getY() + 1 < Shelf.ROWS && position.getX() - 1 < Shelf.COLUMNS) {
-                    if (!shelf.getShelfsMatrix()[position.getY() + 1][position.getX() - 1].getState().equals(State.EMPTY) &&
-                            shelf.getShelfsMatrix()[dummy.get(0).getY()][dummy.get(0).getX()].getTile().getTileType()
-                                    .equals(shelf.getShelfsMatrix()[position.getY() + 1][position.getX() - 1].getTile().getTileType())) {
+                    if (!shelf.getShelfMatrix()[position.getY() + 1][position.getX() - 1].getState().equals(State.EMPTY) &&
+                            shelf.getShelfMatrix()[dummy.get(0).getY()][dummy.get(0).getX()].getTile().getTileType()
+                                    .equals(shelf.getShelfMatrix()[position.getY() + 1][position.getX() - 1].getTile().getTileType())) {
                         if (dummy.stream().noneMatch(o -> ( o.getX() == position.getX() - 1 ) && ( o.getY() == position.getY() + 1 ))) {
                             return false;
                         }

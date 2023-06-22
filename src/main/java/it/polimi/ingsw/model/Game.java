@@ -36,26 +36,23 @@ public class Game {
         gameController = gameC;
     }
 
-    public void initialize() {
+    /** Method startGame initializes the game and notifies the players that the game has started. */
+    public void startGame() {
         fileLog.info("Initializing game " + gameId + "with players: ");
         for (Player player : players) {
             fileLog.info(player.getNickname());
         }
-        /** we need the server to pass the number of players and the list of players to the gameController, somehow**/
-        // create and setup board (we're assuming this all happens in the next instruction)
-        this.gameBoard = new LivingRoom(numOfPlayers);
-        fileLog.info("I've created a living room board!");
-        startGame();
-        /**once the living room is set, controller decides who's first**/
-        chooseFirstPlayer();
-        gameController.notifyAllPlayers(new ModelUpdate(this));
-        /**the game then chooses a first player and notifies everyone**/
+        initialize();
+        notifyStart();
+    }
+
+    /**
+     * Method notifyStart notifies the players that the game has started.
+     */
+    private void notifyStart() {
         String firstPlayer = getCurrentPlayer().getNickname();
         gameController.notifyOnStartTurn(firstPlayer);
-        /**has a method to start a turn, which will notify each player that it's "nickname"'s turn**/
-
-        /**has a method to change turns (it could already be implemented into Game**/
-
+        gameController.notifyOnModelUpdate(new ModelUpdate(this));
     }
 
     /** Method chooseFirstPlayer randomly chooses the first player and gives it the chair */
@@ -64,9 +61,11 @@ public class Game {
         this.currentPlayer.setChair();
     }
 
-    /** Method nextTurn passes to the next turn by saving the current player in previousPlayer and then
-     *  changing currentPlayer to the next one on the list
-     *  If the current player is the last on the list then it starts back from the first */
+    /**
+     * Method nextTurn passes to the next turn by saving the current player in previousPlayer and then
+     * changing currentPlayer to the next one on the list.
+     * If the current player is the last on the list then it starts back from the first.
+     */
     public void nextTurn(){
         int next = 0;
         for(int i = 0; i < numOfPlayers; i++) {
@@ -80,22 +79,27 @@ public class Game {
         }
         previousPlayer = currentPlayer;
         currentPlayer = players.get(next);
-        gameController.notifyOnModelUpdate(new ModelUpdate(this));
         gameController.notifyOnStartTurn(currentPlayer.getNickname());
+        gameController.notifyOnModelUpdate(new ModelUpdate(this));
+
 
     }
 
-    /** Method scoreBoard ranks in descending order the players by their scores and then prints them */
+    /** Method scoreBoard ranks in descending order the players by their scores and then prints them. */
     public void scoreBoard(ArrayList<Player> ps){
         this.scoreBoard = ps.stream().sorted(Comparator.comparing(Player::getScore).reversed()).collect(Collectors.toList());
     }
 
-    /** Method startGame initializes CGCs, PGCs and chooses the first player */
-    public void startGame(){
+    /** Method initialize creates the board, CGCs, PGCs and chooses the first player. */
+    public void initialize(){
+        this.gameBoard = new LivingRoom(numOfPlayers);
+        fileLog.info("I've created a living room board!");
         generateCGC(players.size());
         generatePGC(players);
+        chooseFirstPlayer();
     }
 
+    /** Method gameHasEnded calculates the score of each player and then notifies the players that the game has ended. */
     public void gameHasEnded(){
         calculateScore();
         scoreBoard(players);
@@ -103,7 +107,7 @@ public class Game {
         gameController.notifyOnGameEnd();
     }
 
-    /** Method calculateScore calculates the score of each player at the end of the game */
+    /** Method calculateScore calculates the score of each player at the end of the game. */
     public void calculateScore(){
         for ( Player player : players ){
             player.setScore(player.getMyShelf().additionalPoints() + player.getGoalCard().scorePersonalGoalCard(player.getMyShelf()));
@@ -113,11 +117,11 @@ public class Game {
         }
     }
 
-    /** Method generateCGC generates and returns an ArrayList containing CommonGoalCard objects
-     * Those will be the cards that will be used in the game
-     * First it generates 2 different random numbers from 0 to 11
-     * (inside the code it's from 0 to 12 because the upper bound is exclusive)
-     * Then it iterates for how many cards are needed and adds the cards to the ArrayList
+    /**
+     * Method generateCGC generates and returns an ArrayList containing CommonGoalCard objects.
+     * First it generates 2 different random numbers from 0 to cardNodes (the number of card nodes in the JSON file).
+     * Then it iterates for how many cards are needed, adds the cards to commonGoalCards and adds the points to the cards
+     * depending on the number of players.
      */
     public void generateCGC(int numOfPlayers){
         commonGoalCards = new ArrayList<>();
@@ -146,7 +150,7 @@ public class Game {
         }
     }
 
-    /** Method getNumberOfCardNodes returns the number of nodes in the JSON file containing the CGCs. */
+    /** Method getNumberOfCardNodes returns the number of card nodes in the JSON file containing the CGCs. */
     public int getNumberOfCardNodes(){
 
         ObjectMapper mapper = new ObjectMapper();
@@ -159,7 +163,8 @@ public class Game {
         }
     }
 
-    /** Method generatePGC generates as many ints (all random and different) as there are players.
+    /**
+     * Method generatePGC generates as many ints (all random and different) as there are players.
      * Then it assigns a personal goal card to each player
      * @param players - The Arraylist of players
      */
@@ -176,6 +181,14 @@ public class Game {
         gameController.notifyAllPlayers(new ModelUpdate(this));
     }
 */
+
+    /**
+     * Method insertTiles inserts the tiles in the shelf of the current player.
+     * If the shelf is full and none of the players has already taken the endGame token, it sets the endGame token
+     * to the nickname of the current player and notifies all players that the last round has started.
+     * @param columnChosen - The column chosen by the player.
+     * @param tiles - The tiles to be inserted.
+     */
     public void insertTiles(int columnChosen, ArrayList<Tile> tiles){
         this.getCurrentPlayer().getMyShelf().insertTiles(columnChosen, tiles);
         if ( endGame == null ) {
@@ -187,16 +200,13 @@ public class Game {
     }
 
 
-    public void setCurrentPlayer(Player currentPlayer) {
-        this.currentPlayer = currentPlayer;
+    public void setCurrentPlayer(Player cPlayer) {
+        currentPlayer = cPlayer;
     }
     public Player getCurrentPlayer(){
-        return this.currentPlayer;
+        return currentPlayer;
     }
 
-    public void setPreviousPlayer(Player previousPlayerPlayer) {
-        this.previousPlayer = currentPlayer;
-    }
     public Player getPreviousPlayer(){
         return this.previousPlayer;
     }
@@ -236,16 +246,7 @@ public class Game {
         return scoreBoard;
     }
 
-    //cleanup those methods are never used
-    public void setPlayersView(ArrayList<Player> players) {
-        this.players = players;
-    }
-
-    public String placeTilesOnShelf(List<Tile> tilesChosen, int column) {
-        return null;
-    }
-
-    public void createGameBoard(int size) {
-        gameBoard = new LivingRoom(size);
+    public void setBoard(LivingRoom board) {
+        this.gameBoard = board;
     }
 }

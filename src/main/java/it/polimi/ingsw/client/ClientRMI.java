@@ -1,6 +1,5 @@
 package it.polimi.ingsw.client;
 
-import it.polimi.ingsw.model.board.Position;
 import it.polimi.ingsw.network.ConnectionClientTimer;
 import it.polimi.ingsw.network.IRemoteController;
 import it.polimi.ingsw.view.View;
@@ -10,26 +9,21 @@ import org.apache.logging.log4j.Logger;
 import java.io.Serializable;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 
 
 public class ClientRMI implements IClientConnection, Remote, Serializable {
-    private static Logger fileLog = LogManager.getRootLogger();
-    private String username;
-    private ClientController master;
+    private static final Logger fileLog = LogManager.getRootLogger();
     private final IRemoteController remoteController;
     private View viewClient;
     private String userToken;
-    private ResponseDecoder responseDecoder;
     private boolean isConnected;
     private boolean syn;
     private Timer checkTimer;
     private final int synCheckTime = 1000;
 
-    public ClientRMI(ClientController clientHandler, IRemoteController rc) {
-        this.master = clientHandler;
+    public ClientRMI(IRemoteController rc) {
         this.remoteController = rc;
     }
 
@@ -91,7 +85,7 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
 
     @Override
     public void setResponseDecoder(ResponseDecoder responseDecoder) {
-        this.responseDecoder = responseDecoder;
+        //only for socket
     }
 
     @Override
@@ -106,11 +100,6 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
         } catch (RemoteException e) {
             fileLog.error(e.getMessage());
         }
-    }
-
-    @Override
-    public void passTiles(ArrayList<Position> tilesChosen) {
-        master.passTiles(tilesChosen);
     }
 
     @Override
@@ -132,6 +121,15 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
     }
 
     @Override
+    public void quit(String token) {
+        try {
+            remoteController.disconnect(token);
+        } catch (RemoteException e) {
+            fileLog.error(e.getMessage());
+        }
+    }
+
+    @Override
     public void setCheckTimer(boolean b) {
         if(b){
             checkTimer = new Timer();
@@ -141,11 +139,6 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
             checkTimer.purge();
             checkTimer.cancel();
         }
-    }
-
-    @Override
-    public void setName(String name) {
-        this.username=name;
     }
 
     public void setViewClient(View currentView) {
@@ -161,13 +154,6 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
         }
     }
 
-    public String getName() {
-        return username;
-    }
-
-    public String getUserToken() {
-        return userToken;
-    }
 
     public void setConnected(boolean connected) {
         isConnected = connected;
