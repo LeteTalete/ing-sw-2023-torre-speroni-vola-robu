@@ -96,7 +96,7 @@ public class BoardPlayer extends GenericController {
         for(int row = 0; row < board[0].length; row++){
             for (int colum = 0; colum < board.length; colum++) {
                 Couple tile = board[row][colum];
-                if(!(tile.getState().equals(State.INVALID) || tile.getState().equals(State.EMPTY) || tile.getState().equals(State.EMPTY_AND_UNUSABLE))){
+                if(!(tile.getState().equals(State.INVALID) || tile.getState().equals(State.EMPTY))){
                     ImageView tileLR = new ImageView(showTile(tile));
                     tileLR.setFitHeight(47);
                     tileLR.setFitWidth(47);
