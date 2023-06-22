@@ -39,6 +39,9 @@ public class ClientGUI implements View {
         }
         GUIApplication.clientGUI = this;
     }
+    public GameView getGameView(){
+        return this.gameView;
+    }
     @Override
     public void displayUpdatedModel(ModelUpdate modelUpdate){
         //todo check this
@@ -47,7 +50,9 @@ public class ClientGUI implements View {
         if (!this.isStarGame) {
             this.isStarGame = true;
             GUIApplication.showSceneName(SceneNames.BOARDPLAYER);
+            //GUIApplication.setBoardPlayer();
         }
+        //GUIApplication.updateLivingRoom(this.gameView.getGameBoardView());
     }
     @Override
     public void chooseConnection() {
@@ -77,6 +82,9 @@ public class ClientGUI implements View {
     @Override
     public void GamerStatus(Status current) {
 
+    }
+    public void setGameOn(boolean gameOn) {
+        master.setGameOn(gameOn);
     }
 
     @Override

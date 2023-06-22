@@ -31,7 +31,7 @@ public class ClientListenerGUI extends UnicastRemoteObject implements IClientLis
 
     @Override
     public void sendUpdatedModel(ModelUpdate message) throws RemoteException {
-        //view.displayUpdatedModel(message);
+        view.displayUpdatedModel(message);
     }
 
     @Override
@@ -43,7 +43,6 @@ public class ClientListenerGUI extends UnicastRemoteObject implements IClientLis
                 view.displayNotification("Waiting for other players to join...");
             }
             view.serverSavedUsername(name, true, token, first);
-            GUIApplication.showSceneName(SceneNames.WAITINGROOM); //forse è meglio creare una classe in ClientGui che mi mostro la WaitingRoom
         }
         else{
             view.displayNotification("Registration failed: "+name+" already exists. Try again");
@@ -59,7 +58,7 @@ public class ClientListenerGUI extends UnicastRemoteObject implements IClientLis
     public void setGameOn() throws RemoteException {
         //view.writeText(StaticStrings.GAME_START);
         //view.printCommands();
-        //view.setGameOn(true);
+        view.setGameOn(true);
     }
 
     @Override
@@ -102,14 +101,14 @@ public class ClientListenerGUI extends UnicastRemoteObject implements IClientLis
 
     @Override
     public void updateModel(ModelUpdate modelUpdate) throws RemoteException {
-        //view.displayUpdatedModel(modelUpdate);
+        view.displayUpdatedModel(modelUpdate);
     }
 
     @Override
     public void notifyRearrangeOk(boolean ok, ArrayList<Position> tiles) throws RemoteException {
         if(ok){
-            view.displayNotification("Rearrange successful!");
             view.nextAction(3, tiles);
+            view.displayNotification("Rearrange successful!");
         }
         else{
             view.displayNotification("Invalid move. Try again.");
@@ -140,7 +139,7 @@ public class ClientListenerGUI extends UnicastRemoteObject implements IClientLis
     @Override
     public void notifyEndGame() throws RemoteException {
         view.setMyTurn(0);
-        //view.setGameOn(false);
+        view.setGameOn(false);
         view.showEndResult();
     }
 

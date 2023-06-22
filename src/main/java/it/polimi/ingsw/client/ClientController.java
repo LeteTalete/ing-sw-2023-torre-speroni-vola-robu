@@ -5,6 +5,8 @@ import it.polimi.ingsw.network.IClientListener;
 import it.polimi.ingsw.network.IRemoteController;
 import it.polimi.ingsw.responses.Response;
 import it.polimi.ingsw.server.StaticStrings;
+import it.polimi.ingsw.view.GUIApplication;
+import it.polimi.ingsw.view.SceneNames;
 import it.polimi.ingsw.view.View;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -60,6 +62,7 @@ public class ClientController {
         }
         else if(connectionStatus!=null){
             this.currentView.displayNotification(connectionStatus);
+            GUIApplication.showSceneName(SceneNames.WAITINGROOM);
         }
     }
 

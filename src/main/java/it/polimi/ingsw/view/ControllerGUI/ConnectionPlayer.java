@@ -1,25 +1,13 @@
 package it.polimi.ingsw.view.ControllerGUI;
 
-import it.polimi.ingsw.client.ClientRMI;
-import it.polimi.ingsw.client.ClientSocket;
-import it.polimi.ingsw.client.ResponseDecoder;
-import it.polimi.ingsw.network.IRemoteController;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
-import javafx.event.ActionEvent;
-import javafx.stage.Stage;
 import it.polimi.ingsw.view.GUIApplication;
-
-import java.io.IOException;
-import java.rmi.registry.LocateRegistry;
 
 public class ConnectionPlayer extends GenericController {
 
@@ -61,18 +49,11 @@ public class ConnectionPlayer extends GenericController {
         GUIApplication.clientGUI.getCommPars().elaborateInput(textUsername.getText());
     }
 
-    /*public void setWindowConnection(Stage stage){
-        this.windowConnection = stage;
-    }
-
-     */
-
-
     public void activeWindowSocket(MouseEvent mouseEvent){
         IP.setVisible(true);
         port.setVisible(true);
         this.typeConnection = "SOCKET";
-        GUIApplication.getStageWindow().setHeight(400);
+        GUIApplication.getStageWindow().setHeight(GUIApplication.getSceneWindow().getHeight());
     }
     
     public void activeWindowRMI(MouseEvent mouseEvent){

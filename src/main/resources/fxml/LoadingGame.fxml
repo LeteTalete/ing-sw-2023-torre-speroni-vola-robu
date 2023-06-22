@@ -9,26 +9,19 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<Pane prefHeight="436.0" prefWidth="636.0" styleClass="background" stylesheets="@../css/LoadingGame.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.ControllerGUI.ConnectionPlayer">
+<Pane prefHeight="306.0" prefWidth="636.0" styleClass="background" stylesheets="@../css/LoadingGame.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.ControllerGUI.ConnectionPlayer">
    <children>
       <StackPane prefHeight="150.0" prefWidth="200.0">
-         <children>
-            <ImageView fitHeight="121.0" fitWidth="636.0" pickOnBounds="true">
-               <image>
-                  <Image url="@../imgs/base.jpg" />
-               </image>
-            </ImageView>
-            <ImageView fitHeight="127.0" fitWidth="685.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../imgs/Title.png" />
-               </image>
-            </ImageView>
-         </children>
          <padding>
             <Insets top="20.0" />
          </padding>
       </StackPane>
-      <Label alignment="CENTER" contentDisplay="CENTER" layoutY="322.0" prefHeight="35.0" prefWidth="642.0" text="Waiting for other players to join..." textFill="WHITE">
+      <ImageView fitHeight="144.0" fitWidth="636.0" layoutY="168.0" pickOnBounds="true">
+         <image>
+            <Image url="@../imgs/base.jpg" />
+         </image>
+      </ImageView>
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="-3.0" layoutY="209.0" prefHeight="35.0" prefWidth="642.0" text="Waiting for other players to join..." textFill="WHITE">
          <font>
             <Font name="System Bold" size="34.0" />
          </font>
@@ -36,7 +29,7 @@
             <DropShadow height="81.83" radius="29.302500000000002" spread="0.45" width="37.38" />
          </effect>
       </Label>
-      <ImageView fitHeight="138.0" fitWidth="146.0" layoutX="249.0" layoutY="168.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="138.0" fitWidth="146.0" layoutX="238.0" layoutY="37.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../imgs/BoxShadow.png" />
          </image>

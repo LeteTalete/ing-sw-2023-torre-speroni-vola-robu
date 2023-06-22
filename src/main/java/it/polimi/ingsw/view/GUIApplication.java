@@ -2,6 +2,8 @@ package it.polimi.ingsw.view;
 
 import com.sun.javafx.scene.text.GlyphList;
 import it.polimi.ingsw.client.ClientController;
+import it.polimi.ingsw.structures.GameView;
+import it.polimi.ingsw.structures.LivingRoomView;
 import it.polimi.ingsw.view.ControllerGUI.BoardPlayer;
 import it.polimi.ingsw.view.ControllerGUI.ConnectionPlayer;
 import it.polimi.ingsw.view.ControllerGUI.GenericController;
@@ -20,39 +22,52 @@ import java.util.Objects;
 public class GUIApplication extends Application {
     //private static GenericController genericController;
     public static ClientGUI clientGUI;
-    private static GenericController genericController;
+    private static FXMLLoader loaderController;
+    private static BoardPlayer boardPlayer;
     private static Stage stageWindow;
+    private static Scene sceneWindow;
 
     @Override
     public void start(Stage stage) throws Exception {
         stageWindow = stage;
+        Image icon = new Image(Objects.requireNonNull(GUIApplication.class.getResourceAsStream("/imgs/Icon.png")));
+        stageWindow.getIcons().add(icon);
+        stageWindow.setResizable(false);
         showSceneName(SceneNames.CONNECTION);
         stageWindow.setOnCloseRequest(event -> System.exit(0));
     }
 
 
-    private static void setUpStage(SceneNames sceneNames){
+    private static void setUpScene(SceneNames sceneNames){
         try {
-            FXMLLoader loader = new FXMLLoader(GUIApplication.class.getResource(sceneNames.scaneString()));
-            Scene scene = new Scene(loader.load());
-            Image icon = new Image(Objects.requireNonNull(GUIApplication.class.getResourceAsStream("/imgs/Icon.png")));
-            genericController = loader.getController();
+            loaderController = new FXMLLoader(GUIApplication.class.getResource(sceneNames.scaneString()));
+            Parent root = loaderController.load();
+            sceneWindow = new Scene(root);
+            //Image icon = new Image(Objects.requireNonNull(GUIApplication.class.getResourceAsStream("/imgs/Icon.png")));
             //activeGenericController();
-            stageWindow.getIcons().add(icon);
-            stageWindow.setResizable(false); //Non modifica le dimensioni della finestra
-            stageWindow.setScene(scene);
+            //stageWindow.getIcons().add(icon);
+            //stageWindow.setResizable(false); //Non modifica le dimensioni della finestra
+            stageWindow.setHeight(root.prefHeight(-1));
+            stageWindow.setWidth( root.prefWidth(-1));
+            stageWindow.setScene(sceneWindow);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private static void activeGenericController(){
-        ((BoardPlayer) genericController).setBoadPlayer();
+    public static void updateLivingRoom(LivingRoomView livingRoomView){
+        boardPlayer.setLivingRoom(livingRoomView);
+    }
+
+    public static void setBoardPlayer(){
+        boardPlayer = loaderController.getController();
+        boardPlayer.setBoadPlayer(clientGUI.getGameView());
+        updateLivingRoom(clientGUI.getGameView().getGameBoardView());
     }
 
     public static void showSceneName(SceneNames sceneNames){
         Platform.runLater(()-> {
-            setUpStage(sceneNames);
+            setUpScene(sceneNames);
             if(sceneNames.equals(SceneNames.CONNECTION)){
                 stageWindow.setHeight(220);
                 stageWindow.setTitle("Choose Connection");
@@ -64,9 +79,14 @@ public class GUIApplication extends Application {
                 stageWindow.setTitle("Waiting Room");
             } else if(sceneNames.equals(SceneNames.BOARDPLAYER)){
                 stageWindow.setTitle("MyShelfie");
+                setBoardPlayer();
             }
             stageWindow.show();
+            stageWindow.centerOnScreen();
         });
+    }
+    public static Scene getSceneWindow(){
+        return sceneWindow;
     }
 
     public static Stage getStageWindow(){
