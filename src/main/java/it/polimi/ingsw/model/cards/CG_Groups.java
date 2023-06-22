@@ -22,13 +22,10 @@ public class CG_Groups extends CommonGoalCard implements Serializable {
     private String description;
 
     /**
-     * Constructor for CG_Groups given the card ID reads CommonGoalCards.json and saves the CGC parameters.
+     * Constructor for CG_Groups, given the card ID it finds the corresponding card in CommonGoalCards.json and
+     * saves the CGC parameters. For more information on the parameters see the documentation. //TODO: add readme
      *
      * @param id - Card ID used to identify the card.
-     * type - The card's type.
-     * numOfOccurrences - Specifies how many occurrences of the group are needed to satisfy the card conditions.
-     * atLeast - Specifies the least number of tiles needed to identify an eligible group.
-     * description - The card description.
      */
     public CG_Groups(int id) {
 
@@ -154,28 +151,55 @@ public class CG_Groups extends CommonGoalCard implements Serializable {
 
     }
 
+    /**
+     * Method getID overrides getID in class CommonGoalCard.
+     * @return - The ID of the card.
+     */
     @Override
     public int getID() {
         return this.ID;
     }
 
+    /**
+     * Method getPoints overrides getPoints in class CommonGoalCard.
+     * @return - The points remaining on the card.
+     */
     @Override
     public Stack<Integer> getPoints() {
         return points;
     }
+
+    /**
+     * Method getType overrides getType in class CommonGoalCard.
+     * @return - The type of the card.
+     */
     @Override
     public String getType() {
         return type;
     }
 
+    /**
+     * Method getAtLeast overrides getAtLeast in class CommonGoalCard.
+     * @return - The least number of tiles in a group so that it can be counted.
+     */
     @Override
     public int getAtLeast() {
         return atLeast;
     }
+
+    /**
+     * Method getNumOfOccurrences overrides getNumOfOccurrences in class CommonGoalCard.
+     * @return - The number of groups needed to satisfy the card's conditions.
+     */
     @Override
     public int getNumOfOccurrences() {
         return this.numOfOccurrences;
     }
+
+    /**
+     * Method getDescription overrides getDescription in class CommonGoalCard.
+     * @return - The description of the card.
+     */
     @Override
     public String getDescription() {
         return description;

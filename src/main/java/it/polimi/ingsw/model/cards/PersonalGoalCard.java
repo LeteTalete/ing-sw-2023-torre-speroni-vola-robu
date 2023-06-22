@@ -18,7 +18,39 @@ public class PersonalGoalCard extends GoalCard implements Serializable {
     private int numPGC;
     private ArrayList<String> positionTilePGC; //Location of personal goal card tiles
 
-    //This Method calculates each player's score of his Personal Card
+    /**
+     * Constructor PersonalGoalCard creates a new PersonalGoalCard instance, given the number of the card it finds
+     * the corresponding card in PersonalGoals.json and saves PGC parameters. For more information on the parameters
+     * see the documentation. //TODO: Davide should write the documentation
+     * @param numPersonalCard - the number of the Personal Goal Card.
+     */
+    public PersonalGoalCard(int numPersonalCard) {
+        this.numPGC = numPersonalCard;
+
+        String[] positionTileColummn; // the Array of String containing the position and the type of Tile to search for in a given column
+        String readJSON;
+        this.positionTilePGC = new ArrayList<>();
+        try{
+            //Read JSON file
+            ObjectMapper objectMapper = new ObjectMapper();
+            InputStream inputStream = PersonalGoalCard.class.getClassLoader().getResourceAsStream("JSON/PersonalGoals.json");
+            JsonNode rootNode = objectMapper.readTree(inputStream);
+            JsonNode cardNode = rootNode.get(String.valueOf(numPersonalCard));
+            for(int row = 0; row < Shelf.ROWS; row++){
+                readJSON = cardNode.get(row).asText(); //Save the positions of the Tiles that are on that column
+                this.positionTilePGC.add(readJSON);// Save the Personal Card
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Method scorePersonalGoalCard given the Shelf of the player it calculates how many points the player has earned
+     * with his Personal Goal Card.
+     * @param myShelf - the Shelf of the player.
+     * @return - the number of points earned by the player.
+     */
     public int scorePersonalGoalCard(Shelf myShelf){
         int[] scorePersCard = {0, 1, 2, 4, 6, 9, 12}; // the Score Table
         int tilesCorrect = 0; //Number of correct Tiles found
@@ -57,32 +89,18 @@ public class PersonalGoalCard extends GoalCard implements Serializable {
         return scorePersCard[tilesCorrect];
     }
 
-
-    public PersonalGoalCard(int numPersonalCard) {
-        this.numPGC = numPersonalCard;
-
-        String[] positionTileColummn; // the Array of String containing the position and the type of Tile to search for in a given column
-        String readJSON;
-        this.positionTilePGC = new ArrayList<>();
-        try{
-            //Read JSON file
-            ObjectMapper objectMapper = new ObjectMapper();
-            InputStream inputStream = PersonalGoalCard.class.getClassLoader().getResourceAsStream("JSON/PersonalGoals.json");
-            JsonNode rootNode = objectMapper.readTree(inputStream);
-            JsonNode cardNode = rootNode.get(String.valueOf(numPersonalCard));
-            for(int row = 0; row < Shelf.ROWS; row++){
-                readJSON = cardNode.get(row).asText(); //Save the positions of the Tiles that are on that column
-                this.positionTilePGC.add(readJSON);// Save the Personal Card
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
+    /**
+     * Method getPositionTilePC returns information about the position of the tiles in the personal goal card.
+     * @return - the position of the tiles in the personal goal card.
+     */
     public ArrayList<String> getPositionTilePC() {
         return this.positionTilePGC;
     }
 
+    /**
+     * Method getNumPGC returns the number of the Personal Goal Card.
+     * @return - the number of the Personal Goal Card.
+     */
     public int getNumPGC() {
         return numPGC;
     }

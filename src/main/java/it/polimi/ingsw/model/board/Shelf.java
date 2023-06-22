@@ -13,10 +13,22 @@ public class Shelf implements Serializable {
     private int freeSlots[];
     private List<Integer> cardsAlreadyClaimed;
 
+    /** Constructor Shelf creates a new Shelf instance, it creates a new shelf's matrix and sets all its couples to empty. */
+    public Shelf(){
+        this.shelfsMatrix = new Couple[ROWS][COLUMNS];
+        this.cardsAlreadyClaimed = new ArrayList<>();
+        for(int i = 0; i<ROWS; i++) {
+            for(int j=0; j<COLUMNS; j++) {
+                this.shelfsMatrix[i][j] = new Couple();
+                this.shelfsMatrix[i][j].setState(State.EMPTY);
+            }
+        }
+    }
+
     /**
-     * this method inserts the chosen tiles into the player's shelf.
-     * the first tile to be inserted is at the end of the list, while the last tile to be inserted
-     * is the first tile of the list
+     * Method insertTiles inserts the chosen tiles into the player's shelf.
+     * The first tile to be inserted is at the end of the list, while the last tile to be inserted
+     * is the first tile of the list.
      */
     public void insertTiles(int col, ArrayList<Tile> toInsert)
     {
@@ -55,9 +67,10 @@ public class Shelf implements Serializable {
     }
 
     /**
-     * getMaxFree takes as an argument the number of column in which we want to count the empty spaces
-     * if numberColumn > 4 it means we're about to check all the columns and find the max of empty
-     * slots in the entirety of our array
+     * Method getMaxFree takes as an argument the number of column in which we want to count the empty spaces.
+     * If numberColumn > 4 it means we're about to check all the columns and find the max of empty
+     * slots in the entirety of the shelf.
+     * TODO: instead of > 4 we should use a negative value such as -1, in case someone wants to use a shelf with more than 5 columns
      */
     public int getMaxFree(int numberColumns){
         int maximum = 0;
@@ -98,7 +111,7 @@ public class Shelf implements Serializable {
 
     /**
      * Method setFreeSlots takes as an argument the row and the column of the tile to be removed from the shelf and
-     * sets the state of the corresponding couple to EMPTY.
+     * sets the tile and the state of the corresponding couple to null and empty respectively.
      * @param row - the row of the tile.
      * @param column - the column of the tile.
      */
@@ -108,7 +121,13 @@ public class Shelf implements Serializable {
         this.shelfsMatrix[row][column].setState(State.EMPTY);
     }
 
-    //todo: used only for test purposes
+    /**
+     * Method setCoordinate sets the couple in the specified position of the shelf. Used only for test purposes.
+     * TODO: if PersonalGoalCardTest were to be reworked this method can be deleted.
+     * @param row - the row of the couple.
+     * @param column - the column of the couple.
+     * @param chosen - the couple to be inserted.
+     */
     public void setCoordinate(int row, int column, Couple chosen)
     {
         Couple insert = new Couple();
@@ -129,7 +148,12 @@ public class Shelf implements Serializable {
         return this.shelfsMatrix[row][col];
     }
 
-    //todo: used only for test purposes
+    /**
+     * Method getCouple takes as an argument the position of the couple to be returned and returns the corresponding
+     * couple from the shelf.
+     * @param p - the position of the couple.
+     * @return - the couple.
+     */
     public Couple getCouple(Position p)
     {
         return this.shelfsMatrix[p.getX()][p.getY()];
@@ -235,7 +259,7 @@ public class Shelf implements Serializable {
     }
 
     /**
-     * Method getShelfMatrix returns the shelf's matrix.
+     * Getter getShelfMatrix returns the shelf's matrix.
      * @return - shelfsMatrix.
      */
     public Couple[][] getShelfMatrix() {
@@ -250,7 +274,7 @@ public class Shelf implements Serializable {
         return this.cardsAlreadyClaimed;
     }
 
-    //todo: used only for test purposes
+    /** Method clearShelf clears the shelf. Used only for test purposes. */
     public void clearShelf()
     {
         for(int i=0;i<ROWS;i++)
@@ -264,7 +288,7 @@ public class Shelf implements Serializable {
     }
 
 
-    //todo: used only for test purposes
+    /** Method printShelf prints the shelf. Used only for test purposes. */
     public void printShelf() {
         System.out.println("------------------------");
         for( int i = 0; i < ROWS; i++) {
@@ -299,18 +323,6 @@ public class Shelf implements Serializable {
             System.out.println();
         }
         System.out.println("------------------------");
-    }
-
-    /** Constructor Shelf creates a new Shelf instance, it creates a new shelf's matrix and sets all its couples to empty. */
-    public Shelf(){
-        this.shelfsMatrix = new Couple[ROWS][COLUMNS];
-        this.cardsAlreadyClaimed = new ArrayList<>();
-        for(int i = 0; i<ROWS; i++) {
-            for(int j=0; j<COLUMNS; j++) {
-                this.shelfsMatrix[i][j] = new Couple();
-                this.shelfsMatrix[i][j].setState(State.EMPTY);
-            }
-        }
     }
 
 }

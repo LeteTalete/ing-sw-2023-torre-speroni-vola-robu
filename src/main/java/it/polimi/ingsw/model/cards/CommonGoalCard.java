@@ -11,13 +11,20 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Stack;
 
+//TODO: do all methods here need a comment?
 public class CommonGoalCard extends GoalCard implements Serializable {
     private int ID;
 
-
+    /**
+     * Default constructor for CommonGoalCard.
+     */
     public CommonGoalCard(){
     }
 
+    /**
+     * Constructor for CommonGoalCard. Sets the card ID.
+     * @param id - Card ID used to identify the card.
+     */
     public CommonGoalCard(int id){
         this.ID = id;
     }

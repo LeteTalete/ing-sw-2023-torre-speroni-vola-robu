@@ -15,18 +15,50 @@ public class LivingRoom implements Serializable {
     private Couple[][] board;
     private Deck deck;
 
-    public Couple getCouple(Position p) {
-        return board[p.getX()][p.getY()];
-    }
+    /**
+     * Constructor for the LivingRoom, given the number of players it reads the LivingRoom.json file and creates
+     * the board and the deck. For more information about the board see the documentation. //TODO: add readme
+     * @param numberOfPlayers - the number of players in the game.
+     */
+    public LivingRoom(int numberOfPlayers) {
 
-    public Couple[][] getBoard(){
-        return this.board;
-    }
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            InputStream inputStream = LivingRoom.class.getClassLoader().getResourceAsStream("JSON/LivingRoom.json");
+            JsonNode rootNode = mapper.readTree(inputStream);
+            int[][] jsonMatrixCopy = mapper.convertValue(rootNode.get("LivingRoomBoardJSON"), int[][].class);
 
-    public void setCouple(Position p, Tile t, State s)
-    {
-        board[p.getX()][p.getY()].setTile(t);
-        board[p.getX()][p.getY()].setState(s);
+            this.board = new Couple[jsonMatrixCopy.length][jsonMatrixCopy[0].length];
+            deck = new Deck();
+
+            for (int i = 0; i < jsonMatrixCopy.length; i++) {
+                for (int j = 0; j < jsonMatrixCopy[i].length; j++) {
+
+                    if (jsonMatrixCopy[i][j] == 0) {
+                        Couple couple = new Couple();
+                        couple.setState(State.INVALID);
+                        this.board[i][j] = couple;
+                    } else if (jsonMatrixCopy[i][j] == 2) {
+                        Couple couple = new Couple(deck.draw());
+                        this.board[i][j] = couple;
+                    } else if (( jsonMatrixCopy[i][j] == 3 ) && ( numberOfPlayers >= 3 )) {
+                        Couple couple = new Couple(deck.draw());
+                        this.board[i][j] = couple;
+                    } else if (( jsonMatrixCopy[i][j] == 4 ) && ( numberOfPlayers == 4 )) {
+                        Couple couple = new Couple(deck.draw());
+                        this.board[i][j] = couple;
+                    } else {
+                        Couple couple = new Couple();
+                        couple.setState(State.INVALID);
+                        this.board[i][j] = couple;
+                    }
+                }
+            }
+
+        } catch (IOException e) {
+            System.out.println("Error reading matrix from file: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
 
@@ -166,7 +198,7 @@ public class LivingRoom implements Serializable {
         return true;
     }
 
-    //todo: used only for testing
+    /** Method printBoard prints the board on the screen. Used only for testing. */
     public void printBoard()
     {
         //this method is only used for testing
@@ -178,25 +210,19 @@ public class LivingRoom implements Serializable {
                 } else if (getCouple(new Position(i,j)).getState().equals(State.INVALID)) {
                     System.out.print( "\033[0;100m" + " " + " " + " " + "\033[0m" );
                 } else {
-                    switch (getCouple(new Position(i,j)).getTile().getTileType().toString()) {
-                        case "CAT":
-                            System.out.print( "\033[0;102m" + "\033[1;90m" + " " + getCouple(new Position(i,j)).getTile().getTileType().toString().charAt(0) + " " + "\033[0m"  );
-                            break;
-                        case "PLANT":
-                            System.out.print( "\033[0;105m" + "\033[1;90m" + " " + getCouple(new Position(i,j)).getTile().getTileType().toString().charAt(0) + " " + "\033[0m" );
-                            break;
-                        case "FRAME":
-                            System.out.print( "\033[0;104m" + "\033[1;90m" + " " + getCouple(new Position(i,j)).getTile().getTileType().toString().charAt(0) + " " + "\033[0m" );
-                            break;
-                        case "TROPHY":
-                            System.out.print( "\033[0;106m" + "\033[1;90m" + " " + getCouple(new Position(i,j)).getTile().getTileType().toString().charAt(0) + " " + "\033[0m" );
-                            break;
-                        case "BOOK":
-                            System.out.print( "\033[0;107m" + "\033[1;90m" + " " + getCouple(new Position(i,j)).getTile().getTileType().toString().charAt(0) + " " + "\033[0m"  );
-                            break;
-                        case "GAMES":
-                            System.out.print( "\033[0;103m" + "\033[1;90m" + " " + getCouple(new Position(i,j)).getTile().getTileType().toString().charAt(0) + " " + "\033[0m"  );
-                            break;
+                    switch (getCouple(new Position(i, j)).getTile().getTileType().toString()) {
+                        case "CAT" ->
+                                System.out.print("\033[0;102m" + "\033[1;90m" + " " + getCouple(new Position(i, j)).getTile().getTileType().toString().charAt(0) + " " + "\033[0m");
+                        case "PLANT" ->
+                                System.out.print("\033[0;105m" + "\033[1;90m" + " " + getCouple(new Position(i, j)).getTile().getTileType().toString().charAt(0) + " " + "\033[0m");
+                        case "FRAME" ->
+                                System.out.print("\033[0;104m" + "\033[1;90m" + " " + getCouple(new Position(i, j)).getTile().getTileType().toString().charAt(0) + " " + "\033[0m");
+                        case "TROPHY" ->
+                                System.out.print("\033[0;106m" + "\033[1;90m" + " " + getCouple(new Position(i, j)).getTile().getTileType().toString().charAt(0) + " " + "\033[0m");
+                        case "BOOK" ->
+                                System.out.print("\033[0;107m" + "\033[1;90m" + " " + getCouple(new Position(i, j)).getTile().getTileType().toString().charAt(0) + " " + "\033[0m");
+                        case "GAMES" ->
+                                System.out.print("\033[0;103m" + "\033[1;90m" + " " + getCouple(new Position(i, j)).getTile().getTileType().toString().charAt(0) + " " + "\033[0m");
                     }
                 }
 
@@ -206,7 +232,7 @@ public class LivingRoom implements Serializable {
 
     }
 
-    //todo: used only for testing
+    /** Method clearBoard clears the board. Used only for testing. */
     public void clearBoard()
     {
         for(int i=0;i<board.length;i++)
@@ -221,68 +247,44 @@ public class LivingRoom implements Serializable {
         }
     }
 
-    /** Method refill refills the board with tiles from the deck. */
-    public void refill()
-    {
-        //this method refills the board in this way:
-        //iterates the Couple matrix, if the state is EMPTY it draw a tile form the deck and puts it in the couple,
-        //the state of that Couple will be set to PICKABLE
-        for(int i=0;i<this.board.length;i++)
-        {
-            for(int j=0;j<this.board[i].length;j++)
-            {
-                if((this.board[i][j].getState() == State.EMPTY) && (deck.getSize() > 0))
-                {
-                    this.board[i][j].setTile(deck.draw());
-                    this.board[i][j].setState(State.PICKABLE);
+    /** Method refill refills the board with tiles from the deck. It sets the state of the couples to PICKABLE. */
+    public void refill() {
+        for (Couple[] couples : this.board) {
+            for (Couple couple : couples) {
+                if (( couple.getState() == State.EMPTY ) && ( deck.getSize() > 0 )) {
+                    couple.setTile(deck.draw());
+                    couple.setState(State.PICKABLE);
                 }
             }
         }
     }
 
     /**
-     * Constructor for the LivingRoom class given the number of players it reads the LivingRoom.json file and creates
-     * the board and the deck. Based on the number of players it sets certain tiles as unusable.
-     * @param numberOfPlayers - the number of players in the game.
+     * Method getCouple returns the couple in the given position.
+     * @param p - the position of the couple.
+     * @return - the couple in the given position.
      */
-    public LivingRoom(int numberOfPlayers) {
+    public Couple getCouple(Position p) {
+        return board[p.getX()][p.getY()];
+    }
 
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            InputStream inputStream = LivingRoom.class.getClassLoader().getResourceAsStream("JSON/LivingRoom.json");
-            JsonNode rootNode = mapper.readTree(inputStream);
-            int[][] jsonMatrixCopy = mapper.convertValue(rootNode.get("LivingRoomBoardJSON"), int[][].class);
+    /**
+     * Method getBoard returns the board.
+     * @return - the board.
+     */
+    public Couple[][] getBoard(){
+        return this.board;
+    }
 
-            this.board = new Couple[jsonMatrixCopy.length][jsonMatrixCopy[0].length];
-            deck = new Deck();
-
-            for (int i = 0; i < jsonMatrixCopy.length; i++) {
-                for (int j = 0; j < jsonMatrixCopy[i].length; j++) {
-
-                    if (jsonMatrixCopy[i][j] == 0) {
-                        Couple couple = new Couple();
-                        couple.setState(State.INVALID);
-                        this.board[i][j] = couple;
-                    } else if (jsonMatrixCopy[i][j] == 2) {
-                        Couple couple = new Couple(deck.draw());
-                        this.board[i][j] = couple;
-                    } else if (( jsonMatrixCopy[i][j] == 3 ) && ( numberOfPlayers >= 3 )) {
-                        Couple couple = new Couple(deck.draw());
-                        this.board[i][j] = couple;
-                    } else if (( jsonMatrixCopy[i][j] == 4 ) && ( numberOfPlayers == 4 )) {
-                        Couple couple = new Couple(deck.draw());
-                        this.board[i][j] = couple;
-                    } else {
-                        Couple couple = new Couple();
-                        couple.setState(State.INVALID);
-                        this.board[i][j] = couple;
-                    }
-                }
-            }
-
-        } catch (IOException e) {
-            System.out.println("Error reading matrix from file: " + e.getMessage());
-            e.printStackTrace();
-        }
+    /**
+     * Method setCouple sets the couple in the given position.
+     * @param p - the position of the couple.
+     * @param t - the tile of the couple.
+     * @param s - the state of the couple.
+     */
+    public void setCouple(Position p, Tile t, State s)
+    {
+        board[p.getX()][p.getY()].setTile(t);
+        board[p.getX()][p.getY()].setState(s);
     }
 }

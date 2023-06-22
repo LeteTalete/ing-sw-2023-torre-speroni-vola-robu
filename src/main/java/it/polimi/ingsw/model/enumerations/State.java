@@ -5,6 +5,5 @@ import java.io.Serializable;
 public enum State implements Serializable {
     EMPTY,
     INVALID,
-    PICKABLE,
-    PICKED
+    PICKABLE
 }

@@ -9,22 +9,6 @@ public class Couple implements Serializable {
 
     private State state;
 
-    public Tile getTile() {
-        return this.tile;
-    }
-
-    public void setTile(Tile tile) {
-        this.tile = tile;
-    }
-
-    public State getState() {
-        return this.state;
-    }
-
-    public void setState(State newState) {
-        this.state = newState;
-    }
-
     /** Default constructor for a couple. */
     public Couple(){
 
@@ -37,6 +21,38 @@ public class Couple implements Serializable {
     public Couple( Tile tile ){
         this.state = State.PICKABLE;
         this.tile = tile;
+    }
+
+    /**
+     * Getter method getTile returns the tile.
+     * @return - the tile.
+     */
+    public Tile getTile() {
+        return this.tile;
+    }
+
+    /**
+     * Setter method setTile sets the tile.
+     * @param tile - the tile.
+     */
+    public void setTile(Tile tile) {
+        this.tile = tile;
+    }
+
+    /**
+     * Getter method getState returns the tile's state.
+     * @return - the tile's state.
+     */
+    public State getState() {
+        return this.state;
+    }
+
+    /**
+     * Setter method setState sets the tile's state.
+     * @param newState - the new state.
+     */
+    public void setState(State newState) {
+        this.state = newState;
     }
 
 }

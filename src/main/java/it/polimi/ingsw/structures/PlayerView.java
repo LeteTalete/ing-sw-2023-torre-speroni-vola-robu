@@ -12,6 +12,11 @@ public class PlayerView implements Serializable {
     private PersonalGoalCard personalGoalCard;
     public int score;
 
+    /**
+     * Constructor PlayerView creates a new PlayerView instance. It sets the attributes of the class so that the
+     * information of the player(s) can be shown on the view.
+     * @param player - the player.
+     */
     public PlayerView(Player player){
         this.nickname = player.getNickname();
         this.shelfView = new ShelfView(player.getMyShelf());
@@ -19,17 +24,34 @@ public class PlayerView implements Serializable {
         this.score = player.getScore();
     }
 
+    /**
+     * Method getShelf returns the shelf of the player.
+     * @return - the shelf of the player.
+     */
     public ShelfView getShelf(){
         return this.shelfView;
     }
 
+    /**
+     * Method getNickname returns the nickname of the player.
+     * @return - the nickname of the player.
+     */
     public String getNickname(){
         return this.nickname;
     }
+
+    /**
+     * Method getScore returns the score of the player.
+     * @return - the score of the player.
+     */
     public int getScore(){
         return this.score;
     }
 
+    /**
+     * Method getPersonalGoalCard returns the personal goal card of the player.
+     * @return - the personal goal card of the player.
+     */
     public PersonalGoalCard getPersonalGoalCard(){
         return this.personalGoalCard;
     }

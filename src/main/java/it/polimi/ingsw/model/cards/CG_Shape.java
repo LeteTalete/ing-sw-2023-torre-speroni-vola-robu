@@ -26,19 +26,10 @@ public class CG_Shape extends CommonGoalCard implements Serializable {
     private String description;
 
     /**
-     * Constructor for CG_Shape given the card ID reads CommonGoalCards.json and saves the CGC parameters.
+     * Constructor for CG_Shape, given the card ID it finds the corresponding card in CommonGoalCards.json and
+     * saves the CGC parameters. For more information on the parameters see the documentation. //TODO: add readme
      *
      * @param id - Card ID used to identify the card.
-     * type - The card's type.
-     * numOfOccurrences - Specifies how many occurrences of the same shape are needed to satisfy the card conditions.
-     * diffType - When set to 0 all shape's occurrences must be of the same tile type.
-     *            When set to 1 each of the shape's occurrences can be of a different tile type from the others.
-     * surrounded - When set to 0 neighbour tiles to the shape occurrence can share the same tile type with it.
-     *              When set to 1 neighbour tiles to the shape occurrence must have a different tile type from it.
-     * stairs - Default 0. If set to 1 it identifies the 12th CGC on the rulebook.
-     * description - The card description.
-     * coordinates - This set of coordinates identifies the shape itself that the card requires.
-     *             - Those coordinates are saved in positions.
      */
     public CG_Shape(int id) {
 
@@ -370,31 +361,80 @@ public class CG_Shape extends CommonGoalCard implements Serializable {
         return dummy;
     }
 
+    /**
+     * Method getID overrides getID in class CommonGoalCard.
+     * @return - The ID of the card.
+     */
+    @Override
     public int getID() {
         return this.ID;
     }
 
+    /**
+     * Method getPoints overrides getPoints in class CommonGoalCard.
+     * @return - The points remaining on the card.
+     */
+    @Override
     public Stack<Integer> getPoints() { return this.points; }
+
+    /**
+     * Method getDiffType overrides getDiffType in class CommonGoalCard.
+     * @return - 1 if the card allows shapes of different types, 0 otherwise.
+     */
+    @Override
     public int getDiffType() {
         return this.diffType;
     }
 
+    /**
+     * Method getDiffColor overrides getDiffColor in class CommonGoalCard.
+     * @return - 1 if the card is the 12th CGC on the rulebook, 0 otherwise.
+     */
     public int getStairs() {
         return this.stairs;
     }
 
+    /**
+     * Method getType overrides getType in class CommonGoalCard.
+     * @return - The type of the card.
+     */
+    @Override
     public String getType() {
         return this.type;
     }
+
+    /**
+     * Method getPositions overrides getPositions in class CommonGoalCard.
+     * @return - The list of lists of positions that identify the shapes.
+     */
+    @Override
     public List<List<Position>> getPositions() {
         return this.positions;
     }
+
+    /**
+     * Method getNumOfOccurrences overrides getNumOfOccurrences in class CommonGoalCard.
+     * @return - The number of occurrences needed to satisfy the card's requirements.
+     */
+    @Override
     public int getNumOfOccurrences() {
         return this.numOfOccurrences;
     }
+
+    /**
+     * Method getSurrounded overrides getSurrounded in class CommonGoalCard.
+     * @return - The card description.
+     */
+    @Override
     public String getDescription() {
         return description;
     }
+
+    /**
+     * Method getSurrounded overrides getSurrounded in class CommonGoalCard.
+     * @return - An int that represents the card's requirement on the tiles that surround the shape.
+     */
+    @Override
     public int getSurrounded() {
         return surrounded;
     }

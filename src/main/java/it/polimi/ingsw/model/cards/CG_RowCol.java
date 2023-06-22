@@ -27,15 +27,10 @@ public class CG_RowCol extends CommonGoalCard implements Serializable {
     private String description;
 
     /**
-     * Constructor for CG_RowCol given the card ID reads CommonGoalCards.json and saves the CGC parameters.
+     * Constructor for CG_RowCol, given the card ID it finds the corresponding card in CommonGoalCards.json and
+     * saves the CGC parameters. For more information on the parameters see the documentation. //TODO: add readme
      *
      * @param id - Card ID used to identify the card.
-     * type - The card's type.
-     * numOfOccurrences - Specifies how many occurrences of the same shape are needed to satisfy the card conditions.
-     * diffUpTo - Given a row or a column it specifies the maximum number of different tile types inside it.
-     * horizontal - When set to 1 it means the card asks for rows.
-     * vertical - When set to 1 it means the card asks for columns.
-     * description - The card description.
      */
     public CG_RowCol(int id) {
 
@@ -209,22 +204,67 @@ public class CG_RowCol extends CommonGoalCard implements Serializable {
         } else return 0;
     }
 
+    /**
+     * Method getType overrides getType in class CommonGoalCard.
+     * @return - The type of the card.
+     */
+    @Override
     public String getType() {
         return this.type;
     }
 
+    /**
+     * Method getID overrides getID in class CommonGoalCard.
+     * @return - The ID of the card.
+     */
+    @Override
     public int getID() {
         return this.ID;
     }
+
+    /**
+     * Method getPoints overrides getPoints in class CommonGoalCard.
+     * @return - The points remaining on the card.
+     */
+    @Override
     public Stack<Integer> getPoints() { return this.points; }
 
-
+    /**
+     * Method getNumOfOccurrences overrides getNumOfOccurrences in class CommonGoalCard.
+     * @return - The number of columns/rows needed to satisfy the card requirements.
+     */
+    @Override
     public int getNumOfOccurrences() {
         return this.numOfOccurrences;
     }
+
+    /**
+     * Method getDiffUpTo overrides getDiffUpTo in class CommonGoalCard.
+     * @return - The maximum number of different tile types that a column/row can have so that it counts
+     * towards the card requirements.
+     */
+    @Override
     public int getDiffUpTo() { return this.diffUpTo;}
+
+    /**
+     * Method getHorizontal overrides getHorizontal in class CommonGoalCard.
+     * @return - 1 if the card requires rows to satisfy the card requirements, 0 otherwise.
+     */
+    @Override
     public int getHorizontal() { return this.horizontal;}
+
+    /**
+     * Method getVertical overrides getVertical in class CommonGoalCard.
+     * @return - 1 if the card requires columns to satisfy the card requirements, 0 otherwise.
+     */
+    @Override
     public int getVertical() { return this.vertical;}
+
+    /**
+     * Method getDescription overrides getDescription in class CommonGoalCard.
+     * @return - The description of the card.
+     */
+    @Override
     public String getDescription() {
         return this.description;
     }

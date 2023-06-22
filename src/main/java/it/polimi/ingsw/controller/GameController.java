@@ -21,7 +21,7 @@ public class GameController {
     private ServerManager master;
 
     /**
-     * Constructor GameController creates a new GameController instance.
+     * Constructor GameController creates a new GameController instance and initializes the game model.
      * @param playersList - list of players that are playing the game.
      * @param id - id of the game.
      * @param serverMaster - serverManager that manages the server.
@@ -238,13 +238,19 @@ public class GameController {
         master.notifyOnLastTurn(gameId, nickname);
     }
 
-    //todo: used only for testing
+    /**
+     * Method setChoiceOfTiles is used only for testing.
+     * @param choiceOfTiles - tiles chosen by the player.
+     */
     public void setChoiceOfTiles(ArrayList<Position> choiceOfTiles)
     {
         this.choiceOfTiles = choiceOfTiles;
     }
 
-    //todo: used only for testing
+    /**
+     * Method getChoiceOfTiles is used only for testing.
+     * @return - tiles chosen by the player.
+     */
     public ArrayList<Position> getChoiceOfTiles()
     {
         return this.choiceOfTiles;

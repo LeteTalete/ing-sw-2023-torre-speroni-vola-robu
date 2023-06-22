@@ -31,6 +31,11 @@ public class Game {
     private LivingRoom gameBoard;
     private List<CommonGoalCard> commonGoalCards;
 
+    /**
+     * Constructor Game creates a new Game instance. Sets the game id and the game controller.
+     * @param id - the id of the game.
+     * @param gameC - the game controller.
+     */
     public Game(String id, GameController gameC){
         this.gameId = id;
         gameController = gameC;
@@ -46,9 +51,7 @@ public class Game {
         notifyStart();
     }
 
-    /**
-     * Method notifyStart notifies the players that the game has started.
-     */
+    /** Method notifyStart notifies the players that the game has started. */
     private void notifyStart() {
         String firstPlayer = getCurrentPlayer().getNickname();
         gameController.notifyOnStartTurn(firstPlayer);
@@ -175,12 +178,6 @@ public class Game {
             players.get(i).setGoalCard(personalGoalCards[i]);
         }
     }
-/*
-    public void updateCouples(ArrayList<Position> choice){
-        this.gameBoard.updateCouples(choice);
-        gameController.notifyAllPlayers(new ModelUpdate(this));
-    }
-*/
 
     /**
      * Method insertTiles inserts the tiles in the shelf of the current player.
@@ -199,53 +196,108 @@ public class Game {
         }
     }
 
-
+    /**
+     * Method setCurrentPlayer sets the currentPlayer to the player passed as a parameter. Used for testing purposes.
+     * @param cPlayer - The player to be set as the currentPlayer.
+     */
     public void setCurrentPlayer(Player cPlayer) {
         currentPlayer = cPlayer;
     }
+
+    /**
+     * Method getCurrentPlayer returns the currentPlayer.
+     * @return - The currentPlayer.
+     */
     public Player getCurrentPlayer(){
         return currentPlayer;
     }
 
+    /**
+     * Method getPreviousPlayer returns the previousPlayer.
+     * @return - The previousPlayer.
+     */
     public Player getPreviousPlayer(){
         return this.previousPlayer;
     }
+
+    /**
+     * Method getGameBoard returns the gameBoard.
+     * @return - The gameBoard.
+     */
     public LivingRoom getGameBoard(){
         return this.gameBoard;
     }
+
+    /**
+     * Method getCommonGoalCards returns the commonGoalCards.
+     * @return - The commonGoalCards.
+     */
     public List<CommonGoalCard> getCommonGoalCards() { return  this.commonGoalCards; }
 
+    /**
+     * Method getPlayers returns the list of players.
+     * @return - The list of players.
+     */
     public ArrayList<Player> getPlayers(){
         return this.players;
     }
 
-
+    /**
+     * Method setNumOfPlayers sets the number of players.
+     * @param num - The number of players.
+     */
     public void setNumOfPlayers(int num){
-        //todo: this method needs a test
+        //todo: this method needs to be used in a test
         this.numOfPlayers = num;
     }
     // it is kinda weird because setters usually get covered by other tests
-    // but those two are not used anywhere, instead they get called
-    // maybe
+    // but those two are not used anywhere, send help
+    /**
+     * Method setPlayers sets the list of players.
+     * @param players - The list of players.
+     */
     public void setPlayers(ArrayList<Player> players){
-        //todo: this method needs a test
+        //todo: this method needs to be used in a test
         this.players = players;
     }
+
+    /**
+     * Method getGameId returns the gameId.
+     * @return - The gameId.
+     */
     public String getGameId(){
         return this.gameId;
     }
 
+    /**
+     * Method getEndGame returns the endGame token which is the nickname of the player who took it.
+     * @return - The endGame token.
+     */
     public String getEndGame() {
         return endGame;
     }
 
+    /**
+     * Method setEndGame sets the endGame token to the nickname of the player who took it.
+     * @param endGame - The endGame token.
+     */
     public void setEndGame(String endGame) {
         this.endGame = endGame;
     }
+
+    /**
+     * Method getScoreBoard returns the scoreBoard.
+     * @return - The scoreBoard.
+     */
     public List<Player> getScoreBoard() {
         return scoreBoard;
     }
 
+    /**
+     * Method setBoard sets the gameBoard. Used for testing purposes.
+     * @param board - The gameBoard.
+     */
+    //TODO: why just why. When you create a game the board is already created, why would you want to change it?
     public void setBoard(LivingRoom board) {
         this.gameBoard = board;
     }

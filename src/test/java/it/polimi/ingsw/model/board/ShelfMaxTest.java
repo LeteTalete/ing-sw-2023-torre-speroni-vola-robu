@@ -87,25 +87,36 @@ class ShelfMaxTest {
     @Test
     void testMaxFree() {
         s = new Shelf();
-        dummy = new Couple();
-        dummy.setState(State.PICKED);
-        for(int i=0; i<Shelf.COLUMNS; i++)
-        {
-            s.getShelfMatrix()[0][i]=dummy;
-        }
+        ArrayList<Tile> hand = new ArrayList<>();
+
+        hand.add(new Tile(T_Type.CAT,1));
+        s.insertTiles(0,hand);
+        s.insertTiles(1,hand);
+        s.insertTiles(2,hand);
+        s.insertTiles(3,hand);
+        s.insertTiles(4,hand);
+
         assertEquals(5,s.getMaxFree(5));
     }
 
     @Test
     void checkShelfFullTest() {
         s = new Shelf();
-        dummy = new Couple();
-        dummy.setState(State.PICKED);
-        for(int i=0; i<Shelf.ROWS; i++) {
-            for(int j=0; j<Shelf.COLUMNS; j++) {
-                s.getShelfMatrix()[i][j] = dummy;
-            }
-        }
+        ArrayList<Tile> hand = new ArrayList<>();
+
+        hand.add(new Tile(T_Type.CAT,1));
+        hand.add(new Tile(T_Type.FRAME,1));
+        hand.add(new Tile(T_Type.BOOK,1));
+        hand.add(new Tile(T_Type.TROPHY,1));
+        hand.add(new Tile(T_Type.PLANT,1));
+        hand.add(new Tile(T_Type.CAT,1));
+
+        s.insertTiles(0,hand);
+        s.insertTiles(1,hand);
+        s.insertTiles(2,hand);
+        s.insertTiles(3,hand);
+        s.insertTiles(4,hand);
+
         assertTrue(s.checkShelfFull());
     }
 
