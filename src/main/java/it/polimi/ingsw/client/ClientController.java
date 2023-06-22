@@ -28,20 +28,26 @@ public class ClientController {
     private String userToken;
     private boolean toCLose;
 
-    //constructor
+    /**constructor ClientController sets a new ClientController and initializes the view, the listener,
+     * the command parsing and the connection (RMI or Socket). It also creates a new instance of CommandParsing
+     * @param currentView - the view of the client.
+     * */
     public ClientController(View currentView) {
         this.currentView = currentView;
         this.listenerClient = currentView.getListener();
-        //not sure if we need the command parsing anyway
         this.commPars = new CommandParsing(this);
         currentView.setMaster(this, commPars);
         //setupConnection();
         this.currentView.chooseConnection();
     }
 
+    /**method setupConnection sets up the connection of the client, choosing between RMI and Socket.
+     * To initialize the connection, it asks the server IP and then it calls the method setupRMI or setupSocket.
+     * */
     public void setupConnection() {
         //currentView.chooseConnection();
         //todo uncomment this and place SIP instead of null when initializing connections
+        //todo we need to pass the port to the connection too!
         //currentView.askServerIP();
         //String SIP = currentView.getServerIP();
         if(currentView.getConnectionType().equals("RMI")) {
@@ -52,12 +58,16 @@ public class ClientController {
         }
     }
 
+
+    /**method setupSocket sets up the socket connection of the client. It creates a new instance of ClientSocket
+     * and it sets the view of the client and the response decoder.
+     * @param serverIP - the IP of the server caught from the view.
+     * */
     public void setupSocket(String serverIP) {
         try {
             //you have to pass 'this' to the client socket
             ClientSocket clientSocket = new ClientSocket(serverIP, 8899, this);
             this.currentConnection = clientSocket;
-            clientSocket.setViewClient(currentView);
             this.responseDecoder = new ResponseDecoder(listenerClient, currentConnection);
             clientSocket.setResponseDecoder(responseDecoder);
             clientSocket.startClient();
@@ -67,6 +77,10 @@ public class ClientController {
         }
     }
 
+    /**method setupRMI sets up the RMI connection of the client. It creates a new instance of ClientRMI
+     * and it sets the view of the client and the response decoder.
+     * @param serverIP - the IP of the server caught from the view.
+     * */
     private void setupRMI(String serverIP) {
         try{
             //TODO put serverip in host field of locateregisty
@@ -85,6 +99,8 @@ public class ClientController {
         }
     }
 
+    /**method userLogin asks the username to the client's View
+     * */
     public void userLogin () {
         currentView.getUsername();
     }
@@ -93,10 +109,14 @@ public class ClientController {
         return username;
     }
 
+    /**method to pass the chosen tiles from the view to the connection. It also passes the user's token
+     * @param tilesChosen - the list of tiles chosen by the user.
+     * */
     public void chooseTiles(List<String> tilesChosen) {
         currentConnection.chooseTiles(userToken, tilesChosen);
     }
 
+    /**this boolean is used on the client's side to know if a game has started or not*/
     public boolean isGameOn() {
         return gameOn;
     }
@@ -106,6 +126,9 @@ public class ClientController {
         commPars.setGameIsOn(gameOn);
     }
 
+    /**this int is used on the client's side to know at which stage of the turn they are playing (0 when it's not
+     * the client's turn, 1 when they are choosing tiles, 2 if they are either choosing a column or
+     * re-arranging the tiles*/
     public int isMyTurn() {
         return myTurn;
     }
@@ -115,10 +138,16 @@ public class ClientController {
         commPars.setPlaying(turn);
     }
 
+    /**method serverSavedUsername takes the reply of the server after the login and saves useful information for the
+     * future such as the token. If the login was not successful, the client will be asked to choose a new name.
+     * @param name - the name with which the client has logged in
+     * @param b - boolean which signals whether the username is valid or not.
+     * @param token - token assigned by the server to the client. It will be used for future requests to the server.
+     * @param first - signals whether the client is the first player logging on, in which case they will need
+     * to create a waiting room.*/
     public void serverSavedUsername(String name, boolean b, String token, boolean first) {
         if(b){
             setUserToken(token);
-            fileLog.debug("i'm about the set the name "+name);
             setUsername(name);
             currentConnection.setUserToken(token);
             commPars.setFirst(first);
@@ -135,6 +164,7 @@ public class ClientController {
         this.userToken = userToken;
     }
 
+    /**this boolean signals whether the connection needs to be closed or not*/
     public boolean isToClose() {
         return toCLose;
     }
@@ -143,6 +173,9 @@ public class ClientController {
         this.toCLose = toCLose;
     }
 
+    /**method numberOfPlayers checks whether the input from the view is valid. If it is, it sends the number
+     * of players to the server so that it will create a waiting room.
+     * @param number - number of players of the next match, passed by the view.*/
     public void numberOfPlayers(int number) {
         if(number < 2 || number > 4){
             currentView.printError("Wrong number of players, please type 'help' for a list of commands");
@@ -152,10 +185,13 @@ public class ClientController {
         }
     }
 
+    /**method chooseColumn sends the column chosen by the user to the server.
+     * @param column - the column chosen by the user.*/
     public void chooseColumn(int column) {
         currentConnection.chooseColumn(column);
     }
 
+    /**method close closes the connection with the server.*/
     public void close() {
         currentConnection.close();
     }
@@ -164,6 +200,8 @@ public class ClientController {
         return currentConnection.isConnected();
     }
 
+    /**askLogin method is invoked by the ResponseDecoder to send the username to the server.
+     * @param s - it's the username chosen by the client.*/
     public void askLogin(String s) {
         currentConnection.login(s);
     }
@@ -172,6 +210,9 @@ public class ClientController {
         currentView.printError("Wrong command, please type 'help' for a list of commands");
     }
 
+    /**this method sets the turn parameter to 1 if the name of the current player is the same as the
+     * client's username.
+     * @param name - name of the current player passed by the server.*/
     public void isItMyTurn(String name) {
         if(name.equals(username)){
             setMyTurn(1);
@@ -180,6 +221,8 @@ public class ClientController {
             setMyTurn(0);}
     }
 
+    /**method rearrangeTiles passes the tiles re-arranged to the server.
+     * @param - list of re-arranged tiles passed by the view*/
     public void rearrangeTiles(List<String> multipleChoiceNumber) {
         currentConnection.rearrangeTiles(userToken, multipleChoiceNumber);
     }
@@ -192,6 +235,10 @@ public class ClientController {
         currentView.printError("Wrong format, please try again or type 'help' for a list of commands");
     }
 
+    /**nexrAction method used to change the state of the turn parameter from one to two when the choice of tiles
+     * has been deemed successful by the server.
+     * @param num - the stage at which the turn of the client is.
+     * @param tiles - tiles passed from the server to the view so that the client can see them.*/
     public void nextAction(int num, ArrayList<Position> tiles) {
         if(num==2){
             currentView.passTilesToView(tiles);
@@ -203,12 +250,16 @@ public class ClientController {
         currentView.displayNotification("The game has not started yet, please wait for the other players to join");
     }
 
+    /**sendChat method passes a message to the server.
+     * @param receiver - the receiver of the chat message.
+     * @param message - text of the chat message.*/
     public void sendChat(String receiver, String message) {
         currentConnection.sendChat(username, message, receiver);
         //currentView.addToChatQueue(message, receiver);
     }
 
 
+    /**todo*/
     public void pingSyn() {
         currentConnection.setPing(true);
     }
@@ -238,6 +289,7 @@ public class ClientController {
         currentView.hideChat();
     }
 
+    /**quit method to quit the game*/
     public void quit() { currentConnection.quit(userToken); }
 
 }

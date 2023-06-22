@@ -23,14 +23,18 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
     private Timer checkTimer;
     private final int synCheckTime = 1000;
 
+    /**clientRMI constructor.
+     * @param rc - it's the rmi registry used to invoke the server's methods from the client.*/
     public ClientRMI(IRemoteController rc) {
         this.remoteController = rc;
     }
 
+    /**login method used to log the client in, and to pass the viewListener so that the server will be
+     * able to contact the client.
+     * @param name - username chosen by the client*/
     @Override
     public void login(String name) {
         try {
-            //needs the view to implement getListener method
             remoteController.login(name, viewClient.getListener());
 
         } catch (RemoteException e) {
@@ -53,6 +57,10 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
         //unused in rmi
     }
 
+    /**numberOfPlayers method used to send the number of players of the new match to the server.
+     * @param name - username of the client.
+     * @param token - token used to identify the client.
+     * @param number - number of players for the next match.*/
     @Override
     public void numberOfPlayers(String name, String token, int number) {
         try {
@@ -63,12 +71,15 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
         }
     }
 
+    /**chooseColumn method used to send the choice of column to the server.
+     * @param column - choice of column.*/
     @Override
     public void chooseColumn(int column) {
         try {
             remoteController.selectColumn(userToken, column);
         } catch (RemoteException e) {
-            fileLog.error(e.getMessage());        }
+            fileLog.error(e.getMessage());
+        }
     }
 
 
@@ -77,6 +88,7 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
         this.syn = b;
     }
 
+    /**close method used to close the connection*/
     @Override
     public void close() {
         fileLog.info(System.getProperty("line.separator") + "Closing RMI connection..." );
@@ -93,6 +105,9 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
         return isConnected;
     }
 
+    /**rearrangeTiles method used to send the re-arranged tiles to the server.
+     * @param userToken - token which identifies the client.
+     * @param multipleChoiceNumber - list of positions of the re-arranged tiles.*/
     @Override
     public void rearrangeTiles(String userToken, List<String> multipleChoiceNumber) {
         try {
@@ -102,15 +117,21 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
         }
     }
 
+    /**sendChat method used to send a chat message.
+     * @param receiver - receiver of the message.
+     * @param toString - the text of the message.
+     * @param username - the sender of the message.*/
     @Override
-    public void sendChat(String username, String toString, String choice) {
+    public void sendChat(String username, String toString, String receiver) {
         try {
-            remoteController.sendChat(username, toString, choice);
+            remoteController.sendChat(username, toString, receiver);
         } catch (RemoteException e) {
             fileLog.error(e.getMessage());
         }
     }
 
+    /**sendPing method used to send a ping to the server to let it know that the client is still active
+     * and reachable.*/
     @Override
     public void sendPing(String token) {
         try {
@@ -120,6 +141,7 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
         }
     }
 
+    /**quit method used to quit the game*/
     @Override
     public void quit(String token) {
         try {
@@ -129,6 +151,7 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
         }
     }
 
+    /**setCheckTimer is a method which resets the timer or creates a new one*/
     @Override
     public void setCheckTimer(boolean b) {
         if(b){
@@ -145,6 +168,9 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
         this.viewClient = currentView;
     }
 
+    /**chooseTiles method is used to pass the choice of tiles to the server.
+     * @param token - token used to identify the client.
+     * @param tilesChosen - list of tiles chosen by the player.*/
     @Override
     public void chooseTiles(String token, List<String> tilesChosen) {
         try {
@@ -153,7 +179,6 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
             fileLog.error(e.getMessage());
         }
     }
-
 
     public void setConnected(boolean connected) {
         isConnected = connected;

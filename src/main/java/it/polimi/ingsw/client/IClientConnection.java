@@ -31,7 +31,7 @@ public interface IClientConnection {
 
     void rearrangeTiles(String userToken, List<String> multipleChoiceNumber);
 
-    void sendChat(String username, String toString, String choice);
+    void sendChat(String username, String toString, String receiver);
     void sendPing(String token);
 
     void quit(String token);
