@@ -5,6 +5,8 @@ import it.polimi.ingsw.responses.ResponseHandler;
 
 import java.rmi.RemoteException;
 
+/**used by the server to send a generic text notification.*/
+
 public class TextNotification implements Response {
     private final String message;
 

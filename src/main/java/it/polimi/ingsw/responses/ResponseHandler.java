@@ -4,6 +4,8 @@ import it.polimi.ingsw.notifications.*;
 
 import java.rmi.RemoteException;
 
+/**interface to let the client handle the different kinds of responses*/
+
 public interface ResponseHandler {
     void handle(Pinged pinged) throws RemoteException;
     void handle(LoginResponse loginResponse) throws RemoteException;

@@ -5,6 +5,8 @@ import it.polimi.ingsw.network.ServerSocketClientHandler;
 
 import java.rmi.RemoteException;
 
+/**used by the client to send a ping to the server*/
+
 public class PingRequest extends Request{
     private final String token;
 

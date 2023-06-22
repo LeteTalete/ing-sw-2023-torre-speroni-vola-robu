@@ -5,10 +5,15 @@ import it.polimi.ingsw.model.board.Position;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
+/**response about the choice of tiles*/
+
 public class TilesOk implements Response {
     private final boolean moveOk;
     private final ArrayList<Position> tiles;
 
+    /**constructor of TilesOK response.
+     * @param moveOk - boolean signalling the success or failure of the move.
+     * @param choice - list of tiles chosen*/
     public TilesOk(boolean moveOk, ArrayList<Position> choice) {
         this.moveOk = moveOk;
         this.tiles = choice;

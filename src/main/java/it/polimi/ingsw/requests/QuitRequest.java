@@ -3,6 +3,8 @@ package it.polimi.ingsw.requests;
 import it.polimi.ingsw.server.ServerManager;
 import it.polimi.ingsw.network.ServerSocketClientHandler;
 
+/**request from the client to quit the game*/
+
 public class QuitRequest extends Request {
     private final String token;
 

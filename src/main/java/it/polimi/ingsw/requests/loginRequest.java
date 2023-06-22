@@ -5,17 +5,17 @@ import it.polimi.ingsw.network.ServerSocketClientHandler;
 
 import java.rmi.RemoteException;
 
+/**request from a client to log in*/
+
 public class loginRequest extends Request {
-    //public is set because the attribute needs to be viewable to whoever receives the request
-    //final so that the attribute is only set once and never changed again
+
     public final String username;
     public loginRequest(String name) {
         this.username = name;
     }
 
     @Override
-    public void handleRequest(ServerSocketClientHandler socketClientHandler, ServerManager serverManager)
-    {
+    public void handleRequest(ServerSocketClientHandler socketClientHandler, ServerManager serverManager) {
         try{
             serverManager.login(username, socketClientHandler);
         }catch (RemoteException e){

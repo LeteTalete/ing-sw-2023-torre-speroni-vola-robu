@@ -6,11 +6,16 @@ import it.polimi.ingsw.network.ServerSocketClientHandler;
 import java.rmi.RemoteException;
 import java.util.List;
 
+/**request from the client to choose tiles from the board.*/
+
 public class ChooseTilesRequest extends Request {
     public final String token;
     public final List<String> tiles;
-    public ChooseTilesRequest(String name, List<String> tilesChosen) {
-        this.token = name;
+    /**ChooseTilesRequest constructor.
+     * @param t - token of the client.
+     * @param tilesChosen - tiles chosen by the client.*/
+    public ChooseTilesRequest(String t, List<String> tilesChosen) {
+        this.token = t;
         this.tiles = tilesChosen;
     }
 

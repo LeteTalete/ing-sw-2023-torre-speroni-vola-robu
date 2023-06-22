@@ -5,6 +5,8 @@ import it.polimi.ingsw.responses.ResponseHandler;
 
 import java.rmi.RemoteException;
 
+/**notification from the server about the disconnection of a user*/
+
 public class DisconnectionNotif implements Response {
     private final String username;
 
