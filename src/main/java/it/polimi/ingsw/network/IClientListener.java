@@ -15,15 +15,9 @@ public interface IClientListener extends Remote, Serializable {
 
     String getTypeConnection() throws RemoteException;
 
-    //todo check if this is necessary! there is already a method named start turn
-    void sendUpdatedModel(ModelUpdate message) throws RemoteException;
-
     void notifySuccessfulRegistration(String name, boolean b, String token, boolean first) throws RemoteException;
 
     void setGameOn() throws RemoteException;
-
-    //todo check if this is necessary! there is already a method named start turn
-    void changeTurn(String currentPlayer) throws RemoteException;
 
     void showTextNotification(String waitingRoomCreated) throws RemoteException;
 
@@ -50,7 +44,6 @@ public interface IClientListener extends Remote, Serializable {
     void notifyOnCGC(String nickname, int id) throws RemoteException;
 
     void notifyAboutDisconnection(String disconnectedUser) throws RemoteException;
-    void sendPingSyn() throws RemoteException;
     String getToken() throws RemoteException;
     void setToken(String token) throws RemoteException;
 }

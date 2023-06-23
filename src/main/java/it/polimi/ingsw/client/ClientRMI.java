@@ -1,6 +1,5 @@
 package it.polimi.ingsw.client;
 
-import it.polimi.ingsw.network.ConnectionClientTimer;
 import it.polimi.ingsw.network.IRemoteController;
 import it.polimi.ingsw.view.View;
 import org.apache.logging.log4j.LogManager;
@@ -21,7 +20,7 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
     private String userToken;
     private boolean isConnected;
     private boolean syn;
-    private Timer checkTimer;
+    private Timer connectionTimer;
     private final int synCheckTime = 1000;
 
     /**clientRMI constructor.
@@ -83,12 +82,6 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
         }
     }
 
-
-    @Override
-    public void setPing(boolean b) {
-        this.syn = b;
-    }
-
     /**close method used to close the connection*/
     @Override
     public void close() {
@@ -131,17 +124,6 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
         }
     }
 
-    /**sendPing method used to send a ping to the server to let it know that the client is still active
-     * and reachable.*/
-    @Override
-    public void sendPing(String token) {
-        try {
-            remoteController.sendPing(token);
-        } catch (RemoteException e) {
-            fileLog.error(e.getMessage());
-        }
-    }
-
     /**quit method used to quit the game*/
     @Override
     public void quit(String token) {
@@ -149,19 +131,6 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
             remoteController.disconnect(token);
         } catch (RemoteException e) {
             fileLog.error(e.getMessage());
-        }
-    }
-
-    /**setCheckTimer is a method which resets the timer or creates a new one*/
-    @Override
-    public void setCheckTimer(boolean b) {
-        if(b){
-            checkTimer = new Timer();
-            checkTimer.scheduleAtFixedRate(new ConnectionClientTimer(this), synCheckTime, synCheckTime);
-        }
-        else{
-            checkTimer.purge();
-            checkTimer.cancel();
         }
     }
 
@@ -181,11 +150,9 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
         }
     }
 
+    @Override
     public void setConnected(boolean connected) {
         isConnected = connected;
     }
 
-    public boolean isSyn() {
-        return syn;
-    }
 }

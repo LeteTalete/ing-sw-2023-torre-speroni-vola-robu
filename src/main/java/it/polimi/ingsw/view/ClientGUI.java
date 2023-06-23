@@ -250,10 +250,6 @@ public class ClientGUI implements View {
         //todo
     }
 
-    @Override
-    public void pingSyn() {
-        master.pingSyn();
-    }
 
     @Override
     public void addToChatQueue(String message, String receiver) {

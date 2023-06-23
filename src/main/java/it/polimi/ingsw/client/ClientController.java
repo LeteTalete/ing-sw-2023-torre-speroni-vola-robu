@@ -261,9 +261,9 @@ public class ClientController {
     }
 
     /**todo*/
-    public void pingSyn() {
+    /*public void pingSyn() {
         currentConnection.setPing(true);
-    }
+    }*/
 
     public void hideShelves() {
         currentView.hideShelves();

@@ -30,13 +30,6 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
         return connectionType;
     }
 
-    /**method sendUpdatedModel to send the model update to the view.
-     * @param message - contains the model update*/
-    @Override
-    public void sendUpdatedModel(ModelUpdate message) throws RemoteException {
-        view.displayUpdatedModel(message);
-    }
-
     /**notifySuccessfulRegistration method is used to notify about the success (or failure) of the client's login.
      * @param name - username of the client.
      * @param token - token used to identify the client.
@@ -72,12 +65,6 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
         view.setGameOn(true);
     }
 
-    /**changeTurn method is used to signal the start of a new turn.
-     * @param name - the username of the current player.*/
-    @Override
-    public void changeTurn(String name) throws RemoteException {
-        view.changeTurn(name);
-    }
 
     /**showTextNotificationMethod is used to display a generic text notification on the view.
      * @param message - containst the text notification.*/
@@ -194,10 +181,5 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
         view.displayNotification(disconnectedUser + " disconnected. The game is now over.");
     }
 
-    /**sendPingSyn is used to receive the ping of synchronization from the server*/
-    @Override
-    public void sendPingSyn() throws RemoteException {
-        view.pingSyn();
-    }
 
 }

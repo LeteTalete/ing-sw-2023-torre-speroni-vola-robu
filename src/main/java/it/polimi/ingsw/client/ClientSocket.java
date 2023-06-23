@@ -1,6 +1,5 @@
 package it.polimi.ingsw.client;
 
-import it.polimi.ingsw.network.ConnectionClientTimer;
 import it.polimi.ingsw.requests.*;
 import it.polimi.ingsw.responses.Response;
 import it.polimi.ingsw.view.View;
@@ -218,13 +217,6 @@ public class ClientSocket implements IClientConnection
         }
     }
 
-
-    /**todo*/
-    @Override
-    public void setPing(boolean b) {
-        this.syn = b;
-    }
-
     @Override
     public void close() {
         //todo
@@ -237,6 +229,11 @@ public class ClientSocket implements IClientConnection
     @Override
     public boolean isConnected() {
         return amIconnected;
+    }
+
+    @Override
+    public void setConnected(boolean b) {
+        amIconnected = b;
     }
 
     /**rearrangeTiles method generates a request to send the re-arranged tiles to the server.
@@ -266,13 +263,7 @@ public class ClientSocket implements IClientConnection
         request(new ChatMessageRequest(username, toString, receiver));
     }
 
-    /**sendPing method generates a ping request.
-     * @param token - token used to identify the client.*/
-    @Override
-    public void sendPing(String token) {
-        setReceivedResponse(true);
-        request(new PingRequest(token));
-    }
+
 
     /**quit method used to quit the game.
      * @param token - token used to identify the client.*/
@@ -282,22 +273,5 @@ public class ClientSocket implements IClientConnection
         request(new QuitRequest(token));
     }
 
-    /**setCheckTimer method resets the timer or creates one if there isn't any*/
-    @Override
-    public void setCheckTimer(boolean b) {
-        if(b){
-            checkTimer = new Timer();
-            checkTimer.scheduleAtFixedRate(new ConnectionClientTimer(this), synCheckTime, synCheckTime);
-        }
-        else{
-            checkTimer.purge();
-            checkTimer.cancel();
-        }
-    }
-
-    /**sets the syn boolean which signals whether the server is still reachable*/
-    public boolean isSyn() {
-        return syn;
-    }
 
 }

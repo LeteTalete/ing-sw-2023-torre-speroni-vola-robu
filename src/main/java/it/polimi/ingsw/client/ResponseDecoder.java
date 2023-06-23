@@ -25,16 +25,6 @@ public class ResponseDecoder implements ResponseHandler {
     }
 
 
-    /**handle method to handle the pings from the server*/
-    @Override
-    public void handle(Pinged pinged) throws RemoteException {
-        try{
-            clientListener.sendPingSyn();
-        }catch (RemoteException e){
-            fileLog.error(e.getMessage());
-        }
-    }
-
     /**handle method to get the login response and notify the client about it. After that, it sets the boolean
      * of the controller setReceivedResponse to true, and it notifies all the waiting threads to unlock them.*/
     @Override
@@ -61,7 +51,7 @@ public class ResponseDecoder implements ResponseHandler {
      * of the controller setReceivedResponse to true, and it notifies all the waiting threads to unlock them.*/
     @Override
     public void handle(NotifyOnTurn notifyOnTurn) throws RemoteException {
-        clientListener.changeTurn(notifyOnTurn.getCurrentPlayer());
+        clientListener.notifyStartTurn(notifyOnTurn.getCurrentPlayer());
         client.setReceivedResponse(false);
         synchronized (client){
             client.notifyAll();

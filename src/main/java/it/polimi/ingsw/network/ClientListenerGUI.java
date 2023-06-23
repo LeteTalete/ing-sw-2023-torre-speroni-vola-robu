@@ -30,11 +30,6 @@ public class ClientListenerGUI extends UnicastRemoteObject implements IClientLis
     }
 
     @Override
-    public void sendUpdatedModel(ModelUpdate message) throws RemoteException {
-        view.displayUpdatedModel(message);
-    }
-
-    @Override
     public void notifySuccessfulRegistration(String name, boolean b, String token, boolean first) throws RemoteException {
         if(b) {
             view.displayNotification("Registration Successful!");
@@ -59,11 +54,6 @@ public class ClientListenerGUI extends UnicastRemoteObject implements IClientLis
         //view.writeText(StaticStrings.GAME_START);
         //view.printCommands();
         view.setGameOn(true);
-    }
-
-    @Override
-    public void changeTurn(String name) throws RemoteException {
-        view.changeTurn(name);
     }
 
     @Override
@@ -151,11 +141,6 @@ public class ClientListenerGUI extends UnicastRemoteObject implements IClientLis
     @Override
     public void notifyAboutDisconnection(String disconnectedUser) throws RemoteException {
         view.displayNotification(disconnectedUser + " disconnected. The game is now over.");
-    }
-
-    @Override
-    public void sendPingSyn() throws RemoteException {
-        view.pingSyn();
     }
 
     public String getToken() {

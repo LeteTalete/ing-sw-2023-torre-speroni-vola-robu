@@ -482,11 +482,6 @@ public class ClientTUI implements View{
     }
 
     @Override
-    public void pingSyn() {
-        master.pingSyn();
-    }
-
-    @Override
     public void addToChatQueue(String message, String receiver) {
         if (chatQueue.size() == 4) {
             chatQueue.removeFirst();

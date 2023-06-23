@@ -102,13 +102,6 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
 
     }
 
-
-    public synchronized void periodicPing (){
-        //this has to send a ping to all the players in all the active games
-        //if it does not catch a single pong from one player, it shuts down the entire game
-        //if the game is shut down, the server will notify all the players about it
-    }
-
     /**generateToken methods create a random token to assign to a player*/
     public synchronized String generateToken(){
         Random rand = new Random();
@@ -219,6 +212,7 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
      * @param token - token to identify the disconnecting client.*/
     public void disconnect(String token) {
         ConnectionManager.get().disconnectToken(token);
+
     }
 
     /**method used to get the token from a serverSocketClientHandler, mainly used disconnect.
@@ -238,8 +232,6 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
      * @param token - the token to identify the client*/
     public void createToken(ServerSocketClientHandler socketClientHandler, String token) {
         ConnectionManager.get().viewListenerMap.put(token, socketClientHandler);
-        ConnectionManager.get().startPingTimer(token);
-        ConnectionManager.get().startSynTimer(token);
     }
 
     /**createToken is used to add the token and the viewListener of a client to the map of all the client
@@ -248,17 +240,7 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
      * @param token - the token to identify the client*/
     public void generateTokenRMI(IClientListener viewListener, String token) throws RemoteException {
         ConnectionManager.get().viewListenerMap.put(token, viewListener);
-        ConnectionManager.get().startPingTimer(token);
-        ConnectionManager.get().startSynTimer(token);
     }
-
-    @Override
-    public void sendPing(String token) throws RemoteException {
-        ConnectionManager.get().setPingMap(token, true);
-    }
-
-
-
 
     /**method used to notify all the players of a room about the start of the game.
      * @param playersReady - list of players to be notified.*/
@@ -392,7 +374,7 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
                 .filter(e -> e.getValue().equals(id))
                 .forEach(e -> {
                     try {
-                        ConnectionManager.get().viewListenerMap.get(e.getKey()).sendUpdatedModel(something);
+                        ConnectionManager.get().viewListenerMap.get(e.getKey()).updateModel(something);
                     } catch (RemoteException ex) {
                         fileLog.error(ex.getMessage());
                     }

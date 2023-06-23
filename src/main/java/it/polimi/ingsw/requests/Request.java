@@ -15,7 +15,7 @@ public abstract class Request implements Serializable {
 
     public abstract void handleRequest(ServerSocketClientHandler socketClientHandler, ServerManager serverManager);
 
-    //todo cleanup???? do we need this?
+    //cleanup???? do we need this?
     public String getUID(){
         return uID;
     }

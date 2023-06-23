@@ -1,8 +1,6 @@
 package it.polimi.ingsw.server;
 
-import it.polimi.ingsw.network.ConnectionServerPingTimer;
-import it.polimi.ingsw.network.ConnectionServerTimer;
-import it.polimi.ingsw.network.ConnectionTimer;
+import it.polimi.ingsw.network.ClientTimer;
 import it.polimi.ingsw.network.IClientListener;
 
 import java.io.Serializable;
@@ -24,11 +22,7 @@ public class ConnectionManager implements Serializable {
     Map<String, String> tokenNames = new HashMap<>();
     //usernames and tokens
     Map<String, String> namesTokens = new HashMap<>();
-    //tokens and timers
-    private final Map<String, ConnectionTimer> timers = new HashMap<>();
-    private final int ackTime = 200000;
-    private final Map<String, Boolean> pingCheck = new HashMap<>();
-    private final Map<String, ConnectionTimer> synTimers = new HashMap<>();
+
 
     private ConnectionManager(){
     }
@@ -74,40 +68,4 @@ public class ConnectionManager implements Serializable {
         tokenNames.remove(token);
     }
 
-    /**method used to start the timer of the ping. Each time the timer resets, a ping is sent.
-     * @param token - token of the timer's player*/
-    void startPingTimer(String token){
-        timers.put(token, new ConnectionTimer());
-        timers.get(token).scheduleAtFixedRate(new ConnectionServerPingTimer(viewListenerMap.get(token)), ackTime, ackTime);
-    }
-
-    /**method used to start the timer of the single player. Each time the server receives a ping from the player,
-     * their timer resets.
-     * @param token - token of the timer's player*/
-    void startSynTimer(String token){
-        synTimers.put(token, new ConnectionTimer());
-        int synTime = 100000;
-        synTimers.get(token).scheduleAtFixedRate(new ConnectionServerTimer(viewListenerMap.get(token)), synTime, synTime);
-    }
-
-    public Map<String, Boolean> getPingMap() {
-        return pingCheck;
-    }
-
-    /**this method is used to keep track of the players whose ping has been received by the server*/
-    public void setPingMap(String token, boolean received) {
-        if(pingCheck.containsKey(token)){
-            pingCheck.replace(token, received);
-        }
-        else{
-            pingCheck.put(token, received);
-        }
-    }
-
-    public void stopPingTimer(String token) {
-        if(timers.containsKey(token)){
-            timers.get(token).cancel();
-            timers.remove(token);
-        }
-    }
 }

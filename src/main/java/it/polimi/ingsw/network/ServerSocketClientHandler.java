@@ -86,13 +86,6 @@ public class ServerSocketClientHandler implements Runnable, IClientListener {
         return connectionType;
     }
 
-    /**sendUpdateModel method used to generate a notification containing the model update.
-     * @param updated - model update.*/
-    @Override
-    public void sendUpdatedModel(ModelUpdate updated) throws RemoteException {
-        respond(new ModelUpdateNotification(updated));
-    }
-
     /**notifySuccessfulRegistration method used to notify a player about the success (or failure) of their
      * login.
      * @param token - token used to identify the client.
@@ -108,13 +101,6 @@ public class ServerSocketClientHandler implements Runnable, IClientListener {
     @Override
     public void setGameOn() throws RemoteException {
         //only for rmi
-    }
-
-    /**method changeTurn used to generate a response to notify the start of a new turn.
-     * @param name - name of the current player.*/
-    @Override
-    public void changeTurn(String name) throws RemoteException {
-        respond(new NotifyOnTurn(name));
     }
 
     /**method showTextNotification used to send a generic text notification.
@@ -208,11 +194,6 @@ public class ServerSocketClientHandler implements Runnable, IClientListener {
     @Override
     public void notifyAboutDisconnection(String disconnectedUser) throws RemoteException {
         respond(new DisconnectionNotif(disconnectedUser));
-    }
-
-    @Override
-    public void sendPingSyn() throws RemoteException {
-        respond(new Pinged());
     }
 
     @Override
