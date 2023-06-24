@@ -14,7 +14,7 @@ public class PGC7Test {
 
     /**
      * This test checks if the score of the personal goal card is calculated correctly.
-     * It starts by gradually filling the shelf with tiles and checking if the score is correct there is a match
+     * It starts by gradually filling the shelf with tiles and checking if the score is correct when there is a match
      * between the tiles on the shelf and the tiles on the personal goal card.
      */
     @Test
