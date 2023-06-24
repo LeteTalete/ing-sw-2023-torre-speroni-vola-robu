@@ -1,6 +1,8 @@
-package it.polimi.ingsw.model.cards;
+package it.polimi.ingsw.model.cards.CGC;
 
+import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.board.Shelf;
+import it.polimi.ingsw.model.cards.CG_Groups;
 import it.polimi.ingsw.model.enumerations.T_Type;
 import it.polimi.ingsw.model.board.Tile;
 
@@ -22,7 +24,8 @@ public class CGC6Test {
      */
     @BeforeEach
     public void setUp() {
-        shelf = new Shelf();
+        Player player = new Player();
+        shelf = player.getMyShelf();
         tiles = new ArrayList<>();
         CGC6 = new CG_Groups(6);
     }

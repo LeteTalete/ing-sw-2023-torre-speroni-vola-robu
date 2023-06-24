@@ -1,10 +1,12 @@
-package it.polimi.ingsw.model.cards;
+package it.polimi.ingsw.model.cards.PGC;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.model.board.Deck;
 import it.polimi.ingsw.model.board.Shelf;
 import it.polimi.ingsw.model.board.Couple;
+import it.polimi.ingsw.model.cards.GoalCard;
+import it.polimi.ingsw.model.cards.PersonalGoalCard;
 import it.polimi.ingsw.model.enumerations.State;
 import it.polimi.ingsw.model.enumerations.T_Type;
 import org.junit.jupiter.api.Test;
@@ -12,11 +14,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-class PersonalGoalCardTest extends GoalCard{
+class PersonalGoalCardTest extends GoalCard {
 
     @Test
     public void scoreTest() {
