@@ -35,4 +35,11 @@ public interface IClientConnection {
 
     void quit(String token);
 
+    void setSyn(boolean b);
+
+    boolean isSyn();
+
+    void setSynCheckTimer(boolean startTimer);
+
+    void sendAck();
 }

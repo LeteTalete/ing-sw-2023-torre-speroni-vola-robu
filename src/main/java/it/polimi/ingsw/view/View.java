@@ -74,4 +74,6 @@ public interface View {
 
 
     void passTilesToView(ArrayList<Position> tiles);
+
+    void passSyn();
 }

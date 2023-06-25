@@ -21,4 +21,5 @@ public interface IRemoteController extends Remote {
 
     void disconnect(String token) throws RemoteException;
 
+    void sendAck(String userToken) throws RemoteException;
 }

@@ -34,4 +34,6 @@ public interface ResponseHandler {
     void handle(RearrangeOk rearrangeOk) throws RemoteException;
 
     void handle(TilesOk tilesOk) throws RemoteException;
+
+    void handle(SynPing synPing) throws RemoteException;
 }

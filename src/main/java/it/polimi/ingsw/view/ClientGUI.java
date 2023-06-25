@@ -266,6 +266,10 @@ public class ClientGUI implements View {
 
     }
 
+    @Override
+    public void passSyn() {
+        master.onSyn();
+    }
 
 
 }

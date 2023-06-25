@@ -2,6 +2,7 @@ package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.requests.*;
 import it.polimi.ingsw.responses.Response;
+import it.polimi.ingsw.timers.ConnectionClientTimer;
 import it.polimi.ingsw.view.View;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,8 +35,8 @@ public class ClientSocket implements IClientConnection
     private ResponseDecoder responseDecoder;
     private boolean notReceivingResponse;
     private boolean syn;
-    private Timer checkTimer;
     private final int synCheckTime = 1000;
+    private Timer synCheckTimer;
 
     /**ClientSocket constructor.
      * @param ip - the server's ip address.
@@ -59,6 +60,7 @@ public class ClientSocket implements IClientConnection
         }
         catch(IOException e) {
             fileLog.error(e.getMessage());
+            master.getCurrentView().displayNotification("Connection error. Please try again later.");
         }
     }
 
@@ -94,6 +96,8 @@ public class ClientSocket implements IClientConnection
             fileLog.error(e.getMessage());
         }catch (IOException e){
             fileLog.error(e);
+            //if the connection is lost
+            master.getCurrentView().displayNotification("Connection lost. Please try again later.");
         }
         return null;
     }
@@ -102,7 +106,6 @@ public class ClientSocket implements IClientConnection
     public void startClient() {
         openStreams();
         System.out.println(">> Connection established");
-        //if the connection is successful i can use socket's streams to communicate with the server
         master.userLogin();
     }
 
@@ -134,6 +137,7 @@ public class ClientSocket implements IClientConnection
             }
             catch (InterruptedException e) {
                 fileLog.error(e.getMessage());
+                master.getCurrentView().displayNotification("Connection error. Please try again later.");
             }
         }
     }
@@ -147,10 +151,10 @@ public class ClientSocket implements IClientConnection
         request(new loginRequest(name));
         while(notReceivingResponse){
             try{
-                //maybe this doesn't need 'this', but since it's a thread it's better to be safe
                 this.wait();
             }catch (InterruptedException e){
                 fileLog.error(e.getMessage());
+                master.getCurrentView().displayNotification("Connection error. Please try again later.");
             }
         }
     }
@@ -164,6 +168,7 @@ public class ClientSocket implements IClientConnection
             socketOut.reset();
         }catch (IOException e){
             fileLog.error(e.getMessage());
+            master.getCurrentView().displayNotification("Connection error. Please try again later.");
         }
     }
 
@@ -198,6 +203,7 @@ public class ClientSocket implements IClientConnection
                 this.wait();
             }catch (InterruptedException e){
                 fileLog.error(e.getMessage());
+                master.getCurrentView().displayNotification("Connection error. Please try again later.");
             }
         }
     }
@@ -213,6 +219,7 @@ public class ClientSocket implements IClientConnection
                 this.wait();
             }catch (InterruptedException e){
                 fileLog.error(e.getMessage());
+                master.getCurrentView().displayNotification("Connection error. Please try again later.");
             }
         }
     }
@@ -245,10 +252,10 @@ public class ClientSocket implements IClientConnection
         request(new RearrangeTilesRequest(userToken, multipleChoiceNumber));
         while(notReceivingResponse){
             try{
-                //maybe this doesn't need 'this', but since it's a thread it's better to be safe
                 this.wait();
             }catch (InterruptedException e){
                 fileLog.error(e.getMessage());
+                master.getCurrentView().displayNotification("Connection error. Please try again later.");
             }
         }
     }
@@ -273,5 +280,31 @@ public class ClientSocket implements IClientConnection
         request(new QuitRequest(token));
     }
 
+    @Override
+    public void setSyn(boolean b) {
+        syn = b;
+    }
+
+    @Override
+    public boolean isSyn() {
+        return syn;
+    }
+
+    @Override
+    public void setSynCheckTimer(boolean startTimer) {
+        if(startTimer){
+            synCheckTimer = new Timer();
+            synCheckTimer.scheduleAtFixedRate(new ConnectionClientTimer(this), (synCheckTime/2)+synCheckTime, synCheckTime);
+        }
+        else{
+            synCheckTimer.purge();
+            synCheckTimer.cancel();
+        }
+    }
+
+    @Override
+    public void sendAck() {
+        request(new AckPing(token));
+    }
 
 }

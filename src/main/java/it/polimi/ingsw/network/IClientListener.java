@@ -46,4 +46,6 @@ public interface IClientListener extends Remote, Serializable {
     void notifyAboutDisconnection(String disconnectedUser) throws RemoteException;
     String getToken() throws RemoteException;
     void setToken(String token) throws RemoteException;
+
+    void onSyn() throws RemoteException;
 }

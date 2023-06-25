@@ -24,7 +24,6 @@ public class WaitingRoomRequest extends Request{
 
     @Override
     public void handleRequest(ServerSocketClientHandler socketClientHandler, ServerManager serverManager) {
-        System.out.println("I created waiting room for " + name);
         try {
             serverManager.setPlayersWaitingRoom(token, num);
         } catch (RemoteException e) {

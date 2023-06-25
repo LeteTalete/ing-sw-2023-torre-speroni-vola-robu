@@ -181,6 +181,15 @@ public class ResponseDecoder implements ResponseHandler {
         }
     }
 
+    @Override
+    public void handle(SynPing synPing) throws RemoteException {
+        try{
+            clientListener.onSyn();
+        }catch (Exception e){
+            fileLog.error("Error in handling synPing: "+e.getMessage());
+        }
+    }
+
 
     public void handle(Response response) {
         //not used

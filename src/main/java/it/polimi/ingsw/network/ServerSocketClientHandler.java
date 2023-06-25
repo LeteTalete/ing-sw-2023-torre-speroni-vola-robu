@@ -206,6 +206,11 @@ public class ServerSocketClientHandler implements Runnable, IClientListener {
         this.token = token;
     }
 
+    @Override
+    public void onSyn() throws RemoteException {
+        respond(new SynPing());
+    }
+
     private void respond(Response response) {
         fileLog.debug("server about to send response");
         try{

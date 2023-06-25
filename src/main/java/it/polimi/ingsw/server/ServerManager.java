@@ -18,8 +18,6 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
     private static final Logger fileLog = LogManager.getRootLogger();
     private final Map<String, GameController> activeGames;
     private WaitingRoom waitingRoom;
-    //network manager: to instantiate RMI and socket
-    //these are all the usernames and the respective rooms
     private final Map<String, String> activeUsers;
 
     /**ServerManager constructor*/
@@ -139,11 +137,11 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
 
 
             if(viewListener.getTypeConnection().equals("RMI")){
-                generateTokenRMI(viewListener, name);
+                generateTokenRMI(viewListener, token);
             }
             else if(viewListener.getTypeConnection().equals("SOCKET")){
                 //the cast is not necessary
-                createToken((ServerSocketClientHandler) viewListener, name);
+                createToken((ServerSocketClientHandler) viewListener, token);
             }
         }
     }
@@ -212,7 +210,13 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
      * @param token - token to identify the disconnecting client.*/
     public void disconnect(String token) {
         ConnectionManager.get().disconnectToken(token);
+        ConnectionManager.get().stopSynTimer(token);
+        ConnectionManager.get().stopAckTimer(token);
+    }
 
+    @Override
+    public void sendAck(String userToken) throws RemoteException {
+        ConnectionManager.get().setAck(userToken, true);
     }
 
     /**method used to get the token from a serverSocketClientHandler, mainly used disconnect.
@@ -232,6 +236,9 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
      * @param token - the token to identify the client*/
     public void createToken(ServerSocketClientHandler socketClientHandler, String token) {
         ConnectionManager.get().viewListenerMap.put(token, socketClientHandler);
+        ConnectionManager.get().getAckMap().put(token, false);
+        ConnectionManager.get().startSynTimer(token);
+        ConnectionManager.get().startAckTimer(token);
     }
 
     /**createToken is used to add the token and the viewListener of a client to the map of all the client
@@ -240,6 +247,9 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
      * @param token - the token to identify the client*/
     public void generateTokenRMI(IClientListener viewListener, String token) throws RemoteException {
         ConnectionManager.get().viewListenerMap.put(token, viewListener);
+        ConnectionManager.get().getAckMap().put(token, false);
+        ConnectionManager.get().startSynTimer(token);
+        ConnectionManager.get().startAckTimer(token);
     }
 
     /**method used to notify all the players of a room about the start of the game.
@@ -382,4 +392,6 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
     }
 
     //TODO closeGame(gameId)
+
+
 }

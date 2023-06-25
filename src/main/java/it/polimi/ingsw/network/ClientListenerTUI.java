@@ -54,6 +54,13 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
     public void setToken(String token) {
         this.token = token;
     }
+
+    /**method onSyn to receive the syn/ping from the server*/
+    @Override
+    public void onSyn() throws RemoteException {
+        view.passSyn();
+    }
+
     public String getToken() {
         return token;
     }

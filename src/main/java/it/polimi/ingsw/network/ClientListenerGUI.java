@@ -50,6 +50,11 @@ public class ClientListenerGUI extends UnicastRemoteObject implements IClientLis
     }
 
     @Override
+    public void onSyn() throws RemoteException {
+        view.passSyn();
+    }
+
+    @Override
     public void setGameOn() throws RemoteException {
         //view.writeText(StaticStrings.GAME_START);
         //view.printCommands();

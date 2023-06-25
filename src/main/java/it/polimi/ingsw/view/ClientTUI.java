@@ -204,9 +204,8 @@ public class ClientTUI implements View{
                 commandParsing.elaborateInput(command);
             }
         } while (master.isConnected());
-        if (master.isGameOn() /*and connection is not lost, idk*/) {
-            fileLog.debug("entered an if and is stuck");
-            //i don't remember what i was supposed to write here, i'm tired
+        if (master.isGameOn() && !master.isConnected()) {
+            displayNotification("Connection error. Please try again later.");
         } else {
             fileLog.debug("ClientTUI stopped");
             master.close();
@@ -507,6 +506,11 @@ public class ClientTUI implements View{
     @Override
     public void passTilesToView(ArrayList<Position> tiles) {
         this.tiles = tiles;
+    }
+
+    @Override
+    public void passSyn() {
+        master.onSyn();
     }
 
     public String getServerIP() {

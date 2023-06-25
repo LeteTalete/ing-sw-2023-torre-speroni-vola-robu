@@ -116,6 +116,8 @@ public class ClientController {
             this.currentConnection = clientSocket;
             this.responseDecoder = new ResponseDecoder(listenerClient, currentConnection);
             clientSocket.setResponseDecoder(responseDecoder);
+            clientSocket.setConnected(true);
+            clientSocket.setSynCheckTimer(true);
             clientSocket.startClient();
 
         } catch (Exception e) {
@@ -138,6 +140,7 @@ public class ClientController {
             this.responseDecoder = new ResponseDecoder(listenerClient, currentConnection);
             clientRMI.setResponseDecoder(responseDecoder);
             clientRMI.setConnected(true);
+            clientRMI.setSynCheckTimer(true);
             userLogin();
 
         }catch(Exception e){
@@ -208,10 +211,6 @@ public class ClientController {
         currentConnection.login(s);
     }
 
-    public void wrongCommand() {
-        currentView.printError("Wrong command, please type 'help' for a list of commands");
-    }
-
     /**this method sets the turn parameter to 1 if the name of the current player is the same as the
      * client's username.
      * @param name - name of the current player passed by the server.*/
@@ -229,15 +228,7 @@ public class ClientController {
         currentConnection.rearrangeTiles(userToken, multipleChoiceNumber);
     }
 
-    public void invalidNotMyTurn() {
-        currentView.displayNotification("It's not your turn, yet!");
-    }
-
-    public void errorFormat() {
-        currentView.printError("Wrong format, please try again or type 'help' for a list of commands");
-    }
-
-    /**nexrAction method used to change the state of the turn parameter from one to two when the choice of tiles
+    /**nextAction method used to change the state of the turn parameter from one to two when the choice of tiles
      * has been deemed successful by the server.
      * @param num - the stage at which the turn of the client is.
      * @param tiles - tiles passed from the server to the view so that the client can see them.*/
@@ -246,6 +237,22 @@ public class ClientController {
             currentView.passTilesToView(tiles);
             setMyTurn(2);
         }
+    }
+
+    public void wrongCommand() {
+        currentView.printError("Wrong command, please type 'help' for a list of commands");
+    }
+
+    public void invalidNotMyTurn() {
+        currentView.displayNotification("It's not your turn, yet!");
+    }
+
+    public void errorFormat() {
+        currentView.printError("Wrong format, please try again or type 'help' for a list of commands");
+    }
+
+    public void wrongNumber() {
+        currentView.displayNotification("Number of players not valid; please try again.");
     }
 
     public void gameNotStarted() {
@@ -259,11 +266,6 @@ public class ClientController {
         currentConnection.sendChat(username, message, receiver);
         //currentView.addToChatQueue(message, receiver);
     }
-
-    /**todo*/
-    /*public void pingSyn() {
-        currentConnection.setPing(true);
-    }*/
 
     public void hideShelves() {
         currentView.hideShelves();
@@ -292,6 +294,14 @@ public class ClientController {
 
     /**quit method to quit the game*/
     public void quit() { currentConnection.quit(userToken); }
+
+    public void onSyn() {
+        currentConnection.setSyn(true);
+    }
+
+    public View getCurrentView() {
+        return currentView;
+    }
 
 }
 

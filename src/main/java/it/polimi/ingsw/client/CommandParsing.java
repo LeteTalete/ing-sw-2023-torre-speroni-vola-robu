@@ -74,7 +74,10 @@ public class CommandParsing {
 
         } else if(initializingRoom){
             //if choosing tiles
-            if(command.length() != 1 || command.charAt(0) < 50 || command.charAt(0) > 52) return;
+            if(command.length() != 1 || command.charAt(0) < 50 || command.charAt(0) > 52) {
+                master.wrongNumber();
+                return;
+            }
             choiceNumber= Integer.parseInt(command);
             master.numberOfPlayers(choiceNumber);
             initializingRoom = false;
