@@ -185,8 +185,8 @@ public class ServerSocketClientHandler implements Runnable, IClientListener {
      * @param nickname - username of the player who won the card.
      * @param id - id of the common goal card.*/
     @Override
-    public void notifyOnCGC(String nickname, int id) throws RemoteException {
-        respond(new CommonGoalGained(nickname, id));
+    public void notifyOnCGC(String nickname, int id, int points) throws RemoteException {
+        respond(new CommonGoalGained(nickname, id, points));
     }
 
     /**method to notify about a player's disconnection.

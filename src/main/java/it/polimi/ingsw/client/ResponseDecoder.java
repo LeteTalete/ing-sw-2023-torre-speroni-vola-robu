@@ -119,7 +119,7 @@ public class ResponseDecoder implements ResponseHandler {
      * of the controller setReceivedResponse to true, and it notifies all the waiting threads to unlock them.*/
     @Override
     public void handle(CommonGoalGained commonGoalGained) throws RemoteException {
-        clientListener.notifyOnCGC(commonGoalGained.getName(), commonGoalGained.getCard());
+        clientListener.notifyOnCGC(commonGoalGained.getName(), commonGoalGained.getCard(), commonGoalGained.getPoints());
         client.setReceivedResponse(false);
         synchronized (client) {
             client.notifyAll();

@@ -11,7 +11,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class GameController {
     private static Logger fileLog = LogManager.getRootLogger();
@@ -19,6 +21,7 @@ public class GameController {
     private String gameId;
     private ArrayList<Position> choiceOfTiles;
     private ServerManager master;
+    private Map<Integer,Integer> cardsClaimed;
 
     /**
      * Constructor GameController creates a new GameController instance and initializes the game model.
@@ -32,6 +35,7 @@ public class GameController {
         model.setNumOfPlayers(playersList.size());
         gameId = id;
         master = serverMaster;
+        cardsClaimed = new HashMap<>();
     }
 
     /**
@@ -147,6 +151,7 @@ public class GameController {
         updateBoardCouples();
 
         nextTurn();
+        send();
     }
 
     /** Method nextTurn changes the current player and if the game has ended it notifies the players. */
@@ -164,14 +169,25 @@ public class GameController {
      */
     public void checkCGCs(){
 
+        int i = 0;
         for (CommonGoalCard card : model.getCommonGoalCards() ) {
+            i++;
             if ( card.checkConditions(model.getCurrentPlayer().getMyShelf()) == 1 ) {
                 int points = card.getPoints().pop();
                 model.getCurrentPlayer().setScore(points);
-                master.notifyOnCGC(gameId, model.getCurrentPlayer().getNickname(), card.getID());
+                cardsClaimed.put(i, points);
                 fileLog.info(model.getCurrentPlayer().getNickname() + " has received " + points + " points from CGC " + card.getID());
             }
         }
+    }
+
+    public void send(){
+        if ( cardsClaimed.size() > 0 ) {
+            for (Integer key : cardsClaimed.keySet()) {
+                master.notifyOnCGC(gameId, model.getPreviousPlayer().getNickname(), key, cardsClaimed.get(key));
+            }
+        }
+        cardsClaimed.clear();
     }
 
     /**

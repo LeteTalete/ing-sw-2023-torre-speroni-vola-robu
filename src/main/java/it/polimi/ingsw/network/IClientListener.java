@@ -41,7 +41,7 @@ public interface IClientListener extends Remote, Serializable {
 
     void notifyEndGame() throws RemoteException;
 
-    void notifyOnCGC(String nickname, int id) throws RemoteException;
+    void notifyOnCGC(String nickname, int id, int points) throws RemoteException;
 
     void notifyAboutDisconnection(String disconnectedUser) throws RemoteException;
     String getToken() throws RemoteException;

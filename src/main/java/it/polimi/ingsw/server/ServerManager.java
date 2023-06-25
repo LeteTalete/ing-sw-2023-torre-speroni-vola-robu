@@ -362,13 +362,13 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
      * @param gameId - id of the room.
      * @param nickname - username of the players who won the card.
      * @param id - id of the common goal card gained.*/
-    public void notifyOnCGC(String gameId, String nickname, int id) {
+    public void notifyOnCGC(String gameId, String nickname, int id, int points) {
         activeUsers.entrySet()
                 .stream()
                 .filter(e -> e.getValue().equals(gameId))
                 .forEach(e -> {
                     try {
-                        ConnectionManager.get().viewListenerMap.get(e.getKey()).notifyOnCGC(nickname, id);
+                        ConnectionManager.get().viewListenerMap.get(e.getKey()).notifyOnCGC(nickname, id, points);
                     } catch (RemoteException ex) {
                         fileLog.error(ex.getMessage());
                     }

@@ -190,11 +190,11 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
      * @param nickname - username of the player who won the card.
      * @param id - id of the common goal card.*/
     @Override
-    public void notifyOnCGC(String nickname, int id) throws RemoteException {
+    public void notifyOnCGC(String nickname, int id, int points) throws RemoteException {
         if(nickname.equals(view.getName())){
-            view.displayNotification("You gained Common Goal Card " + id + "!");
+            view.displayNotification("You gained " + points + " points from Common Goal Card " + id + "!");
         }
-        else view.displayNotification(nickname + " gained Common Goal Card " + id + "!");
+        else view.displayNotification(nickname + " gained " + points + " points from Common Goal Card " + id + "!");
     }
 
     /**method notifyAboutDisconnection notifies about the disconnection of a user.

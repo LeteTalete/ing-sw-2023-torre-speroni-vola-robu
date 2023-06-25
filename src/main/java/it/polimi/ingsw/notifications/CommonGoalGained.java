@@ -11,12 +11,15 @@ public class CommonGoalGained implements Response {
     private final String name;
     private final int goalCard;
 
+    private final int points;
+
     /**CommonGoalGained constructor.
      * @param card - id of the common goal card.
      * @param n - username of the player who won the card*/
-    public CommonGoalGained(String n, int card) {
+    public CommonGoalGained(String n, int card, int points) {
         this.name = n;
         this.goalCard = card;
+        this.points = points;
     }
 
     @Override
@@ -30,5 +33,9 @@ public class CommonGoalGained implements Response {
 
     public String getName() {
         return name;
+    }
+
+    public int getPoints() {
+        return points;
     }
 }

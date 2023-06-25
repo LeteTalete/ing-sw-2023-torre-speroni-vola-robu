@@ -2,11 +2,8 @@ package it.polimi.ingsw.network;
 
 import it.polimi.ingsw.Updates.ModelUpdate;
 import it.polimi.ingsw.model.board.Position;
-import it.polimi.ingsw.server.StaticStrings;
 import it.polimi.ingsw.view.ClientGUI;
-import it.polimi.ingsw.view.ClientTUI;
 import it.polimi.ingsw.view.GUIApplication;
-import it.polimi.ingsw.view.SceneNames;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -143,7 +140,7 @@ public class ClientListenerGUI extends UnicastRemoteObject implements IClientLis
     }
 
     @Override
-    public void notifyOnCGC(String nickname, int id) throws RemoteException {
+    public void notifyOnCGC(String nickname, int id, int points) throws RemoteException {
         view.displayNotification(nickname + " gained Common Goal Card " + id + "!");
     }
 
