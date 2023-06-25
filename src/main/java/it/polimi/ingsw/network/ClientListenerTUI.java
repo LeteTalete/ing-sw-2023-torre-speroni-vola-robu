@@ -102,6 +102,9 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
      * @param firstDoneUser - username of the player who first completed their shelf.*/
     @Override
     public void notifyLastTurn(String firstDoneUser) throws RemoteException {
+        if(firstDoneUser.equals(view.getName())){
+            view.displayNotification("You gained completed your Shelfie! Last round starts now.");
+        }
         view.displayNotification(firstDoneUser + "completed their Shelfie. Last round starts now!");
     }
 
@@ -188,7 +191,10 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
      * @param id - id of the common goal card.*/
     @Override
     public void notifyOnCGC(String nickname, int id) throws RemoteException {
-        view.displayNotification(nickname + " gained Common Goal Card " + id + "!");
+        if(nickname.equals(view.getName())){
+            view.displayNotification("You gained Common Goal Card " + id + "!");
+        }
+        else view.displayNotification(nickname + " gained Common Goal Card " + id + "!");
     }
 
     /**method notifyAboutDisconnection notifies about the disconnection of a user.
