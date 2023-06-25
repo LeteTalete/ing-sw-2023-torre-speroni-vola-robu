@@ -10,8 +10,10 @@ import it.polimi.ingsw.model.board.Tile;
 import it.polimi.ingsw.model.cards.CG_RowCol;
 import it.polimi.ingsw.model.cards.CG_Shape;
 import it.polimi.ingsw.model.cards.CommonGoalCard;
+import it.polimi.ingsw.model.enumerations.State;
 import it.polimi.ingsw.model.enumerations.T_Type;
 import it.polimi.ingsw.server.ServerManager;
+import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -437,9 +439,110 @@ public class GameControllerTest {
 
     }
 
+    @Test
+    public void updateBoardCouplesTest()
+    {
+        ArrayList<Player> players = new ArrayList<>();
+
+        Player player1 = new Player();
+        player1.setNickname("kiwi");
+        player1.setTokenId("1");
+        player1.setMyShelf(new Shelf());
+        player1.setGoalCard(1);
+        players.add(player1);
+
+        Player player2 = new Player();
+        player2.setNickname("mango");
+        player2.setTokenId("2");
+        player2.setMyShelf(new Shelf());
+        player2.setGoalCard(2);
+        players.add(player2);
+
+
+        gameController = new GameController(players,gameId, master);
+
+        LivingRoom board = new LivingRoom(2);
+
+        Game gameModel = gameController.getModel();
+        gameModel.setBoard(board);
+        gameModel.getGameBoard().printBoard();
+        gameModel.setCurrentPlayer(player1);
+
+        //test 1
+        assert(gameModel.getGameBoard().getBoard()[3][7].getState().equals(State.PICKABLE));
+        assert(gameModel.getGameBoard().getBoard()[3][7].getTile() != null);
+        assert(gameModel.getGameBoard().getBoard()[4][7].getState().equals(State.PICKABLE));
+        assert(gameModel.getGameBoard().getBoard()[4][7].getTile() != null);
+
+        choiceOfTiles.clear();
+        choiceOfTiles.add(0, new Position(3,7));
+        choiceOfTiles.add(1, new Position(4,7));
+
+        gameController.setChoiceOfTiles(choiceOfTiles);
+
+        gameController.updateBoardCouples();
+
+        assert(gameModel.getGameBoard().getBoard()[3][7].getState().equals(State.EMPTY));
+        assert(gameModel.getGameBoard().getBoard()[3][7].getTile() == null);
+        assert(gameModel.getGameBoard().getBoard()[4][7].getState().equals(State.EMPTY));
+        assert(gameModel.getGameBoard().getBoard()[4][7].getTile() == null);
+
+        gameModel.getGameBoard().printBoard();
+
+
+        //test 2
+        choiceOfTiles.clear();
+        choiceOfTiles.add(0, new Position(3,6));
+        choiceOfTiles.add(1, new Position(4,6));
+        choiceOfTiles.add(2, new Position(5,6));
+        choiceOfTiles.add(3, new Position(2,5));
+        choiceOfTiles.add(4, new Position(3,5));
+        choiceOfTiles.add(5, new Position(4,5));
+        choiceOfTiles.add(6, new Position(5,5));
+        choiceOfTiles.add(7, new Position(6,5));
+        choiceOfTiles.add(8, new Position(7,5));
+        choiceOfTiles.add(9, new Position(1,4));
+        choiceOfTiles.add(10, new Position(2,4));
+        choiceOfTiles.add(11, new Position(3,4));
+        choiceOfTiles.add(12, new Position(4,4));
+        choiceOfTiles.add(13, new Position(5,4));
+        choiceOfTiles.add(14, new Position(6,4));
+        choiceOfTiles.add(15, new Position(7,4));
+        choiceOfTiles.add(16, new Position(1,3));
+        choiceOfTiles.add(17, new Position(2,3));
+        choiceOfTiles.add(18, new Position(3,3));
+        choiceOfTiles.add(19, new Position(4,3));
+        choiceOfTiles.add(20, new Position(5,3));
+        choiceOfTiles.add(21, new Position(6,3));
+        choiceOfTiles.add(22, new Position(3,2));
+        choiceOfTiles.add(23, new Position(4,2));
+        choiceOfTiles.add(24, new Position(5,2));
+
+        gameController.setChoiceOfTiles(choiceOfTiles);
+
+        gameController.updateBoardCouples();
+
+        gameModel.getGameBoard().printBoard();
+
+        assert(gameModel.getGameBoard().getBoard()[4][1].getState().equals(State.PICKABLE));
+        assert(gameModel.getGameBoard().getBoard()[4][1].getTile() != null);
+
+        choiceOfTiles.clear();
+        choiceOfTiles.add(0, new Position(4,1));
+
+        gameController.setChoiceOfTiles(choiceOfTiles);
+
+        gameController.updateBoardCouples();
+
+        assert(gameModel.getGameBoard().getBoard()[4][1].getState().equals(State.PICKABLE));
+        assert(gameModel.getGameBoard().getBoard()[4][1].getTile() != null);
+
+        gameModel.getGameBoard().printBoard();
+    }
+
     //todo write checkcgcs test
 
-    //todo write updateboardcouples
+
 
 
 
