@@ -33,7 +33,7 @@ public interface IClientListener extends Remote, Serializable {
 
     void notifyRearrangeOk(boolean ok, ArrayList<Position> tiles) throws RemoteException;
 
-    void notifyTilesOk(boolean ok, ArrayList<Position> tiles) throws RemoteException;
+    void notifyTilesOk(int ok, ArrayList<Position> tiles) throws RemoteException;
 
     void notifyGameStart() throws RemoteException;
 

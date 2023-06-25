@@ -8,13 +8,13 @@ import java.util.ArrayList;
 /**response about the choice of tiles*/
 
 public class TilesOk implements Response {
-    private final boolean moveOk;
+    private final int moveOk;
     private final ArrayList<Position> tiles;
 
     /**constructor of TilesOK response.
      * @param moveOk - boolean signalling the success or failure of the move.
      * @param choice - list of tiles chosen*/
-    public TilesOk(boolean moveOk, ArrayList<Position> choice) {
+    public TilesOk(int moveOk, ArrayList<Position> choice) {
         this.moveOk = moveOk;
         this.tiles = choice;
     }
@@ -24,7 +24,7 @@ public class TilesOk implements Response {
         responseHandler.handle(this);
     }
 
-    public boolean isMoveOk() {
+    public int isMoveOk() {
         return moveOk;
     }
 

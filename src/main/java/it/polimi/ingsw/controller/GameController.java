@@ -58,14 +58,14 @@ public class GameController {
         if (valid && model.getCurrentPlayer().getMyShelf().checkEnoughSpace(choice) && this.model.getGameBoard().checkPlayerChoice(choice))
         {
             this.choiceOfTiles = choice;
-            master.notifyAboutTiles(token, true, choice);
-            //master.notifySinglePlayer(token, new GetTilesResponse(choice));
-            //master.notifySinglePlayer(token, new TilesOk(true));
+            master.notifyAboutTiles(token, 0, choice);
         }
         else
         {
-            master.notifyAboutTiles(token, false, choice);
-            //master.notifySinglePlayer(token, new TilesOk(false));
+            if(!model.getCurrentPlayer().getMyShelf().checkEnoughSpace(choice)){
+                master.notifyAboutTiles(token, 4, choice);
+            }
+            else master.notifyAboutTiles(token, model.getGameBoard().getErrorTilesCode(), choice);
         }
     }
 

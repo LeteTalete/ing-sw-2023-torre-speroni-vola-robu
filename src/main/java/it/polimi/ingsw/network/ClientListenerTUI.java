@@ -138,16 +138,26 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
     }
 
     /**method notifyTilesOk used to notify the player whether the choice of tiles was a success or a failure.
-     * @param ok - boolean signalling the success or failure of the move.
+     * @param ok - integer signaling whether the move was successful or not (0 = success, 1 = tiles not adjacent,
+     *           2 = tiles not in the same row/column, 3 = tiles not from the edge, 4 = not enough space in shelf).
      * @param tiles - contains the tiles chosen by the client.*/
     @Override
-    public void notifyTilesOk(boolean ok, ArrayList<Position> tiles) throws RemoteException {
-        if(ok){
+    public void notifyTilesOk(int ok, ArrayList<Position> tiles) throws RemoteException {
+        if(ok==0){
             view.nextAction(2, tiles);
             view.refreshBoard();
         }
         else{
-            view.displayNotification("Invalid move. Try again.");
+            if(ok==1){
+                view.displayNotification("Invalid move: tiles need to be adjacent! Try again.");
+            }
+            else if(ok == 2){
+                view.displayNotification("Invalid move: tiles need to be in the same row or column! Try again.");
+            }
+            else if(ok == 3){
+                view.displayNotification("Invalid move: tiles need to have at least one side free! Try again.");
+            }
+            else view.displayNotification("Invalid move: not enough space in your Shelfie! Try again.");
         }
     }
 

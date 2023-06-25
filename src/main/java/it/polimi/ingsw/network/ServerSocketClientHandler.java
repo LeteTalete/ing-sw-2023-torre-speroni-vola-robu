@@ -158,7 +158,7 @@ public class ServerSocketClientHandler implements Runnable, IClientListener {
      * @param ok - boolean signalling the success or failure of the client's move.
      * @param tiles - tiles chosen by the client.*/
     @Override
-    public void notifyTilesOk(boolean ok, ArrayList<Position> tiles) throws RemoteException {
+    public void notifyTilesOk(int ok, ArrayList<Position> tiles) throws RemoteException {
         respond(new TilesOk(ok, tiles));
     }
 

@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 
 public class Game {
     private static Logger fileLog = LogManager.getRootLogger();
+    public int getTilesError;
     private String endGame;
     private Player currentPlayer;
     private Player previousPlayer;

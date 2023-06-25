@@ -14,6 +14,7 @@ import java.util.Collections;
 public class LivingRoom implements Serializable {
     private Couple[][] board;
     private Deck deck;
+    private int errorTilesCode;
 
     /**
      * Constructor for the LivingRoom, given the number of players it reads the LivingRoom.json file and creates
@@ -81,8 +82,14 @@ public class LivingRoom implements Serializable {
 
         for (Position p : choice)
         {
-            if(getCouple(p).getState() != State.PICKABLE) return false;
-            if(!atLeastOneSideFree(p)) return false;
+            if(getCouple(p).getState() != State.PICKABLE){
+                errorTilesCode = 3;
+                return false;
+            }
+            if(!atLeastOneSideFree(p)){
+                errorTilesCode = 3;
+                return false;
+            }
             X.add(p.getX());
             Y.add(p.getY());
         }
@@ -93,13 +100,19 @@ public class LivingRoom implements Serializable {
                 if(!X.get(i).equals(X.get(i+1))) sameX = false; //not horizontal direction
                 if(!Y.get(i).equals(Y.get(i+1))) sameY = false; //not vertical direction
             }
-            if(!sameX && !sameY) return false;
+            if(!sameX && !sameY) {
+                errorTilesCode = 2;
+                return false;
+            }
             if(sameX)
             {
                 Collections.sort(Y);
                 for(int i=0;i<choice.size()-1;i++)
                 {
-                   if(Y.get(i+1) - Y.get(i) != 1) return false; //not adjacent
+                   if(Y.get(i+1) - Y.get(i) != 1) {
+                       errorTilesCode = 1;
+                       return false; //not adjacent
+                   }
                 }
             }
             if(sameY)
@@ -107,7 +120,10 @@ public class LivingRoom implements Serializable {
                 Collections.sort(X);
                 for(int i=0;i<choice.size()-1;i++)
                 {
-                    if(X.get(i+1) - X.get(i) != 1) return false; //not adjacent
+                    if(X.get(i+1) - X.get(i) != 1) {
+                        errorTilesCode = 1;
+                        return false; //not adjacent
+                    }
                 }
             }
         }
@@ -286,5 +302,9 @@ public class LivingRoom implements Serializable {
     {
         board[p.getX()][p.getY()].setTile(t);
         board[p.getX()][p.getY()].setState(s);
+    }
+
+    public int getErrorTilesCode() {
+        return errorTilesCode;
     }
 }

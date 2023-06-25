@@ -315,10 +315,11 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
     }
 
     /**notifyAboutTiles method used to notify a player about a successful (or failed) choice of tiles.
-     * @param b - boolean signaling whether the move was successful or not.
+     * @param b - integer signaling whether the move was successful or not (0 = success, 1 = tiles not adjacent, 2 =
+     *          tiles not in the same row/column, 3 = tiles not from the edge, 4 = not enough space in shelf).
      * @param token - token used to identify the client.
      * @param choice - choice of tiles passed to the client so that they can view them.*/
-    public void notifyAboutTiles(String token, boolean b, ArrayList<Position> choice) {
+    public void notifyAboutTiles(String token, int b, ArrayList<Position> choice) {
         try {
             ConnectionManager.get().viewListenerMap.get(token).notifyTilesOk(b, choice);
         } catch (RemoteException e) {

@@ -110,13 +110,17 @@ public class ClientListenerGUI extends UnicastRemoteObject implements IClientLis
         }
     }
 
+    /**
+    @param ok - integer signaling whether the move was successful or not (0 = success, 1 = tiles not adjacent,
+     *           2 = tiles not in the same row/column, 3 = tiles not from the edge). */
     @Override
-    public void notifyTilesOk(boolean ok, ArrayList<Position> tiles) throws RemoteException {
-        if(ok){
+    public void notifyTilesOk(int ok, ArrayList<Position> tiles) throws RemoteException {
+        if(ok==0){
             view.displayNotification("Choice of tiles successful!");
             view.nextAction(2, tiles);
         }
         else{
+            //todo manage error
             view.displayNotification("Invalid move. Try again.");
         }
     }

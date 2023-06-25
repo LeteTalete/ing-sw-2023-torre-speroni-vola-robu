@@ -35,7 +35,7 @@ public class ClientSocket implements IClientConnection
     private ResponseDecoder responseDecoder;
     private boolean notReceivingResponse;
     private boolean syn;
-    private final int synCheckTime = 1000;
+    private final int synCheckTime = 30000;
     private Timer synCheckTimer;
 
     /**ClientSocket constructor.
