@@ -436,4 +436,11 @@ public class GameControllerTest {
         assertEquals(player2, gameController.getModel().getCurrentPlayer());
 
     }
+
+    //todo write checkcgcs test
+
+    //todo write updateboardcouples
+
+
+
 }

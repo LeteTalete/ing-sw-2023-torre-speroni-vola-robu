@@ -187,11 +187,6 @@ public class GameController {
         }
     }
 
-    // todo: no usages found, should be deleted
-    public void generateCGC(){
-        model.generateCGC(model.getPlayers().size());
-    }
-
     /**
      * Method getModel returns the model of the game.
      * @return - model of the game.
@@ -199,15 +194,6 @@ public class GameController {
     public Game getModel(){
         return model;
     }
-
-    //todo: no usages found, should be deleted
-    public void setModel(Game model)
-    {
-        this.model = model;
-    }
-
-    //todo: no usages found, should be deleted
-    public List<CommonGoalCard> getCommonGoalCards() { return  model.getCommonGoalCards(); }
 
     /**
      * Method notifyOnStartTurn notifies the players that it's the turn of the current player.

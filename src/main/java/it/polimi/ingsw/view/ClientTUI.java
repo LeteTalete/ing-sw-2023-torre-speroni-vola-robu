@@ -8,7 +8,6 @@ import it.polimi.ingsw.model.board.Position;
 import it.polimi.ingsw.network.ClientListenerTUI;
 import it.polimi.ingsw.network.IClientListener;
 import it.polimi.ingsw.server.StaticStrings;
-import it.polimi.ingsw.stati.Status;
 import it.polimi.ingsw.structures.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -264,12 +263,6 @@ public class ClientTUI implements View{
     public void displayNotification(String message) {
         fileLog.debug("displayNotification: " + message);
         writeText(message);
-    }
-
-    //gamerstatus has a status as an argument
-    @Override
-    public void GamerStatus(Status current) {
-
     }
 
     @Override
