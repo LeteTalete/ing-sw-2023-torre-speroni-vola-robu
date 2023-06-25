@@ -190,7 +190,6 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
     @Override
     public void setConnected(boolean connected) {
         isConnected = connected;
-        //todo when the server terminates, rmi connections ned to be notified about it
         if(!connected){
             fileLog.debug("Lost connection to the server. Setting isConnected to false");
             viewClient.displayNotification("You lost connection to the server, please try to reconnect");

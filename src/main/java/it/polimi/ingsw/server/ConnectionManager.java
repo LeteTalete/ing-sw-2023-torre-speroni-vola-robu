@@ -3,7 +3,7 @@ package it.polimi.ingsw.server;
 import it.polimi.ingsw.network.IClientListener;
 import it.polimi.ingsw.timers.CTimer;
 import it.polimi.ingsw.timers.ConnectionAckTimer;
-import it.polimi.ingsw.timers.ConnectionServerTimer;
+import it.polimi.ingsw.timers.ServerSynTimer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -85,7 +85,7 @@ public class ConnectionManager implements Serializable {
     synchronized void startSynTimer(String token){
         fileLog.debug("Starting syn timer for client: "+tokenNames.get(token));
         synTimer.put(token, new CTimer());
-        synTimer.get(token).scheduleAtFixedRate(new ConnectionServerTimer(viewListenerMap.get(token)), synTime, synTime);
+        synTimer.get(token).scheduleAtFixedRate(new ServerSynTimer(viewListenerMap.get(token)), synTime, synTime);
     }
 
     public void stopSynTimer(String token){

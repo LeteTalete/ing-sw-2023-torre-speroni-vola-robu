@@ -59,11 +59,7 @@ public class CommandParsing {
                 if ( master.isGameOn() ) {
                     initializingRoom = false;
                 } else {
-                    if (first) {
-                        initializingRoom = true;
-                    } else {
-                        initializingRoom = false;
-                    }
+                    initializingRoom = first;
                 }
 
             } else if ( master.getUsername() == null ) {
@@ -236,7 +232,7 @@ public class CommandParsing {
         for(String s : args){
             message.append(s).append(" ");
         }
-        fileLog.info("sending message " + message.toString() + " to " + choice);
+        fileLog.info("sending message " + message + " to " + choice);
         master.sendChat(choice, message.toString());
     }
 
@@ -273,8 +269,8 @@ public class CommandParsing {
     private boolean checkOrderFormat(List<String> order)
     {
         //checking for admissible values
-        for(int i=0; i<order.size();i++) {
-            if(!order.get(i).equals("1") && !order.get(i).equals("2") && !order.get(i).equals("3")) return false;
+        for (String s : order) {
+            if (!s.equals("1") && !s.equals("2") && !s.equals("3")) return false;
         }
 
         //checking for duplicates
@@ -328,12 +324,7 @@ public class CommandParsing {
 
 
     public void setPlaying(int playing) {
-        if(playing>0){
-            isPlaying = true;
-        }
-        else{
-            isPlaying = false;
-        }
+        isPlaying = playing > 0;
     }
 
     public void setGameIsOn(boolean gameIsOn) {
@@ -361,9 +352,7 @@ public class CommandParsing {
         if(p.getX()<0 || p.getY()<0) return false;
 
         //at least 1 couple of coordinates, maximum 3
-        if(multipleChoiceNumber.size() < 1 || multipleChoiceNumber.size() > 3) return false;
-
-        return true;
+        return multipleChoiceNumber.size() >= 1 && multipleChoiceNumber.size() <= 3;
     }
 
     public void setFirst(boolean b) {

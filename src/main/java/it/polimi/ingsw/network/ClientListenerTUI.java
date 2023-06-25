@@ -149,13 +149,13 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
         }
         else{
             if(ok==1){
-                view.displayNotification("Invalid move: tiles need to be adjacent! Try again.");
+                view.displayNotification("Invalid move: all tiles need to be adjacent! Try again.");
             }
             else if(ok == 2){
-                view.displayNotification("Invalid move: tiles need to be in the same row or column! Try again.");
+                view.displayNotification("Invalid move: all tiles need to be in the same row or column! Try again.");
             }
             else if(ok == 3){
-                view.displayNotification("Invalid move: tiles need to have at least one side free! Try again.");
+                view.displayNotification("Invalid move: all tiles need to have at least one side free! Try again.");
             }
             else view.displayNotification("Invalid move: not enough space in your Shelfie! Try again.");
         }

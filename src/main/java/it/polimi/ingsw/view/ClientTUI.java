@@ -18,12 +18,12 @@ import java.util.*;
 
 
 public class ClientTUI implements View{
-    private static Logger fileLog = LogManager.getRootLogger();
+    private static final Logger fileLog = LogManager.getRootLogger();
     private GameView gameView;
     private static final String ERROR_COMMAND = "ERROR";
     private ClientController master;
     private CommandParsing commandParsing;
-    private ClientListenerTUI listenerClient;
+    private final ClientListenerTUI listenerClient;
     static final String colorRESET = "\033[0m";  // Reset Changes
     static final String colorTitle = "\033[38;5;11m"; //Yellow
     private final Integer sizeSlotTile = 3; //Tile size to be colored
@@ -31,7 +31,7 @@ public class ClientTUI implements View{
     private String command;
     private boolean isRunning;
     private String ServerIP;
-    private LinkedList<String> chatQueue = new LinkedList<>();
+    private final LinkedList<String> chatQueue = new LinkedList<>();
     private String username;
     private boolean isStarGame = false;
 
@@ -529,8 +529,6 @@ public class ClientTUI implements View{
         chatQueue.add(s);
         this.newChatMessage = true;
         refreshBoard();
-        //todo
-        //writeText(s);
     }
 
     public String getName() {

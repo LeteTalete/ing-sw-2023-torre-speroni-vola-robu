@@ -18,7 +18,7 @@ public class LivingRoom implements Serializable {
 
     /**
      * Constructor for the LivingRoom, given the number of players it reads the LivingRoom.json file and creates
-     * the board and the deck. For more information about the board see the documentation. //TODO: add readme
+     * the board and the deck. For more information about the board see the documentation.
      * @param numberOfPlayers - the number of players in the game.
      */
     public LivingRoom(int numberOfPlayers) {
