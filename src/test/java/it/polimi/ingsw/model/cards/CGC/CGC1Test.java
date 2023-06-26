@@ -19,6 +19,7 @@ public class CGC1Test {
     private Shelf shelf;
     private ArrayList<Tile> tiles;
     private CG_Shape CGC1;
+    private Shelf testShelf;
 
     /**
      * Method setUp creates a new shelf, a new ArrayList of tiles and a new CGC1 before each test.
@@ -119,6 +120,8 @@ public class CGC1Test {
         tiles.add(new Tile(T_Type.TROPHY, 1));
         tiles.add(new Tile(T_Type.CAT,1));
         shelf.insertTiles(4, tiles);
+
+        testShelf = shelf;
 
         System.out.println("cornerTest");
         shelf.printShelf();
@@ -248,4 +251,7 @@ public class CGC1Test {
         assertFalse(shelf.getCardsAlreadyClaimed().contains(CGC1.getID()));
     }
 
+    public Shelf getTestShelf() {
+        return testShelf;
+    }
 }

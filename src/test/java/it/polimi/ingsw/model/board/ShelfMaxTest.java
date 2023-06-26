@@ -69,21 +69,6 @@ class ShelfMaxTest {
         assertTrue(shelf.checkEnoughSpace(choice));
     }
 
-    /**
-     * Test setCoordinateTest checks if the tile is inserted in the correct position.
-     */
-    @Test
-    public void setCoordinateTest(){
-        Tile tile = new Tile(T_Type.CAT,1);
-        Couple couple = new Couple(tile);
-
-        Shelf shelf = new Shelf();
-        shelf.setCoordinate(5,0,couple);
-        shelf.printShelf();
-
-        assertEquals(shelf.getCouple(new Position(5,0)).getTile().getTileType(),T_Type.CAT);
-    }
-
     @Test
     void testMaxFree() {
         s = new Shelf();

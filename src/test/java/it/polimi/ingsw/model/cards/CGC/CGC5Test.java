@@ -19,6 +19,7 @@ public class CGC5Test {
     private Shelf shelf;
     private ArrayList<Tile> tiles;
     private CG_Groups CGC5;
+    private Shelf testShelf;
 
     /**
      * Method setUp creates a new shelf, a new ArrayList of tiles and a new CGC5 before each test.
@@ -93,6 +94,8 @@ public class CGC5Test {
         tiles.add(new Tile(T_Type.GAMES, 1));
         tiles.add(new Tile(T_Type.GAMES, 1));
         shelf.insertTiles(4, tiles);
+
+        testShelf = shelf;
 
         System.out.println("sixOccTest1");
         shelf.printShelf();
@@ -343,4 +346,7 @@ public class CGC5Test {
         assertFalse(shelf.getCardsAlreadyClaimed().contains(CGC5.getID()));
     }
 
+    public Shelf getTestShelf() {
+        return testShelf;
+    }
 }

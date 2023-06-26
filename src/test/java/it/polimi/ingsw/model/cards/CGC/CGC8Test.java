@@ -18,6 +18,7 @@ public class CGC8Test {
     private Shelf shelf;
     private ArrayList<Tile> tiles;
     private CG_RowCol CGC8;
+    private Shelf testShelf;
 
     /**
      * Method setUp creates a new shelf, a new ArrayList of tiles and a new CGC8 before each test.
@@ -93,6 +94,8 @@ public class CGC8Test {
         tiles.add(new Tile(T_Type.TROPHY, 1));
         tiles.add(new Tile(T_Type.CAT, 1));
         shelf.insertTiles(2, tiles);
+
+        testShelf = shelf;
 
         System.out.println("threeVerticalTest1");
         shelf.printShelf();
@@ -334,4 +337,7 @@ public class CGC8Test {
     }
 
 
+    public Shelf getTestShelf() {
+        return testShelf;
+    }
 }

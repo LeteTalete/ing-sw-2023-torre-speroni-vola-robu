@@ -18,6 +18,7 @@ public class CGC11Test {
     private Shelf shelf;
     private ArrayList<Tile> tiles;
     private CG_RowCol CGC11;
+    private Shelf testShelf;
 
     /**
      * Method setUp creates a new shelf, a new ArrayList of tiles and a new CGC11 before each test.
@@ -91,6 +92,8 @@ public class CGC11Test {
         tiles.add(new Tile(T_Type.TROPHY,1));
         tiles.add(new Tile(T_Type.TROPHY,1));
         shelf.insertTiles(4, tiles);
+
+        testShelf = shelf;
 
         System.out.println("horizontalTest1");
         shelf.printShelf();
@@ -263,4 +266,7 @@ public class CGC11Test {
     }
 
 
+    public Shelf getTestShelf() {
+        return testShelf;
+    }
 }

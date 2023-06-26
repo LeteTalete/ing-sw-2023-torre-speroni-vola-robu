@@ -19,6 +19,7 @@ public class CGC7Test {
     private Shelf shelf;
     private ArrayList<Tile> tiles;
     private CG_Shape CGC7;
+    private Shelf testShelf;
 
     /**
      * Method setUp creates a new shelf, a new ArrayList of tiles and a new CGC7 before each test.
@@ -92,6 +93,8 @@ public class CGC7Test {
         tiles.clear();
         tiles.add(new Tile(T_Type.CAT,1));
         shelf.insertTiles(4, tiles);
+
+        testShelf = shelf;
 
         System.out.println("eightOccTest1");
         shelf.printShelf();
@@ -226,4 +229,7 @@ public class CGC7Test {
     }
 
 
+    public Shelf getTestShelf() {
+        return testShelf;
+    }
 }

@@ -19,6 +19,7 @@ public class CGC0Test {
     private Shelf shelf;
     private ArrayList<Tile> tiles;
     private CG_Shape CGC0;
+    private Shelf testShelf;
 
     /**
      * Method setUp creates a new shelf, a new ArrayList of tiles and a new CGC0 before each test.
@@ -132,6 +133,8 @@ public class CGC0Test {
         tiles.add(new Tile(T_Type.GAMES, 1));
         tiles.add(new Tile(T_Type.FRAME, 1));
         shelf.insertTiles(4, tiles);
+
+        testShelf = shelf;
 
         System.out.println("diagonalTest1");
         shelf.printShelf();
@@ -564,4 +567,7 @@ public class CGC0Test {
         assertFalse(shelf.getCardsAlreadyClaimed().contains(CGC0.getID()));
     }
 
+    public Shelf getTestShelf() {
+        return testShelf;
+    }
 }

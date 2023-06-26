@@ -7,6 +7,7 @@ import it.polimi.ingsw.model.board.LivingRoom;
 import it.polimi.ingsw.model.board.Position;
 import it.polimi.ingsw.model.board.Shelf;
 import it.polimi.ingsw.model.board.Tile;
+import it.polimi.ingsw.model.cards.CGC.*;
 import it.polimi.ingsw.model.cards.CG_RowCol;
 import it.polimi.ingsw.model.cards.CG_Shape;
 import it.polimi.ingsw.model.cards.CommonGoalCard;
@@ -18,6 +19,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -540,8 +542,122 @@ public class GameControllerTest {
         gameModel.getGameBoard().printBoard();
     }
 
-    //todo write checkcgcs test
+    @Test
+    public void checkCGCsTest(){
+        String ID = "1";
+        ArrayList<Player> players = new ArrayList<>();
+        int numOfPlayers = 2;
+        for ( int i = 0; i < numOfPlayers; i++){
+            players.add(new Player());
+            players.get(i).setNickname("Player" + i); // The usernames are Player0, Player1, Player2, ...
+        }
 
+        GameController gameController;
+        try {
+            gameController = new GameController(players, ID, new ServerManager());
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+
+        Game game = gameController.getModel();
+        game.startGame();
+        game.setCurrentPlayer(game.getPlayers().get(0));
+
+        CGC0Test cgc0Test = new CGC0Test();
+        cgc0Test.setUp();
+        cgc0Test.diagonalTest1();
+        Shelf testShelf0 = cgc0Test.getTestShelf();
+
+        CGC1Test cgc1Test = new CGC1Test();
+        cgc1Test.setUp();
+        cgc1Test.cornersTest();
+        Shelf testShelf1 = cgc1Test.getTestShelf();
+
+        CGC2Test cgc2Test = new CGC2Test();
+        cgc2Test.setUp();
+        cgc2Test.squareTest1();
+        Shelf testShelf2 = cgc2Test.getTestShelf();
+
+        CGC3Test cgc3Test = new CGC3Test();
+        cgc3Test.setUp();
+        cgc3Test.xTest1();
+        Shelf testShelf3 = cgc3Test.getTestShelf();
+
+        CGC4Test cgc4Test = new CGC4Test();
+        cgc4Test.setUp();
+        cgc4Test.stairsTest();
+        Shelf testShelf4 = cgc4Test.getTestShelf();
+
+        CGC5Test cgc5Test = new CGC5Test();
+        cgc5Test.setUp();
+        cgc5Test.sixOccTest1();
+        Shelf testShelf5 = cgc5Test.getTestShelf();
+
+        CGC6Test cgc6Test = new CGC6Test();
+        cgc6Test.setUp();
+        cgc6Test.fourOccTest1();
+        Shelf testShelf6 = cgc6Test.getTestShelf();
+
+        CGC7Test cgc7Test = new CGC7Test();
+        cgc7Test.setUp();
+        cgc7Test.eightOccTest1();
+        Shelf testShelf7 = cgc7Test.getTestShelf();
+
+        CGC8Test cgc8Test = new CGC8Test();
+        cgc8Test.setUp();
+        cgc8Test.threeVerticalTest1();
+        Shelf testShelf8 = cgc8Test.getTestShelf();
+
+        CGC9Test cgc9Test = new CGC9Test();
+        cgc9Test.setUp();
+        cgc9Test.threeHorizontalTest1();
+        Shelf testShelf9 = cgc9Test.getTestShelf();
+
+        CGC10Test cgc10Test = new CGC10Test();
+        cgc10Test.setUp();
+        cgc10Test.verticalTest1();
+        Shelf testShelf10 = cgc10Test.getTestShelf();
+
+        CGC11Test cgc11Test = new CGC11Test();
+        cgc11Test.setUp();
+        cgc11Test.horizontalTest1();
+        Shelf testShelf11 = cgc11Test.getTestShelf();
+
+        for ( Player player : gameController.getModel().getPlayers() ) {
+            for ( CommonGoalCard card : gameController.getModel().getCommonGoalCards() ) {
+                if ( card.getID() == 0 ) {
+                    player.setMyShelf(testShelf0);
+                } else if ( card.getID() == 1 ) {
+                    player.setMyShelf(testShelf1);
+                } else if ( card.getID() == 2 ) {
+                    player.setMyShelf(testShelf2);
+                } else if ( card.getID() == 3 ) {
+                    player.setMyShelf(testShelf3);
+                } else if ( card.getID() == 4 ) {
+                    player.setMyShelf(testShelf4);
+                } else if ( card.getID() == 5 ) {
+                    player.setMyShelf(testShelf5);
+                } else if ( card.getID() == 6 ) {
+                    player.setMyShelf(testShelf6);
+                } else if ( card.getID() == 7 ) {
+                    player.setMyShelf(testShelf7);
+                } else if ( card.getID() == 8 ) {
+                    player.setMyShelf(testShelf8);
+                } else if ( card.getID() == 9 ) {
+                    player.setMyShelf(testShelf9);
+                } else if ( card.getID() == 10 ) {
+                    player.setMyShelf(testShelf10);
+                } else if ( card.getID() == 11 ) {
+                    player.setMyShelf(testShelf11);
+                }
+            }
+        }
+
+        gameController.checkCGCs();
+        assertTrue(gameController.getCardsClaimed().containsKey(2));
+        assertEquals(8, gameController.getCardsClaimed().get(2) );
+
+    }
 
 
 
