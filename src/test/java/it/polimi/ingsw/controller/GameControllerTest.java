@@ -666,6 +666,11 @@ public class GameControllerTest {
         assertTrue(gameController.getCardsClaimed().containsKey(2));
         assertEquals(8, gameController.getCardsClaimed().get(2) );
 
+        gameController.nextTurn();
+
+        assertTrue(gameController.getCardsClaimed().size() > 0);
+        gameController.notifyPointsCGC();
+        assertTrue(gameController.getCardsClaimed().isEmpty());
     }
 
 
