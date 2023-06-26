@@ -299,7 +299,11 @@ public class ClientController {
     }
 
     /**quit method to quit the game*/
-    public void quit() { currentConnection.quit(userToken); }
+    public void quit()
+    {
+        currentConnection.quit(userToken);
+        System.exit(0);
+    }
 
     public void onSyn() {
         currentConnection.setSyn(true);
