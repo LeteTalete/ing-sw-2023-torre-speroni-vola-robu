@@ -151,7 +151,7 @@ public class GameController {
         updateBoardCouples();
 
         nextTurn();
-        send();
+        notifyPointsCGC();
     }
 
     /** Method nextTurn changes the current player and if the game has ended it notifies the players. */
@@ -181,7 +181,7 @@ public class GameController {
         }
     }
 
-    public void send(){
+    public void notifyPointsCGC(){
         if ( cardsClaimed.size() > 0 ) {
             for (Integer key : cardsClaimed.keySet()) {
                 master.notifyOnCGC(gameId, model.getPreviousPlayer().getNickname(), key, cardsClaimed.get(key));
@@ -256,5 +256,13 @@ public class GameController {
     public ArrayList<Position> getChoiceOfTiles()
     {
         return this.choiceOfTiles;
+    }
+
+    /**
+     * Method getCardsClaimed returns the cards claimed by the player.
+     * @return - cards claimed by the player.
+     */
+    public Map<Integer, Integer> getCardsClaimed() {
+        return cardsClaimed;
     }
 }
