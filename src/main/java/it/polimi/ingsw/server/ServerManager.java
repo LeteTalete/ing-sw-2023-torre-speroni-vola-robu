@@ -25,6 +25,7 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
         super();
         activeGames = new HashMap<>();
         activeUsers = new HashMap<>();
+        ConnectionManager.get().setMaster(this);
     }
 
     /**method setPlayersWaitingRoom to set a maximum number of players to a waiting room.
@@ -209,9 +210,10 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
     /**disconnect method to disconnect a user.
      * @param token - token to identify the disconnecting client.*/
     public void disconnect(String token) {
-        ConnectionManager.get().disconnectToken(token);
-        ConnectionManager.get().stopSynTimer(token);
-        ConnectionManager.get().stopAckTimer(token);
+        activeUsers.remove(token);
+        if(waitingRoom!=null){
+            waitingRoom.disconnectFromWaitingRoom(token);
+        }
     }
 
     @Override
@@ -390,6 +392,14 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
                         fileLog.error(ex.getMessage());
                     }
                 });
+    }
+
+    public void deleteWaitingRoom() {
+        waitingRoom = null;
+    }
+
+    public WaitingRoom getWaitingRoom() {
+        return waitingRoom;
     }
 
     //TODO closeGame(gameId)

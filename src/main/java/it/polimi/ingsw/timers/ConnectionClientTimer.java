@@ -26,7 +26,6 @@ public class ConnectionClientTimer extends TimerTask {
             clientConnection.setConnected(false);
         }
         else{
-            fileLog.debug("Received syn from server");
             clientConnection.setSyn(false);
             clientConnection.sendAck();
             clientConnection.setConnected(true);

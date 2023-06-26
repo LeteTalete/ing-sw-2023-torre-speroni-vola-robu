@@ -27,11 +27,12 @@ public class ConnectionManager implements Serializable {
     //usernames and tokens
     Map<String, String> namesTokens = new HashMap<>();
     private final Map<String, CTimer> synTimer = new HashMap<>();
-    private final int synTime = 15000;
-    private final int ackTime = 30000;
+    private final int synTime = 10;
+    private final int ackTime = 30;
     private Map<String, Boolean> ackMap = new HashMap<>();
     private final Map<String, CTimer> ackCheckTimer = new HashMap<>();
     private static final Logger fileLog = LogManager.getRootLogger();
+    private ServerManager master;
 
 
     private ConnectionManager(){
@@ -63,7 +64,7 @@ public class ConnectionManager implements Serializable {
     //todo check whether this needs the id of the game, if we want to implement multiple matches
     public void disconnectToken(String token) {
         fileLog.debug("Disconnecting token " + token + ", username: "+ tokenNames.get(token));
-        if(!inactiveUsers.contains(token)){
+        if(!inactiveUsers.contains(token) && master.getWaitingRoom()==null){
             viewListenerMap.entrySet()
                     .stream()
                     .filter(e -> !e.getKey().equals(token))
@@ -75,8 +76,11 @@ public class ConnectionManager implements Serializable {
                         }
                     });
         }
+        stopSynTimer(token);
+        stopAckTimer(token);
         viewListenerMap.remove(token);
         tokenNames.remove(token);
+        master.disconnect(token);
     }
 
     /**startSynTimer method is used to start the timer to ping the client and see if they are still
@@ -129,5 +133,8 @@ public class ConnectionManager implements Serializable {
         }
     }
 
+    public void setMaster(ServerManager serverManager) {
+        this.master = serverManager;
+    }
 }
 

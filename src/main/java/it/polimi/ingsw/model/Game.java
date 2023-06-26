@@ -85,8 +85,6 @@ public class Game {
         currentPlayer = players.get(next);
         gameController.notifyOnStartTurn(currentPlayer.getNickname());
         gameController.notifyOnModelUpdate(new ModelUpdate(this));
-
-
     }
 
     /** Method scoreBoard ranks in descending order the players by their scores and then prints them. */
@@ -302,4 +300,5 @@ public class Game {
     public void setBoard(LivingRoom board) {
         this.gameBoard = board;
     }
+
 }

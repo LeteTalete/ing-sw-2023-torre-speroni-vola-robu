@@ -29,11 +29,10 @@ public class ConnectionAckTimer extends TimerTask implements Serializable {
                 ConnectionManager.get().stopAckTimer(clientListener.getToken());
             }
             else {
-                fileLog.debug("Received ack from client");
                 ConnectionManager.get().setAck(clientListener.getToken(),true);
             }
         } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            fileLog.error("Error: "+ e.getMessage());
         }
     }
 }

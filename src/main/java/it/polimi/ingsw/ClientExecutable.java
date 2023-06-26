@@ -12,8 +12,7 @@ import java.lang.String;
 public class ClientExecutable {
     private static ClientController clientController;
     private static View clientView;
-//we need to write the ip of the server as an argument each time we launch the game
-    //or we can use java properties
+
     public static void main(String[] args) {
         String interfaceC = interfaceChoice();
         //if it's equal to GUI then we start the GUI
@@ -28,8 +27,6 @@ public class ClientExecutable {
             clientController = new ClientController(clientView);
             clientController.setupConnection();
         }
-        //client executable will run an instance of ClientRMI or ClientSocket
-        //accordingly to the preferred connection
     }
 
 

@@ -21,7 +21,7 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
     private String userToken;
     private boolean isConnected;
     private boolean syn;
-    private final int synCheckTime = 30000;
+    private final int synCheckTime = 1000;
     private Timer synCheckTimer;
 
     /**clientRMI constructor.

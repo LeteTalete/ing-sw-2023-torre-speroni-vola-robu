@@ -91,16 +91,14 @@ public class ClientController {
      * To initialize the connection, it asks the server IP and then it calls the method setupRMI or setupSocket.
      * */
     public void setupConnection() {
-        //currentView.chooseConnection();
-        //todo uncomment this and place SIP instead of null when initializing connections
         //todo we need to pass the port to the connection too!
-        //currentView.askServerIP();
-        //String SIP = currentView.getServerIP();
+        currentView.askServerIP();
+        String SIP = currentView.getServerIP();
         if(currentView.getConnectionType().equals("RMI")) {
-            setupRMI(System.getProperty(HOSTNAME));
+            setupRMI(SIP);
         }
         else if(currentView.getConnectionType().equals("SOCKET")){
-            setupSocket(System.getProperty(HOSTNAME));
+            setupSocket(SIP);
         }
     }
 
@@ -111,7 +109,6 @@ public class ClientController {
      * */
     public void setupSocket(String serverIP) {
         try {
-            //you have to pass 'this' to the client socket
             ClientSocket clientSocket = new ClientSocket(serverIP, 8899, this);
             this.currentConnection = clientSocket;
             this.responseDecoder = new ResponseDecoder(listenerClient, currentConnection);
@@ -131,7 +128,6 @@ public class ClientController {
      * */
     private void setupRMI(String serverIP) {
         try{
-            //TODO put serverip in host field of locateregisty
             this.registry = LocateRegistry.getRegistry(serverIP,8089);
             this.remoteController = (IRemoteController) registry.lookup("Login");
             ClientRMI clientRMI = new ClientRMI(remoteController);
@@ -140,11 +136,12 @@ public class ClientController {
             this.responseDecoder = new ResponseDecoder(listenerClient, currentConnection);
             clientRMI.setResponseDecoder(responseDecoder);
             clientRMI.setConnected(true);
-            clientRMI.setSynCheckTimer(true);
             userLogin();
+            clientRMI.setSynCheckTimer(true);
 
         }catch(Exception e){
             fileLog.error(e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 
