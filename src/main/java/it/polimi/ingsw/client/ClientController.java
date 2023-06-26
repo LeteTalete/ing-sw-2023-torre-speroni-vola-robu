@@ -7,6 +7,7 @@ import it.polimi.ingsw.view.View;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.rmi.UnknownHostException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
@@ -113,11 +114,16 @@ public class ClientController {
             this.currentConnection = clientSocket;
             this.responseDecoder = new ResponseDecoder(listenerClient, currentConnection);
             clientSocket.setResponseDecoder(responseDecoder);
+            clientSocket.setViewClient(currentView);
             clientSocket.setConnected(true);
             clientSocket.setSynCheckTimer(true);
             clientSocket.startClient();
 
-        } catch (Exception e) {
+        }catch(NullPointerException n){
+            currentView.displayNotification("Server not found. Please try again.");
+            setupConnection();
+        }
+        catch (Exception e) {
             fileLog.error(e);
         }
     }
@@ -139,9 +145,12 @@ public class ClientController {
             userLogin();
             clientRMI.setSynCheckTimer(true);
 
-        }catch(Exception e){
-            fileLog.error(e.getMessage());
-            throw new RuntimeException(e);
+        }catch(UnknownHostException b){
+            currentView.displayNotification("Unknown Host. Please try again.");
+            setupConnection();
+        }
+        catch(Exception e){
+            fileLog.error(e);
         }
     }
 

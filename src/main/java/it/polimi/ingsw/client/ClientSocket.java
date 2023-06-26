@@ -37,6 +37,7 @@ public class ClientSocket implements IClientConnection
     private boolean syn;
     private final int synCheckTime = 10000;
     private Timer synCheckTimer;
+    private View currentView;
 
     /**ClientSocket constructor.
      * @param ip - the server's ip address.
@@ -50,18 +51,12 @@ public class ClientSocket implements IClientConnection
     }
 
     /**openStreams method creates a new socket and initializes it. Then it starts the startReceiving method*/
-    public void openStreams() {
-        try {
-            socket = new Socket(ip, port);
-            this.socketOut = new ObjectOutputStream(socket.getOutputStream());
-            this.socketIn = new ObjectInputStream(socket.getInputStream());
-            amIconnected= true;
-            startReceiving();
-        }
-        catch(IOException e) {
-            fileLog.error(e.getMessage());
-            master.getCurrentView().displayNotification("Connection error. Please try again later.");
-        }
+    public void openStreams() throws IOException {
+        socket = new Socket(ip, port);
+        this.socketOut = new ObjectOutputStream(socket.getOutputStream());
+        this.socketIn = new ObjectInputStream(socket.getInputStream());
+        amIconnected= true;
+        startReceiving();
     }
 
     /**startReceiving method is basically a loop in which the socket keeps listening. Each time something is read
@@ -104,8 +99,14 @@ public class ClientSocket implements IClientConnection
 
     /**startClient method is used to start the client. It opens the streams and then calls the userLogin method*/
     public void startClient() {
-        openStreams();
-        System.out.println(">> Connection established");
+        try {
+            openStreams();
+        } catch (IOException e) {
+            fileLog.error(e);
+            currentView.displayNotification("Connection failed. Try again.");
+            master.setupConnection();
+        }
+        currentView.displayNotification("Connection successful!");
         master.userLogin();
     }
 
@@ -119,8 +120,8 @@ public class ClientSocket implements IClientConnection
 
 
     @Override
-    public void setViewClient(View currentView) {
-        //only for rmi
+    public void setViewClient(View cView) {
+        this.currentView = cView;
     }
 
     /**chooseTiles method is used to create a request with the choice of tiles to be sent to the server.
