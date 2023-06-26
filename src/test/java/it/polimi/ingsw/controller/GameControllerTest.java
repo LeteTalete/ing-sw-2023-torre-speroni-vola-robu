@@ -14,7 +14,7 @@ import it.polimi.ingsw.model.cards.CommonGoalCard;
 import it.polimi.ingsw.model.enumerations.State;
 import it.polimi.ingsw.model.enumerations.T_Type;
 import it.polimi.ingsw.server.ServerManager;
-import org.junit.Assert;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -542,6 +542,11 @@ public class GameControllerTest {
         gameModel.getGameBoard().printBoard();
     }
 
+    /**
+     * Test checkCGCsTest tests if checkCGCs correctly saves the number of the card and the points when the player has
+     * fulfilled a CGC. Since the cards are randomly chosen, multiple shelves made to fulfill all CGCs are saved so
+     * that one of them is to be later set as the player's shelf matching the CGC. (forcing the method to give the points).
+     */
     @Test
     public void checkCGCsTest(){
         String ID = "1";
@@ -561,7 +566,6 @@ public class GameControllerTest {
 
         Game game = gameController.getModel();
         game.startGame();
-        game.setCurrentPlayer(game.getPlayers().get(0));
 
         CGC0Test cgc0Test = new CGC0Test();
         cgc0Test.setUp();
@@ -653,6 +657,11 @@ public class GameControllerTest {
             }
         }
 
+        for ( Player player : gameController.getModel().getPlayers() ) {
+            player.getMyShelf().getCardsAlreadyClaimed().clear();
+        }
+
+        assertFalse(gameController.getCardsClaimed().containsKey(2));
         gameController.checkCGCs();
         assertTrue(gameController.getCardsClaimed().containsKey(2));
         assertEquals(8, gameController.getCardsClaimed().get(2) );
