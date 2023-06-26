@@ -138,6 +138,7 @@ public class ClientTUI implements View{
                 writeText("Choose order: [order 'first number' 'second number' 'third number']");
                 chooseColumn();
                 chooseOrder(tiles);
+                displayNotification("To choose different tiles, type the command: [tiles row,column] again. ");
             }
         }
     }
@@ -461,7 +462,8 @@ public class ClientTUI implements View{
 
     @Override
     public void showEndResult() {
-        //todo: maybe it's better to call clearConsole() and then print the end result
+        clearConsole();
+        clearConsole();
         ArrayList<PlayerView> playersSorted = new ArrayList<>();
         playersSorted.addAll(gameView.getPlayersView());
         Collections.sort(playersSorted, new Comparator<PlayerView>() {
@@ -471,6 +473,9 @@ public class ClientTUI implements View{
             }
         });
         DrawTui.printlnString(DrawTui.endGameScore(master.getUsername(), playersSorted));
+
+        writeText("The game is over. Write 'quit' or close the window to disconnect.");
+
     }
 
     @Override
