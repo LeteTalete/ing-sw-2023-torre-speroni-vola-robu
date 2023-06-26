@@ -55,7 +55,7 @@ public class DrawTui {
             orderTiles += boardSide[0] + empty + slotTile(tile) + empty;
         }
         orderTiles += boardSide[0] + "\n" + startLine + boardSide[2] + stringRepeat(board + boardSide[7],numTiles - 1) + board + boardSide[5] + "\n";
-        orderTiles += startLine + empty.repeat((sizeSlotTile + 4)/2) + sequenceNumbers(1, numTiles + 1, (sizeSlotTile/2)*2 + 3) + "\n";
+        orderTiles += startLine + empty.repeat((sizeSlotTile + 4)/2) + sequenceNumbers(1, numTiles+1, (sizeSlotTile/2)*2 + 3) + "\n";
         printlnString(orderTiles);
     }
 

@@ -30,13 +30,6 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
         return connectionType;
     }
 
-    /**method sendUpdatedModel to send the model update to the view.
-     * @param message - contains the model update*/
-    @Override
-    public void sendUpdatedModel(ModelUpdate message) throws RemoteException {
-        view.displayUpdatedModel(message);
-    }
-
     /**notifySuccessfulRegistration method is used to notify about the success (or failure) of the client's login.
      * @param name - username of the client.
      * @param token - token used to identify the client.
@@ -61,6 +54,13 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
     public void setToken(String token) {
         this.token = token;
     }
+
+    /**method onSyn to receive the syn/ping from the server*/
+    @Override
+    public void onSyn() throws RemoteException {
+        view.passSyn();
+    }
+
     public String getToken() {
         return token;
     }
@@ -72,12 +72,6 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
         view.setGameOn(true);
     }
 
-    /**changeTurn method is used to signal the start of a new turn.
-     * @param name - the username of the current player.*/
-    @Override
-    public void changeTurn(String name) throws RemoteException {
-        view.changeTurn(name);
-    }
 
     /**showTextNotificationMethod is used to display a generic text notification on the view.
      * @param message - containst the text notification.*/
@@ -108,6 +102,9 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
      * @param firstDoneUser - username of the player who first completed their shelf.*/
     @Override
     public void notifyLastTurn(String firstDoneUser) throws RemoteException {
+        if(firstDoneUser.equals(view.getName())){
+            view.displayNotification("You gained completed your Shelfie! Last round starts now.");
+        }
         view.displayNotification(firstDoneUser + "completed their Shelfie. Last round starts now!");
     }
 
@@ -144,16 +141,26 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
     }
 
     /**method notifyTilesOk used to notify the player whether the choice of tiles was a success or a failure.
-     * @param ok - boolean signalling the success or failure of the move.
+     * @param ok - integer signaling whether the move was successful or not (0 = success, 1 = tiles not adjacent,
+     *           2 = tiles not in the same row/column, 3 = tiles not from the edge, 4 = not enough space in shelf).
      * @param tiles - contains the tiles chosen by the client.*/
     @Override
-    public void notifyTilesOk(boolean ok, ArrayList<Position> tiles) throws RemoteException {
-        if(ok){
+    public void notifyTilesOk(int ok, ArrayList<Position> tiles) throws RemoteException {
+        if(ok==0){
             view.nextAction(2, tiles);
             view.refreshBoard();
         }
         else{
-            view.displayNotification("Invalid move. Try again.");
+            if(ok==1){
+                view.displayNotification("Invalid move: all tiles need to be adjacent! Try again.");
+            }
+            else if(ok == 2){
+                view.displayNotification("Invalid move: all tiles need to be in the same row or column! Try again.");
+            }
+            else if(ok == 3){
+                view.displayNotification("Invalid move: all tiles need to have at least one side free! Try again.");
+            }
+            else view.displayNotification("Invalid move: not enough space in your Shelfie! Try again.");
         }
     }
 
@@ -183,8 +190,11 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
      * @param nickname - username of the player who won the card.
      * @param id - id of the common goal card.*/
     @Override
-    public void notifyOnCGC(String nickname, int id) throws RemoteException {
-        view.displayNotification(nickname + " gained Common Goal Card " + id + "!");
+    public void notifyOnCGC(String nickname, int id, int points) throws RemoteException {
+        if(nickname.equals(view.getName())){
+            view.displayNotification("You gained " + points + " points from Common Goal Card " + id + "!");
+        }
+        else view.displayNotification(nickname + " gained " + points + " points from Common Goal Card " + id + "!");
     }
 
     /**method notifyAboutDisconnection notifies about the disconnection of a user.
@@ -194,10 +204,5 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
         view.displayNotification(disconnectedUser + " disconnected. The game is now over.");
     }
 
-    /**sendPingSyn is used to receive the ping of synchronization from the server*/
-    @Override
-    public void sendPingSyn() throws RemoteException {
-        view.pingSyn();
-    }
 
 }

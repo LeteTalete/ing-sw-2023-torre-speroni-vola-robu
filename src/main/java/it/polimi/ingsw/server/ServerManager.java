@@ -18,8 +18,6 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
     private static final Logger fileLog = LogManager.getRootLogger();
     private final Map<String, GameController> activeGames;
     private WaitingRoom waitingRoom;
-    //network manager: to instantiate RMI and socket
-    //these are all the usernames and the respective rooms
     private final Map<String, String> activeUsers;
 
     /**ServerManager constructor*/
@@ -27,6 +25,7 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
         super();
         activeGames = new HashMap<>();
         activeUsers = new HashMap<>();
+        ConnectionManager.get().setMaster(this);
     }
 
     /**method setPlayersWaitingRoom to set a maximum number of players to a waiting room.
@@ -102,13 +101,6 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
 
     }
 
-
-    public synchronized void periodicPing (){
-        //this has to send a ping to all the players in all the active games
-        //if it does not catch a single pong from one player, it shuts down the entire game
-        //if the game is shut down, the server will notify all the players about it
-    }
-
     /**generateToken methods create a random token to assign to a player*/
     public synchronized String generateToken(){
         Random rand = new Random();
@@ -146,11 +138,11 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
 
 
             if(viewListener.getTypeConnection().equals("RMI")){
-                generateTokenRMI(viewListener, name);
+                generateTokenRMI(viewListener, token);
             }
             else if(viewListener.getTypeConnection().equals("SOCKET")){
                 //the cast is not necessary
-                createToken((ServerSocketClientHandler) viewListener, name);
+                createToken((ServerSocketClientHandler) viewListener, token);
             }
         }
     }
@@ -218,7 +210,15 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
     /**disconnect method to disconnect a user.
      * @param token - token to identify the disconnecting client.*/
     public void disconnect(String token) {
-        ConnectionManager.get().disconnectToken(token);
+        activeUsers.remove(token);
+        if(waitingRoom!=null){
+            waitingRoom.disconnectFromWaitingRoom(token);
+        }
+    }
+
+    @Override
+    public void sendAck(String userToken) throws RemoteException {
+        ConnectionManager.get().setAck(userToken, true);
     }
 
     /**method used to get the token from a serverSocketClientHandler, mainly used disconnect.
@@ -238,8 +238,9 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
      * @param token - the token to identify the client*/
     public void createToken(ServerSocketClientHandler socketClientHandler, String token) {
         ConnectionManager.get().viewListenerMap.put(token, socketClientHandler);
-        ConnectionManager.get().startPingTimer(token);
+        ConnectionManager.get().getAckMap().put(token, false);
         ConnectionManager.get().startSynTimer(token);
+        ConnectionManager.get().startAckTimer(token);
     }
 
     /**createToken is used to add the token and the viewListener of a client to the map of all the client
@@ -248,17 +249,10 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
      * @param token - the token to identify the client*/
     public void generateTokenRMI(IClientListener viewListener, String token) throws RemoteException {
         ConnectionManager.get().viewListenerMap.put(token, viewListener);
-        ConnectionManager.get().startPingTimer(token);
+        ConnectionManager.get().getAckMap().put(token, false);
         ConnectionManager.get().startSynTimer(token);
+        ConnectionManager.get().startAckTimer(token);
     }
-
-    @Override
-    public void sendPing(String token) throws RemoteException {
-        ConnectionManager.get().setPingMap(token, true);
-    }
-
-
-
 
     /**method used to notify all the players of a room about the start of the game.
      * @param playersReady - list of players to be notified.*/
@@ -323,10 +317,11 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
     }
 
     /**notifyAboutTiles method used to notify a player about a successful (or failed) choice of tiles.
-     * @param b - boolean signaling whether the move was successful or not.
+     * @param b - integer signaling whether the move was successful or not (0 = success, 1 = tiles not adjacent, 2 =
+     *          tiles not in the same row/column, 3 = tiles not from the edge, 4 = not enough space in shelf).
      * @param token - token used to identify the client.
      * @param choice - choice of tiles passed to the client so that they can view them.*/
-    public void notifyAboutTiles(String token, boolean b, ArrayList<Position> choice) {
+    public void notifyAboutTiles(String token, int b, ArrayList<Position> choice) {
         try {
             ConnectionManager.get().viewListenerMap.get(token).notifyTilesOk(b, choice);
         } catch (RemoteException e) {
@@ -369,13 +364,13 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
      * @param gameId - id of the room.
      * @param nickname - username of the players who won the card.
      * @param id - id of the common goal card gained.*/
-    public void notifyOnCGC(String gameId, String nickname, int id) {
+    public void notifyOnCGC(String gameId, String nickname, int id, int points) {
         activeUsers.entrySet()
                 .stream()
                 .filter(e -> e.getValue().equals(gameId))
                 .forEach(e -> {
                     try {
-                        ConnectionManager.get().viewListenerMap.get(e.getKey()).notifyOnCGC(nickname, id);
+                        ConnectionManager.get().viewListenerMap.get(e.getKey()).notifyOnCGC(nickname, id, points);
                     } catch (RemoteException ex) {
                         fileLog.error(ex.getMessage());
                     }
@@ -392,12 +387,22 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
                 .filter(e -> e.getValue().equals(id))
                 .forEach(e -> {
                     try {
-                        ConnectionManager.get().viewListenerMap.get(e.getKey()).sendUpdatedModel(something);
+                        ConnectionManager.get().viewListenerMap.get(e.getKey()).updateModel(something);
                     } catch (RemoteException ex) {
                         fileLog.error(ex.getMessage());
                     }
                 });
     }
 
+    public void deleteWaitingRoom() {
+        waitingRoom = null;
+    }
+
+    public WaitingRoom getWaitingRoom() {
+        return waitingRoom;
+    }
+
     //TODO closeGame(gameId)
+
+
 }

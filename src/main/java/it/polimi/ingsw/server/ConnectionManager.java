@@ -1,9 +1,11 @@
 package it.polimi.ingsw.server;
 
-import it.polimi.ingsw.network.ConnectionServerPingTimer;
-import it.polimi.ingsw.network.ConnectionServerTimer;
-import it.polimi.ingsw.network.ConnectionTimer;
 import it.polimi.ingsw.network.IClientListener;
+import it.polimi.ingsw.timers.CTimer;
+import it.polimi.ingsw.timers.ConnectionAckTimer;
+import it.polimi.ingsw.timers.ServerSynTimer;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
@@ -24,11 +26,14 @@ public class ConnectionManager implements Serializable {
     Map<String, String> tokenNames = new HashMap<>();
     //usernames and tokens
     Map<String, String> namesTokens = new HashMap<>();
-    //tokens and timers
-    private final Map<String, ConnectionTimer> timers = new HashMap<>();
-    private final int ackTime = 200000;
-    private final Map<String, Boolean> pingCheck = new HashMap<>();
-    private final Map<String, ConnectionTimer> synTimers = new HashMap<>();
+    private final Map<String, CTimer> synTimer = new HashMap<>();
+    private final int synTime = 10;
+    private final int ackTime = 30;
+    private Map<String, Boolean> ackMap = new HashMap<>();
+    private final Map<String, CTimer> ackCheckTimer = new HashMap<>();
+    private static final Logger fileLog = LogManager.getRootLogger();
+    private ServerManager master;
+
 
     private ConnectionManager(){
     }
@@ -58,7 +63,8 @@ public class ConnectionManager implements Serializable {
      * @param token - token of the disconnecting player.*/
     //todo check whether this needs the id of the game, if we want to implement multiple matches
     public void disconnectToken(String token) {
-        if(!inactiveUsers.contains(token)){
+        fileLog.debug("Disconnecting token " + token + ", username: "+ tokenNames.get(token));
+        if(!inactiveUsers.contains(token) && master.getWaitingRoom()==null){
             viewListenerMap.entrySet()
                     .stream()
                     .filter(e -> !e.getKey().equals(token))
@@ -70,44 +76,65 @@ public class ConnectionManager implements Serializable {
                         }
                     });
         }
+        stopSynTimer(token);
+        stopAckTimer(token);
         viewListenerMap.remove(token);
         tokenNames.remove(token);
+        master.disconnect(token);
     }
 
-    /**method used to start the timer of the ping. Each time the timer resets, a ping is sent.
-     * @param token - token of the timer's player*/
-    void startPingTimer(String token){
-        timers.put(token, new ConnectionTimer());
-        timers.get(token).scheduleAtFixedRate(new ConnectionServerPingTimer(viewListenerMap.get(token)), ackTime, ackTime);
+    /**startSynTimer method is used to start the timer to ping the client and see if they are still
+     * reachable.
+     * @param token - token used to identify the client*/
+    synchronized void startSynTimer(String token){
+        fileLog.debug("Starting syn timer for client: "+tokenNames.get(token));
+        synTimer.put(token, new CTimer());
+        synTimer.get(token).scheduleAtFixedRate(new ServerSynTimer(viewListenerMap.get(token)), synTime, synTime);
     }
 
-    /**method used to start the timer of the single player. Each time the server receives a ping from the player,
-     * their timer resets.
-     * @param token - token of the timer's player*/
-    void startSynTimer(String token){
-        synTimers.put(token, new ConnectionTimer());
-        int synTime = 100000;
-        synTimers.get(token).scheduleAtFixedRate(new ConnectionServerTimer(viewListenerMap.get(token)), synTime, synTime);
+    public void stopSynTimer(String token){
+        if(synTimer.containsKey(token)){
+            fileLog.debug("Stopping syn timer for client: "+tokenNames.get(token));
+            synTimer.get(token).purge();
+            synTimer.get(token).cancel();
+        }
     }
 
-    public Map<String, Boolean> getPingMap() {
-        return pingCheck;
-    }
-
-    /**this method is used to keep track of the players whose ping has been received by the server*/
-    public void setPingMap(String token, boolean received) {
-        if(pingCheck.containsKey(token)){
-            pingCheck.replace(token, received);
+    public void setAck(String token, boolean received) {
+        if(ackMap.containsKey(token)){
+            fileLog.debug("Setting ackmap for client: "+tokenNames.get(token));
+            ackMap.replace(token,received);
         }
         else{
-            pingCheck.put(token, received);
+            ackMap.put(token,received);
         }
     }
 
-    public void stopPingTimer(String token) {
-        if(timers.containsKey(token)){
-            timers.get(token).cancel();
-            timers.remove(token);
+    public Map<String, Boolean> getAckMap() {
+        return ackMap;
+    }
+
+    /**startAckTimer method starts a timer to receive an ack from the client as a response to the ping.
+     * @param token - token used to identify the client related to the timer*/
+    void startAckTimer(String token){
+        fileLog.debug("Starting ack timer for client: "+tokenNames.get(token));
+        ackCheckTimer.put(token, new CTimer());
+        ackMap.put(token, true);
+        ackCheckTimer.get(token).scheduleAtFixedRate(new ConnectionAckTimer(viewListenerMap.get(token)), ackTime, ackTime);
+    }
+
+    /**stopAckTimer method clears the ack timer.
+     * @param token - to identify the client related to the timer*/
+    public void stopAckTimer(String token){
+        if(ackCheckTimer.containsKey(token)){
+            fileLog.debug("Stopping timer for client: "+tokenNames.get(token));
+            ackCheckTimer.get(token).purge();
+            ackCheckTimer.get(token).cancel();
         }
     }
+
+    public void setMaster(ServerManager serverManager) {
+        this.master = serverManager;
+    }
 }
+

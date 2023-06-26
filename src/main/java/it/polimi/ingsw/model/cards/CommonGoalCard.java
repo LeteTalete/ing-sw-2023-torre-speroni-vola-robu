@@ -11,7 +11,6 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Stack;
 
-//TODO: do all methods here need a comment?
 public class CommonGoalCard extends GoalCard implements Serializable {
     private int ID;
 

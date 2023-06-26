@@ -7,6 +7,7 @@ import it.polimi.ingsw.view.View;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.rmi.UnknownHostException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
@@ -91,16 +92,14 @@ public class ClientController {
      * To initialize the connection, it asks the server IP and then it calls the method setupRMI or setupSocket.
      * */
     public void setupConnection() {
-        //currentView.chooseConnection();
-        //todo uncomment this and place SIP instead of null when initializing connections
         //todo we need to pass the port to the connection too!
-        //currentView.askServerIP();
-        //String SIP = currentView.getServerIP();
+        currentView.askServerIP();
+        String SIP = currentView.getServerIP();
         if(currentView.getConnectionType().equals("RMI")) {
-            setupRMI(System.getProperty(HOSTNAME));
+            setupRMI(SIP);
         }
         else if(currentView.getConnectionType().equals("SOCKET")){
-            setupSocket(System.getProperty(HOSTNAME));
+            setupSocket(SIP);
         }
     }
 
@@ -111,14 +110,20 @@ public class ClientController {
      * */
     public void setupSocket(String serverIP) {
         try {
-            //you have to pass 'this' to the client socket
             ClientSocket clientSocket = new ClientSocket(serverIP, 8899, this);
             this.currentConnection = clientSocket;
             this.responseDecoder = new ResponseDecoder(listenerClient, currentConnection);
             clientSocket.setResponseDecoder(responseDecoder);
+            clientSocket.setViewClient(currentView);
+            clientSocket.setConnected(true);
+            clientSocket.setSynCheckTimer(true);
             clientSocket.startClient();
 
-        } catch (Exception e) {
+        }catch(NullPointerException n){
+            currentView.displayNotification("Server not found. Please try again.");
+            setupConnection();
+        }
+        catch (Exception e) {
             fileLog.error(e);
         }
     }
@@ -129,7 +134,6 @@ public class ClientController {
      * */
     private void setupRMI(String serverIP) {
         try{
-            //TODO put serverip in host field of locateregisty
             this.registry = LocateRegistry.getRegistry(serverIP,8089);
             this.remoteController = (IRemoteController) registry.lookup("Login");
             ClientRMI clientRMI = new ClientRMI(remoteController);
@@ -139,9 +143,14 @@ public class ClientController {
             clientRMI.setResponseDecoder(responseDecoder);
             clientRMI.setConnected(true);
             userLogin();
+            clientRMI.setSynCheckTimer(true);
 
-        }catch(Exception e){
-            fileLog.error(e.getMessage());
+        }catch(UnknownHostException b){
+            currentView.displayNotification("Unknown Host. Please try again.");
+            setupConnection();
+        }
+        catch(Exception e){
+            fileLog.error(e);
         }
     }
 
@@ -208,10 +217,6 @@ public class ClientController {
         currentConnection.login(s);
     }
 
-    public void wrongCommand() {
-        currentView.printError("Wrong command, please type 'help' for a list of commands");
-    }
-
     /**this method sets the turn parameter to 1 if the name of the current player is the same as the
      * client's username.
      * @param name - name of the current player passed by the server.*/
@@ -229,15 +234,7 @@ public class ClientController {
         currentConnection.rearrangeTiles(userToken, multipleChoiceNumber);
     }
 
-    public void invalidNotMyTurn() {
-        currentView.displayNotification("It's not your turn, yet!");
-    }
-
-    public void errorFormat() {
-        currentView.printError("Wrong format, please try again or type 'help' for a list of commands");
-    }
-
-    /**nexrAction method used to change the state of the turn parameter from one to two when the choice of tiles
+    /**nextAction method used to change the state of the turn parameter from one to two when the choice of tiles
      * has been deemed successful by the server.
      * @param num - the stage at which the turn of the client is.
      * @param tiles - tiles passed from the server to the view so that the client can see them.*/
@@ -246,6 +243,22 @@ public class ClientController {
             currentView.passTilesToView(tiles);
             setMyTurn(2);
         }
+    }
+
+    public void wrongCommand() {
+        currentView.printError("Wrong command, please type 'help' for a list of commands");
+    }
+
+    public void invalidNotMyTurn() {
+        currentView.displayNotification("It's not your turn, yet!");
+    }
+
+    public void errorFormat() {
+        currentView.printError("Wrong format, please try again or type 'help' for a list of commands");
+    }
+
+    public void wrongNumber() {
+        currentView.displayNotification("Number of players not valid; please try again.");
     }
 
     public void gameNotStarted() {
@@ -258,11 +271,6 @@ public class ClientController {
     public void sendChat(String receiver, String message) {
         currentConnection.sendChat(username, message, receiver);
         //currentView.addToChatQueue(message, receiver);
-    }
-
-    /**todo*/
-    public void pingSyn() {
-        currentConnection.setPing(true);
     }
 
     public void hideShelves() {
@@ -291,7 +299,19 @@ public class ClientController {
     }
 
     /**quit method to quit the game*/
-    public void quit() { currentConnection.quit(userToken); }
+    public void quit()
+    {
+        currentConnection.quit(userToken);
+        System.exit(0);
+    }
+
+    public void onSyn() {
+        currentConnection.setSyn(true);
+    }
+
+    public View getCurrentView() {
+        return currentView;
+    }
 
 }
 

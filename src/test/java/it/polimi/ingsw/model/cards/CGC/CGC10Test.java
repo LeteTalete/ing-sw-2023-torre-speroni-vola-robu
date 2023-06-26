@@ -1,6 +1,8 @@
-package it.polimi.ingsw.model.cards;
+package it.polimi.ingsw.model.cards.CGC;
 
+import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.board.Shelf;
+import it.polimi.ingsw.model.cards.CG_RowCol;
 import it.polimi.ingsw.model.enumerations.T_Type;
 import it.polimi.ingsw.model.board.Tile;
 
@@ -16,13 +18,15 @@ public class CGC10Test {
     private Shelf shelf;
     private ArrayList<Tile> tiles;
     private CG_RowCol CGC10;
+    private Shelf testShelf;
 
     /**
      * Method setUp creates a new shelf, a new ArrayList of tiles and a new CGC10 before each test.
      */
     @BeforeEach
     public void setUp() {
-        shelf = new Shelf();
+        Player player = new Player();
+        shelf = player.getMyShelf();
         tiles = new ArrayList<>();
         CGC10 = new CG_RowCol(10);
     }
@@ -74,6 +78,8 @@ public class CGC10Test {
         tiles.add(new Tile(T_Type.FRAME,1));
         shelf.insertTiles(0, tiles);
         shelf.insertTiles(1, tiles);
+
+        testShelf = shelf;
 
         System.out.println("verticalTest1");
         shelf.printShelf();
@@ -231,4 +237,7 @@ public class CGC10Test {
         assertFalse(shelf.getCardsAlreadyClaimed().contains(CGC10.getID()));
     }
 
+    public Shelf getTestShelf() {
+        return testShelf;
+    }
 }

@@ -21,7 +21,7 @@ public class PersonalGoalCard extends GoalCard implements Serializable {
     /**
      * Constructor PersonalGoalCard creates a new PersonalGoalCard instance, given the number of the card it finds
      * the corresponding card in PersonalGoals.json and saves PGC parameters. For more information on the parameters
-     * see the documentation. //TODO: Davide should write the documentation
+     * see the documentation.
      * @param numPersonalCard - the number of the Personal Goal Card.
      */
     public PersonalGoalCard(int numPersonalCard) {

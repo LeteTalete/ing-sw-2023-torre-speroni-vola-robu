@@ -86,13 +86,6 @@ public class ServerSocketClientHandler implements Runnable, IClientListener {
         return connectionType;
     }
 
-    /**sendUpdateModel method used to generate a notification containing the model update.
-     * @param updated - model update.*/
-    @Override
-    public void sendUpdatedModel(ModelUpdate updated) throws RemoteException {
-        respond(new ModelUpdateNotification(updated));
-    }
-
     /**notifySuccessfulRegistration method used to notify a player about the success (or failure) of their
      * login.
      * @param token - token used to identify the client.
@@ -108,13 +101,6 @@ public class ServerSocketClientHandler implements Runnable, IClientListener {
     @Override
     public void setGameOn() throws RemoteException {
         //only for rmi
-    }
-
-    /**method changeTurn used to generate a response to notify the start of a new turn.
-     * @param name - name of the current player.*/
-    @Override
-    public void changeTurn(String name) throws RemoteException {
-        respond(new NotifyOnTurn(name));
     }
 
     /**method showTextNotification used to send a generic text notification.
@@ -172,7 +158,7 @@ public class ServerSocketClientHandler implements Runnable, IClientListener {
      * @param ok - boolean signalling the success or failure of the client's move.
      * @param tiles - tiles chosen by the client.*/
     @Override
-    public void notifyTilesOk(boolean ok, ArrayList<Position> tiles) throws RemoteException {
+    public void notifyTilesOk(int ok, ArrayList<Position> tiles) throws RemoteException {
         respond(new TilesOk(ok, tiles));
     }
 
@@ -199,8 +185,8 @@ public class ServerSocketClientHandler implements Runnable, IClientListener {
      * @param nickname - username of the player who won the card.
      * @param id - id of the common goal card.*/
     @Override
-    public void notifyOnCGC(String nickname, int id) throws RemoteException {
-        respond(new CommonGoalGained(nickname, id));
+    public void notifyOnCGC(String nickname, int id, int points) throws RemoteException {
+        respond(new CommonGoalGained(nickname, id, points));
     }
 
     /**method to notify about a player's disconnection.
@@ -211,11 +197,6 @@ public class ServerSocketClientHandler implements Runnable, IClientListener {
     }
 
     @Override
-    public void sendPingSyn() throws RemoteException {
-        respond(new Pinged());
-    }
-
-    @Override
     public String getToken() throws RemoteException {
         return token;
     }
@@ -223,6 +204,11 @@ public class ServerSocketClientHandler implements Runnable, IClientListener {
     @Override
     public void setToken(String token) throws RemoteException {
         this.token = token;
+    }
+
+    @Override
+    public void onSyn() throws RemoteException {
+        respond(new SynPing());
     }
 
     private void respond(Response response) {

@@ -1,7 +1,7 @@
 package it.polimi.ingsw.client;
 
-import it.polimi.ingsw.network.ConnectionClientTimer;
 import it.polimi.ingsw.network.IRemoteController;
+import it.polimi.ingsw.timers.ConnectionClientTimer;
 import it.polimi.ingsw.view.View;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,13 +21,14 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
     private String userToken;
     private boolean isConnected;
     private boolean syn;
-    private Timer checkTimer;
     private final int synCheckTime = 1000;
+    private Timer synCheckTimer;
 
     /**clientRMI constructor.
      * @param rc - it's the rmi registry used to invoke the server's methods from the client.*/
     public ClientRMI(IRemoteController rc) {
         this.remoteController = rc;
+        synCheckTimer = new Timer();
     }
 
     /**login method used to log the client in, and to pass the viewListener so that the server will be
@@ -40,6 +41,7 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
 
         } catch (RemoteException e) {
             fileLog.error(e.getMessage());
+            viewClient.printError("Network error. Please, try again");
         }
     }
 
@@ -68,6 +70,7 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
             remoteController.setPlayersWaitingRoom(token, number);
         } catch (RemoteException e) {
             fileLog.error(e.getMessage());
+            viewClient.printError("Network error. Please, try again");
             throw new RuntimeException(e);
         }
     }
@@ -80,13 +83,8 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
             remoteController.selectColumn(userToken, column);
         } catch (RemoteException e) {
             fileLog.error(e.getMessage());
+            viewClient.printError("Network error. Please, try again");
         }
-    }
-
-
-    @Override
-    public void setPing(boolean b) {
-        this.syn = b;
     }
 
     /**close method used to close the connection*/
@@ -101,10 +99,7 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
         //only for socket
     }
 
-    @Override
-    public boolean isConnected() {
-        return isConnected;
-    }
+
 
     /**rearrangeTiles method used to send the re-arranged tiles to the server.
      * @param userToken - token which identifies the client.
@@ -115,6 +110,7 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
             remoteController.rearrangeTiles(userToken, multipleChoiceNumber);
         } catch (RemoteException e) {
             fileLog.error(e.getMessage());
+            viewClient.printError("Network error. Please, try again");
         }
     }
 
@@ -128,17 +124,7 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
             remoteController.sendChat(username, toString, receiver);
         } catch (RemoteException e) {
             fileLog.error(e.getMessage());
-        }
-    }
-
-    /**sendPing method used to send a ping to the server to let it know that the client is still active
-     * and reachable.*/
-    @Override
-    public void sendPing(String token) {
-        try {
-            remoteController.sendPing(token);
-        } catch (RemoteException e) {
-            fileLog.error(e.getMessage());
+            viewClient.printError("Network error. Please, try again");
         }
     }
 
@@ -149,19 +135,38 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
             remoteController.disconnect(token);
         } catch (RemoteException e) {
             fileLog.error(e.getMessage());
+            viewClient.printError("Network error. Please, try again");
         }
     }
 
-    /**setCheckTimer is a method which resets the timer or creates a new one*/
     @Override
-    public void setCheckTimer(boolean b) {
-        if(b){
-            checkTimer = new Timer();
-            checkTimer.scheduleAtFixedRate(new ConnectionClientTimer(this), synCheckTime, synCheckTime);
+    public void setSyn(boolean b) {
+        this.syn = b;
+    }
+
+    @Override
+    public boolean isSyn() {
+        return syn;
+    }
+
+    @Override
+    public void setSynCheckTimer(boolean startTimer) {
+        if (startTimer) {
+            synCheckTimer = new Timer();
+            synCheckTimer.scheduleAtFixedRate(new ConnectionClientTimer(this), (synCheckTime/2)+synCheckTime, synCheckTime);
+        } else {
+            synCheckTimer.purge();
+            synCheckTimer.cancel();
         }
-        else{
-            checkTimer.purge();
-            checkTimer.cancel();
+    }
+
+    @Override
+    public void sendAck() {
+        try{
+            remoteController.sendAck(userToken);
+        } catch (RemoteException e) {
+            fileLog.error(e.getMessage());
+            viewClient.printError("Network error. Please, try again");
         }
     }
 
@@ -178,14 +183,22 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
             remoteController.pickedTiles(token, tilesChosen);
         } catch (RemoteException e) {
             fileLog.error(e.getMessage());
+            viewClient.printError("Network error. Please, try again");
         }
     }
 
+    @Override
     public void setConnected(boolean connected) {
         isConnected = connected;
+        if(!connected){
+            fileLog.debug("Lost connection to the server. Setting isConnected to false");
+            viewClient.displayNotification("You lost connection to the server, please try to reconnect");
+        }
     }
 
-    public boolean isSyn() {
-        return syn;
+    @Override
+    public boolean isConnected() {
+        return isConnected;
     }
+
 }

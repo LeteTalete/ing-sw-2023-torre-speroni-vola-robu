@@ -6,11 +6,7 @@ import it.polimi.ingsw.client.CommandParsing;
 import it.polimi.ingsw.model.board.Couple;
 import it.polimi.ingsw.model.board.Position;
 import it.polimi.ingsw.network.ClientListenerGUI;
-import it.polimi.ingsw.network.ClientListenerTUI;
 import it.polimi.ingsw.network.IClientListener;
-import it.polimi.ingsw.responses.Response;
-import it.polimi.ingsw.server.StaticStrings;
-import it.polimi.ingsw.stati.Status;
 import it.polimi.ingsw.structures.GameView;
 import it.polimi.ingsw.structures.LivingRoomView;
 import it.polimi.ingsw.structures.PlayerView;
@@ -21,7 +17,6 @@ import it.polimi.ingsw.view.ControllerGUI.GenericController;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.swing.*;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -97,10 +92,6 @@ public class ClientGUI implements View {
         System.out.println("displayNotification: " + message);
     }
 
-    @Override
-    public void GamerStatus(Status current) {
-
-    }
     public void setGameOn(boolean gameOn) {
         master.setGameOn(gameOn);
     }
@@ -297,10 +288,6 @@ public class ClientGUI implements View {
         //todo
     }
 
-    @Override
-    public void pingSyn() {
-        master.pingSyn();
-    }
 
     @Override
     public void addToChatQueue(String message, String receiver) {
@@ -316,5 +303,11 @@ public class ClientGUI implements View {
     public void passTilesToView(ArrayList<Position> tiles) {
         this.tiles = tiles;
     }
+
+    @Override
+    public void passSyn() {
+        master.onSyn();
+    }
+
 
 }

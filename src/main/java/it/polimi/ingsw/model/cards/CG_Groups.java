@@ -23,7 +23,7 @@ public class CG_Groups extends CommonGoalCard implements Serializable {
 
     /**
      * Constructor for CG_Groups, given the card ID it finds the corresponding card in CommonGoalCards.json and
-     * saves the CGC parameters. For more information on the parameters see the documentation. //TODO: add readme
+     * saves the CGC parameters. For more information on the parameters see the documentation.
      *
      * @param id - Card ID used to identify the card.
      */

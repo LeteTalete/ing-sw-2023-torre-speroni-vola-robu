@@ -8,7 +8,6 @@ import it.polimi.ingsw.model.board.Position;
 import it.polimi.ingsw.network.ClientListenerTUI;
 import it.polimi.ingsw.network.IClientListener;
 import it.polimi.ingsw.server.StaticStrings;
-import it.polimi.ingsw.stati.Status;
 import it.polimi.ingsw.structures.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,12 +17,12 @@ import java.util.*;
 
 
 public class ClientTUI implements View{
-    private static Logger fileLog = LogManager.getRootLogger();
+    private static final Logger fileLog = LogManager.getRootLogger();
     private GameView gameView;
     private static final String ERROR_COMMAND = "ERROR";
     private ClientController master;
     private CommandParsing commandParsing;
-    private ClientListenerTUI listenerClient;
+    private final ClientListenerTUI listenerClient;
     static final String colorRESET = "\033[0m";  // Reset Changes
     static final String colorTitle = "\033[38;5;11m"; //Yellow
     private final Integer sizeSlotTile = 3; //Tile size to be colored
@@ -31,7 +30,7 @@ public class ClientTUI implements View{
     private String command;
     private boolean isRunning;
     private String ServerIP;
-    private LinkedList<String> chatQueue = new LinkedList<>();
+    private final LinkedList<String> chatQueue = new LinkedList<>();
     private String username;
     private boolean isStarGame = false;
 
@@ -140,6 +139,7 @@ public class ClientTUI implements View{
                 writeText("Choose order: [order 'first number' 'second number' 'third number']");
                 chooseColumn();
                 chooseOrder();
+                displayNotification("To choose different tiles, type the command: [tiles row,column] again. ");
             }
         }
     }
@@ -205,9 +205,8 @@ public class ClientTUI implements View{
                 commandParsing.elaborateInput(command);
             }
         } while (master.isConnected());
-        if (master.isGameOn() /*and connection is not lost, idk*/) {
-            fileLog.debug("entered an if and is stuck");
-            //i don't remember what i was supposed to write here, i'm tired
+        if (master.isGameOn() && !master.isConnected()) {
+            displayNotification("Connection error. Please try again later.");
         } else {
             fileLog.debug("ClientTUI stopped");
             master.close();
@@ -266,12 +265,6 @@ public class ClientTUI implements View{
     public void displayNotification(String message) {
         fileLog.debug("displayNotification: " + message);
         writeText(message);
-    }
-
-    //gamerstatus has a status as an argument
-    @Override
-    public void GamerStatus(Status current) {
-
     }
 
     @Override
@@ -474,7 +467,8 @@ public class ClientTUI implements View{
 
     @Override
     public void showEndResult() {
-        //todo: maybe it's better to call clearConsole() and then print the end result
+        clearConsole();
+        clearConsole();
         ArrayList<PlayerView> playersSorted = new ArrayList<>();
         playersSorted.addAll(gameView.getPlayersView());
         Collections.sort(playersSorted, new Comparator<PlayerView>() {
@@ -484,11 +478,9 @@ public class ClientTUI implements View{
             }
         });
         DrawTui.printlnString(DrawTui.endGameScore(master.getUsername(), playersSorted));
-    }
 
-    @Override
-    public void pingSyn() {
-        master.pingSyn();
+        writeText("The game is over. Write 'quit' or close the window to disconnect.");
+
     }
 
     @Override
@@ -519,6 +511,11 @@ public class ClientTUI implements View{
         this.tiles = tiles;
     }
 
+    @Override
+    public void passSyn() {
+        master.onSyn();
+    }
+
     public String getServerIP() {
         return ServerIP;
     }
@@ -535,8 +532,6 @@ public class ClientTUI implements View{
         chatQueue.add(s);
         this.newChatMessage = true;
         refreshBoard();
-        //todo
-        //writeText(s);
     }
 
     public String getName() {

@@ -12,11 +12,12 @@ public class Player implements Serializable {
     private String tokenId;
     private Shelf shelf;
     private PersonalGoalCard personalGoalCard;
-    private int score = 0;
+    private int score;
 
     /** Constructor for the player class. It creates a new shelf for the player. */
     public Player(){
         this.shelf = new Shelf();
+        this.score = 0;
     }
 
     /**

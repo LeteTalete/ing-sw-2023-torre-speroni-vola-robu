@@ -11,7 +11,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class GameController {
     private static Logger fileLog = LogManager.getRootLogger();
@@ -19,6 +21,7 @@ public class GameController {
     private String gameId;
     private ArrayList<Position> choiceOfTiles;
     private ServerManager master;
+    private Map<Integer,Integer> cardsClaimed;
 
     /**
      * Constructor GameController creates a new GameController instance and initializes the game model.
@@ -32,6 +35,7 @@ public class GameController {
         model.setNumOfPlayers(playersList.size());
         gameId = id;
         master = serverMaster;
+        cardsClaimed = new HashMap<>();
     }
 
     /**
@@ -58,14 +62,14 @@ public class GameController {
         if (valid && model.getCurrentPlayer().getMyShelf().checkEnoughSpace(choice) && this.model.getGameBoard().checkPlayerChoice(choice))
         {
             this.choiceOfTiles = choice;
-            master.notifyAboutTiles(token, true, choice);
-            //master.notifySinglePlayer(token, new GetTilesResponse(choice));
-            //master.notifySinglePlayer(token, new TilesOk(true));
+            master.notifyAboutTiles(token, 0, choice);
         }
         else
         {
-            master.notifyAboutTiles(token, false, choice);
-            //master.notifySinglePlayer(token, new TilesOk(false));
+            if(!model.getCurrentPlayer().getMyShelf().checkEnoughSpace(choice)){
+                master.notifyAboutTiles(token, 4, choice);
+            }
+            else master.notifyAboutTiles(token, model.getGameBoard().getErrorTilesCode(), choice);
         }
     }
 
@@ -133,8 +137,10 @@ public class GameController {
             fileLog.debug("i'm in choose column and i'm about to notify player: "+token+" about the move ok");
 
             updateGame();
-            master.notifyAboutColumn(token, true);
-            master.notifyOnEndTurn(token);
+            if ( !(model.getEndGame() != null && model.getPreviousPlayer().getChair() )){
+                master.notifyAboutColumn(token, true);
+                master.notifyOnEndTurn(token);
+            }
         }
         else {
             master.notifyAboutColumn(token, false);
@@ -147,6 +153,7 @@ public class GameController {
         updateBoardCouples();
 
         nextTurn();
+        notifyPointsCGC();
     }
 
     /** Method nextTurn changes the current player and if the game has ended it notifies the players. */
@@ -164,14 +171,25 @@ public class GameController {
      */
     public void checkCGCs(){
 
+        int i = 0;
         for (CommonGoalCard card : model.getCommonGoalCards() ) {
+            i++;
             if ( card.checkConditions(model.getCurrentPlayer().getMyShelf()) == 1 ) {
                 int points = card.getPoints().pop();
                 model.getCurrentPlayer().setScore(points);
-                master.notifyOnCGC(gameId, model.getCurrentPlayer().getNickname(), card.getID());
+                cardsClaimed.put(i, points);
                 fileLog.info(model.getCurrentPlayer().getNickname() + " has received " + points + " points from CGC " + card.getID());
             }
         }
+    }
+
+    public void notifyPointsCGC(){
+        if ( cardsClaimed.size() > 0 ) {
+            for (Integer key : cardsClaimed.keySet()) {
+                master.notifyOnCGC(gameId, model.getPreviousPlayer().getNickname(), key, cardsClaimed.get(key));
+            }
+        }
+        cardsClaimed.clear();
     }
 
     /**
@@ -187,11 +205,6 @@ public class GameController {
         }
     }
 
-    // todo: no usages found, should be deleted
-    public void generateCGC(){
-        model.generateCGC(model.getPlayers().size());
-    }
-
     /**
      * Method getModel returns the model of the game.
      * @return - model of the game.
@@ -199,15 +212,6 @@ public class GameController {
     public Game getModel(){
         return model;
     }
-
-    //todo: no usages found, should be deleted
-    public void setModel(Game model)
-    {
-        this.model = model;
-    }
-
-    //todo: no usages found, should be deleted
-    public List<CommonGoalCard> getCommonGoalCards() { return  model.getCommonGoalCards(); }
 
     /**
      * Method notifyOnStartTurn notifies the players that it's the turn of the current player.
@@ -254,5 +258,13 @@ public class GameController {
     public ArrayList<Position> getChoiceOfTiles()
     {
         return this.choiceOfTiles;
+    }
+
+    /**
+     * Method getCardsClaimed returns the cards claimed by the player.
+     * @return - cards claimed by the player.
+     */
+    public Map<Integer, Integer> getCardsClaimed() {
+        return cardsClaimed;
     }
 }

@@ -5,8 +5,6 @@ import it.polimi.ingsw.client.ClientController;
 import it.polimi.ingsw.client.CommandParsing;
 import it.polimi.ingsw.model.board.Position;
 import it.polimi.ingsw.network.IClientListener;
-import it.polimi.ingsw.responses.Response;
-import it.polimi.ingsw.stati.Status;
 import it.polimi.ingsw.structures.LivingRoomView;
 import it.polimi.ingsw.structures.PlayerView;
 import it.polimi.ingsw.structures.ShelfView;
@@ -18,7 +16,6 @@ public interface View {
     String getConnectionType();
     void getUsername();
     void displayNotification(String message);
-    void GamerStatus(Status current);
     void askAmountOfPlayers();
     //choose tiles from board
     //reorder tiles
@@ -51,7 +48,6 @@ public interface View {
     void serverSavedUsername(String name, boolean b, String token, boolean first);
 
     void running();
-    void setGameOn(boolean gameOn);
 
     void printCommands();
 
@@ -63,14 +59,11 @@ public interface View {
 
     void chooseColumn();
 
-    void chooseOrder();
+    void chooseOrder(ArrayList<Position> tilesPosition);
 
     void nextAction(int num, ArrayList<Position> tiles);
 
     void showEndResult();
-
-    void pingSyn();
-    void turnPhase();
 
     void addToChatQueue(String message, String receiver);
 
@@ -78,4 +71,6 @@ public interface View {
 
 
     void passTilesToView(ArrayList<Position> tiles);
+
+    void passSyn();
 }

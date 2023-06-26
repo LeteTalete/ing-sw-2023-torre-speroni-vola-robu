@@ -1,6 +1,8 @@
-package it.polimi.ingsw.model.cards;
+package it.polimi.ingsw.model.cards.CGC;
 
+import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.board.Shelf;
+import it.polimi.ingsw.model.cards.CG_Groups;
 import it.polimi.ingsw.model.enumerations.T_Type;
 import it.polimi.ingsw.model.board.Tile;
 
@@ -16,13 +18,15 @@ public class CGC6Test {
     private Shelf shelf;
     private ArrayList<Tile> tiles;
     private CG_Groups CGC6;
+    private Shelf testShelf;
 
     /**
      * Method setUp creates a new shelf, a new ArrayList of tiles and a new CGC6 before each test.
      */
     @BeforeEach
     public void setUp() {
-        shelf = new Shelf();
+        Player player = new Player();
+        shelf = player.getMyShelf();
         tiles = new ArrayList<>();
         CGC6 = new CG_Groups(6);
     }
@@ -89,6 +93,8 @@ public class CGC6Test {
         tiles.add(new Tile(T_Type.FRAME, 1));
         tiles.add(new Tile(T_Type.FRAME, 1));
         shelf.insertTiles(3, tiles);
+
+        testShelf = shelf;
 
         System.out.println("fourOccTest1");
         shelf.printShelf();
@@ -349,5 +355,9 @@ public class CGC6Test {
         assertTrue(shelf.getCardsAlreadyClaimed().isEmpty());
         assertEquals(0, CGC6.checkConditions(shelf));
         assertFalse(shelf.getCardsAlreadyClaimed().contains(CGC6.getID()));
+    }
+
+    public Shelf getTestShelf() {
+        return testShelf;
     }
 }

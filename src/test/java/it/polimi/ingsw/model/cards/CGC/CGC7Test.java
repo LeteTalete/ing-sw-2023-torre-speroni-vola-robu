@@ -1,6 +1,8 @@
-package it.polimi.ingsw.model.cards;
+package it.polimi.ingsw.model.cards.CGC;
 
+import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.board.Shelf;
+import it.polimi.ingsw.model.cards.CG_Shape;
 import it.polimi.ingsw.model.enumerations.T_Type;
 import it.polimi.ingsw.model.board.Tile;
 
@@ -17,13 +19,15 @@ public class CGC7Test {
     private Shelf shelf;
     private ArrayList<Tile> tiles;
     private CG_Shape CGC7;
+    private Shelf testShelf;
 
     /**
      * Method setUp creates a new shelf, a new ArrayList of tiles and a new CGC7 before each test.
      */
     @BeforeEach
     public void setUp() {
-        shelf = new Shelf();
+        Player player = new Player();
+        shelf = player.getMyShelf();
         tiles = new ArrayList<>();
         CGC7 = new CG_Shape(7);
     }
@@ -89,6 +93,8 @@ public class CGC7Test {
         tiles.clear();
         tiles.add(new Tile(T_Type.CAT,1));
         shelf.insertTiles(4, tiles);
+
+        testShelf = shelf;
 
         System.out.println("eightOccTest1");
         shelf.printShelf();
@@ -223,4 +229,7 @@ public class CGC7Test {
     }
 
 
+    public Shelf getTestShelf() {
+        return testShelf;
+    }
 }

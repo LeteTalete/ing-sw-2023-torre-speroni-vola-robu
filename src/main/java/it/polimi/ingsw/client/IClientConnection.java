@@ -22,21 +22,24 @@ public interface IClientConnection {
 
     void chooseColumn(int column);
 
-    void setPing(boolean b);
-    boolean isSyn();
-
     void close();
 
     void setResponseDecoder(ResponseDecoder responseDecoder);
 
     boolean isConnected();
+    void setConnected(boolean b);
 
     void rearrangeTiles(String userToken, List<String> multipleChoiceNumber);
 
     void sendChat(String username, String toString, String receiver);
-    void sendPing(String token);
 
     void quit(String token);
 
-    void setCheckTimer(boolean b);
+    void setSyn(boolean b);
+
+    boolean isSyn();
+
+    void setSynCheckTimer(boolean startTimer);
+
+    void sendAck();
 }

@@ -75,4 +75,17 @@ public class WaitingRoom {
             master.createGame(id);
         }
     }
+
+    public void disconnectFromWaitingRoom(String token) {
+        for(Player p : players){
+            if(p.getTokenId().equals(token)){
+                players.remove(p);
+                playersWaiting--;
+                break;
+            }
+        }
+        if(playersWaiting==0){
+            master.deleteWaitingRoom();
+        }
+    }
 }

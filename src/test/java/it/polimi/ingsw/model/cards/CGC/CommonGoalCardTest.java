@@ -1,8 +1,9 @@
-package it.polimi.ingsw.model.cards;
+package it.polimi.ingsw.model.cards.CGC;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import it.polimi.ingsw.model.board.Shelf;
+import it.polimi.ingsw.model.cards.CommonGoalCard;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 

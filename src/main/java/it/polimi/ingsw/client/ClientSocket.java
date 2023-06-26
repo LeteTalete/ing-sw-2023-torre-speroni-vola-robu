@@ -1,8 +1,8 @@
 package it.polimi.ingsw.client;
 
-import it.polimi.ingsw.network.ConnectionClientTimer;
 import it.polimi.ingsw.requests.*;
 import it.polimi.ingsw.responses.Response;
+import it.polimi.ingsw.timers.ConnectionClientTimer;
 import it.polimi.ingsw.view.View;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -35,8 +35,9 @@ public class ClientSocket implements IClientConnection
     private ResponseDecoder responseDecoder;
     private boolean notReceivingResponse;
     private boolean syn;
-    private Timer checkTimer;
-    private final int synCheckTime = 1000;
+    private final int synCheckTime = 10000;
+    private Timer synCheckTimer;
+    private View currentView;
 
     /**ClientSocket constructor.
      * @param ip - the server's ip address.
@@ -50,17 +51,12 @@ public class ClientSocket implements IClientConnection
     }
 
     /**openStreams method creates a new socket and initializes it. Then it starts the startReceiving method*/
-    public void openStreams() {
-        try {
-            socket = new Socket(ip, port);
-            this.socketOut = new ObjectOutputStream(socket.getOutputStream());
-            this.socketIn = new ObjectInputStream(socket.getInputStream());
-            amIconnected= true;
-            startReceiving();
-        }
-        catch(IOException e) {
-            fileLog.error(e.getMessage());
-        }
+    public void openStreams() throws IOException {
+        socket = new Socket(ip, port);
+        this.socketOut = new ObjectOutputStream(socket.getOutputStream());
+        this.socketIn = new ObjectInputStream(socket.getInputStream());
+        amIconnected= true;
+        startReceiving();
     }
 
     /**startReceiving method is basically a loop in which the socket keeps listening. Each time something is read
@@ -95,15 +91,22 @@ public class ClientSocket implements IClientConnection
             fileLog.error(e.getMessage());
         }catch (IOException e){
             fileLog.error(e);
+            //if the connection is lost
+            master.getCurrentView().displayNotification("Connection lost. Please try again later.");
         }
         return null;
     }
 
     /**startClient method is used to start the client. It opens the streams and then calls the userLogin method*/
     public void startClient() {
-        openStreams();
-        System.out.println(">> Connection established");
-        //if the connection is successful i can use socket's streams to communicate with the server
+        try {
+            openStreams();
+        } catch (IOException e) {
+            fileLog.error(e);
+            currentView.displayNotification("Connection failed. Try again.");
+            master.setupConnection();
+        }
+        currentView.displayNotification("Connection successful!");
         master.userLogin();
     }
 
@@ -117,8 +120,8 @@ public class ClientSocket implements IClientConnection
 
 
     @Override
-    public void setViewClient(View currentView) {
-        //only for rmi
+    public void setViewClient(View cView) {
+        this.currentView = cView;
     }
 
     /**chooseTiles method is used to create a request with the choice of tiles to be sent to the server.
@@ -135,6 +138,7 @@ public class ClientSocket implements IClientConnection
             }
             catch (InterruptedException e) {
                 fileLog.error(e.getMessage());
+                master.getCurrentView().displayNotification("Connection error. Please try again later.");
             }
         }
     }
@@ -148,10 +152,10 @@ public class ClientSocket implements IClientConnection
         request(new loginRequest(name));
         while(notReceivingResponse){
             try{
-                //maybe this doesn't need 'this', but since it's a thread it's better to be safe
                 this.wait();
             }catch (InterruptedException e){
                 fileLog.error(e.getMessage());
+                master.getCurrentView().displayNotification("Connection error. Please try again later.");
             }
         }
     }
@@ -165,6 +169,7 @@ public class ClientSocket implements IClientConnection
             socketOut.reset();
         }catch (IOException e){
             fileLog.error(e.getMessage());
+            master.getCurrentView().displayNotification("Connection error. Please try again later.");
         }
     }
 
@@ -199,6 +204,7 @@ public class ClientSocket implements IClientConnection
                 this.wait();
             }catch (InterruptedException e){
                 fileLog.error(e.getMessage());
+                master.getCurrentView().displayNotification("Connection error. Please try again later.");
             }
         }
     }
@@ -214,15 +220,9 @@ public class ClientSocket implements IClientConnection
                 this.wait();
             }catch (InterruptedException e){
                 fileLog.error(e.getMessage());
+                master.getCurrentView().displayNotification("Connection error. Please try again later.");
             }
         }
-    }
-
-
-    /**todo*/
-    @Override
-    public void setPing(boolean b) {
-        this.syn = b;
     }
 
     @Override
@@ -239,6 +239,11 @@ public class ClientSocket implements IClientConnection
         return amIconnected;
     }
 
+    @Override
+    public void setConnected(boolean b) {
+        amIconnected = b;
+    }
+
     /**rearrangeTiles method generates a request to send the re-arranged tiles to the server.
      * @param userToken - token used to identify the client.
      * @param multipleChoiceNumber - list of the positions of the re-arranged tiles.*/
@@ -248,10 +253,10 @@ public class ClientSocket implements IClientConnection
         request(new RearrangeTilesRequest(userToken, multipleChoiceNumber));
         while(notReceivingResponse){
             try{
-                //maybe this doesn't need 'this', but since it's a thread it's better to be safe
                 this.wait();
             }catch (InterruptedException e){
                 fileLog.error(e.getMessage());
+                master.getCurrentView().displayNotification("Connection error. Please try again later.");
             }
         }
     }
@@ -266,13 +271,7 @@ public class ClientSocket implements IClientConnection
         request(new ChatMessageRequest(username, toString, receiver));
     }
 
-    /**sendPing method generates a ping request.
-     * @param token - token used to identify the client.*/
-    @Override
-    public void sendPing(String token) {
-        setReceivedResponse(true);
-        request(new PingRequest(token));
-    }
+
 
     /**quit method used to quit the game.
      * @param token - token used to identify the client.*/
@@ -282,22 +281,31 @@ public class ClientSocket implements IClientConnection
         request(new QuitRequest(token));
     }
 
-    /**setCheckTimer method resets the timer or creates one if there isn't any*/
     @Override
-    public void setCheckTimer(boolean b) {
-        if(b){
-            checkTimer = new Timer();
-            checkTimer.scheduleAtFixedRate(new ConnectionClientTimer(this), synCheckTime, synCheckTime);
+    public void setSyn(boolean b) {
+        syn = b;
+    }
+
+    @Override
+    public boolean isSyn() {
+        return syn;
+    }
+
+    @Override
+    public void setSynCheckTimer(boolean startTimer) {
+        if(startTimer){
+            synCheckTimer = new Timer();
+            synCheckTimer.scheduleAtFixedRate(new ConnectionClientTimer(this), (synCheckTime/2)+synCheckTime, synCheckTime);
         }
         else{
-            checkTimer.purge();
-            checkTimer.cancel();
+            synCheckTimer.purge();
+            synCheckTimer.cancel();
         }
     }
 
-    /**sets the syn boolean which signals whether the server is still reachable*/
-    public boolean isSyn() {
-        return syn;
+    @Override
+    public void sendAck() {
+        request(new AckPing(token));
     }
 
 }

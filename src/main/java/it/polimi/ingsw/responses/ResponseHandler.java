@@ -7,7 +7,6 @@ import java.rmi.RemoteException;
 /**interface to let the client handle the different kinds of responses*/
 
 public interface ResponseHandler {
-    void handle(Pinged pinged) throws RemoteException;
     void handle(LoginResponse loginResponse) throws RemoteException;
 
     void handle(GameStart gameStart) throws RemoteException;
@@ -35,4 +34,6 @@ public interface ResponseHandler {
     void handle(RearrangeOk rearrangeOk) throws RemoteException;
 
     void handle(TilesOk tilesOk) throws RemoteException;
+
+    void handle(SynPing synPing) throws RemoteException;
 }
