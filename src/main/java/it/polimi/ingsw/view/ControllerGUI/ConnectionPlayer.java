@@ -53,7 +53,8 @@ public class ConnectionPlayer extends GenericController {
         IP.setVisible(true);
         port.setVisible(true);
         this.typeConnection = "SOCKET";
-        GUIApplication.getStageWindow().setHeight(GUIApplication.getSceneWindow().getHeight());
+        GUIApplication.getStageWindow().setHeight(400);
+        //GUIApplication.getStageWindow().setHeight(GUIApplication.getSceneWindow().getHeight());
     }
     
     public void activeWindowRMI(MouseEvent mouseEvent){
@@ -62,7 +63,5 @@ public class ConnectionPlayer extends GenericController {
         this.typeConnection = "RMI";
         GUIApplication.getStageWindow().setHeight(400);
     }
-
-
 
 }

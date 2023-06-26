@@ -51,6 +51,7 @@ public interface View {
     void serverSavedUsername(String name, boolean b, String token, boolean first);
 
     void running();
+    void setGameOn(boolean gameOn);
 
     void printCommands();
 
@@ -62,13 +63,14 @@ public interface View {
 
     void chooseColumn();
 
-    void chooseOrder(ArrayList<Position> tilesPosition);
+    void chooseOrder();
 
     void nextAction(int num, ArrayList<Position> tiles);
 
     void showEndResult();
 
     void pingSyn();
+    void turnPhase();
 
     void addToChatQueue(String message, String receiver);
 

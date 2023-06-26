@@ -14,16 +14,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.rmi.registry.Registry;
 
-public class GenericController {
-
-    private GUIApplication guiApplication;
-
-    public void setGuiApplication(GUIApplication guiApplication){
-        this.guiApplication = guiApplication;
-    }
-
-    public GUIApplication getGuiApplication(){
-        return this.guiApplication;
-    }
+public abstract class GenericController {
 
 }

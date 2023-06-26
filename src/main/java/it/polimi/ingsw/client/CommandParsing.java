@@ -323,7 +323,6 @@ public class CommandParsing {
         }
     }
 
-
     public void setPlaying(int playing) {
         if(playing>0){
             isPlaying = true;

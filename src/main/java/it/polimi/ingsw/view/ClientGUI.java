@@ -3,17 +3,23 @@ package it.polimi.ingsw.view;
 import it.polimi.ingsw.Updates.ModelUpdate;
 import it.polimi.ingsw.client.ClientController;
 import it.polimi.ingsw.client.CommandParsing;
+import it.polimi.ingsw.model.board.Couple;
 import it.polimi.ingsw.model.board.Position;
 import it.polimi.ingsw.network.ClientListenerGUI;
 import it.polimi.ingsw.network.ClientListenerTUI;
 import it.polimi.ingsw.network.IClientListener;
 import it.polimi.ingsw.responses.Response;
+import it.polimi.ingsw.server.StaticStrings;
 import it.polimi.ingsw.stati.Status;
 import it.polimi.ingsw.structures.GameView;
 import it.polimi.ingsw.structures.LivingRoomView;
 import it.polimi.ingsw.structures.PlayerView;
 import it.polimi.ingsw.structures.ShelfView;
+import it.polimi.ingsw.view.ControllerGUI.BoardPlayer;
+import it.polimi.ingsw.view.ControllerGUI.ErrorMessage;
 import it.polimi.ingsw.view.ControllerGUI.GenericController;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
 import java.rmi.RemoteException;
@@ -21,7 +27,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class ClientGUI implements View {
+    private static Logger fileLog = LogManager.getRootLogger();
     private ClientController master;
+    private BoardPlayer boardPlayer;
     private GameView gameView;
     private ClientListenerGUI listenerClient;
     private CommandParsing commPars;
@@ -31,6 +39,8 @@ public class ClientGUI implements View {
     private LinkedList<String> chatQueue = new LinkedList<>();
     private String username;
     private boolean isStarGame = false;
+    private ArrayList<Position> tiles;
+
     public ClientGUI(){
         try {
             this.listenerClient = new ClientListenerGUI(this);
@@ -48,11 +58,19 @@ public class ClientGUI implements View {
         this.gameView = new GameView(modelUpdate);
         //
         if (!this.isStarGame) {
+            //Caricamento partita: settare la board
             this.isStarGame = true;
             GUIApplication.showSceneName(SceneNames.BOARDPLAYER);
-            //GUIApplication.setBoardPlayer();
+            //GUIApplication.behaviorGUI(0);
+            //GUIApplication.getBoardPlayer().setBoadPlayer(gameView);
         }
-        //GUIApplication.updateLivingRoom(this.gameView.getGameBoardView());
+        GUIApplication.behaviorGUI(0);
+        turnPhase();
+        //GUIApplication.getBoardPlayer().setLivingRoom(gameView.getGameBoardView());
+    }
+
+    public void setBoardPlayer(BoardPlayer boardPlayerController){
+        boardPlayer = boardPlayerController;
     }
     @Override
     public void chooseConnection() {
@@ -161,12 +179,13 @@ public class ClientGUI implements View {
 
     @Override
     public void printError(String message) {
+        GUIApplication.error(message);
         System.out.println("Errore: " + message);
     }
 
     @Override
     public void setMyTurn(int b) {
-
+        this.master.setMyTurn(b);
     }
 
     @Override
@@ -189,8 +208,9 @@ public class ClientGUI implements View {
 
     @Override
     public void askForTiles() {
+        //Dice al giocatore che ora può scegliere le tiles dalla LivingRoom
+        //GUIApplication.showWhoseIsTurn("Choose the tiles");
         System.out.println("FUNZIONA");
-
     }
 
     @Override
@@ -216,7 +236,7 @@ public class ClientGUI implements View {
 
     @Override
     public void changeTurn(String name) {
-
+        master.isItMyTurn(name);
     }
 
     @Override
@@ -229,20 +249,47 @@ public class ClientGUI implements View {
         return ServerIP;
     }
 
-
     @Override
-    public void chooseColumn() {
-        //todo
+    public void turnPhase(){
+        //Devo mostrare sulla GUI di chi è il turno
+        switch (master.isMyTurn()) {
+            case 0 -> {
+                GUIApplication.messaggeForPlayer("It's " + gameView.getCurrentPlayerNickname() + "'s turn");
+                displayNotification("It's " + gameView.getCurrentPlayerNickname() + "'s turn");
+            }
+            case 1 -> {
+                GUIApplication.messaggeForPlayer("It's your turn: Choose the tiles"); //GUIApplication.showWhoseIsTurn("It's your turn: Choose the tiles");
+                displayNotification(StaticStrings.YOUR_TURN);
+
+                askForTiles();
+            }
+            case 2 -> {
+                GUIApplication.messaggeForPlayer("It's your turn : Re-arrange the tiles or choose the column"); //GUIApplication.showWhoseIsTurn("It's your turn : Re-arrange the tiles or choose the column");
+                displayNotification(StaticStrings.YOUR_TURN);
+                displayNotification("You can now re-arrange the tiles or choose the column.");
+                chooseOrder();
+            }
+        }
     }
 
     @Override
-    public void chooseOrder(ArrayList<Position> tilesPosition) {
-        //todo
+    public void chooseColumn() {
+        System.out.println("ChoooseColumn!!");
+        GUIApplication.behaviorGUI(3);
+
+    }
+
+    @Override
+    public void chooseOrder() {
+        System.out.println("Ordina le Tile!!!!");
+
+        GUIApplication.behaviorGUI(2);
+
     }
 
     @Override
     public void nextAction(int num, ArrayList<Position> tiles) {
-
+        master.nextAction(num, tiles);
     }
 
     @Override
@@ -267,9 +314,7 @@ public class ClientGUI implements View {
 
     @Override
     public void passTilesToView(ArrayList<Position> tiles) {
-
+        this.tiles = tiles;
     }
-
-
 
 }

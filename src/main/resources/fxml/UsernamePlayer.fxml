@@ -36,7 +36,8 @@
       <TextField fx:id="textUsername" layoutX="208.0" layoutY="169.0" prefHeight="25.0" prefWidth="251.0">
          <effect>
             <DropShadow />
-         </effect></TextField>
+         </effect>
+      </TextField>
       <StackPane fx:id="buttonUsername" layoutX="399.0" layoutY="224.0" onMouseClicked="#clickedButtonUsername" onMouseEntered="#enteredButton" onMouseExited="#exitedButton" prefHeight="46.0" prefWidth="60.0">
          <children>
             <ImageView fitHeight="56.0" fitWidth="60.0" pickOnBounds="true">

@@ -94,7 +94,7 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
             view.displayNotification("Choice of column successful!");
         }
         else{
-            view.displayNotification("Invalid move. Try again.");
+            view.printError("Invalid move. Try again.");
         }
     }
 

@@ -33,12 +33,15 @@
             <DropShadow height="10.0" radius="4.5" width="10.0" />
          </effect>
       </Label>
-      <Button fx:id="shelfPlayers" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="0.0" layoutX="1191.0" layoutY="63.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="214.0" styleClass="buttonShelfPlayers" stylesheets="@../css/BoardPlayer.css" text="Shelfs" textAlignment="CENTER" textFill="WHITE">
+      <Button fx:id="shelfPlayers" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="0.0" layoutX="1191.0" layoutY="63.0" mnemonicParsing="false" onAction="#clickedPlayers" prefHeight="42.0" prefWidth="214.0" styleClass="buttonShelfPlayers" stylesheets="@../css/BoardPlayer.css" text="Shelfs" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font name="System Bold" size="47.0" />
          </font>
          <effect>
-            <InnerShadow />
+            <InnerShadow choke="0.06" height="37.38" radius="28.7175" width="79.49">
+               <input>
+                  <DropShadow />
+               </input></InnerShadow>
          </effect>
       </Button>
       <ImageView fitHeight="459.0" fitWidth="236.0" layoutX="1180.0" layoutY="236.0" pickOnBounds="true">
@@ -145,14 +148,17 @@
       </StackPane>
       <VBox layoutX="1188.0" layoutY="247.0" prefHeight="459.0" prefWidth="220.0">
          <children>
-            <ChoiceBox fx:id="choiceChat" prefHeight="28.0" prefWidth="220.0" styleClass="chatBoxTop" />
+            <ChoiceBox fx:id="choiceChat" prefHeight="28.0" prefWidth="220.0" styleClass="chatBoxTop">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor></ChoiceBox>
             <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="351.0" prefWidth="220.0" vbarPolicy="ALWAYS">
               <content>
                 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="355.0" prefWidth="205.0">
                      <children>
                         <StackPane fx:id="boxChat" alignment="TOP_CENTER" layoutY="-75.0" maxWidth="1.7976931348623157E308" prefHeight="407.0" prefWidth="208.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
-                              <VBox fx:id="All" alignment="BOTTOM_CENTER" prefHeight="278.0" prefWidth="208.0" styleClass="chatBackground" />
+                              <VBox fx:id="all" alignment="BOTTOM_CENTER" prefHeight="278.0" prefWidth="208.0" styleClass="chatBackground" />
                            </children>
                         </StackPane>
                      </children>
@@ -414,17 +420,11 @@
          </opaqueInsets>
          <children>
             <ImageView fitHeight="46.0" fitWidth="46.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../imgs/ScoreTiles/scoring_back_EMPTY.jpg" />
-               </image>
                <effect>
                   <DropShadow height="10.0" offsetX="1.0" offsetY="2.0" radius="4.5" width="10.0" />
                </effect>
             </ImageView>
             <ImageView fitHeight="46.0" fitWidth="46.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../imgs/ScoreTiles/scoring_back_EMPTY.jpg" />
-               </image>
                <effect>
                   <DropShadow height="10.0" offsetX="1.0" offsetY="2.0" radius="4.5" width="10.0" />
                </effect>
@@ -433,9 +433,6 @@
                </HBox.margin>
             </ImageView>
             <ImageView fitHeight="46.0" fitWidth="46.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../imgs/ScoreTiles/scoring_back_EMPTY.jpg" />
-               </image>
                <effect>
                   <DropShadow height="10.0" offsetX="1.0" offsetY="2.0" radius="4.5" width="10.0" />
                </effect>

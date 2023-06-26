@@ -7,6 +7,7 @@ import it.polimi.ingsw.view.ClientGUI;
 import it.polimi.ingsw.view.ClientTUI;
 import it.polimi.ingsw.view.GUIApplication;
 import it.polimi.ingsw.view.SceneNames;
+import javafx.application.Platform;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -76,15 +77,16 @@ public class ClientListenerGUI extends UnicastRemoteObject implements IClientLis
     public void notifyColumnOk(boolean ok) throws RemoteException {
         if(ok){
             view.displayNotification("Choice of column successful!");
+            view.chooseColumn(); //Mi permette di aggiornare la shelf
         }
         else{
-            view.displayNotification("Invalid move. Try again.");
+            view.printError("Invalid move. Try again.");
         }
     }
 
     @Override
     public void notifyEndTurn() throws RemoteException {
-        view.setMyTurn(0);
+        //view.setMyTurn(0);
         view.displayNotification("Turn ended.");
     }
 
@@ -95,8 +97,8 @@ public class ClientListenerGUI extends UnicastRemoteObject implements IClientLis
 
     @Override
     public void notifyChatMessage(String sender, String message, String receiver) throws RemoteException {
+        GUIApplication.setMessageEntry(sender, message, receiver);
         //view.displayChatNotification("@"+sender + " to " + receiver +": " + message);
-
     }
 
     @Override
@@ -118,11 +120,12 @@ public class ClientListenerGUI extends UnicastRemoteObject implements IClientLis
     @Override
     public void notifyTilesOk(boolean ok, ArrayList<Position> tiles) throws RemoteException {
         if(ok){
-            view.displayNotification("Choice of tiles successful!");
             view.nextAction(2, tiles);
+            view.turnPhase();
+            view.displayNotification("Choice of tiles successful!");
         }
-        else{
-            view.displayNotification("Invalid move. Try again.");
+        else {
+            view.printError("Invalid move. Try again.");
         }
     }
 

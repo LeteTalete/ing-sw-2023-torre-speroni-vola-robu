@@ -124,7 +124,8 @@ public class ClientTUI implements View{
         System.out.println("----------------------------------------");
     }
 
-    private void turnPhase() {
+    @Override
+    public void turnPhase() {
         switch (master.isMyTurn()) {
             case 0 -> {
                 displayNotification("It's " + gameView.getCurrentPlayerNickname() + "'s turn");
@@ -138,7 +139,7 @@ public class ClientTUI implements View{
                 displayNotification("You can now re-arrange the tiles or choose the column. Here are the commands:");
                 writeText("Choose order: [order 'first number' 'second number' 'third number']");
                 chooseColumn();
-                chooseOrder(tiles);
+                chooseOrder();
             }
         }
     }
@@ -367,10 +368,13 @@ public class ClientTUI implements View{
         livingRoomP = DrawTui.mergerString(livingRoomP, shelfP, false, true, false);
         DrawTui.printlnString(DrawTui.mergerString(livingRoomP, pcg, true, false, false));
     }
+    /*
 
     public void chooseTiles() {
         DrawTui.askWhat("Choose the tiles: [tiles row,column]");
     }
+
+     */
 
     @Override
     public void showPersonalGoalCard() {
@@ -421,7 +425,8 @@ public class ClientTUI implements View{
 
     @Override
     public void askForTiles() {
-        chooseTiles();
+        //chooseTiles();
+        DrawTui.askWhat("Choose the tiles: [tiles row,column]");
     }
 
     @Override
@@ -455,10 +460,10 @@ public class ClientTUI implements View{
     }
 
     @Override
-    public void chooseOrder(ArrayList<Position> tilesPosition) {
+    public void chooseOrder() {
         ArrayList<Couple> tilesChoose = new ArrayList<>();
         LivingRoomView livingRoomView = this.gameView.getGameBoardView();
-        tilesPosition.forEach(position -> tilesChoose.add(livingRoomView.getCouple(position)));
+        tiles.forEach(position -> tilesChoose.add(livingRoomView.getCouple(position)));
         DrawTui.graphicsOrderTiles(tilesChoose);
     }
 

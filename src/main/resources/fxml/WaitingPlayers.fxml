@@ -1,21 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
 <Pane prefHeight="306.0" prefWidth="636.0" styleClass="background" stylesheets="@../css/LoadingGame.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.ControllerGUI.ConnectionPlayer">
    <children>
-      <StackPane prefHeight="150.0" prefWidth="200.0">
-         <padding>
-            <Insets top="20.0" />
-         </padding>
-      </StackPane>
       <ImageView fitHeight="144.0" fitWidth="636.0" layoutY="168.0" pickOnBounds="true">
          <image>
             <Image url="@../imgs/base.jpg" />
