@@ -15,6 +15,8 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.image.Image;
@@ -50,22 +52,10 @@ public class GUIApplication extends Application {
 
     private static Scene setUpScene(SceneNames sceneNames){
         try {
-            //Stage stage = new Stage();
             loaderController = new FXMLLoader(GUIApplication.class.getResource(sceneNames.scaneString()));
             Parent root = loaderController.load();
             Scene newScene = new Scene(root);
             genericController = loaderController.getController();
-            //sceneWindow = new Scene(root);
-            //Image icon = new Image(Objects.requireNonNull(GUIApplication.class.getResourceAsStream("/imgs/Icon.png")));
-            //activeGenericController();
-            //stageWindow.getIcons().add(icon);
-            //stageWindow.setResizable(false); //Non modifica le dimensioni della finestra
-            /*
-            stageWindow.setHeight(root.prefHeight(-1));
-            stageWindow.setWidth( root.prefWidth(-1));
-            stageWindow.setScene(sceneWindow);
-
-             */
             return newScene;
         } catch (IOException e) {
             e.printStackTrace();
@@ -83,18 +73,6 @@ public class GUIApplication extends Application {
         System.out.println("Entrato Board!!");
         return (BoardPlayer) genericController;
     }
-
-    /*
-
-    public static void setBoardPlayer(){
-
-        boardPlayer = boardPlayerController;
-                loaderController.getController();
-        boardPlayer.setBoadPlayer(clientGUI.getGameView());
-        updateLivingRoom(clientGUI.getGameView().getGameBoardView());
-    }
-    */
-
 
     public static void showSceneName(SceneNames sceneNames){
         Platform.runLater(()-> {
@@ -189,6 +167,15 @@ public class GUIApplication extends Application {
         Platform.runLater(()-> {
             getBoardPlayer().setLabelTurn(message);
         });
+    }
+
+    public static void setMyScoreCGC(int id, int token){
+        Platform.runLater( () -> getBoardPlayer().updateScore(id, token, true) );
+    }
+
+    public static void setPlayerScoreCGC(String player, int id, int token, boolean scoreClient){
+        Platform.runLater( () -> getBoardPlayer().updateScore(id, token, true) );
+
     }
 
 

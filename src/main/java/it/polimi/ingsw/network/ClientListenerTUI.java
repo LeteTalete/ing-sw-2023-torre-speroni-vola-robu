@@ -51,6 +51,7 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
         }
     }
 
+    @Override
     public void setToken(String token) {
         this.token = token;
     }
@@ -61,6 +62,7 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
         view.passSyn();
     }
 
+    @Override
     public String getToken() {
         return token;
     }

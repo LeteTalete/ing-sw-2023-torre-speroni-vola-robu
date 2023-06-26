@@ -17,9 +17,7 @@ public interface View {
     void getUsername();
     void displayNotification(String message);
     void askAmountOfPlayers();
-    //choose tiles from board
-    //reorder tiles
-    //place tiles on shelf
+    void turnPhase();
     void GameTitle();
     void showShelves();
     void showChat();
@@ -28,49 +26,30 @@ public interface View {
     void hideCommands();
     void showCommonGoalCards();
     void hideCommonGoalCards();
-
+    String getName();
     void displayUpdatedModel(ModelUpdate modelUpdate);
     void showLivingRoom(LivingRoomView livingRoomView);
     void showBoardPlayer(PlayerView playerBoardView, LivingRoomView livingRoomView);
     void showPersonalGoalCard();
     void showBoard(LivingRoomView livingRoomView);
     IClientListener getListener();
-
     void printError(String message);
-
     void setMyTurn(int b);
     void startRun();
-
     void setMaster(ClientController clientController, CommandParsing commandParsing);
-
     void askForTiles();
-
     void serverSavedUsername(String name, boolean b, String token, boolean first);
-
     void running();
-
     void printCommands();
-
     void changeTurn(String name);
-
     void askServerIP();
-
     String getServerIP();;
-
     void chooseColumn();
-
-    void chooseOrder(ArrayList<Position> tilesPosition);
-
+    void chooseOrder();
     void nextAction(int num, ArrayList<Position> tiles);
-
     void showEndResult();
-
     void addToChatQueue(String message, String receiver);
-
     void hideShelves();
-
-
     void passTilesToView(ArrayList<Position> tiles);
-
     void passSyn();
 }

@@ -31,11 +31,6 @@ public class ClientListenerGUI extends UnicastRemoteObject implements IClientLis
     }
 
     @Override
-    public void sendUpdatedModel(ModelUpdate message) throws RemoteException {
-        view.displayUpdatedModel(message);
-    }
-
-    @Override
     public void notifySuccessfulRegistration(String name, boolean b, String token, boolean first) throws RemoteException {
         if(b) {
             view.displayNotification("Registration Successful!");
@@ -51,8 +46,19 @@ public class ClientListenerGUI extends UnicastRemoteObject implements IClientLis
         }
     }
 
+    @Override
     public void setToken(String token) {
         this.token = token;
+    }
+
+    @Override
+    public void onSyn() throws RemoteException {
+        view.passSyn();
+    }
+
+    @Override
+    public String getToken() {
+        return token;
     }
 
     @Override
@@ -60,11 +66,6 @@ public class ClientListenerGUI extends UnicastRemoteObject implements IClientLis
         //view.writeText(StaticStrings.GAME_START);
         //view.printCommands();
         view.setGameOn(true);
-    }
-
-    @Override
-    public void changeTurn(String name) throws RemoteException {
-        view.changeTurn(name);
     }
 
     @Override
@@ -92,7 +93,11 @@ public class ClientListenerGUI extends UnicastRemoteObject implements IClientLis
 
     @Override
     public void notifyLastTurn(String firstDoneUser) throws RemoteException {
+        if(firstDoneUser.equals(view.getName())){
+            view.displayNotification("You gained completed your Shelfie! Last round starts now.");
+        }
         view.displayNotification(firstDoneUser + "completed their Shelfie. Last round starts now!");
+
     }
 
     @Override
@@ -110,6 +115,7 @@ public class ClientListenerGUI extends UnicastRemoteObject implements IClientLis
     public void notifyRearrangeOk(boolean ok, ArrayList<Position> tiles) throws RemoteException {
         if(ok){
             view.nextAction(3, tiles);
+            view.turnPhase();
             view.displayNotification("Rearrange successful!");
         }
         else{
@@ -118,14 +124,22 @@ public class ClientListenerGUI extends UnicastRemoteObject implements IClientLis
     }
 
     @Override
-    public void notifyTilesOk(boolean ok, ArrayList<Position> tiles) throws RemoteException {
-        if(ok){
+    public void notifyTilesOk(int ok, ArrayList<Position> tiles) throws RemoteException {
+        if(ok==0){
             view.nextAction(2, tiles);
             view.turnPhase();
-            view.displayNotification("Choice of tiles successful!");
         }
-        else {
-            view.printError("Invalid move. Try again.");
+        else{
+            if(ok==1){
+                view.printError("Invalid move: all tiles need to be adjacent! Try again.");
+            }
+            else if(ok == 2){
+                view.printError("Invalid move: all tiles need to be in the same row or column! Try again.");
+            }
+            else if(ok == 3){
+                view.printError("Invalid move: all tiles need to have at least one side free! Try again.");
+            }
+            else view.printError("Invalid move: not enough space in your Shelfie! Try again.");
         }
     }
 
@@ -147,21 +161,19 @@ public class ClientListenerGUI extends UnicastRemoteObject implements IClientLis
     }
 
     @Override
-    public void notifyOnCGC(String nickname, int id) throws RemoteException {
-        view.displayNotification(nickname + " gained Common Goal Card " + id + "!");
+    public void notifyOnCGC(String nickname, int id, int points) throws RemoteException {
+        if(nickname.equals(view.getName())){
+            GUIApplication.setMyScoreCGC(id, points);
+            view.displayNotification("You gained " + points + " points from Common Goal Card " + id + "!");
+        }
+        else{
+            view.displayNotification(nickname + " gained " + points + " points from Common Goal Card " + id + "!");
+        }
+
     }
 
     @Override
     public void notifyAboutDisconnection(String disconnectedUser) throws RemoteException {
         view.displayNotification(disconnectedUser + " disconnected. The game is now over.");
-    }
-
-    @Override
-    public void sendPingSyn() throws RemoteException {
-        view.pingSyn();
-    }
-
-    public String getToken() {
-        return token;
     }
 }

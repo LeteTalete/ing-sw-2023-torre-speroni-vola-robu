@@ -7,6 +7,7 @@ import it.polimi.ingsw.model.board.Couple;
 import it.polimi.ingsw.model.board.Position;
 import it.polimi.ingsw.network.ClientListenerGUI;
 import it.polimi.ingsw.network.IClientListener;
+import it.polimi.ingsw.server.StaticStrings;
 import it.polimi.ingsw.structures.GameView;
 import it.polimi.ingsw.structures.LivingRoomView;
 import it.polimi.ingsw.structures.PlayerView;
@@ -22,7 +23,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class ClientGUI implements View {
-    private static Logger fileLog = LogManager.getRootLogger();
+    private static final Logger fileLog = LogManager.getRootLogger();
     private ClientController master;
     private BoardPlayer boardPlayer;
     private GameView gameView;
@@ -265,14 +266,12 @@ public class ClientGUI implements View {
 
     @Override
     public void chooseColumn() {
-        System.out.println("ChoooseColumn!!");
         GUIApplication.behaviorGUI(3);
 
     }
 
     @Override
     public void chooseOrder() {
-        System.out.println("Ordina le Tile!!!!");
 
         GUIApplication.behaviorGUI(2);
 
@@ -307,6 +306,11 @@ public class ClientGUI implements View {
     @Override
     public void passSyn() {
         master.onSyn();
+    }
+
+    @Override
+    public String getName(){
+        return username;
     }
 
 

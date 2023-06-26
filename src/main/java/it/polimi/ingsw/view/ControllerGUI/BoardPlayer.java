@@ -86,7 +86,8 @@ public class BoardPlayer extends GenericController {
                 }
             }
         });
-        //setToken();
+        setToken(1);
+        setToken(2);
         //setto la sedia: da aggiungeree!!
         //setWindowShelfPlayers();
     }
@@ -99,21 +100,44 @@ public class BoardPlayer extends GenericController {
         windowShelfPlayers.setTitle("Shelf Other Players");
     }
 
-    public void setToken(){
-        int score1 =  GUIApplication.clientGUI.getGameView().getCGC1Points();
-        int score2 = GUIApplication.clientGUI.getGameView().getCGC2Points();
-        token1.setImage(new Image( Objects.requireNonNull( getClass().getResourceAsStream("/imgs/ScoreTiles/scoring_" + score1 + ".jpg") ) ) );
-        token2.setImage(new Image( Objects.requireNonNull( getClass().getResourceAsStream("/imgs/ScoreTiles/scoring_" + score2 + ".jpg") ) ) );
+    public void setToken(int id){
+        if(id == 1){
+            int score1 =  GUIApplication.clientGUI.getGameView().getCGC1Points();
+            token1.setImage(new Image( Objects.requireNonNull( getClass().getResourceAsStream("/imgs/ScoreTiles/scoring_" + score1 + ".jpg") ) ) );
+        }
+        else if(id == 2){
+            int score2 = GUIApplication.clientGUI.getGameView().getCGC2Points();
+            token2.setImage(new Image( Objects.requireNonNull( getClass().getResourceAsStream("/imgs/ScoreTiles/scoring_" + score2 + ".jpg") ) ) );
+        }
     }
 
-    public void updateScore(){
+    private void setScoreCGC(HBox boxScore, int token){
+        Image score;
+        if(token == 1){
+            score = new Image( Objects.requireNonNull( getClass().getResourceAsStream("/imgs/ScoreTiles/endgame.jpg")));
+        } else {
+            score = new Image( Objects.requireNonNull( getClass().getResourceAsStream("/imgs/ScoreTiles/scoring_" + token + ".jpg")));
+        }
+        for(Node node : boxScore.getChildren()){
+            if( ((ImageView) node).getImage() == null ){
+                ( (ImageView) node).setImage(score);
+                //( (ImageView) node).setEffect( );
+                break;
+            }
+        }
+    }
 
+    public void updateScore(int id, int token, boolean myScore){
+        if(myScore){
+            setScoreCGC(scorePlayer, token);
+            setToken(id);
+        } else {
+            // ancora da fare
+        }
     }
 
     public void updateBoard(LivingRoomView livingRoomView){
         //aggiorno i token, aggiorno la tabella dei miei punteggi:
-        setToken();
-        updateScore();
         livingRoom.getChildren().clear();
         tileChoosenP.clear();
         tileChoosenI.clear();
