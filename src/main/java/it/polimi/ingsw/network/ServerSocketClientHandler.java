@@ -188,6 +188,11 @@ public class ServerSocketClientHandler implements Runnable, IClientListener {
         respond(new GameEnd());
     }
 
+    @Override
+    public void showWaitingRoomNotification(String message) throws RemoteException {
+        respond(new WaitingRoomResponse(message));
+    }
+
     /**method notifyOnCGC generates a notification about the gain of a common goal card.
      * @param nickname - username of the player who won the card.
      * @param id - id of the common goal card.*/

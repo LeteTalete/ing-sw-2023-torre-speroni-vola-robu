@@ -109,7 +109,6 @@ public class ConnectionManager implements Serializable {
 
     public void setAck(String token, boolean received) {
         if(ackMap.containsKey(token)){
-            fileLog.info("Setting ackmap for client: "+tokenNames.get(token));
             ackMap.replace(token,received);
         }
         else{

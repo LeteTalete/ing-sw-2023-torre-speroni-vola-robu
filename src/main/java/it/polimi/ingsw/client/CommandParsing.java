@@ -108,11 +108,6 @@ public class CommandParsing {
             master.userLogin();
             return false;
         }
-        /*else if(command.contains(" ")) {
-            master.errorFormat();
-            master.userLogin();
-            return false;
-        }*/
         return true;
     }
 

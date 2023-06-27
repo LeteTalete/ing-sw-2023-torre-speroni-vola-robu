@@ -191,6 +191,11 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
         view.showEndResult();
     }
 
+    @Override
+    public void showWaitingRoomNotification(String message) throws RemoteException {
+        view.displayNotification(message);
+    }
+
 
     /**method notifyOnCGC notifies about the gain of a common goal card.
      * @param nickname - username of the player who won the card.

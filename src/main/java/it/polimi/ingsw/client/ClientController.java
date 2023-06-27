@@ -19,7 +19,6 @@ import java.util.List;
 public class ClientController {
     /**logger to keep track of events, such as errors and info about parameters*/
     private static final Logger fileLog = LogManager.getRootLogger();
-    private static String HOSTNAME = "ingsw.server.hostname";
     /**currentView parameter used by ClientController to call methods of the View (GUI or TUI)*/
     private final View currentView;
     /**boolean signalling whether a game is active or not*/

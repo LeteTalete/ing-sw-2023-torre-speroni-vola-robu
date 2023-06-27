@@ -37,7 +37,7 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
     @Override
     public void setPlayersWaitingRoom(String token, int num) throws RemoteException {
         waitingRoom.setMaxPLayers(num);
-        ConnectionManager.get().viewListenerMap.get(token).showTextNotification("Waiting room created! Waiting for other players to join...");
+        ConnectionManager.get().viewListenerMap.get(token).showWaitingRoomNotification("Waiting room created! Waiting for other players to join...");
     }
 
     /**putInWaitingRoom method is used to place the players inside the waiting room.
@@ -164,7 +164,7 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
                 activeUsers.remove(token);
                 ConnectionManager.get().inactiveUsers.add(token);
                 try {
-                    ConnectionManager.get().viewListenerMap.get(token).showTextNotification("There is no game active for you. Please disconnect and try again later");
+                    ConnectionManager.get().viewListenerMap.get(token).showWaitingRoomNotification("There is no game active for you. Please disconnect and try again later");
                 } catch (RemoteException e) {
                     throw new RuntimeException(e);
                 }
