@@ -52,4 +52,8 @@ public interface View {
     void hideShelves();
     void passTilesToView(ArrayList<Position> tiles);
     void passSyn();
+
+    void askPort();
+
+    String getPort();
 }

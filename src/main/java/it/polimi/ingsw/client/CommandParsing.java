@@ -11,7 +11,10 @@ import java.util.List;
 /**CommandParsing class is used to parse the user's input*/
 
 public class CommandParsing {
+    /**fileLog is the logger used to keep track of events*/
     private static final Logger fileLog = LogManager.getRootLogger();
+
+    /**list of commands recognized by the game*/
     private static final String QUIT = "quit";
     private static final String TILES = "tiles";
     private static final String HIDESHELF = "hideshelves";
@@ -24,16 +27,27 @@ public class CommandParsing {
     private static final String SHOWCHAT = "showchat";
     private static final String HIDECHAT = "hidechat";
     private static final String COLUMN = "column";
+
+    /**boolean isPlaying signalling whether it's the player's turn or not*/
     private boolean isPlaying;
+    /**boolean gameIsOn signalling whether it's a game is active or not*/
     private boolean gameIsOn;
+    /**boolean initializingName used to signal if the client is logging in*/
     private boolean initializingName;
+    /**boolean initializing roon used to signal if the client is creating a waiting room or not*/
     private boolean initializingRoom;
 
+    /**int choiceNumber is used to save and pass to the ClientController an input of a single integer (used to choose
+     * the column of the shelf and to set the number of players expected in a waiting room)*/
     private int choiceNumber;
-    private List<String> multipleChoiceNumber = new ArrayList<>();
+    /**multipleChoice is used to save and pass an input of multiple strings to the ClientController*/
+    private List<String> multipleChoice = new ArrayList<>();
+    /**choice is used to save and pass an input of a single string to the ClientController*/
     private String choice;
+    /**master is used to invoke the method of the ClientController
+     * @see ClientController*/
     private final ClientController master;
-    private boolean first;
+
 
     /**constructor CommandParsing to set the ClientController and set the parameters.
      * @param master - the clientController, used to invoke its methods*/
@@ -58,10 +72,7 @@ public class CommandParsing {
                 initializingName = false;
                 if ( master.isGameOn() ) {
                     initializingRoom = false;
-                } else {
-                    initializingRoom = first;
                 }
-
             } else if ( master.getUsername() == null ) {
                 initializingRoom = false;
                 initializingName = true;
@@ -184,10 +195,6 @@ public class CommandParsing {
                 master.hideCommands();
             }
             case (QUIT) -> {
-                if (!gameIsOn) {
-                    master.gameNotStarted();
-                    break;
-                }
                 master.quit();
             }
             case (SHOWCHAT) -> {
@@ -257,12 +264,12 @@ public class CommandParsing {
      * positions to the clientController*/
     private void executeRearrangeCommand()
     {
-        if(!checkOrderFormat(multipleChoiceNumber))
+        if(!checkOrderFormat(multipleChoice))
         {
             master.errorFormat();
             return;
         }
-        master.rearrangeTiles(multipleChoiceNumber);
+        master.rearrangeTiles(multipleChoice);
     }
 
     /**method checkOrderFormat checks whether the format is correct. If so, it returns true*/
@@ -286,8 +293,8 @@ public class CommandParsing {
      * to the clientController*/
     private void executeTileCommand()
     {
-        if(multipleChoiceNumber.size() == 0) return;
-        for(String s : multipleChoiceNumber)
+        if(multipleChoice.size() == 0) return;
+        for(String s : multipleChoice)
         {
             if(!checkTilesFormat(s))
             {
@@ -295,7 +302,7 @@ public class CommandParsing {
                 return;
             }
         }
-        master.chooseTiles(multipleChoiceNumber);
+        master.chooseTiles(multipleChoice);
     }
 
     /**method parseInteger parses the string into integer and saves it into the choiceNumber parameter*/
@@ -316,7 +323,7 @@ public class CommandParsing {
             return;
         }
         try{
-            multipleChoiceNumber = args;
+            multipleChoice = args;
         }catch(NumberFormatException e) {
             fileLog.error(e.getMessage());
         }
@@ -351,11 +358,11 @@ public class CommandParsing {
         if(p.getX()<0 || p.getY()<0) return false;
 
         //at least 1 couple of coordinates, maximum 3
-        return multipleChoiceNumber.size() >= 1 && multipleChoiceNumber.size() <= 3;
+        return multipleChoice.size() >= 1 && multipleChoice.size() <= 3;
     }
 
     public void setFirst(boolean b) {
-        this.first = b;
+        this.initializingRoom = b;
     }
 }
 

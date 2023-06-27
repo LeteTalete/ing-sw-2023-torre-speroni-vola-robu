@@ -41,6 +41,7 @@ public class ClientTUI implements View{
     private boolean showOtherShelves;
     private boolean newChatMessage;
     private ArrayList<Position> tiles;
+    private String port;
 
     //constructor
     public ClientTUI() {
@@ -445,6 +446,7 @@ public class ClientTUI implements View{
 
     public void setGameOn(boolean gameOn) {
         master.setGameOn(gameOn);
+        commandParsing.setGameIsOn(gameOn);
     }
 
     @Override
@@ -514,6 +516,17 @@ public class ClientTUI implements View{
     @Override
     public void passSyn() {
         master.onSyn();
+    }
+
+    @Override
+    public void askPort() {
+        writeText("Insert server port: ['xxxx']");
+        port = frominput.nextLine();
+    }
+
+    @Override
+    public String getPort() {
+        return port;
     }
 
     public String getServerIP() {

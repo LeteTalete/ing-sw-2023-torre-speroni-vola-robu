@@ -4,19 +4,19 @@ import it.polimi.ingsw.Updates.ModelUpdate;
 import it.polimi.ingsw.model.board.Position;
 import it.polimi.ingsw.server.StaticStrings;
 import it.polimi.ingsw.view.ClientTUI;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 
-/**this class is used by the server to communicate with the client via RMI*/
+/**this class is used by the server to communicate with the client via RMI (it's used so that the server can invoke
+ * these methods, which then invoke the client's view methods)*/
 
 public class ClientListenerTUI extends UnicastRemoteObject implements IClientListener {
-    private static Logger fileLog = LogManager.getRootLogger();
     private String connectionType = "RMI";
+    /**view parameter is used to invoke the methods of the TUI*/
     private transient final ClientTUI view;
+    /**token used to identify the client*/
     private String token;
 
     /**ClientListenerTUI constructor.
@@ -144,7 +144,8 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
 
     /**method notifyTilesOk used to notify the player whether the choice of tiles was a success or a failure.
      * @param ok - integer signaling whether the move was successful or not (0 = success, 1 = tiles not adjacent,
-     *           2 = tiles not in the same row/column, 3 = tiles not from the edge, 4 = not enough space in shelf).
+     *           2 = tiles not in the same row/column, 3 = tiles not from the edge, 4 = not enough space in shelf,
+     *           5 = the tiles is not pickable).
      * @param tiles - contains the tiles chosen by the client.*/
     @Override
     public void notifyTilesOk(int ok, ArrayList<Position> tiles) throws RemoteException {
@@ -162,7 +163,10 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
             else if(ok == 3){
                 view.displayNotification("Invalid move: all tiles need to have at least one side free! Try again.");
             }
-            else view.displayNotification("Invalid move: not enough space in your Shelfie! Try again.");
+            else if(ok==4) {
+                view.displayNotification("Invalid move: not enough space in your Shelfie! Try again.");
+            }
+            else view.displayNotification("Invalid move: the tile chosen is not pickable!");
         }
     }
 
@@ -204,6 +208,7 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
     @Override
     public void notifyAboutDisconnection(String disconnectedUser) throws RemoteException {
         view.displayNotification(disconnectedUser + " disconnected. The game is now over.");
+        view.setGameOn(false);
     }
 
 

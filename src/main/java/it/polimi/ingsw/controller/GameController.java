@@ -16,11 +16,14 @@ import java.util.List;
 import java.util.Map;
 
 public class GameController {
+    /**fileLog is a logger to keep track of the events happening during the game*/
     private static Logger fileLog = LogManager.getRootLogger();
     private Game model;
     private String gameId;
+    /**choiceOfTiles contains the tiles chosen by the players*/
     private ArrayList<Position> choiceOfTiles;
     private ServerManager master;
+    //todo explain what this is, i'm not sure
     private Map<Integer,Integer> cardsClaimed;
 
     /**

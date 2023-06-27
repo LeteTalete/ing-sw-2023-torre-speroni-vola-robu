@@ -12,8 +12,6 @@ public interface IRemoteController extends Remote {
     void rearrangeTiles(String token, List<String> tilesOrdered) throws RemoteException;
 
     void selectColumn (String token, int column) throws RemoteException;
-    void createWaitingRoom(String username, String userToken) throws RemoteException;
-
     void sendChat(String username, String toString, String choice) throws RemoteException;
     void generateTokenRMI(IClientListener viewListener, String token) throws RemoteException;
 

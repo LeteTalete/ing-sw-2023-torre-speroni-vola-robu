@@ -15,6 +15,7 @@ import java.util.concurrent.Executors;
  * accepts() method and creates thread to handle multiple accepted connections*/
 
 public class MultiServerSocket {
+    /**fileLog is a logger to keep track of the events happening during the game*/
     private static final Logger fileLog = LogManager.getRootLogger();
     private final ServerSocket serverSocket;
     private final ExecutorService pool;

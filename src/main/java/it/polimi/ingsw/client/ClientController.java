@@ -17,19 +17,33 @@ import java.util.List;
  * the commandParsing and the network.*/
 
 public class ClientController {
+    /**logger to keep track of events, such as errors and info about parameters*/
     private static final Logger fileLog = LogManager.getRootLogger();
     private static String HOSTNAME = "ingsw.server.hostname";
+    /**currentView parameter used by ClientController to call methods of the View (GUI or TUI)*/
     private final View currentView;
+    /**boolean signalling whether a game is active or not*/
     private boolean gameOn;
+    /**int myTurn is used to keep track of the state of the player (0 = not my turn, 1 = choosing tiles,
+     * 3 = choosing column or rearranging tiles)*/
     private int myTurn;
     private String username;
     private final CommandParsing commPars;
+    /**currentConnection attribute to call the method of the connection (RMI or socket)*/
     private IClientConnection currentConnection;
+    /**listenerClient used to assign a listener to the connection
+     * @see IClientListener*/
     private final IClientListener listenerClient;
+    /**responseDecoder used to decode the responses received from the server via socket
+     * @see ResponseDecoder*/
     private ResponseDecoder responseDecoder;
     private Registry registry;
+    /**remoteController is the RMI register to allow the client to call the methods of the server*/
     private IRemoteController remoteController;
+    /**token assigned by the server to the client*/
     private String userToken;
+    /**boolean toClose signalling whether the connection needs to be closed*/
+    //todo do we actually need this?
     private boolean toCLose;
 
     /**constructor ClientController sets a new ClientController and initializes the view, the listener,
@@ -95,11 +109,13 @@ public class ClientController {
         //todo we need to pass the port to the connection too!
         currentView.askServerIP();
         String SIP = currentView.getServerIP();
+        currentView.askPort();
+        int port = Integer.parseInt(currentView.getPort());
         if(currentView.getConnectionType().equals("RMI")) {
-            setupRMI(SIP);
+            setupRMI(SIP, port);
         }
         else if(currentView.getConnectionType().equals("SOCKET")){
-            setupSocket(SIP);
+            setupSocket(SIP, port);
         }
     }
 
@@ -108,9 +124,9 @@ public class ClientController {
      * and it sets the view of the client and the response decoder.
      * @param serverIP - the IP of the server caught from the view.
      * */
-    public void setupSocket(String serverIP) {
+    public void setupSocket(String serverIP, int port) {
         try {
-            ClientSocket clientSocket = new ClientSocket(serverIP, 8899, this);
+            ClientSocket clientSocket = new ClientSocket(serverIP, port, this);//8899
             this.currentConnection = clientSocket;
             this.responseDecoder = new ResponseDecoder(listenerClient, currentConnection);
             clientSocket.setResponseDecoder(responseDecoder);
@@ -132,9 +148,9 @@ public class ClientController {
      * and it sets the view of the client and the response decoder.
      * @param serverIP - the IP of the server caught from the view.
      * */
-    private void setupRMI(String serverIP) {
+    private void setupRMI(String serverIP, int port) {
         try{
-            this.registry = LocateRegistry.getRegistry(serverIP,8089);
+            this.registry = LocateRegistry.getRegistry(serverIP,port); //8089
             this.remoteController = (IRemoteController) registry.lookup("Login");
             ClientRMI clientRMI = new ClientRMI(remoteController);
             this.currentConnection = clientRMI;

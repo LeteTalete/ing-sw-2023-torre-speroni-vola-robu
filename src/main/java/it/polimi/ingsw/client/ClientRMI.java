@@ -15,13 +15,19 @@ import java.util.Timer;
 /**ClientRMI class used to manage the RMI connection to the server.*/
 
 public class ClientRMI implements IClientConnection, Remote, Serializable {
+    /**fileLog is the logger used to keep track of the actions performed by the game*/
     private static final Logger fileLog = LogManager.getRootLogger();
+    /**remoteController is the rmi registry to invoke*/
     private final IRemoteController remoteController;
+    /**viewClient used to invoke the method of the View (GUI or TUI)*/
     private View viewClient;
+    /**token used to identify the client*/
     private String userToken;
+    /**boolean isConnected signalling whether the client is connected to the server or not*/
     private boolean isConnected;
+    /**boolean syn used to signal whether the client received a ping message from the server*/
     private boolean syn;
-    private final int synCheckTime = 1000;
+    private final int synCheckTime = 5000;
     private Timer synCheckTimer;
 
     /**clientRMI constructor.
@@ -191,7 +197,6 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
     public void setConnected(boolean connected) {
         isConnected = connected;
         if(!connected){
-            fileLog.debug("Lost connection to the server. Setting isConnected to false");
             viewClient.displayNotification("You lost connection to the server, please try to reconnect");
         }
     }

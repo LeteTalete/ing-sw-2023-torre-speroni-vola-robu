@@ -11,9 +11,11 @@ import java.rmi.RemoteException;
 /**this class is used to decode and handle the messages incoming from the server (only for Socket purposes)*/
 
 public class ResponseDecoder implements ResponseHandler {
+    /**fileLog used to keep track of the game's activities*/
     private static final Logger fileLog = LogManager.getRootLogger();
-
+    /**clientListener used to invoke the methods of the IClientListener*/
     private final IClientListener clientListener;
+    /**client used to invoke the methods of the connection*/
     private final IClientConnection client;
 
     /**respondeDecoder constructor.

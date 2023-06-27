@@ -7,8 +7,9 @@ import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 
 public class WaitingRoom {
+    /**fileLog is a logger to keep track of the events happening during the game*/
     private static Logger fileLog = LogManager.getRootLogger();
-    private String id;
+    private final String id;
     private ServerManager master;
     private int playersWaiting;
     private int maxPLayers;
@@ -16,7 +17,6 @@ public class WaitingRoom {
     private ArrayList<Player> overflowPlayers;
 
     /**WaitingRoom constructor.
-     * @param identifier - identifies the room.
      * @param serverManager - to invoke the serverManager's methods*/
     public WaitingRoom(int identifier, ServerManager serverManager){
         this.id = String.valueOf(identifier);
@@ -76,6 +76,7 @@ public class WaitingRoom {
         }
     }
 
+    /**disconnectFromWaitingRoom is a method used to disconnect a player while they are in the lobby*/
     public void disconnectFromWaitingRoom(String token) {
         for(Player p : players){
             if(p.getTokenId().equals(token)){

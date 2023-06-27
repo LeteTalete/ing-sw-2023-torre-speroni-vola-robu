@@ -83,7 +83,7 @@ public class LivingRoom implements Serializable {
         for (Position p : choice)
         {
             if(getCouple(p).getState() != State.PICKABLE){
-                errorTilesCode = 3;
+                errorTilesCode = 5;
                 return false;
             }
             if(!atLeastOneSideFree(p)){
