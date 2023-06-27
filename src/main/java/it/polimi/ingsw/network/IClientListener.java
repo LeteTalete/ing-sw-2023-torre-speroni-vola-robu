@@ -19,7 +19,7 @@ public interface IClientListener extends Remote, Serializable {
 
     void setGameOn() throws RemoteException;
 
-    void showTextNotification(String waitingRoomCreated) throws RemoteException;
+    void showTextNotification(String message) throws RemoteException;
 
     void notifyColumnOk(boolean ok) throws RemoteException;
 

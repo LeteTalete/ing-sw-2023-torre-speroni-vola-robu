@@ -46,7 +46,7 @@ public class WaitingRoom {
             fileLog.info("Enough players to start the game!");
             return StaticStrings.GAME_START;
         }
-        return StaticStrings.GAME_WAITING;
+        return null;
     }
 
     public String getId(){
@@ -67,9 +67,9 @@ public class WaitingRoom {
     /**setMaxPlayers method to set the maximum number of players in a match. Since there could be two or more
      * client logging in at the same time, the server will save them in a waiting list and ask only one of them
      * about the number of players for the match.*/
-    public void setMaxPLayers(int maxPLayers) {
-        this.maxPLayers = maxPLayers;
-        if(playersWaiting>=maxPLayers)
+    public void setMaxPLayers(int maxPlayers) {
+        this.maxPLayers = maxPlayers;
+        if(playersWaiting>=maxPlayers)
         {
             fileLog.info("Enough players to start the game!");
             master.createGame(id);
