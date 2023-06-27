@@ -99,6 +99,9 @@ public class LivingRoomTest {
     }
 
 
+    /**
+     * Method checkPlayerChoiceTest tests if the positions of tiles chosen by the player are valid
+     */
     @Test
     public void checkPlayerChoiceTest()
     {
@@ -137,11 +140,15 @@ public class LivingRoomTest {
 
     }
 
+
+    /**
+     * Method atLeastOneSideFreeTest tests if a position in the game board containing a tile has at least one
+     * adjacent position which does not contain a tile
+     */
     @Test
     public void atLeastOneSideFreeTest()
     {
         LivingRoom l = new LivingRoom(4);
-        //l.refill(new Deck());
 
         l.setCouple(new Position(5,5),null,State.EMPTY);
 
@@ -153,6 +160,11 @@ public class LivingRoomTest {
         assertTrue(l.atLeastOneSideFree(new Position(5,6)));
     }
 
+
+    /**
+     * Method checkForRefillTest tests if the game board needs to be refilled, it happens when there are not
+     * at least two adjacent positions containing a tile
+     */
     @Test
     public void checkForRefillTest()
     {
