@@ -103,16 +103,16 @@ public class CommandParsing {
     /**checkUsernameFormat method checks whether the username is valid or not (meaning it's a single word made of
     * less than 20 characters*/
     private boolean checkUsernameFormat(String command) {
-        if(command.length() > 20) {
+        if(command.length() > 20 || command.isBlank()) {
             master.errorFormat();
             master.userLogin();
             return false;
         }
-        else if(command.contains(" ")) {
+        /*else if(command.contains(" ")) {
             master.errorFormat();
             master.userLogin();
             return false;
-        }
+        }*/
         return true;
     }
 

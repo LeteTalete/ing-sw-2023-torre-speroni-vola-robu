@@ -106,7 +106,6 @@ public class ClientController {
      * To initialize the connection, it asks the server IP and then it calls the method setupRMI or setupSocket.
      * */
     public void setupConnection() {
-        //todo we need to pass the port to the connection too!
         currentView.askServerIP();
         String SIP = currentView.getServerIP();
         currentView.askPort();
@@ -167,6 +166,7 @@ public class ClientController {
         }
         catch(Exception e){
             fileLog.error(e);
+            setupConnection();
         }
     }
 
