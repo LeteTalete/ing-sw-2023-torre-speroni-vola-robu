@@ -283,6 +283,21 @@ public class ClientController {
         currentView.printError("Wrong format, please try again or type 'help' for a list of commands");
     }
 
+    public void errorNoSelection(String s) {
+        if (s.equals("selection")) {
+            currentView.printError("Please select one to three tiles");
+        }
+        if (s.equals("order")) {
+            currentView.printError("Please select the tiles to rearrange");
+        }
+        if (s.equals("column")){
+            currentView.printError("Please select one to three tiles first");
+        }
+        if (s.equals("choose")){
+            currentView.printError("Please select the column");
+        }
+    }
+
     public void wrongNumber() {
         currentView.displayNotification("Number of players not valid; please try again.");
     }

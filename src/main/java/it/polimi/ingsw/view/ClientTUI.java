@@ -41,9 +41,11 @@ public class ClientTUI implements View{
     private boolean showOtherShelves;
     private boolean newChatMessage;
     private ArrayList<Position> tiles;
+    private Scanner frominput;
     private String port;
 
-    //constructor
+
+    //TODO: lete please i'm lost
     public ClientTUI() {
         setupStdInput();
         try {
@@ -54,18 +56,25 @@ public class ClientTUI implements View{
         GameTitle();
     }
 
-    //this one is to read from keyboard input
-    private Scanner frominput;
-
-    //this one is for writing
-    public synchronized void writeText(String text) {
-        System.out.println(">> " + text);
-    }
-
+    //TODO: lete please i'm lost
     private void setupStdInput() {
         this.frominput = new Scanner(System.in);
     }
 
+    /**
+     * Method writeText is used to print a text on the console.
+     * @param text - text to be printed.
+     */
+    public synchronized void writeText(String text) {
+        System.out.println(">> " + text);
+    }
+
+    /**
+     * Method displayUpdatedModel sets the updated game view with the new model and calls the method refreshBoard to
+     * print the updated game view. Only on the first time the method is called it will set the elements PGC and CGC
+     * inside class DrawTui for future use.
+     * @param modelUpdate - updated model.
+     */
     @Override
     public void displayUpdatedModel(ModelUpdate modelUpdate) {
         this.gameView = new GameView(modelUpdate);
@@ -79,6 +88,9 @@ public class ClientTUI implements View{
         refreshBoard();
     }
 
+    /**
+     * Method refreshBoard
+     */
     public void refreshBoard(){
 
         clearConsole();
@@ -145,7 +157,10 @@ public class ClientTUI implements View{
         }
     }
 
-
+    /**
+     * Method clearConsole is used to clear the console, it works by checking the current operating system and then
+     * executing the specific command to clear the console.
+     */
     public static void clearConsole() {
         try {
             String operatingSystem = System.getProperty("os.name"); //Check the current operating system
@@ -184,16 +199,12 @@ public class ClientTUI implements View{
 
     }
 
+    /**
+     * Method nextCommand is used to read the user input.
+     * @return - the command typed by the user.
+     */
     private String nextCommand() {
         command = frominput.nextLine();
-        if (master.isConnected() /*and if the game is on but i'm not sure about this bit*/) {
-            //master.wake();
-        }
-        /*if (!master.isGameOn()) {
-            printError("The game is not started yet");
-            command = ERROR_COMMAND;
-        }*/
-
         return command;
     }
 
