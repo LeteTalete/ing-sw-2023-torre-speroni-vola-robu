@@ -20,6 +20,8 @@ import org.apache.logging.log4j.Logger;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 
 public class ClientGUI implements View {
@@ -60,7 +62,8 @@ public class ClientGUI implements View {
             //GUIApplication.behaviorGUI(0);
             //GUIApplication.getBoardPlayer().setBoadPlayer(gameView);
         }
-        GUIApplication.behaviorGUI(0);
+        GUIApplication.updateLivingRoom(); // behaviorGUI(0);
+        GUIApplication.updateShelfPlayer(gameView.getPlayersView());
         turnPhase();
         //GUIApplication.getBoardPlayer().setLivingRoom(gameView.getGameBoardView());
     }
@@ -183,6 +186,7 @@ public class ClientGUI implements View {
     @Override
     public void startRun() {
 
+
     }
 
     @Override
@@ -200,9 +204,7 @@ public class ClientGUI implements View {
 
     @Override
     public void askForTiles() {
-        //Dice al giocatore che ora può scegliere le tiles dalla LivingRoom
-        //GUIApplication.showWhoseIsTurn("Choose the tiles");
-        System.out.println("FUNZIONA");
+
     }
 
     @Override
@@ -236,6 +238,10 @@ public class ClientGUI implements View {
         
     }
 
+    public void setServerIP(String ip){
+        ServerIP = ip;
+    }
+
     @Override
     public String getServerIP() {
         return ServerIP;
@@ -266,15 +272,13 @@ public class ClientGUI implements View {
 
     @Override
     public void chooseColumn() {
-        GUIApplication.behaviorGUI(3);
+        GUIApplication.updateShelf(gameView);// behaviorGUI(3);
 
     }
 
     @Override
     public void chooseOrder() {
-
-        GUIApplication.behaviorGUI(2);
-
+        GUIApplication.setOrderTile(); // behaviorGUI(2);
     }
 
     @Override
@@ -284,7 +288,7 @@ public class ClientGUI implements View {
 
     @Override
     public void showEndResult() {
-        //todo
+        GUIApplication.showSceneName(SceneNames.ENDGAME);
     }
 
 

@@ -103,7 +103,6 @@ public class ClientListenerGUI extends UnicastRemoteObject implements IClientLis
     @Override
     public void notifyChatMessage(String sender, String message, String receiver) throws RemoteException {
         GUIApplication.setMessageEntry(sender, message, receiver);
-        //view.displayChatNotification("@"+sender + " to " + receiver +": " + message);
     }
 
     @Override
@@ -119,7 +118,7 @@ public class ClientListenerGUI extends UnicastRemoteObject implements IClientLis
             view.displayNotification("Rearrange successful!");
         }
         else{
-            view.displayNotification("Invalid move. Try again.");
+            view.printError("Invalid move. Try again.");
         }
     }
 

@@ -120,7 +120,7 @@ public class ClientController {
             clientSocket.startClient();
 
         }catch(NullPointerException n){
-            currentView.displayNotification("Server not found. Please try again.");
+            currentView.printError("Server not found. Please try again.");
             setupConnection();
         }
         catch (Exception e) {
@@ -146,7 +146,7 @@ public class ClientController {
             clientRMI.setSynCheckTimer(true);
 
         }catch(UnknownHostException b){
-            currentView.displayNotification("Unknown Host. Please try again.");
+            currentView.printError("Unknown Host. Please try again.");
             setupConnection();
         }
         catch(Exception e){
@@ -250,7 +250,7 @@ public class ClientController {
     }
 
     public void invalidNotMyTurn() {
-        currentView.displayNotification("It's not your turn, yet!");
+        currentView.printError("It's not your turn, yet!");
     }
 
     public void errorFormat() {
@@ -258,7 +258,7 @@ public class ClientController {
     }
 
     public void wrongNumber() {
-        currentView.displayNotification("Number of players not valid; please try again.");
+        currentView.printError("Number of players not valid; please try again.");
     }
 
     public void gameNotStarted() {

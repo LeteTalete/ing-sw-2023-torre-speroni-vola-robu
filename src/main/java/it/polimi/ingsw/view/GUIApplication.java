@@ -1,16 +1,16 @@
 package it.polimi.ingsw.view;
 
+import com.sun.javafx.scene.shape.ArcHelper;
 import com.sun.javafx.scene.text.GlyphList;
 import it.polimi.ingsw.client.ClientController;
+import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.board.Position;
+import it.polimi.ingsw.model.board.Shelf;
 import it.polimi.ingsw.structures.GameView;
 import it.polimi.ingsw.structures.LivingRoomView;
 import it.polimi.ingsw.structures.PlayerView;
 import it.polimi.ingsw.structures.ShelfView;
-import it.polimi.ingsw.view.ControllerGUI.BoardPlayer;
-import it.polimi.ingsw.view.ControllerGUI.ConnectionPlayer;
-import it.polimi.ingsw.view.ControllerGUI.ErrorMessage;
-import it.polimi.ingsw.view.ControllerGUI.GenericController;
+import it.polimi.ingsw.view.ControllerGUI.*;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Parent;
@@ -22,6 +22,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.image.Image;
 
 import java.io.IOException;
+import java.io.PushbackInputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -30,7 +31,6 @@ public class GUIApplication extends Application {
     //private static GenericController genericController;
     public static ClientGUI clientGUI;
     private static GenericController genericController;
-    private static FXMLLoader loaderController;
     private static Stage stageWindow;
     private static Scene sceneWindow;
 
@@ -44,15 +44,9 @@ public class GUIApplication extends Application {
         stageWindow.setOnCloseRequest(event -> System.exit(0));
     }
 
-    public static Stage setUpStage(SceneNames sceneNames){
-        Stage newStage = new Stage();
-        newStage.setScene( setUpScene(sceneNames) );
-        return newStage;
-    }
-
     private static Scene setUpScene(SceneNames sceneNames){
         try {
-            loaderController = new FXMLLoader(GUIApplication.class.getResource(sceneNames.scaneString()));
+            FXMLLoader loaderController = new FXMLLoader(GUIApplication.class.getResource(sceneNames.scaneString()));
             Parent root = loaderController.load();
             Scene newScene = new Scene(root);
             genericController = loaderController.getController();
@@ -62,16 +56,12 @@ public class GUIApplication extends Application {
         }
         return null;
     }
-    /*
-    public static void updateLivingRoom(LivingRoomView livingRoomView){
-        boardPlayer.setLivingRoom(livingRoomView);
-    }
 
-     */
-
-    public static BoardPlayer getBoardPlayer(){
-        System.out.println("Entrato Board!!");
+    private static BoardPlayer getBoardPlayer(){
         return (BoardPlayer) genericController;
+    }
+    private static EndGame getEndGame(){
+        return (EndGame) genericController;
     }
 
     public static void showSceneName(SceneNames sceneNames){
@@ -100,15 +90,15 @@ public class GUIApplication extends Application {
                 stageWindow.setTitle("MyShelfie");
                 getBoardPlayer().setBoadPlayer(clientGUI.getGameView());
             } else if(sceneNames.equals(SceneNames.ENDGAME)){
+                stageWindow.setHeight(535);
+                stageWindow.setWidth(610);
                 stageWindow.setTitle("Score End Game");
+                getEndGame().setEndGame();
             }
             stageWindow.setScene(sceneWindow);
             stageWindow.show();
             stageWindow.centerOnScreen();
         });
-    }
-    public static Scene getSceneWindow(){
-        return sceneWindow;
     }
 
     public static Stage getStageWindow(){
@@ -116,25 +106,8 @@ public class GUIApplication extends Application {
     }
 
 
-    public static void closeStage(){
-        if(stageWindow != null){
-            stageWindow.close();
-        }
-    }
-
+    /*
     public static void behaviorGUI(int command){
-        //Settare il turno,
-        //DIre al giocatore che deve ora scegliere le tile dalla LivingRoom
-        //Dire al giocatore che deve scegliere l'ordine delle tile e la colonna in cui metterle
-        /* 0 non è il turno, 1 devo scegliere le tile, 2 devo scegliere l'ordine delle tile e la colonna, 3 ricevere un messaggio
-
-        0 -> setta la livingRoom
-        1 -> setta la shelf
-        2 -> setta i punteggi
-        3 -> setta la shelf degli altri giocatori?
-        4 -> mostra il messaggio che mi arriva da un giocatore
-
-         */
         Platform.runLater(()-> {
             if(command == 0){
                 //Aggiorna la LivingRoom
@@ -156,6 +129,38 @@ public class GUIApplication extends Application {
                 getBoardPlayer().updateShelfClient(shelfView);
             }
         });
+    }
+    */
+
+    public static void updateLivingRoom(){
+        Platform.runLater( () -> getBoardPlayer().updateBoard(clientGUI.getGameView().getGameBoardView()));
+    }
+
+    public static void updateShelf(GameView gameView){
+        Platform.runLater( () -> {
+            PlayerView mine = gameView.getPlayersView().stream().filter(
+                    (p) -> p.getNickname().equals(clientGUI.getMaster().getUsername())
+            ).findFirst().orElse(null);
+            ShelfView shelfView = mine.getShelf();
+            getBoardPlayer().updateShelfClient(shelfView);
+        });
+    }
+
+    public static void setOrderTile(){
+        Platform.runLater( () -> getBoardPlayer().setTileOrderPosition() );
+    }
+
+
+    public static void updateShelfPlayer(ArrayList<PlayerView> players ){
+        Platform.runLater(() -> {
+            ArrayList<ShelfView> shelfPlayers = new ArrayList<>();
+            players.forEach( p -> {
+                if(!GUIApplication.clientGUI.getName().equals(p.getNickname())){
+                    shelfPlayers.add(p.getShelf());
+                }
+            });
+            getBoardPlayer().updateShelfOthers(shelfPlayers);
+        });
 
     }
 
@@ -164,23 +169,16 @@ public class GUIApplication extends Application {
     }
 
     public static void messaggeForPlayer(String message){
-        Platform.runLater(()-> {
-            getBoardPlayer().setLabelTurn(message);
-        });
+        Platform.runLater(()-> getBoardPlayer().setLabelTurn(message));
     }
 
     public static void setMyScoreCGC(int id, int token){
         Platform.runLater( () -> getBoardPlayer().updateScore(id, token, true) );
     }
 
-    public static void setPlayerScoreCGC(String player, int id, int token, boolean scoreClient){
-        Platform.runLater( () -> getBoardPlayer().updateScore(id, token, true) );
-
-    }
-
 
     public static void error(String message){
-        ErrorMessage.errorMessage(stageWindow, message);
+        Platform.runLater( () -> ErrorMessage.errorMessage(stageWindow, message));
     }
 
     public static void main(String args[]){

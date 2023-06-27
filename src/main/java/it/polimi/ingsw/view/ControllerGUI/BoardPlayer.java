@@ -11,12 +11,16 @@ import it.polimi.ingsw.structures.PlayerView;
 import it.polimi.ingsw.structures.ShelfView;
 import it.polimi.ingsw.view.GUIApplication;
 import it.polimi.ingsw.view.SceneNames;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.InnerShadow;
 import javafx.scene.image.Image;
@@ -26,6 +30,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -38,7 +43,7 @@ public class BoardPlayer extends GenericController {
     @FXML private Label labelTurn;
     @FXML private ImageView chair, tileEndGame, imageCommonCard1, imageCommonCard2, imagePersonalGoalCard, token1, token2, tile1, tile2, tile3;
     @FXML private ChoiceBox choiceChat;
-    @FXML private GridPane myShelf, livingRoom;
+    @FXML private GridPane myShelf, livingRoom, shelfPlayer1;
     private Color colorTileTaken = new Color(0.9548, 1.0, 0.21, 1.0);//Yellow
     private double xOffset = 0, yOffset = 0;
     private ArrayList<String> tileChoosenP = new ArrayList<>();
@@ -46,7 +51,7 @@ public class BoardPlayer extends GenericController {
     private ArrayList<Image> tileChoosenI = new ArrayList<>();
     private String[] colorChat = {"#f0fff0", "#ffc07e", "#93c47d", "#ffd049"}; //Ciano, arancione, verde, giallo
     private boolean columnActive = false;
-    private Stage windowShelfPlayers;
+    //private Stage windowShelfPlayers = new Stage();
 
 
     //Voglio caricare la board quando mi mostra la finestra in cui mi dice che sta caricando, in questo modo quando apro la finestra della partita è già tutto caricato
@@ -89,16 +94,44 @@ public class BoardPlayer extends GenericController {
         setToken(1);
         setToken(2);
         //setto la sedia: da aggiungeree!!
-        //setWindowShelfPlayers();
+        if(GUIApplication.clientGUI.getName().equals(gameView.getPlayersView().get(0).getNickname()) ) chair.setVisible(true);
     }
 
-    private void setWindowShelfPlayers(){
-        windowShelfPlayers = GUIApplication.setUpStage(SceneNames.SHELFPLAYERS);
+    public void updateShelfOthers(ArrayList<ShelfView> shelfViews){
+        setShelf(shelfPlayer1, shelfViews.get(0));
+    }
+
+    /*
+    private void setWindowShelfPlayers(int numPlayers){
+            VBox newPlayer = new VBox();
+            newPlayer.getChildren().addAll(player1.getChildren());
+            players.getItems().add(newPlayer);
         //windowShelfPlayers.setHeight(550);
         //windowShelfPlayers.setWidth(1509);
-        windowShelfPlayers.centerOnScreen();
-        windowShelfPlayers.setTitle("Shelf Other Players");
+        //windowShelfPlayers = GUIApplication.setUpStage(SceneNames.SHELFPLAYERS);
+        setWindow(SceneNames.SHELFPLAYERS);
+        //((VBox) playersShelf.getItems().get(0)).getChildren().
+
     }
+
+
+    private void setWindow(SceneNames sceneNames){
+        try {
+            if (sceneNames.equals(SceneNames.SHELFPLAYERS)) {
+                Image icon = new Image(Objects.requireNonNull(GUIApplication.class.getResourceAsStream("/imgs/Icon.png")));
+                FXMLLoader loaderController = new FXMLLoader(GUIApplication.class.getResource(sceneNames.scaneString()));
+                Parent root = loaderController.load();
+                Scene newScene = new Scene(root);
+                windowShelfPlayers.getIcons().add(icon);
+                windowShelfPlayers.setScene(newScene);
+                windowShelfPlayers.setTitle("Shelf Other Players");
+                windowShelfPlayers.centerOnScreen();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+     */
 
     public void setToken(int id){
         if(id == 1){
@@ -218,9 +251,7 @@ public class BoardPlayer extends GenericController {
     }
 
     public void clickedPlayers(ActionEvent actionEvent){
-        if(!windowShelfPlayers.isShowing()){
-            windowShelfPlayers.show();
-        }
+
     }
 
     public void clickedButtonOK(MouseEvent mouseEvent){

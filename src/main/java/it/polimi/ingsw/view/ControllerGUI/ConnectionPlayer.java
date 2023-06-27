@@ -16,6 +16,7 @@ public class ConnectionPlayer extends GenericController {
     @FXML private TextField textUsername;
     private String typeConnection;
 
+
     //Quando passo sopra ai bottoni essi diventano un pò più grandi e quando ci esco ritornano alla dimensione originale
     public void enteredButton(MouseEvent mouseEvent){
         ImageView imageView = (ImageView) ((StackPane) mouseEvent.getSource()).getChildren().get(0);
@@ -33,7 +34,10 @@ public class ConnectionPlayer extends GenericController {
 
     //Si attiva quando premo sui bottone ok della finestra di connessione
     public void clickedButtonConnetion(MouseEvent mouseEvent){
+        //TODO Nel caso ci fossero dei problemi a lato server il codice si fotte!!(Finisce in un ciclo di errori senza uscita)
         GUIApplication.clientGUI.setConnectionType(this.typeConnection);
+        String ip = ((TextField) IP.getChildren().get(1)).getText();
+        GUIApplication.clientGUI.setServerIP(ip);
         GUIApplication.clientGUI.getMaster().setupConnection();
     }
 
@@ -54,7 +58,6 @@ public class ConnectionPlayer extends GenericController {
         port.setVisible(true);
         this.typeConnection = "SOCKET";
         GUIApplication.getStageWindow().setHeight(400);
-        //GUIApplication.getStageWindow().setHeight(GUIApplication.getSceneWindow().getHeight());
     }
     
     public void activeWindowRMI(MouseEvent mouseEvent){

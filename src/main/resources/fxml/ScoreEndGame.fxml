@@ -33,7 +33,7 @@
             <DropShadow height="46.73" radius="25.205" width="56.09" />
          </effect>
       </Label>
-      <VBox layoutX="73.0" layoutY="184.0" prefHeight="280.0" prefWidth="454.0" style="-fx-background-color: #FFFFFF; -fx-opacity: 0.9;">
+      <VBox fx:id="score" layoutX="73.0" layoutY="184.0" prefHeight="280.0" prefWidth="454.0" style="-fx-background-color: #FFFFFF; -fx-opacity: 0.9;">
          <children>
             <HBox prefHeight="51.0" prefWidth="454.0">
                <children>
@@ -55,6 +55,44 @@
                      <padding>
                         <Insets left="20.0" />
                      </padding>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox prefHeight="51.0" prefWidth="454.0">
+               <children>
+                  <Label alignment="CENTER" prefHeight="51.0" prefWidth="70.0">
+                     <font>
+                        <Font name="System Bold" size="33.0" />
+                     </font>
+                  </Label>
+                  <Label prefHeight="51.0" prefWidth="223.0">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                  </Label>
+                  <Label prefHeight="51.0" prefWidth="200.0">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox prefHeight="51.0" prefWidth="454.0">
+               <children>
+                  <Label alignment="CENTER" prefHeight="51.0" prefWidth="70.0">
+                     <font>
+                        <Font name="System Bold" size="33.0" />
+                     </font>
+                  </Label>
+                  <Label prefHeight="51.0" prefWidth="223.0">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                  </Label>
+                  <Label prefHeight="51.0" prefWidth="200.0">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
                   </Label>
                </children>
             </HBox>

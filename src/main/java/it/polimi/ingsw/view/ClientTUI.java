@@ -121,6 +121,7 @@ public class ClientTUI implements View{
         System.out.println("----------------------------------------");
         turnPhase();
         System.out.println("----------------------------------------");
+        System.out.print("#>: ");
     }
 
     @Override
