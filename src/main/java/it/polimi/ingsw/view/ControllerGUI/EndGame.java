@@ -32,10 +32,10 @@ public class EndGame extends GenericController {
             labelStateGame.setText("LOSER");
         }
         for(int i = 0; i < playersSorted.size(); i++ ){
-            VBox scorePlayers = (VBox) score.getChildren().get(i+1);
+            HBox scorePlayers = (HBox) score.getChildren().get(i+1);
             ((Label) scorePlayers.getChildren().get(0)).setText(Integer.toString(i+1));
             ((Label) scorePlayers.getChildren().get(1)).setText(playersSorted.get(i).getNickname());
-            ((Label) scorePlayers.getChildren().get(1)).setText(Integer.toString(playersSorted.get(i).getScore()));
+            ((Label) scorePlayers.getChildren().get(2)).setText(Integer.toString(playersSorted.get(i).getScore()));
         }
     }
 

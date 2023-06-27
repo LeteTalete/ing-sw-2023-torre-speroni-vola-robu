@@ -35,6 +35,7 @@ public class ClientGUI implements View {
     private String connectionType;
     private boolean isRunning;
     private String ServerIP;
+    private String port;
     private LinkedList<String> chatQueue = new LinkedList<>();
     private String username;
     private boolean isStarGame = false;
@@ -239,10 +240,6 @@ public class ClientGUI implements View {
 
     }
 
-    public void setServerIP(String ip){
-        ServerIP = ip;
-    }
-
     @Override
     public String getServerIP() {
         return ServerIP;
@@ -325,11 +322,14 @@ public class ClientGUI implements View {
 
     @Override
     public String getPort() {
-        return null;
+        return port;
     }
-
 
     public void setServerIP(String accessibleText) {
         this.ServerIP = accessibleText;
+    }
+
+    public void setPort(String port){
+        this.port = port;
     }
 }

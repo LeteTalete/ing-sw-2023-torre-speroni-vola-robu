@@ -12,9 +12,11 @@ import it.polimi.ingsw.view.GUIApplication;
 public class ConnectionPlayer extends GenericController {
 
     @FXML private StackPane buttonConnetionOK, buttonRMI, buttonSocket, buttonNumPlayers, buttonUsername;
-    @FXML private HBox IP, port;
-    @FXML private TextField textUsername;
+    @FXML private TextField IP, port, textUsername;
+    @FXML private ImageView imageSocket, imageRMI;
     private String typeConnection;
+    private boolean activeButtonS = false;
+    private boolean activeButtonR = false;
 
 
     //Quando passo sopra ai bottoni essi diventano un pò più grandi e quando ci esco ritornano alla dimensione originale
@@ -32,12 +34,22 @@ public class ConnectionPlayer extends GenericController {
         imageView.setOpacity(1);
     }
 
+
+    public void exitedButtonConnection(MouseEvent mouseEvent){
+        ImageView imageView = (ImageView) ((StackPane) mouseEvent.getSource()).getChildren().get(0);
+        if(imageView.equals(imageRMI)){
+            activeTypeConnection(activeButtonR, imageRMI);
+        } else {
+            activeTypeConnection(activeButtonS, imageSocket);
+        }
+    }
+
     //Si attiva quando premo sui bottone ok della finestra di connessione
     public void clickedButtonConnetion(MouseEvent mouseEvent){
         //TODO Nel caso ci fossero dei problemi a lato server il codice si fotte!!(Finisce in un ciclo di errori senza uscita)
         GUIApplication.clientGUI.setConnectionType(this.typeConnection);
-        String ip = ((TextField) IP.getChildren().get(1)).getText();
-        GUIApplication.clientGUI.setServerIP(ip);
+        GUIApplication.clientGUI.setServerIP(IP.getText());
+        GUIApplication.clientGUI.setPort(port.getText());
         GUIApplication.clientGUI.getMaster().setupConnection();
     }
 
@@ -54,17 +66,34 @@ public class ConnectionPlayer extends GenericController {
     }
 
     public void activeWindowSocket(MouseEvent mouseEvent){
-        IP.setVisible(true);
-        port.setVisible(true);
         this.typeConnection = "SOCKET";
+        activeButtonR = false;
+        activeButtonS = true;
+        activeTypeConnection(activeButtonS, imageSocket);
+        activeTypeConnection(activeButtonR, imageRMI);
+
         GUIApplication.getStageWindow().setHeight(400);
     }
     
     public void activeWindowRMI(MouseEvent mouseEvent){
-        IP.setVisible(true);
-        port.setVisible(false);
         this.typeConnection = "RMI";
+        activeButtonR = true;
+        activeButtonS = false;
+        activeTypeConnection(activeButtonR, imageRMI);
+        activeTypeConnection(activeButtonS, imageSocket);
         GUIApplication.getStageWindow().setHeight(400);
+    }
+
+    private void activeTypeConnection(boolean active, ImageView imageView){
+        if(active){
+            imageView.setScaleX(1.2);
+            imageView.setScaleY(1.2);
+            imageView.setOpacity(0.8);
+        } else {
+            imageView.setScaleX(1);
+            imageView.setScaleY(1);
+            imageView.setOpacity(1);
+        }
     }
 
 }
