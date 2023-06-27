@@ -109,7 +109,18 @@ public class ClientController {
         currentView.askServerIP();
         String SIP = currentView.getServerIP();
         currentView.askPort();
-        int port = Integer.parseInt(currentView.getPort());
+
+        int port = 0;
+        
+        try
+        {
+            port = Integer.parseInt(currentView.getPort());
+        }
+        catch(Exception e)
+        {
+            setupConnection();
+        }
+
         if(currentView.getConnectionType().equals("RMI")) {
             setupRMI(SIP, port);
         }
