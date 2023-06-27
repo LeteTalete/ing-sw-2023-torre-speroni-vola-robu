@@ -28,8 +28,12 @@ public class GameView implements Serializable {
         this.commonGoalCards = game.getCommonGoalCards();
         this.endGame = game.getEndGame();
         game.getPlayers().forEach( player -> this.playersView.add( new PlayerView(player) ) );
-        this.CGC1Points = game.getCommonGoalCards().get(0).getPoints().pop();
-        this.CGC2Points = game.getCommonGoalCards().get(1).getPoints().pop();
+        if (game.getCommonGoalCards().get(0).getPoints().size() == 1 && game.getCommonGoalCards().get(0).getPoints().get(0).equals(0)) {
+            this.CGC1Points = 0;
+        } else this.CGC1Points = game.getCommonGoalCards().get(0).getPoints().pop();
+        if (game.getCommonGoalCards().get(1).getPoints().size() == 1 && game.getCommonGoalCards().get(1).getPoints().get(0).equals(0)) {
+            this.CGC2Points = 0;
+        } else this.CGC2Points = game.getCommonGoalCards().get(1).getPoints().pop();
         this.currentPlayerNickname = game.getCurrentPlayerNickname();
     }
 
