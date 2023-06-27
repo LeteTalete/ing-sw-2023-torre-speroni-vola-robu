@@ -3,10 +3,7 @@ package it.polimi.ingsw.controller;
 import it.polimi.ingsw.Updates.ModelUpdate;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.model.board.LivingRoom;
-import it.polimi.ingsw.model.board.Position;
-import it.polimi.ingsw.model.board.Shelf;
-import it.polimi.ingsw.model.board.Tile;
+import it.polimi.ingsw.model.board.*;
 import it.polimi.ingsw.model.cards.CGC.*;
 import it.polimi.ingsw.model.cards.CG_RowCol;
 import it.polimi.ingsw.model.cards.CG_Shape;
@@ -37,6 +34,11 @@ public class GameControllerTest {
 
     ArrayList<Position> choiceOfTiles = new ArrayList<>();
 
+
+    /**
+     * Method calculateScoreTest tests if the final score of a player is calculated correctly by adding Common Goal Card
+     * points, Personal Goal Card points and shelf's additional points
+     */
     @Test
     public void calculateScoreTest(){
 
@@ -111,6 +113,8 @@ public class GameControllerTest {
         assertEquals(38,player.getScore());
     }
 
+
+    //todo
     @Test
     public void notifyOnStartTurnTest(){
         ArrayList<Player> players = new ArrayList<>();
@@ -121,6 +125,7 @@ public class GameControllerTest {
         verify(master, times(1)).notifyOnStartTurn(gameId, nameTest);
     }
 
+    //todo
     @Test
     public void notifyOnModelUpdateTest(){
         ArrayList<Player> players = new ArrayList<>();
@@ -131,6 +136,7 @@ public class GameControllerTest {
         verify(master, times(1)).notifyAllPlayers(gameId, modelUpdate);
     }
 
+    //todo
     @Test
     public void notifyOnEndGameTest(){
         ArrayList<Player> players = new ArrayList<>();
@@ -140,6 +146,7 @@ public class GameControllerTest {
         verify(master, times(1)).notifyOnEndGame(gameId);
     }
 
+    //todo
     @Test
     public void notifyOnLastTurnTest(){
         ArrayList<Player> players = new ArrayList<>();
@@ -150,6 +157,11 @@ public class GameControllerTest {
         verify(master, times(1)).notifyOnLastTurn(gameId, nameTest);
     }
 
+
+    /**
+     * Method chooseColumnTest tests if the tiles chose by the player are inserted correctly in the selected column
+     * of player's shelf
+     */
     @Test
     public void chooseColumnTest(){
         int columnTest = new Random().nextInt(5);
@@ -171,35 +183,95 @@ public class GameControllerTest {
         players.add(player2);
 
         gameController = new GameController(players,gameId, master);
+        gameController.getModel().startGame();
+        gameController.getModel().setCurrentPlayer(player1);
 
-        LivingRoom board = new LivingRoom(2);
-        board.printBoard();
+        gameController.getModel().getGameBoard().printBoard();
 
-        choiceOfTiles.add(0, new Position(3,7));
-        choiceOfTiles.add(1, new Position(4,7));
+        //test 1
+        List<String> choice = new ArrayList<>();
+        choice.add("3,7");
+        choice.add("4,7");
 
-        ArrayList<Tile> tiles = new ArrayList<>();
-        tiles.add(board.getCouple(choiceOfTiles.get(0)).getTile());
-        tiles.add(board.getCouple(choiceOfTiles.get(1)).getTile());
+        List<Tile> tiles = new ArrayList<>();
+        tiles.add(gameController.getModel().getGameBoard().getCouple(new Position(3,7)).getTile());
+        tiles.add(gameController.getModel().getGameBoard().getCouple(new Position(4,7)).getTile());
+
+        gameController.chooseTiles(player1.getTokenId(),choice);
+
+        System.out.println(choice.get(0) + "   " + choice.get(1));
 
         gameController.chooseColumn(player1.getTokenId(), columnTest);
-        player1.getMyShelf().insertTiles(columnTest, tiles);
-        Shelf shelfie = player1.getMyShelf();
-        shelfie.printShelf();
+
+        player1.getMyShelf().printShelf();
 
         //checks if that column has been filled with the correct amount of tiles
-        assert((6-tiles.size())==(shelfie.getFreeCol(columnTest)));
+        assert((6-choice.size())==(player1.getMyShelf().getFreeCol(columnTest)));
 
-        Position p = new Position(5, columnTest);
-        System.out.println(p.getX() + " " + p.getY());
+        //checks if the tiles inserted in the shelf are correct
+        assert(player1.getMyShelf().getCouple(new Position(5,columnTest)).getTile().equals(tiles.get(0)));
+        assert(player1.getMyShelf().getCouple(new Position(4,columnTest)).getTile().equals(tiles.get(1)));
 
-        for (Tile tile : tiles) {
-            assert(shelfie.getCouple(p).getTile().equals(tile));
-            p = new Position(p.getX()-1, p.getY());
-            System.out.println(p.getX() + " " + p.getY());
-        }
+
+        //test 2
+        gameController.getModel().setCurrentPlayer(player1);
+        gameController.getModel().getGameBoard().printBoard();
+
+        choice.clear();
+        choice.add("3,6");
+        choice.add("4,6");
+        choice.add("5,6");
+
+        tiles.clear();
+        tiles.add(gameController.getModel().getGameBoard().getCouple(new Position(3,6)).getTile());
+        tiles.add(gameController.getModel().getGameBoard().getCouple(new Position(4,6)).getTile());
+        tiles.add(gameController.getModel().getGameBoard().getCouple(new Position(5,6)).getTile());
+
+        gameController.chooseTiles(player1.getTokenId(),choice);
+
+        System.out.println(choice.get(0) + "   " + choice.get(1) + "   " + choice.get(2));
+
+        gameController.chooseColumn(player1.getTokenId(), columnTest);
+
+        player1.getMyShelf().printShelf();
+
+        //checks if that column has been filled with the correct amount of tiles
+        assert((4-choice.size())==(player1.getMyShelf().getFreeCol(columnTest)));
+
+        //checks if the tiles inserted in the shelf are correct
+        assert(player1.getMyShelf().getCouple(new Position(3,columnTest)).getTile().equals(tiles.get(0)));
+        assert(player1.getMyShelf().getCouple(new Position(2,columnTest)).getTile().equals(tiles.get(1)));
+        assert(player1.getMyShelf().getCouple(new Position(1,columnTest)).getTile().equals(tiles.get(2)));
+
+
+        //test 3
+        gameController.getModel().setCurrentPlayer(player1);
+        gameController.getModel().getGameBoard().printBoard();
+
+        int freeSlots = player1.getMyShelf().getMaxFree(columnTest);
+
+        choice.clear();
+        choice.add("2,5");
+        choice.add("3,5");
+        choice.add("4,5");
+
+        gameController.getModel().getGameBoard().printBoard();
+
+        gameController.chooseTiles(player1.getTokenId(),choice);
+        gameController.chooseColumn(player1.getTokenId(), columnTest);
+
+        player1.getMyShelf().printShelf();
+
+        //checks if that column has been filled with the correct amount of tiles (in this case no variations)
+        assert(freeSlots==(player1.getMyShelf().getFreeCol(columnTest)));
+
     }
 
+
+    /**
+     *  Method chooseTilesTest tests if the positions chose by the player are correctly stored in choiceOfTiles
+     *  attribute if the choice is valid
+     */
     @Test
     public void chooseTilesTest()
     {
@@ -313,6 +385,12 @@ public class GameControllerTest {
         assert(gameController.getChoiceOfTiles().get(0).getY() == 7);
 
     }
+
+
+    /**
+     * Method rearrangeTilesTest tests if the positions stored in choiceOfTiles attribute are rearranged correctly
+     * as the player has chosen
+     */
     @Test
     public void rearrangeTilesTest()
     {
@@ -401,6 +479,8 @@ public class GameControllerTest {
 
     }
 
+
+    //todo
     @Test
     public void nextTurnTest(){
         ArrayList<Player> players = new ArrayList<>();
@@ -441,6 +521,10 @@ public class GameControllerTest {
 
     }
 
+
+    /**
+     * Method updateBoardCouplesTest tests if the positions of the board chose by the player get correctly emptied
+     */
     @Test
     public void updateBoardCouplesTest()
     {

@@ -11,9 +11,11 @@ import java.rmi.RemoteException;
 /**this class is used to decode and handle the messages incoming from the server (only for Socket purposes)*/
 
 public class ResponseDecoder implements ResponseHandler {
+    /**fileLog used to keep track of the game's activities*/
     private static final Logger fileLog = LogManager.getRootLogger();
-
+    /**clientListener used to invoke the methods of the IClientListener*/
     private final IClientListener clientListener;
+    /**client used to invoke the methods of the connection*/
     private final IClientConnection client;
 
     /**respondeDecoder constructor.
@@ -187,6 +189,16 @@ public class ResponseDecoder implements ResponseHandler {
             clientListener.onSyn();
         }catch (Exception e){
             fileLog.error("Error in handling synPing: "+e.getMessage());
+        }
+    }
+
+    /**method is used to display a notification relative to the waiting room*/
+    @Override
+    public void handle(WaitingRoomResponse waitingRoomResponse) throws RemoteException {
+        clientListener.showWaitingRoomNotification(waitingRoomResponse.getMessage());
+        client.setReceivedResponse(false);
+        synchronized (client) {
+            client.notifyAll();
         }
     }
 

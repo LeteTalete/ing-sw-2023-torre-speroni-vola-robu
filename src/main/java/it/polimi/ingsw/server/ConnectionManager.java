@@ -19,18 +19,26 @@ import java.util.Map;
 
 public class ConnectionManager implements Serializable {
     private static ConnectionManager instance;
+    /**inactiveUsers is a list containing the tokens of all the inactive users*/
     public List<String> inactiveUsers = new ArrayList<>();
-    //tokens and listeners
+    /**viewListenerMap contains the tokens of the players and the respective listeners (i.e. ClientListenerTUI,
+     * ClientListenerGUI, ServerSocketClientHandler)*/
     Map<String, IClientListener> viewListenerMap = new HashMap<>();
-    //tokens and usernames
+    /**tokenNames contains the tokens of the players and the respective usernames*/
     Map<String, String> tokenNames = new HashMap<>();
-    //usernames and tokens
+    /**namesTokens contains the usernames of the players and the respective tokens*/
     Map<String, String> namesTokens = new HashMap<>();
+    /**synTimer is a map containing the tokens of the clients and the respective timers to send them a ping*/
     private final Map<String, CTimer> synTimer = new HashMap<>();
-    private final int synTime = 10;
-    private final int ackTime = 30;
+    private final int synTime = 1000;
+    private final int ackTime = 3000;
+    /**ackMap contains the tokens of the clients and the boolean indicating whether an ack has been
+     * received from them*/
     private Map<String, Boolean> ackMap = new HashMap<>();
+    /**ackCheckTimer is a map containing the tokens of the clients and the respective timers to keep track
+     * of the ack received in response to a ping*/
     private final Map<String, CTimer> ackCheckTimer = new HashMap<>();
+    /**fileLog is a logger to keep track of the events happening during the game*/
     private static final Logger fileLog = LogManager.getRootLogger();
     private ServerManager master;
 
@@ -61,7 +69,6 @@ public class ConnectionManager implements Serializable {
 
     /**disconnectToken method used to disconnect a client and notify all the other players about it.
      * @param token - token of the disconnecting player.*/
-    //todo check whether this needs the id of the game, if we want to implement multiple matches
     public void disconnectToken(String token) {
         fileLog.debug("Disconnecting token " + token + ", username: "+ tokenNames.get(token));
         if(!inactiveUsers.contains(token) && master.getWaitingRoom()==null){
@@ -87,14 +94,14 @@ public class ConnectionManager implements Serializable {
      * reachable.
      * @param token - token used to identify the client*/
     synchronized void startSynTimer(String token){
-        fileLog.debug("Starting syn timer for client: "+tokenNames.get(token));
+        fileLog.info("Starting syn timer for client: "+tokenNames.get(token));
         synTimer.put(token, new CTimer());
         synTimer.get(token).scheduleAtFixedRate(new ServerSynTimer(viewListenerMap.get(token)), synTime, synTime);
     }
 
     public void stopSynTimer(String token){
         if(synTimer.containsKey(token)){
-            fileLog.debug("Stopping syn timer for client: "+tokenNames.get(token));
+            fileLog.info("Stopping syn timer for client: "+tokenNames.get(token));
             synTimer.get(token).purge();
             synTimer.get(token).cancel();
         }
@@ -102,7 +109,6 @@ public class ConnectionManager implements Serializable {
 
     public void setAck(String token, boolean received) {
         if(ackMap.containsKey(token)){
-            fileLog.debug("Setting ackmap for client: "+tokenNames.get(token));
             ackMap.replace(token,received);
         }
         else{
@@ -117,7 +123,7 @@ public class ConnectionManager implements Serializable {
     /**startAckTimer method starts a timer to receive an ack from the client as a response to the ping.
      * @param token - token used to identify the client related to the timer*/
     void startAckTimer(String token){
-        fileLog.debug("Starting ack timer for client: "+tokenNames.get(token));
+        fileLog.info("Starting ack timer for client: "+tokenNames.get(token));
         ackCheckTimer.put(token, new CTimer());
         ackMap.put(token, true);
         ackCheckTimer.get(token).scheduleAtFixedRate(new ConnectionAckTimer(viewListenerMap.get(token)), ackTime, ackTime);
@@ -127,7 +133,7 @@ public class ConnectionManager implements Serializable {
      * @param token - to identify the client related to the timer*/
     public void stopAckTimer(String token){
         if(ackCheckTimer.containsKey(token)){
-            fileLog.debug("Stopping timer for client: "+tokenNames.get(token));
+            fileLog.info("Stopping timer for client: "+tokenNames.get(token));
             ackCheckTimer.get(token).purge();
             ackCheckTimer.get(token).cancel();
         }

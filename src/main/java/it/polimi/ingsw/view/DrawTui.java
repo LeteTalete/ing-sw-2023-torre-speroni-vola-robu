@@ -13,7 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class DrawTui {
-    static final String colorERROR = "\033[1;38;5m"; //colore di un messaggio di errore
+    static final String colorERROR = "\033[1;97;48;5;124m"; //colore di un messaggio di errore
     static final String colorRESET = "\033[0m";  // Reset Changes
     static final String colorTileG = "\033[1;30;48;5;214m"; //Orange
     static final String colorTileC = "\033[1;30;48;5;10m"; //Green

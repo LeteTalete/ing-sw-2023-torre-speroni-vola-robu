@@ -160,6 +160,11 @@ public class ClientListenerGUI extends UnicastRemoteObject implements IClientLis
     }
 
     @Override
+    public void showWaitingRoomNotification(String message) throws RemoteException {
+
+    }
+
+    @Override
     public void notifyOnCGC(String nickname, int id, int points) throws RemoteException {
         if(nickname.equals(view.getName())){
             GUIApplication.setMyScoreCGC(id, points);

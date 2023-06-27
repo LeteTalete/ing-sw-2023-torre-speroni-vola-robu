@@ -11,7 +11,10 @@ import java.util.List;
 /**CommandParsing class is used to parse the user's input*/
 
 public class CommandParsing {
+    /**fileLog is the logger used to keep track of events*/
     private static final Logger fileLog = LogManager.getRootLogger();
+
+    /**list of commands recognized by the game*/
     private static final String QUIT = "quit";
     private static final String TILES = "tiles";
     private static final String HIDESHELF = "hideshelves";
@@ -24,16 +27,27 @@ public class CommandParsing {
     private static final String SHOWCHAT = "showchat";
     private static final String HIDECHAT = "hidechat";
     private static final String COLUMN = "column";
+
+    /**boolean isPlaying signalling whether it's the player's turn or not*/
     private boolean isPlaying;
+    /**boolean gameIsOn signalling whether it's a game is active or not*/
     private boolean gameIsOn;
+    /**boolean initializingName used to signal if the client is logging in*/
     private boolean initializingName;
+    /**boolean initializing roon used to signal if the client is creating a waiting room or not*/
     private boolean initializingRoom;
 
-    private int choiceNumber;
+    /**int choiceNumber is used to save and pass to the ClientController an input of a single integer (used to choose
+     * the column of the shelf and to set the number of players expected in a waiting room)*/
+    private Integer choiceNumber;
+    /**multipleChoice is used to save and pass an input of multiple strings to the ClientController*/
     private List<String> multipleChoiceNumber = new ArrayList<>();
+    /**choice is used to save and pass an input of a single string to the ClientController*/
     private String choice;
+    /**master is used to invoke the method of the ClientController
+     * @see ClientController*/
     private final ClientController master;
-    private boolean first;
+
 
     /**constructor CommandParsing to set the ClientController and set the parameters.
      * @param master - the clientController, used to invoke its methods*/
@@ -58,10 +72,7 @@ public class CommandParsing {
                 initializingName = false;
                 if ( master.isGameOn() ) {
                     initializingRoom = false;
-                } else {
-                    initializingRoom = first;
                 }
-
             } else if ( master.getUsername() == null ) {
                 initializingRoom = false;
                 initializingName = true;
@@ -86,18 +97,15 @@ public class CommandParsing {
             command = splitted[0];
             args = new ArrayList<>(Arrays.asList(splitted));
             args.remove(0);
+        } else if ( splitted.length == 1 ){
+            command = splitted[0];
         }
         executeCom(command, args);
     }
     /**checkUsernameFormat method checks whether the username is valid or not (meaning it's a single word made of
     * less than 20 characters*/
     private boolean checkUsernameFormat(String command) {
-        if(command.length() > 20) {
-            master.errorFormat();
-            master.userLogin();
-            return false;
-        }
-        else if(command.contains(" ")) {
+        if(command.length() > 20 || command.isBlank()) {
             master.errorFormat();
             master.userLogin();
             return false;
@@ -112,33 +120,34 @@ public class CommandParsing {
     private void executeCom(String command, List<String> args) {
         switch (command) {
             case (TILES) -> {
-                if (!isPlaying) {
+                if (master.isMyTurn() == 0) {
                     notMyTurn();
                     break;
                 }
-                parseMultipleInteger(args);
+                parseMultipleInteger(args, "selection");
                 executeTileCommand();
             }
             case (REARRANGE) -> {
-                if (!isPlaying) {
+                if (master.isMyTurn() == 0) {
                     notMyTurn();
                     break;
+                } else if (master.isMyTurn() == 1) {
+                    master.errorNoSelection("selection");
+                    break;
                 }
-                parseMultipleInteger(args);
+                parseMultipleInteger(args, REARRANGE);
                 executeRearrangeCommand();
             }
             case (COLUMN) -> {
-                if (!isPlaying) {
+                if (master.isMyTurn() == 0) {
                     notMyTurn();
                     break;
-                }
-                try {
-                    parseInteger(args);
-                }
-                catch(NumberFormatException e) {
-                    master.errorFormat();
+                } else if (master.isMyTurn() == 1) {
+                    master.errorNoSelection(COLUMN);
                     break;
-                }
+            }
+                //TODO: writing [ column "letter" ] crashes the client
+                parseInteger(args);
                 executeColumnCommand();
             }
             case (SHELFSHOW) -> {
@@ -184,10 +193,6 @@ public class CommandParsing {
                 master.hideCommands();
             }
             case (QUIT) -> {
-                if (!gameIsOn) {
-                    master.gameNotStarted();
-                    break;
-                }
                 master.quit();
             }
             case (SHOWCHAT) -> {
@@ -245,12 +250,17 @@ public class CommandParsing {
      * would not make sense if the input was less than 0 or more than 4). If so, it sends the column number
      * to the clientController*/
     private void executeColumnCommand() {
-        if(choiceNumber > 4 || choiceNumber < 0 ){
+        if (choiceNumber == null) {
+            return;
+        }
+        if(choiceNumber > 4 || choiceNumber < 0){
             master.errorFormat();
+            return;
         }
-        else{
-            master.chooseColumn(choiceNumber);
-        }
+
+        master.chooseColumn(choiceNumber);
+        choiceNumber = null;
+
     }
 
     /**method executeRearrangeCommand checks whether the format is correct. If so, it sends the re-arranged
@@ -259,15 +269,20 @@ public class CommandParsing {
     {
         if(!checkOrderFormat(multipleChoiceNumber))
         {
-            master.errorFormat();
+            if ( multipleChoiceNumber.isEmpty() ){
+                return;
+            } else master.errorFormat();
+            multipleChoiceNumber.clear();
             return;
         }
         master.rearrangeTiles(multipleChoiceNumber);
+        multipleChoiceNumber.clear();
     }
 
     /**method checkOrderFormat checks whether the format is correct. If so, it returns true*/
     private boolean checkOrderFormat(List<String> order)
     {
+        if ( order.isEmpty() ) return false;
         //checking for admissible values
         for (String s : order) {
             if (!s.equals("1") && !s.equals("2") && !s.equals("3")) return false;
@@ -286,33 +301,43 @@ public class CommandParsing {
      * to the clientController*/
     private void executeTileCommand()
     {
-        if(multipleChoiceNumber.size() == 0) return;
+        if(multipleChoiceNumber.isEmpty()) return;
         for(String s : multipleChoiceNumber)
         {
             if(!checkTilesFormat(s))
             {
                 master.errorFormat();
+                multipleChoiceNumber.clear();
                 return;
             }
         }
         master.chooseTiles(multipleChoiceNumber);
+        multipleChoiceNumber.clear();
     }
 
     /**method parseInteger parses the string into integer and saves it into the choiceNumber parameter*/
-    private void parseInteger(List<String> args) throws NumberFormatException
-    {
-        if(args.size()!=1 || args.get(0).length() != 1)
-        {
-            throw new NumberFormatException();
+    private void parseInteger(List<String> args) {
+        if ( args.size() < 1 ) {
+            master.errorNoSelection("choose");
+            choiceNumber = null;
+            return;
         }
+        if(args.size()!=1 || args.get(0).length() != 1) {
+            args.clear();
+            choiceNumber = null;
+            master.errorFormat();
+            return;
+        }
+
         choiceNumber =Integer.parseInt(args.get(0));
     }
 
     /**method parseMultipleInteger parses multiple strings into multiple integers and saves them into
      * multipleChoiceNumber parameter*/
-    private void parseMultipleInteger(List<String> args) {
+    private void parseMultipleInteger(List<String> args, String command) {
         if(args.size() < 1){
-            master.errorFormat();
+            multipleChoiceNumber.clear();
+            master.errorNoSelection(command);
             return;
         }
         try{
@@ -355,7 +380,7 @@ public class CommandParsing {
     }
 
     public void setFirst(boolean b) {
-        this.first = b;
+        this.initializingRoom = b;
     }
 }
 

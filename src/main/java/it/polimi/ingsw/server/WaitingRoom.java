@@ -7,8 +7,9 @@ import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 
 public class WaitingRoom {
+    /**fileLog is a logger to keep track of the events happening during the game*/
     private static Logger fileLog = LogManager.getRootLogger();
-    private String id;
+    private final String id;
     private ServerManager master;
     private int playersWaiting;
     private int maxPLayers;
@@ -16,7 +17,6 @@ public class WaitingRoom {
     private ArrayList<Player> overflowPlayers;
 
     /**WaitingRoom constructor.
-     * @param identifier - identifies the room.
      * @param serverManager - to invoke the serverManager's methods*/
     public WaitingRoom(int identifier, ServerManager serverManager){
         this.id = String.valueOf(identifier);
@@ -46,7 +46,7 @@ public class WaitingRoom {
             fileLog.info("Enough players to start the game!");
             return StaticStrings.GAME_START;
         }
-        return StaticStrings.GAME_WAITING;
+        return null;
     }
 
     public String getId(){
@@ -67,15 +67,16 @@ public class WaitingRoom {
     /**setMaxPlayers method to set the maximum number of players in a match. Since there could be two or more
      * client logging in at the same time, the server will save them in a waiting list and ask only one of them
      * about the number of players for the match.*/
-    public void setMaxPLayers(int maxPLayers) {
-        this.maxPLayers = maxPLayers;
-        if(playersWaiting>=maxPLayers)
+    public void setMaxPLayers(int maxPlayers) {
+        this.maxPLayers = maxPlayers;
+        if(playersWaiting>=maxPlayers)
         {
             fileLog.info("Enough players to start the game!");
             master.createGame(id);
         }
     }
 
+    /**disconnectFromWaitingRoom is a method used to disconnect a player while they are in the lobby*/
     public void disconnectFromWaitingRoom(String token) {
         for(Player p : players){
             if(p.getTokenId().equals(token)){

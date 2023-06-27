@@ -13,30 +13,36 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.rmi.RemoteException;
 import java.util.List;
-import java.util.Scanner;
 import java.util.Timer;
 
 /**ClientSocket class used to manage the Socket connection to the server.*/
 
-public class ClientSocket implements IClientConnection
-{
+public class ClientSocket implements IClientConnection {
     private static final Logger fileLog = LogManager.getRootLogger();
 
+    /**master used to invoke methods of the ClientController*/
     private final ClientController master;
+    /**token used to identify the client to the server*/
     private String token;
+    /**ip of the server*/
     private final String ip;
     private final int port;
     private Socket socket;
     private ObjectInputStream socketIn;
     private  ObjectOutputStream socketOut;
-    private Scanner stdin;
+    /**boolean signalling whether the client is connected or not*/
     private boolean amIconnected;
     private Thread receiving;
+    /**responseDecoder used to decode the responses received from the server via socket
+     * @see ResponseDecoder*/
     private ResponseDecoder responseDecoder;
+    /**boolean notReceivingResponse used to wait for a response from the server*/
     private boolean notReceivingResponse;
+    /**boolean syn used to know whether the client has received the ping message from the server*/
     private boolean syn;
-    private final int synCheckTime = 10000;
+    private final int synCheckTime = 5000;
     private Timer synCheckTimer;
+    /**currentView parameter used to invoke the method of the View (GUI or TUI)*/
     private View currentView;
 
     /**ClientSocket constructor.
@@ -92,7 +98,7 @@ public class ClientSocket implements IClientConnection
         }catch (IOException e){
             fileLog.error(e);
             //if the connection is lost
-            master.getCurrentView().displayNotification("Connection lost. Please try again later.");
+            currentView.displayNotification("Connection lost. Please try again later.");
         }
         return null;
     }
@@ -113,7 +119,6 @@ public class ClientSocket implements IClientConnection
     /**closeStreams method is used to close the streams*/
     public void closeStreams() throws IOException {
         //closing streams
-        stdin.close();
         socketIn.close();
         socketOut.close();
     }
@@ -138,7 +143,7 @@ public class ClientSocket implements IClientConnection
             }
             catch (InterruptedException e) {
                 fileLog.error(e.getMessage());
-                master.getCurrentView().displayNotification("Connection error. Please try again later.");
+                currentView.displayNotification("Connection error. Please try again later.");
             }
         }
     }
@@ -155,7 +160,7 @@ public class ClientSocket implements IClientConnection
                 this.wait();
             }catch (InterruptedException e){
                 fileLog.error(e.getMessage());
-                master.getCurrentView().displayNotification("Connection error. Please try again later.");
+                currentView.displayNotification("Connection error. Please try again later.");
             }
         }
     }
@@ -169,7 +174,7 @@ public class ClientSocket implements IClientConnection
             socketOut.reset();
         }catch (IOException e){
             fileLog.error(e.getMessage());
-            master.getCurrentView().displayNotification("Connection error. Please try again later.");
+            currentView.displayNotification("Connection error. Please try again later.");
         }
     }
 
@@ -204,7 +209,7 @@ public class ClientSocket implements IClientConnection
                 this.wait();
             }catch (InterruptedException e){
                 fileLog.error(e.getMessage());
-                master.getCurrentView().displayNotification("Connection error. Please try again later.");
+                currentView.displayNotification("Connection error. Please try again later.");
             }
         }
     }
@@ -220,7 +225,7 @@ public class ClientSocket implements IClientConnection
                 this.wait();
             }catch (InterruptedException e){
                 fileLog.error(e.getMessage());
-                master.getCurrentView().displayNotification("Connection error. Please try again later.");
+                currentView.displayNotification("Connection error. Please try again later.");
             }
         }
     }
@@ -256,7 +261,7 @@ public class ClientSocket implements IClientConnection
                 this.wait();
             }catch (InterruptedException e){
                 fileLog.error(e.getMessage());
-                master.getCurrentView().displayNotification("Connection error. Please try again later.");
+                currentView.displayNotification("Connection error. Please try again later.");
             }
         }
     }

@@ -12,14 +12,12 @@ public interface IRemoteController extends Remote {
     void rearrangeTiles(String token, List<String> tilesOrdered) throws RemoteException;
 
     void selectColumn (String token, int column) throws RemoteException;
-    void createWaitingRoom(String username, String userToken) throws RemoteException;
-
-    void sendChat(String username, String toString, String choice) throws RemoteException;
+    void sendChat(String sender, String message, String receiver) throws RemoteException;
     void generateTokenRMI(IClientListener viewListener, String token) throws RemoteException;
 
     void setPlayersWaitingRoom(String token, int num) throws RemoteException;
 
     void disconnect(String token) throws RemoteException;
 
-    void sendAck(String userToken) throws RemoteException;
+    void sendAck(String token) throws RemoteException;
 }

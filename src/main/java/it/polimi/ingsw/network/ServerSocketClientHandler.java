@@ -6,6 +6,7 @@ import it.polimi.ingsw.network.IClientListener;
 import it.polimi.ingsw.notifications.*;
 import it.polimi.ingsw.requests.Request;
 import it.polimi.ingsw.responses.*;
+import it.polimi.ingsw.server.ConnectionManager;
 import it.polimi.ingsw.server.ServerManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,6 +15,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
@@ -21,12 +23,17 @@ import java.util.ArrayList;
  * IClientListener so that the server can send replies and notification without having to know the type
  * of connection chosen by the client.*/
 public class ServerSocketClientHandler implements Runnable, IClientListener {
+    /**fileLog is the logger used to keep track of the actions performed by the game*/
     private static final Logger fileLog = LogManager.getRootLogger();
     private final Socket socket;
+    /**serverManager is used to invoke the methods of the server
+     * @see ServerManager*/
     private ServerManager serverManager;
     private ObjectInputStream in;
     private ObjectOutputStream out;
+    /**boolean stop used to know whether the connection needs to be closed or not*/
     private boolean stop;
+    /**token used to identify the client*/
     private String token;
     private final String connectionType = "SOCKET";
 
@@ -106,7 +113,7 @@ public class ServerSocketClientHandler implements Runnable, IClientListener {
     /**method showTextNotification used to send a generic text notification.
      *@param text - text of the notification*/
     @Override
-    public void showTextNotification(String text) {
+    public void showTextNotification(String text) throws RemoteException {
         respond(new TextNotification(text));
     }
 
@@ -181,6 +188,12 @@ public class ServerSocketClientHandler implements Runnable, IClientListener {
         respond(new GameEnd());
     }
 
+    /**method showWaitingRoomNotification generates a response about the creation of a lobby*/
+    @Override
+    public void showWaitingRoomNotification(String message) throws RemoteException {
+        respond(new WaitingRoomResponse(message));
+    }
+
     /**method notifyOnCGC generates a notification about the gain of a common goal card.
      * @param nickname - username of the player who won the card.
      * @param id - id of the common goal card.*/
@@ -211,15 +224,18 @@ public class ServerSocketClientHandler implements Runnable, IClientListener {
         respond(new SynPing());
     }
 
-    private void respond(Response response) {
+    private void respond(Response response) throws RemoteException {
         fileLog.debug("server about to send response");
         try{
             out.writeObject(response);
             out.reset();
         } catch (IOException e) {
+            fileLog.error("Error: can't reach the client's socket");
             if(!stop){
                 close();
             }
+            throw new RemoteException();
+
         }
     }
 }

@@ -34,7 +34,4 @@ public class Position implements Serializable {
         return this.x;
     }
 
-    public void setY(int y) {
-        this.y = y;
-    }
 }

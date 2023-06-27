@@ -16,8 +16,11 @@ import java.util.*;
 
 public class ServerManager extends UnicastRemoteObject implements IRemoteController {
     private static final Logger fileLog = LogManager.getRootLogger();
+    /**map of the active games with their id and the respective GameController*/
     private final Map<String, GameController> activeGames;
+    /**lobby for the users waiting for a game to start*/
     private WaitingRoom waitingRoom;
+    /**map of the active users with their token and the game id representing the game they're in*/
     private final Map<String, String> activeUsers;
 
     /**ServerManager constructor*/
@@ -34,9 +37,7 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
     @Override
     public void setPlayersWaitingRoom(String token, int num) throws RemoteException {
         waitingRoom.setMaxPLayers(num);
-        if(activeGames.isEmpty()){
-            ConnectionManager.get().viewListenerMap.get(token).showTextNotification("Waiting room created! Waiting for other players to join...");
-        }
+        ConnectionManager.get().viewListenerMap.get(token).showWaitingRoomNotification("Waiting room created! Waiting for other players to join...");
     }
 
     /**putInWaitingRoom method is used to place the players inside the waiting room.
@@ -163,7 +164,7 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
                 activeUsers.remove(token);
                 ConnectionManager.get().inactiveUsers.add(token);
                 try {
-                    ConnectionManager.get().viewListenerMap.get(token).showTextNotification("There is no game active for you. Please disconnect and try again later");
+                    ConnectionManager.get().viewListenerMap.get(token).showWaitingRoomNotification("There is no game active for you. Please disconnect and try again later");
                 } catch (RemoteException e) {
                     throw new RuntimeException(e);
                 }
@@ -213,6 +214,9 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
         activeUsers.remove(token);
         if(waitingRoom!=null){
             waitingRoom.disconnectFromWaitingRoom(token);
+        }
+        if(ConnectionManager.get().viewListenerMap.containsKey(token)){
+            ConnectionManager.get().disconnectToken(token);
         }
     }
 
@@ -318,7 +322,8 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
 
     /**notifyAboutTiles method used to notify a player about a successful (or failed) choice of tiles.
      * @param b - integer signaling whether the move was successful or not (0 = success, 1 = tiles not adjacent, 2 =
-     *          tiles not in the same row/column, 3 = tiles not from the edge, 4 = not enough space in shelf).
+     *          tiles not in the same row/column, 3 = tiles not from the edge, 4 = not enough space in shelf,
+     *          5 = the tile is not pickable).
      * @param token - token used to identify the client.
      * @param choice - choice of tiles passed to the client so that they can view them.*/
     public void notifyAboutTiles(String token, int b, ArrayList<Position> choice) {
@@ -401,8 +406,5 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
     public WaitingRoom getWaitingRoom() {
         return waitingRoom;
     }
-
-    //TODO closeGame(gameId)
-
 
 }

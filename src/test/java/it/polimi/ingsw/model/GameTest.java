@@ -313,17 +313,20 @@ public class GameTest {
             assertTrue(expectedIDsList.contains((card.getID())));
 
             if ( game.getPlayers().size() == 4 ) {
-                assertEquals(2, card.getPoints().get(0).intValue());
+                assertEquals(0, card.getPoints().get(0).intValue());
+                assertEquals(2, card.getPoints().get(1).intValue());
+                assertEquals(4, card.getPoints().get(2).intValue());
+                assertEquals(6, card.getPoints().get(3).intValue());
+                assertEquals(8, card.getPoints().get(4).intValue());
+            } else if ( game.getPlayers().size() == 3 ) {
+                assertEquals(0, card.getPoints().get(0).intValue());
                 assertEquals(4, card.getPoints().get(1).intValue());
                 assertEquals(6, card.getPoints().get(2).intValue());
                 assertEquals(8, card.getPoints().get(3).intValue());
-            } else if ( game.getPlayers().size() == 3 ) {
-                assertEquals(4, card.getPoints().get(0).intValue());
-                assertEquals(6, card.getPoints().get(1).intValue());
-                assertEquals(8, card.getPoints().get(2).intValue());
             } else if ( game.getPlayers().size() == 2 ) {
-                assertEquals(4, card.getPoints().get(0).intValue());
-                assertEquals(8, card.getPoints().get(1).intValue());
+                assertEquals(0, card.getPoints().get(0).intValue());
+                assertEquals(4, card.getPoints().get(1).intValue());
+                assertEquals(8, card.getPoints().get(2).intValue());
             }
 
             if ( card.getType().equals("Shape") ) {
