@@ -105,9 +105,9 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
     @Override
     public void notifyLastTurn(String firstDoneUser) throws RemoteException {
         if(firstDoneUser.equals(view.getName())){
-            view.displayNotification("You gained completed your Shelfie! Last round starts now.");
+            view.displayNotification("You completed your Shelfie! Last round starts now.");
         }
-        view.displayNotification(firstDoneUser + "completed their Shelfie. Last round starts now!");
+        else view.displayNotification(firstDoneUser + "completed their Shelfie. Last round starts now!");
     }
 
     /**method notifyChatMessage used to display a chat message.

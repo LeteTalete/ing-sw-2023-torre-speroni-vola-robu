@@ -156,7 +156,9 @@ public class GameController {
         updateBoardCouples();
 
         nextTurn();
-        notifyPointsCGC();
+        if ( !(model.getEndGame() != null && model.getPreviousPlayer().getChair()) ){
+            notifyPointsCGC();
+        }
     }
 
     /** Method nextTurn changes the current player and if the game has ended it notifies the players. */
