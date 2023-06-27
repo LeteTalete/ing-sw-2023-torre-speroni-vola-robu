@@ -191,6 +191,7 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
         view.showEndResult();
     }
 
+    /**method showWaitingRoomNotification is used to display a notification relative to the waiting room*/
     @Override
     public void showWaitingRoomNotification(String message) throws RemoteException {
         view.displayNotification(message);

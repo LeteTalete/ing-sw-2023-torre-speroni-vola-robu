@@ -192,6 +192,16 @@ public class ResponseDecoder implements ResponseHandler {
         }
     }
 
+    /**method is used to display a notification relative to the waiting room*/
+    @Override
+    public void handle(WaitingRoomResponse waitingRoomResponse) throws RemoteException {
+        clientListener.showWaitingRoomNotification(waitingRoomResponse.getMessage());
+        client.setReceivedResponse(false);
+        synchronized (client) {
+            client.notifyAll();
+        }
+    }
+
 
     public void handle(Response response) {
         //not used
