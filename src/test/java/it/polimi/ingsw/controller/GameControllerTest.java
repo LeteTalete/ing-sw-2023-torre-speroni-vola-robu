@@ -34,6 +34,11 @@ public class GameControllerTest {
 
     ArrayList<Position> choiceOfTiles = new ArrayList<>();
 
+
+    /**
+     * Method calculateScoreTest tests if the final score of a player is calculated correctly by adding Common Goal Card
+     * points, Personal Goal Card points and shelf's additional points
+     */
     @Test
     public void calculateScoreTest(){
 
@@ -108,6 +113,8 @@ public class GameControllerTest {
         assertEquals(38,player.getScore());
     }
 
+
+    //todo
     @Test
     public void notifyOnStartTurnTest(){
         ArrayList<Player> players = new ArrayList<>();
@@ -118,6 +125,7 @@ public class GameControllerTest {
         verify(master, times(1)).notifyOnStartTurn(gameId, nameTest);
     }
 
+    //todo
     @Test
     public void notifyOnModelUpdateTest(){
         ArrayList<Player> players = new ArrayList<>();
@@ -128,6 +136,7 @@ public class GameControllerTest {
         verify(master, times(1)).notifyAllPlayers(gameId, modelUpdate);
     }
 
+    //todo
     @Test
     public void notifyOnEndGameTest(){
         ArrayList<Player> players = new ArrayList<>();
@@ -137,6 +146,7 @@ public class GameControllerTest {
         verify(master, times(1)).notifyOnEndGame(gameId);
     }
 
+    //todo
     @Test
     public void notifyOnLastTurnTest(){
         ArrayList<Player> players = new ArrayList<>();
@@ -148,6 +158,10 @@ public class GameControllerTest {
     }
 
 
+    /**
+     * Method chooseColumnTest tests if the tiles chose by the player are inserted correctly in the selected column
+     * of player's shelf
+     */
     @Test
     public void chooseColumnTest(){
         int columnTest = new Random().nextInt(5);
@@ -253,6 +267,11 @@ public class GameControllerTest {
 
     }
 
+
+    /**
+     *  Method chooseTilesTest tests if the positions chose by the player are correctly stored in choiceOfTiles
+     *  attribute if the choice is valid
+     */
     @Test
     public void chooseTilesTest()
     {
@@ -366,6 +385,12 @@ public class GameControllerTest {
         assert(gameController.getChoiceOfTiles().get(0).getY() == 7);
 
     }
+
+
+    /**
+     * Method rearrangeTilesTest tests if the positions stored in choiceOfTiles attribute are rearranged correctly
+     * as the player has chosen
+     */
     @Test
     public void rearrangeTilesTest()
     {
@@ -454,6 +479,8 @@ public class GameControllerTest {
 
     }
 
+
+    //todo
     @Test
     public void nextTurnTest(){
         ArrayList<Player> players = new ArrayList<>();
@@ -494,6 +521,10 @@ public class GameControllerTest {
 
     }
 
+
+    /**
+     * Method updateBoardCouplesTest tests if the positions of the board chose by the player get correctly emptied
+     */
     @Test
     public void updateBoardCouplesTest()
     {
