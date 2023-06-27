@@ -13,6 +13,7 @@ import it.polimi.ingsw.structures.LivingRoomView;
 import it.polimi.ingsw.structures.PlayerView;
 import it.polimi.ingsw.structures.ShelfView;
 import it.polimi.ingsw.view.ControllerGUI.BoardPlayer;
+import it.polimi.ingsw.view.ControllerGUI.ConnectionPlayer;
 import it.polimi.ingsw.view.ControllerGUI.ErrorMessage;
 import it.polimi.ingsw.view.ControllerGUI.GenericController;
 import org.apache.logging.log4j.LogManager;
@@ -233,7 +234,7 @@ public class ClientGUI implements View {
 
     @Override
     public void askServerIP() {
-        
+
     }
 
     @Override
@@ -313,5 +314,18 @@ public class ClientGUI implements View {
         return username;
     }
 
+    @Override
+    public void askPort() {
 
+    }
+
+    @Override
+    public String getPort() {
+        return null;
+    }
+
+
+    public void setServerIP(String accessibleText) {
+        this.ServerIP = accessibleText;
+    }
 }

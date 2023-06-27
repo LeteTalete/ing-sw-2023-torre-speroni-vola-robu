@@ -215,6 +215,9 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
         if(waitingRoom!=null){
             waitingRoom.disconnectFromWaitingRoom(token);
         }
+        if(ConnectionManager.get().viewListenerMap.containsKey(token)){
+            ConnectionManager.get().disconnectToken(token);
+        }
     }
 
     @Override
