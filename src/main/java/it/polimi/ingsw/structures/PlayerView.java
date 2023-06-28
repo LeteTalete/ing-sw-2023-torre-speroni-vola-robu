@@ -11,6 +11,7 @@ public class PlayerView implements Serializable {
     private ShelfView shelfView;
     private PersonalGoalCard personalGoalCard;
     private final int score;
+    private boolean chair;
 
     /**
      * Constructor PlayerView creates a new PlayerView instance. It sets the attributes of the class so that the
@@ -22,6 +23,7 @@ public class PlayerView implements Serializable {
         this.shelfView = new ShelfView(player.getMyShelf());
         this.personalGoalCard = player.getGoalCard();
         this.score = player.getScore();
+        this.chair = player.getChair();
     }
 
     /**

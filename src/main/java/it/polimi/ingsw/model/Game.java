@@ -193,8 +193,9 @@ public class Game {
 
         if ( endGame == null ) {
             if (this.getCurrentPlayer().getMyShelf().checkShelfFull()) {
-                setEndGame(this.getCurrentPlayer().getNickname());}
+                setEndGame(this.getCurrentPlayer().getNickname());
                 gameController.setLastRound();
+            }
         }
     }
 

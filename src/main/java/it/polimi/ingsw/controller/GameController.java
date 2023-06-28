@@ -39,6 +39,7 @@ public class GameController {
         gameId = id;
         master = serverMaster;
         cardsClaimed = new HashMap<>();
+        lastRound = false;
     }
 
     /**
@@ -158,7 +159,7 @@ public class GameController {
         nextTurn();
         if ( lastRound ) {
             lastRound = false;
-            notifyOnLastTurn(model.getPreviousPlayer().getNickname());
+            notifyOnLastTurn(model.getEndGame());
         }
         if ( !(model.getEndGame() != null && model.getPreviousPlayer().getChair()) ){
             notifyPointsCGC();
