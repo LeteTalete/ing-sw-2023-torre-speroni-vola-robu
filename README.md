@@ -34,10 +34,10 @@ For ensuring the correct funtioning of the RMI connection, it is advised for the
 
 ### Client
 
-The Client can be launched using the executable jar Client.jar:
+The Client can be launched using the executable jar ClientExecutable.jar:
 
 ```bash
-java -jar Client.jar
+java -jar ClientExecutable.jar
 ```
 
 After the client being launched, the user is asked to choose which interface (GUI orTUI) they want to play with and then they have to insert the IP address that the server is currently running on.
@@ -65,6 +65,13 @@ Project was tested using JUnit unit tests. Running all written tests with covera
 ## Explanation of the json files
 For a better understanding of the cards and the board's funcionalities, please check the file under /deliverables named JsonsReadMe.pdf
 
+## Additional funciontalities
+We decided to implement a logger to keep track of the server and client activities. If you want to use the logger, then you need to add the following command when launching a jar:
 
+```bash
+java -Dlog4j.configurationFile=path\log4j2-server.xml -jar ClientExecutable.jar
+```
+
+The configuration files for the logger are inside the \etc folder. Please, be mindful of the path from witch you are launching the .jar file.
 
 
