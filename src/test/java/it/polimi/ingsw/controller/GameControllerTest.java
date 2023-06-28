@@ -27,9 +27,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class GameControllerTest {
     private GameController gameController;
-    GameController gC = mock(GameController.class);
     ServerManager master = mock(ServerManager.class);
-    Game model = mock(Game.class);
     String gameId = "0";
 
     ArrayList<Position> choiceOfTiles = new ArrayList<>();
@@ -114,7 +112,7 @@ public class GameControllerTest {
     }
 
 
-    //todo
+    /**method notifyOnStartTurnTest tests if the method ever gets invoked*/
     @Test
     public void notifyOnStartTurnTest(){
         ArrayList<Player> players = new ArrayList<>();
@@ -125,7 +123,7 @@ public class GameControllerTest {
         verify(master, times(1)).notifyOnStartTurn(gameId, nameTest);
     }
 
-    //todo
+    /**method notifyOnModelUpdateTest tests if the method ever gets invoked*/
     @Test
     public void notifyOnModelUpdateTest(){
         ArrayList<Player> players = new ArrayList<>();
@@ -136,7 +134,7 @@ public class GameControllerTest {
         verify(master, times(1)).notifyAllPlayers(gameId, modelUpdate);
     }
 
-    //todo
+    /**method notifyOnEndGameTest tests if the method ever gets invoked*/
     @Test
     public void notifyOnEndGameTest(){
         ArrayList<Player> players = new ArrayList<>();
@@ -146,7 +144,7 @@ public class GameControllerTest {
         verify(master, times(1)).notifyOnEndGame(gameId);
     }
 
-    //todo
+    /**method notifyOnLastTurnTest tests if the method ever gets invoked*/
     @Test
     public void notifyOnLastTurnTest(){
         ArrayList<Player> players = new ArrayList<>();
@@ -480,7 +478,8 @@ public class GameControllerTest {
     }
 
 
-    //todo
+    /**method nextTurnTest checks whether the controller manages to change turns and set currentPlayer to the
+     * next player*/
     @Test
     public void nextTurnTest(){
         ArrayList<Player> players = new ArrayList<>();

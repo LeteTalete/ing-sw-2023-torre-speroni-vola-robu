@@ -44,7 +44,6 @@ public class ClientTUI implements View{
     private String port;
 
 
-    //TODO: lete
     public ClientTUI() {
         setupStdInput();
         try {
@@ -649,7 +648,6 @@ public class ClientTUI implements View{
         this.tiles = tiles;
     }
 
-    //TODO: lete
     @Override
     public void passSyn() {
         master.onSyn();

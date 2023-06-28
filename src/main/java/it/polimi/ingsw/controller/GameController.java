@@ -23,7 +23,6 @@ public class GameController {
     /**choiceOfTiles contains the tiles chosen by the players*/
     private ArrayList<Position> choiceOfTiles;
     private ServerManager master;
-    //todo explain what this is, i'm not sure
     private Map<Integer,Integer> cardsClaimed;
     private boolean lastRound;
 

@@ -438,16 +438,16 @@ public class DrawTui {
         String color;
         String title = "";
         for(int i = 0; i < len; i++){
-            if(i == 0) color = "\033[1;30;48;5;196m";
-            else if(i ==  1) color = "\033[1;30;48;5;202m";
+            if(i == 0) color = "\033[1;30;48;5;46m";
+            else if(i ==  1) color = "\033[1;30;48;5;214m";
             else if(i == 2) color = "\033[1;30;48;5;208m";
-            else color = "\033[1;30;48;5;214m";
+            else color = "\033[1;30;48;5;196m";
             String name = players.get(i).getNickname();
             if(namePlayerClient.equals(name)){
-                if(i == 0) title = "\033[1;38;5;196m" + winner;
-                else if(i == 1) title = "\033[1;38;5;202m" + loser;
+                if(i == 0) title = "\033[1;38;5;46m" + winner;
+                else if(i == 1) title = "\033[1;38;5;214m" + loser;
                 else if( i == 2) title = "\033[1;38;5;208m" + loser;
-                else title = "\033[1;38;5;214m" + loser;
+                else title = "\033[1;38;5;196m" + loser;
                 title += colorRESET;
             }
             String score = Integer.toString(players.get(i).getScore());

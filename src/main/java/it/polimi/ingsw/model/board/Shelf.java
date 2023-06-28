@@ -10,7 +10,6 @@ public class Shelf implements Serializable {
     public static final int ROWS = 6;
     public static final int COLUMNS = 5;
     private Couple[][] shelfsMatrix;
-    private int freeSlots[];
     private List<Integer> cardsAlreadyClaimed;
 
     /** Constructor Shelf creates a new Shelf instance, it creates a new shelf's matrix and sets all its couples to empty. */
