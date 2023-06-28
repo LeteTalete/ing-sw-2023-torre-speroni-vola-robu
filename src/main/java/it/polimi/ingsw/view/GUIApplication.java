@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class GUIApplication extends Application {
-    //private static GenericController genericController;
     private static ClientGUI clientGUI;
     private static GenericController genericController;
     private static Stage stageWindow;
@@ -110,7 +109,6 @@ public class GUIApplication extends Application {
     public static void setOrderTile(){
         Platform.runLater( () -> getBoardPlayer().setTileOrderPosition() );
     }
-
 
     public static void updateShelfPlayer(ArrayList<PlayerView> players ){
         Platform.runLater(() -> {

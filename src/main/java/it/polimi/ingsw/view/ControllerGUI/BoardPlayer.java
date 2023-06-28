@@ -1,7 +1,6 @@
 package it.polimi.ingsw.view.ControllerGUI;
 
 import it.polimi.ingsw.model.board.Couple;
-import it.polimi.ingsw.model.board.Position;
 import it.polimi.ingsw.model.board.Tile;
 import it.polimi.ingsw.model.enumerations.State;
 import it.polimi.ingsw.model.enumerations.T_Type;
@@ -10,29 +9,20 @@ import it.polimi.ingsw.structures.LivingRoomView;
 import it.polimi.ingsw.structures.PlayerView;
 import it.polimi.ingsw.structures.ShelfView;
 import it.polimi.ingsw.view.GUIApplication;
-import it.polimi.ingsw.view.SceneNames;
-import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.effect.Effect;
 import javafx.scene.effect.InnerShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -244,9 +234,8 @@ public class BoardPlayer extends GenericController {
     //Questa funzione mi permette di gestire il trascinamento delle tile 2/3 tile per cui dovrò decidere l'ordine:
     private void setDraggingTile(ImageView imageView){
         imageView.setOnMousePressed(event -> {
-            // Salva la posizione iniziale dell'immagine quando viene premuto il mouse
-            xOffset = event.getSceneX(); // event.getX(); //imageView.getX();
-            yOffset = event.getSceneY(); //event.getY();
+            xOffset = event.getSceneX();
+            yOffset = event.getSceneY();
         });
 
         imageView.setOnMouseDragged(event -> {
@@ -381,7 +370,6 @@ public class BoardPlayer extends GenericController {
         }
     }
 
-    //La chiamo quando il giocatore deve scegliere l'ordine delle tile
     public void setTileOrderPosition(){
         columnActive = true;
         clearOrderPosition();
