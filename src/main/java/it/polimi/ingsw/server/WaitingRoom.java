@@ -46,7 +46,7 @@ public class WaitingRoom {
             fileLog.info("Enough players to start the game!");
             return StaticStrings.GAME_START;
         }
-        return null;
+        return "Waiting";
     }
 
     public String getId(){

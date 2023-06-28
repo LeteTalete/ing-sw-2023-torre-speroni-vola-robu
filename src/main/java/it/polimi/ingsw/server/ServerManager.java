@@ -18,6 +18,7 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
     private static final Logger fileLog = LogManager.getRootLogger();
     /**map of the active games with their id and the respective GameController*/
     private final Map<String, GameController> activeGames;
+
     /**lobby for the users waiting for a game to start*/
     private WaitingRoom waitingRoom;
     /**map of the active users with their token and the game id representing the game they're in*/
