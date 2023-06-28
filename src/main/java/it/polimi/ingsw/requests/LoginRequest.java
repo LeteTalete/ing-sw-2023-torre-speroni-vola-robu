@@ -7,10 +7,10 @@ import java.rmi.RemoteException;
 
 /**request from a client to log in*/
 
-public class loginRequest extends Request {
+public class LoginRequest extends Request {
 
     public final String username;
-    public loginRequest(String name) {
+    public LoginRequest(String name) {
         this.username = name;
     }
 
