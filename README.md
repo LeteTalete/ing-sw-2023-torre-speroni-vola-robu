@@ -28,6 +28,8 @@ The server can be launched using the executable jar Server.jar and writing the f
 ```bash
 java  -Djava.rmi.server.useCodebaseOnly=false -Djava.rmi.server.hostname=yourServerIP -jar ServerExecutable.jar
 ```
+For ensuring the correct funtioning of the RMI connection, it is advised for the server's machine to disable its firewalls.
+
 
 
 ### Client
@@ -39,6 +41,7 @@ java -jar Client.jar
 ```
 
 After the client being launched, the user is asked to choose which interface (GUI orTUI) they want to play with and then they have to insert the IP address that the server is currently running on.
+
 
 ## Implemented Functionalities
 
@@ -59,8 +62,8 @@ Project was tested using JUnit unit tests. Running all written tests with covera
 ## Rules
 
 
-## Explanation of the cards
-For a better understanding of the card's funcionalities, please check the file under /deliverables named CardsReadMe.pdf
+## Explanation of the json files
+For a better understanding of the cards and the board's funcionalities, please check the file under /deliverables named JsonsReadMe.pdf
 
 
 
