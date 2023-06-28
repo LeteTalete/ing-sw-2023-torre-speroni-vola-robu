@@ -545,7 +545,6 @@ public class ClientTUI implements View{
         return ServerIP;
     }
 
-
     public void setServerIP(String serverIP) {
         ServerIP = serverIP;
     }

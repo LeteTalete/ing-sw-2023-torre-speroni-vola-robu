@@ -1,13 +1,6 @@
 package it.polimi.ingsw.view;
 
-import com.sun.javafx.scene.shape.ArcHelper;
-import com.sun.javafx.scene.text.GlyphList;
-import it.polimi.ingsw.client.ClientController;
-import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.model.board.Position;
-import it.polimi.ingsw.model.board.Shelf;
 import it.polimi.ingsw.structures.GameView;
-import it.polimi.ingsw.structures.LivingRoomView;
 import it.polimi.ingsw.structures.PlayerView;
 import it.polimi.ingsw.structures.ShelfView;
 import it.polimi.ingsw.view.ControllerGUI.*;
@@ -15,21 +8,16 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.image.Image;
-
 import java.io.IOException;
-import java.io.PushbackInputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Objects;
 
 public class GUIApplication extends Application {
     //private static GenericController genericController;
-    public static ClientGUI clientGUI;
+    private static ClientGUI clientGUI;
     private static GenericController genericController;
     private static Stage stageWindow;
     private static Scene sceneWindow;
@@ -105,33 +93,6 @@ public class GUIApplication extends Application {
         return stageWindow;
     }
 
-
-    /*
-    public static void behaviorGUI(int command){
-        Platform.runLater(()-> {
-            if(command == 0){
-                //Aggiorna la LivingRoom
-                getBoardPlayer().updateBoard(clientGUI.getGameView().getGameBoardView());
-            }
-            else if(command == 1){
-                //getBoardPlayer().setLivingRoom(clientGUI.getGameView().getGameBoardView());
-            }
-            else if(command == 2){
-                //Setta la posizione della tiles
-                getBoardPlayer().setTileOrderPosition();
-            }
-            else if( command == 3){
-                //Aggiorna la Shelf:
-                PlayerView mine = clientGUI.getGameView().getPlayersView().stream().filter(
-                                (p) -> p.getNickname().equals(clientGUI.getMaster().getUsername())
-                ).findFirst().orElse(null);
-                ShelfView shelfView = mine.getShelf();
-                getBoardPlayer().updateShelfClient(shelfView);
-            }
-        });
-    }
-    */
-
     public static void updateLivingRoom(){
         Platform.runLater( () -> getBoardPlayer().updateBoard(clientGUI.getGameView().getGameBoardView()));
     }
@@ -172,13 +133,34 @@ public class GUIApplication extends Application {
         Platform.runLater(()-> getBoardPlayer().setLabelTurn(message));
     }
 
-    public static void setMyScoreCGC(int id, int token){
-        Platform.runLater( () -> getBoardPlayer().updateScore(id, token, true) );
+    public static void setScorePlayer(int token){
+        Platform.runLater( () -> getBoardPlayer().setScoreCGC(token) );
     }
 
+    public static void updateScore(GameView gameView){
+        Platform.runLater( () -> {
+            String name = gameView.getEndGame();
+            if( name != null){
+                if(name.equals(GUIApplication.clientGUI.getName())){
+                    getBoardPlayer().setScoreCGC(1);
+                } else {
+                    getBoardPlayer().setEmptyTileEndGame();
+                }
+            }
+            getBoardPlayer().setToken(gameView);
+        });
+    }
 
     public static void error(String message){
         Platform.runLater( () -> ErrorMessage.errorMessage(stageWindow, message));
+    }
+
+    public static ClientGUI getClientGUI (){
+        return clientGUI;
+    }
+
+    public static void setClientGUI(ClientGUI clientView){
+        clientGUI = clientView;
     }
 
     public static void main(String args[]){

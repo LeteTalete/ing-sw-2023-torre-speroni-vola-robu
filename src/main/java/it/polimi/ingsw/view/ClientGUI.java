@@ -47,7 +47,7 @@ public class ClientGUI implements View {
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
-        GUIApplication.clientGUI = this;
+        GUIApplication.setClientGUI(this);
     }
     public GameView getGameView(){
         return this.gameView;
@@ -66,6 +66,7 @@ public class ClientGUI implements View {
         }
         GUIApplication.updateLivingRoom(); // behaviorGUI(0);
         GUIApplication.updateShelfPlayer(gameView.getPlayersView());
+        GUIApplication.updateScore(gameView);
         turnPhase();
         //GUIApplication.getBoardPlayer().setLivingRoom(gameView.getGameBoardView());
     }

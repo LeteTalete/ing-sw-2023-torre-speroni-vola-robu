@@ -22,6 +22,8 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.Effect;
 import javafx.scene.effect.InnerShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -59,7 +61,7 @@ public class BoardPlayer extends GenericController {
         int CGC1 = gameView.getCommonGoalCards().get(0).getID();
         int CGC2 = gameView.getCommonGoalCards().get(1).getID();
         int PGC = Objects.requireNonNull(gameView.getPlayersView().stream()
-                .filter(p -> p.getNickname().equals(GUIApplication.clientGUI.getMaster().getUsername())).findFirst().orElse(null)).getPersonalGoalCard().getNumPGC();
+                .filter(p -> p.getNickname().equals(GUIApplication.getClientGUI().getMaster().getUsername())).findFirst().orElse(null)).getPersonalGoalCard().getNumPGC();
         Image PersonalGC = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/imgs/PersonalCards/Personal_Goals" + PGC + ".png")));
         Image CommonGC1 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/imgs/CommonCards/"+ CGC1 +".jpg")));
         Image CommonGC2 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/imgs/CommonCards/" + CGC2 + ".jpg")));
@@ -68,7 +70,7 @@ public class BoardPlayer extends GenericController {
         imagePersonalGoalCard.setImage(PersonalGC);
         choiceChat.getItems().add("all");
         for(PlayerView player : gameView.getPlayersView()){
-            if(!player.getNickname().equals( GUIApplication.clientGUI.getMaster().getUsername() )){
+            if(!player.getNickname().equals( GUIApplication.getClientGUI().getMaster().getUsername() )){
                 choiceChat.getItems().add(player.getNickname());
                 VBox chatBox = new VBox();
                 chatBox.setPrefWidth(all.getPrefWidth());
@@ -91,86 +93,50 @@ public class BoardPlayer extends GenericController {
                 }
             }
         });
-        setToken(1);
-        setToken(2);
-        //setto la sedia: da aggiungeree!!
-        if(GUIApplication.clientGUI.getName().equals(gameView.getPlayersView().get(0).getNickname()) ) chair.setVisible(true);
+        if(GUIApplication.getClientGUI().getName().equals(gameView.getPlayersView().get(0).getNickname()) ) chair.setVisible(true);
     }
 
     public void updateShelfOthers(ArrayList<ShelfView> shelfViews){
         setShelf(shelfPlayer1, shelfViews.get(0));
     }
 
-    /*
-    private void setWindowShelfPlayers(int numPlayers){
-            VBox newPlayer = new VBox();
-            newPlayer.getChildren().addAll(player1.getChildren());
-            players.getItems().add(newPlayer);
-        //windowShelfPlayers.setHeight(550);
-        //windowShelfPlayers.setWidth(1509);
-        //windowShelfPlayers = GUIApplication.setUpStage(SceneNames.SHELFPLAYERS);
-        setWindow(SceneNames.SHELFPLAYERS);
-        //((VBox) playersShelf.getItems().get(0)).getChildren().
-
+    public void setToken(GameView gameView){
+        int score1 =  gameView.getCGC1Points();
+        if(score1 > 0) token1.setImage(new Image( Objects.requireNonNull( getClass().getResourceAsStream("/imgs/ScoreTiles/scoring_" + score1 + ".jpg") ) ) );
+        else token1.setImage(null);
+        int score2 = gameView.getCGC2Points();
+        if(score2 > 0) token2.setImage(new Image( Objects.requireNonNull( getClass().getResourceAsStream("/imgs/ScoreTiles/scoring_" + score2 + ".jpg") ) ) );
+        else token2.setImage(null);
     }
 
-
-    private void setWindow(SceneNames sceneNames){
-        try {
-            if (sceneNames.equals(SceneNames.SHELFPLAYERS)) {
-                Image icon = new Image(Objects.requireNonNull(GUIApplication.class.getResourceAsStream("/imgs/Icon.png")));
-                FXMLLoader loaderController = new FXMLLoader(GUIApplication.class.getResource(sceneNames.scaneString()));
-                Parent root = loaderController.load();
-                Scene newScene = new Scene(root);
-                windowShelfPlayers.getIcons().add(icon);
-                windowShelfPlayers.setScene(newScene);
-                windowShelfPlayers.setTitle("Shelf Other Players");
-                windowShelfPlayers.centerOnScreen();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-     */
-
-    public void setToken(int id){
-        if(id == 1){
-            int score1 =  GUIApplication.clientGUI.getGameView().getCGC1Points();
-            token1.setImage(new Image( Objects.requireNonNull( getClass().getResourceAsStream("/imgs/ScoreTiles/scoring_" + score1 + ".jpg") ) ) );
-        }
-        else if(id == 2){
-            int score2 = GUIApplication.clientGUI.getGameView().getCGC2Points();
-            token2.setImage(new Image( Objects.requireNonNull( getClass().getResourceAsStream("/imgs/ScoreTiles/scoring_" + score2 + ".jpg") ) ) );
-        }
-    }
-
-    private void setScoreCGC(HBox boxScore, int token){
+    public void setScoreCGC(int token){
         Image score;
         if(token == 1){
             score = new Image( Objects.requireNonNull( getClass().getResourceAsStream("/imgs/ScoreTiles/endgame.jpg")));
         } else {
             score = new Image( Objects.requireNonNull( getClass().getResourceAsStream("/imgs/ScoreTiles/scoring_" + token + ".jpg")));
         }
-        for(Node node : boxScore.getChildren()){
+        for(Node node : scorePlayer.getChildren()){
             if( ((ImageView) node).getImage() == null ){
                 ( (ImageView) node).setImage(score);
-                //( (ImageView) node).setEffect( );
+                DropShadow dropShadow = new DropShadow();
+                dropShadow.setHeight(20);
+                dropShadow.setWidth(20);
+                dropShadow.setSpread(0.15);
+                dropShadow.setOffsetX(1.2);
+                dropShadow.setOffsetY(2.0);
+                node.setEffect(dropShadow);
                 break;
             }
         }
     }
 
-    public void updateScore(int id, int token, boolean myScore){
-        if(myScore){
-            setScoreCGC(scorePlayer, token);
-            setToken(id);
-        } else {
-            // ancora da fare
-        }
+    public void setEmptyTileEndGame(){
+        tileEndGame.setVisible(false);
     }
 
+
     public void updateBoard(LivingRoomView livingRoomView){
-        //aggiorno i token, aggiorno la tabella dei miei punteggi:
         livingRoom.getChildren().clear();
         tileChoosenP.clear();
         tileChoosenI.clear();
@@ -233,21 +199,12 @@ public class BoardPlayer extends GenericController {
                 orderT += " " + (pos + 1);
             }
             System.out.println("ORDER: " + orderT);
-            GUIApplication.clientGUI.getCommPars().elaborateInput("order" + orderT );
+            GUIApplication.getClientGUI().getCommPars().elaborateInput("order" + orderT );
             int columnChoosen =  Integer.parseInt( ( (Label) ((StackPane) mouseEvent.getSource()).getChildren().get(1) ).getText() ) - 1;
-            GUIApplication.clientGUI.getCommPars().elaborateInput("column " + columnChoosen );
+            GUIApplication.getClientGUI().getCommPars().elaborateInput("column " + columnChoosen );
         } else {
-            GUIApplication.clientGUI.printError("First you have to choose the tiles and press OK");
+            GUIApplication.getClientGUI().printError("First you have to choose the tiles and press OK");
         }
-    }
-
-    //Quando un giocatore prende la tileEndGame deve essere resa invisibile in quanto è stata presa dal giocatore,
-    //se è stata presa dal giocatore stesso allora deve essere mostrata nello ScoreBox
-    public void tileEndGameTaken(Boolean currentPlayer){
-        if(currentPlayer){
-            ((ImageView) scorePlayer.getChildren().get(2)).setImage(tileEndGame.getImage());
-        }
-        tileEndGame.setVisible(false);
     }
 
     public void clickedPlayers(ActionEvent actionEvent){
@@ -259,7 +216,7 @@ public class BoardPlayer extends GenericController {
         for(String tile: tileChoosenP){
             posTile += " " + tile;
         }
-        GUIApplication.clientGUI.getCommPars().elaborateInput("tiles" + posTile);
+        GUIApplication.getClientGUI().getCommPars().elaborateInput("tiles" + posTile);
     }
 
     //Questa funzione mi permette di gestire il trascinamento delle tile 2/3 tile per cui dovrò decidere l'ordine:
@@ -359,7 +316,7 @@ public class BoardPlayer extends GenericController {
         String text = boxMessage.getText();
         if(!text.isBlank()){
             //saveMessage(choiceChat.getValue().toString(), GUIApplication.clientGUI.getMaster().getUsername(), text);
-            GUIApplication.clientGUI.getCommPars().elaborateInput("@" + choiceChat.getValue() + " " + text);
+            GUIApplication.getClientGUI().getCommPars().elaborateInput("@" + choiceChat.getValue() + " " + text);
             System.out.println("INVIO MESSAGGIO: " + choiceChat.getValue() + "Text: " + text );
         }
         boxMessage.setText(null);
@@ -386,9 +343,9 @@ public class BoardPlayer extends GenericController {
 
 
     private String colorBackgroundChat(String player){
-        if(Objects.equals(player, "you")) player = GUIApplication.clientGUI.getMaster().getUsername();
-        for(int i= 0; i < GUIApplication.clientGUI.getGameView().getPlayersView().size(); i++){
-            if(GUIApplication.clientGUI.getGameView().getPlayersView().get(i).getNickname().equals(player)){
+        if(Objects.equals(player, "you")) player = GUIApplication.getClientGUI().getMaster().getUsername();
+        for(int i= 0; i < GUIApplication.getClientGUI().getGameView().getPlayersView().size(); i++){
+            if(GUIApplication.getClientGUI().getGameView().getPlayersView().get(i).getNickname().equals(player)){
                 return colorChat[i];
             }
         }

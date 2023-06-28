@@ -168,8 +168,8 @@ public class ClientListenerGUI extends UnicastRemoteObject implements IClientLis
     @Override
     public void notifyOnCGC(String nickname, int id, int points) throws RemoteException {
         if(nickname.equals(view.getName())){
-            GUIApplication.setMyScoreCGC(id, points);
             view.displayNotification("You gained " + points + " points from Common Goal Card " + id + "!");
+            GUIApplication.setScorePlayer(points);
         }
         else{
             view.displayNotification(nickname + " gained " + points + " points from Common Goal Card " + id + "!");

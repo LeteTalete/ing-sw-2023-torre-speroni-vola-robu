@@ -47,22 +47,22 @@ public class ConnectionPlayer extends GenericController {
     //Si attiva quando premo sui bottone ok della finestra di connessione
     public void clickedButtonConnetion(MouseEvent mouseEvent){
         //TODO Nel caso ci fossero dei problemi a lato server il codice si fotte!!(Finisce in un ciclo di errori senza uscita)
-        GUIApplication.clientGUI.setConnectionType(this.typeConnection);
-        GUIApplication.clientGUI.setServerIP(IP.getText());
-        GUIApplication.clientGUI.setPort(port.getText());
-        GUIApplication.clientGUI.getMaster().setupConnection();
+        GUIApplication.getClientGUI().setConnectionType(this.typeConnection);
+        GUIApplication.getClientGUI().setServerIP(IP.getText());
+        GUIApplication.getClientGUI().setPort(port.getText());
+        GUIApplication.getClientGUI().getMaster().setupConnection();
     }
 
     //Si arriva quando il giocatore che ha sta creando la partita ha deciso quale sia il numero dei dei partecipanti
     public void clickedButtonNumPlayers(MouseEvent mouseEvent){
-        GUIApplication.clientGUI.getCommPars().elaborateInput(((Label) (((StackPane) mouseEvent.getSource()).getChildren().get(1))).getText());
+        GUIApplication.getClientGUI().getCommPars().elaborateInput(((Label) (((StackPane) mouseEvent.getSource()).getChildren().get(1))).getText());
 
     }
 
     //Si arriva quando il giocatore ha deciso il suo username
     public void clickedButtonUsername(MouseEvent mouseEvent){
         System.out.println(textUsername.getText());
-        GUIApplication.clientGUI.getCommPars().elaborateInput(textUsername.getText());
+        GUIApplication.getClientGUI().getCommPars().elaborateInput(textUsername.getText());
     }
 
     public void activeWindowSocket(MouseEvent mouseEvent){
