@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Appenders>
+        <RollingFile
+                name="roll-by-time"
+                fileName="app-server.log"
+                filePattern="app-server.%d{yyyy-MM-dd}.log"
+                ignoreExceptions="false">
+            <PatternLayout>
+                <Pattern>%d [%t] %-5p (%F:%L) - %m%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+            </Policies>
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+        <Root level="trace">
+            <AppenderRef ref="roll-by-time"/>
+        </Root>
+    </Loggers>
+</Configuration>

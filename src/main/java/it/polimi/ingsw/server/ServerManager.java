@@ -121,6 +121,9 @@ public class ServerManager extends UnicastRemoteObject implements IRemoteControl
         if(ConnectionManager.get().tokenNames.containsValue(name)){
             viewListener.notifySuccessfulRegistration(name, false, null, false);
         }
+        else if(!activeGames.isEmpty()){
+            viewListener.showTextNotification("There is no waiting room available at the moment. Please try again later.");
+        }
         else{
             String token = generateToken();
             ConnectionManager.get().addClientView(token, name, viewListener);

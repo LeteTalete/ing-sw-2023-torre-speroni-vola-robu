@@ -458,7 +458,7 @@ public class ClientTUI implements View{
     //TODO: this method is never called, maybe it is not necessary
     @Override
     public void showPersonalGoalCard() {
-        //todo?
+
     }
 
     /**
@@ -548,16 +548,6 @@ public class ClientTUI implements View{
         if (first) {
             askAmountOfPlayers();
         }
-    }
-
-    //TODO: this method is never called, maybe it is not necessary
-    public int getMyTurn() {
-        return master.isMyTurn();
-    }
-
-    //TODO: this method is never called, maybe it is not necessary
-    public boolean isGameOn() {
-        return master.isGameOn();
     }
 
     /**
@@ -675,11 +665,6 @@ public class ClientTUI implements View{
      */
     public String getServerIP() {
         return ServerIP;
-    }
-
-    //TODO: this method is never called, maybe it is not necessary
-    public void setServerIP(String serverIP) {
-        ServerIP = serverIP;
     }
 
     /**

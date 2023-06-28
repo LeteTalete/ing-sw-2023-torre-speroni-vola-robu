@@ -141,7 +141,6 @@ public class ClientController {
             clientSocket.setResponseDecoder(responseDecoder);
             clientSocket.setViewClient(currentView);
             clientSocket.setConnected(true);
-            clientSocket.setSynCheckTimer(true);
             clientSocket.startClient();
 
         }catch(NullPointerException n){
@@ -168,7 +167,6 @@ public class ClientController {
             clientRMI.setResponseDecoder(responseDecoder);
             clientRMI.setConnected(true);
             userLogin();
-            clientRMI.setSynCheckTimer(true);
 
         }catch(UnknownHostException b){
             currentView.printError("Unknown Host. Please try again.");
@@ -209,6 +207,7 @@ public class ClientController {
             currentConnection.setUserToken(token);
             commPars.setFirst(first);
             setToCLose(false);
+            currentConnection.setSynCheckTimer(true);
         }
         else{
             userLogin();
