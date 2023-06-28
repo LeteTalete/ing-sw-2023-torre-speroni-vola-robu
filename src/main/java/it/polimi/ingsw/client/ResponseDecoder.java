@@ -31,7 +31,7 @@ public class ResponseDecoder implements ResponseHandler {
      * of the controller setReceivedResponse to true, and it notifies all the waiting threads to unlock them.*/
     @Override
     public void handle(LoginResponse loginResponse) throws RemoteException {
-        clientListener.notifySuccessfulRegistration(loginResponse.name, loginResponse.b, loginResponse.token, loginResponse.first);
+        clientListener.notifySuccessfulRegistration(loginResponse.getName(), loginResponse.isB(), loginResponse.getToken(), loginResponse.isFirst());
         client.setReceivedResponse(false);
         synchronized (client) {
             client.notifyAll();

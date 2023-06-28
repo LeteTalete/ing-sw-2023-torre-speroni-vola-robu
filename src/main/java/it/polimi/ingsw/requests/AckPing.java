@@ -8,7 +8,7 @@ import java.rmi.RemoteException;
 /**ack response sent by the server to the client*/
 
 public class AckPing extends Request{
-    private String token;
+    private final String token;
     public AckPing(String tToken){
         token = tToken;
     }

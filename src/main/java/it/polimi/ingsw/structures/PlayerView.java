@@ -10,7 +10,7 @@ public class PlayerView implements Serializable {
     private String nickname;
     private ShelfView shelfView;
     private PersonalGoalCard personalGoalCard;
-    public int score;
+    private final int score;
 
     /**
      * Constructor PlayerView creates a new PlayerView instance. It sets the attributes of the class so that the
@@ -55,6 +55,5 @@ public class PlayerView implements Serializable {
     public PersonalGoalCard getPersonalGoalCard(){
         return this.personalGoalCard;
     }
-
 
 }

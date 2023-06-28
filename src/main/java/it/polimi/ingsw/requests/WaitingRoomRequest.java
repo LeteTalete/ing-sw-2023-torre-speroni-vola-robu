@@ -8,9 +8,9 @@ import java.rmi.RemoteException;
 /**request from the client to create a waiting room*/
 
 public class WaitingRoomRequest extends Request{
-    public final String token;
-    public final String name;
-    public final int num;
+    private final String token;
+    private final String name;
+    private final int num;
 
     /**WaitingRoomRequest constructor.
      * @param username - name of the client.

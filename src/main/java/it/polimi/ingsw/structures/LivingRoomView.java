@@ -15,7 +15,6 @@ public class LivingRoomView implements Serializable{
      */
     public LivingRoomView(LivingRoom livingRoom){
         this.boardView = livingRoom.getBoard();
-
     }
 
     /**

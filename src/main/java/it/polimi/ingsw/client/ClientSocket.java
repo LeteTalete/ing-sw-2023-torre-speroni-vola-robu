@@ -154,7 +154,7 @@ public class ClientSocket implements IClientConnection {
     @Override
     public synchronized void login(String name) {
         setReceivedResponse(true);
-        request(new loginRequest(name));
+        request(new LoginRequest(name));
         while(notReceivingResponse){
             try{
                 this.wait();

@@ -7,6 +7,8 @@ import it.polimi.ingsw.view.View;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.net.PortUnreachableException;
+import java.rmi.RemoteException;
 import java.rmi.UnknownHostException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -111,12 +113,10 @@ public class ClientController {
 
         int port = 0;
         
-        try
-        {
+        try {
             port = Integer.parseInt(currentView.getPort());
         }
-        catch(Exception e)
-        {
+        catch(Exception e) {
             setupConnection();
         }
 
@@ -173,10 +173,12 @@ public class ClientController {
         }catch(UnknownHostException b){
             currentView.printError("Unknown Host. Please try again.");
             setupConnection();
+        }catch (RemoteException e){
+            currentView.displayNotification("RemoteException. Please try again.");
+            setupConnection();
         }
         catch(Exception e){
             fileLog.error(e);
-            setupConnection();
         }
     }
 

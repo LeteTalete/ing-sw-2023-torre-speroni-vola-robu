@@ -5,10 +5,10 @@ import java.rmi.RemoteException;
 /**response after a login request*/
 
 public class LoginResponse implements Response {
-    public final String token;
-    public final String name;
-    public final boolean b;
-    public final boolean first;
+    private final String token;
+    private final String name;
+    private final boolean b;
+    private final boolean first;
     /**loginResponse constructor.
      * @param username - username of the client.
      * @param f - boolean signalling whether the client needs to create a waiting room.
@@ -26,4 +26,19 @@ public class LoginResponse implements Response {
     }
 
 
+    public String getToken() {
+        return token;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public boolean isB() {
+        return b;
+    }
+
+    public boolean isFirst() {
+        return first;
+    }
 }
