@@ -25,6 +25,7 @@ public class GameController {
     private ServerManager master;
     //todo explain what this is, i'm not sure
     private Map<Integer,Integer> cardsClaimed;
+    private boolean lastRound;
 
     /**
      * Constructor GameController creates a new GameController instance and initializes the game model.
@@ -156,11 +157,12 @@ public class GameController {
         updateBoardCouples();
 
         nextTurn();
+        if ( lastRound ) {
+            lastRound = false;
+            notifyOnLastTurn(model.getPreviousPlayer().getNickname());
+        }
         if ( !(model.getEndGame() != null && model.getPreviousPlayer().getChair()) ){
             notifyPointsCGC();
-            if ( model.getCurrentPlayer().getMyShelf().checkShelfFull() ) {
-                notifyOnLastTurn(model.getCurrentPlayer().getNickname());
-            }
         }
     }
 
@@ -274,5 +276,9 @@ public class GameController {
      */
     public Map<Integer, Integer> getCardsClaimed() {
         return cardsClaimed;
+    }
+
+    public void setLastRound() {
+        this.lastRound = true;
     }
 }
