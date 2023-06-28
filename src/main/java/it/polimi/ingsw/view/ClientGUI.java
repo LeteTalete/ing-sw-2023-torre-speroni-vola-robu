@@ -66,6 +66,7 @@ public class ClientGUI implements View {
         }
         GUIApplication.updateLivingRoom(); // behaviorGUI(0);
         GUIApplication.updateShelfPlayer(gameView.getPlayersView());
+        GUIApplication.updateShelf(gameView);
         GUIApplication.updateScore(gameView);
         turnPhase();
         //GUIApplication.getBoardPlayer().setLivingRoom(gameView.getGameBoardView());
@@ -271,7 +272,7 @@ public class ClientGUI implements View {
 
     @Override
     public void chooseColumn() {
-        GUIApplication.updateShelf(gameView);// behaviorGUI(3);
+        //GUIApplication.updateShelf(gameView);// behaviorGUI(3);
 
     }
 

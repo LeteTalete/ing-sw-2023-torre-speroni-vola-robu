@@ -122,7 +122,6 @@ public class GUIApplication extends Application {
             });
             getBoardPlayer().updateShelfOthers(shelfPlayers);
         });
-
     }
 
     public static void setMessageEntry(String sender, String message, String receiver){

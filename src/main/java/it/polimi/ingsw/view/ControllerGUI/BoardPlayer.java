@@ -40,20 +40,19 @@ import java.util.Objects;
 public class BoardPlayer extends GenericController {
     @FXML private VBox chooseTileBox, all;
     @FXML private StackPane boxChat;
-    @FXML private HBox scorePlayer;
+    @FXML private HBox scorePlayer, shelfOtherPlayers, commonCald;
     @FXML private TextArea boxMessage;
     @FXML private Label labelTurn;
     @FXML private ImageView chair, tileEndGame, imageCommonCard1, imageCommonCard2, imagePersonalGoalCard, token1, token2, tile1, tile2, tile3;
     @FXML private ChoiceBox choiceChat;
-    @FXML private GridPane myShelf, livingRoom, shelfPlayer1;
-    private Color colorTileTaken = new Color(0.9548, 1.0, 0.21, 1.0);//Yellow
+    @FXML private GridPane myShelf, livingRoom;
+    private Color colorTileTaken = new Color(0.9548, 1.0, 0.21, 1.0);
     private double xOffset = 0, yOffset = 0;
     private ArrayList<String> tileChoosenP = new ArrayList<>();
     private ArrayList<Integer> tileOrderPosition = new ArrayList<>();
     private ArrayList<Image> tileChoosenI = new ArrayList<>();
-    private String[] colorChat = {"#f0fff0", "#ffc07e", "#93c47d", "#ffd049"}; //Ciano, arancione, verde, giallo
+    private String[] colorChat = {"#f0fff0", "#ffc07e", "#93c47d", "#ffd049"};
     private boolean columnActive = false;
-    //private Stage windowShelfPlayers = new Stage();
 
 
     //Voglio caricare la board quando mi mostra la finestra in cui mi dice che sta caricando, in questo modo quando apro la finestra della partita è già tutto caricato
@@ -69,8 +68,10 @@ public class BoardPlayer extends GenericController {
         imageCommonCard2.setImage(CommonGC2);
         imagePersonalGoalCard.setImage(PersonalGC);
         choiceChat.getItems().add("all");
+        ArrayList<String> namePlayers = new ArrayList<>();
         for(PlayerView player : gameView.getPlayersView()){
-            if(!player.getNickname().equals( GUIApplication.getClientGUI().getMaster().getUsername() )){
+            if(!player.getNickname().equals( GUIApplication.getClientGUI().getName() )){
+                namePlayers.add(player.getNickname());
                 choiceChat.getItems().add(player.getNickname());
                 VBox chatBox = new VBox();
                 chatBox.setPrefWidth(all.getPrefWidth());
@@ -93,11 +94,24 @@ public class BoardPlayer extends GenericController {
                 }
             }
         });
+        setShelfOtherPlayers(namePlayers);
         if(GUIApplication.getClientGUI().getName().equals(gameView.getPlayersView().get(0).getNickname()) ) chair.setVisible(true);
     }
 
+    private void setShelfOtherPlayers(ArrayList<String> name){
+        for(int i = 0; i < name.size(); i++){
+            StackPane shelf = (StackPane) shelfOtherPlayers.getChildren().get(i);
+            shelf.setVisible(true);
+            Label labelName = (Label) shelf.getChildren().get(2);
+            labelName.setText(name.get(i) );
+        }
+    }
+
     public void updateShelfOthers(ArrayList<ShelfView> shelfViews){
-        setShelf(shelfPlayer1, shelfViews.get(0));
+        for(int i = 0; i < shelfViews.size(); i++){
+            GridPane shelf = (GridPane) ( (StackPane) shelfOtherPlayers.getChildren().get(i)).getChildren().get(0);
+            setShelf(shelf, shelfViews.get(i));
+        }
     }
 
     public void setToken(GameView gameView){
@@ -133,6 +147,18 @@ public class BoardPlayer extends GenericController {
 
     public void setEmptyTileEndGame(){
         tileEndGame.setVisible(false);
+    }
+
+    public void showDescriptionCGC(MouseEvent mouseEvent){
+        int i = 0;
+        for(Node node : commonCald.getChildren() ){
+            if(mouseEvent.getSource().equals(node)){
+                String description = GUIApplication.getClientGUI().getGameView().getCommonGoalCards().get(i).getDescription();
+                GUIApplication.error(description);
+                break;
+            }
+            ++i;
+        }
     }
 
 
@@ -207,10 +233,6 @@ public class BoardPlayer extends GenericController {
         }
     }
 
-    public void clickedPlayers(ActionEvent actionEvent){
-
-    }
-
     public void clickedButtonOK(MouseEvent mouseEvent){
         String posTile = "";
         for(String tile: tileChoosenP){
@@ -228,7 +250,6 @@ public class BoardPlayer extends GenericController {
         });
 
         imageView.setOnMouseDragged(event -> {
-            //Sposta l'immagine sulla nuova posizione
             imageView.setTranslateX(event.getSceneX() - xOffset);
             imageView.setTranslateY(event.getSceneY() - yOffset);
         });
@@ -274,10 +295,7 @@ public class BoardPlayer extends GenericController {
         stackPane.getChildren().get(0).setOpacity(1);
     }
 
-    //Devo poi gestire i vari comportamenti a seconda dei bottini su cui clicco:
-    //...
 
-    //Seleziona le Tile su cui clicco e se ci passo sopra diventano opache:
     public void setInnerShadowTile(ImageView tile){
         tile.setOnMouseClicked( event -> {
             int row = GridPane.getRowIndex(tile);
@@ -315,7 +333,6 @@ public class BoardPlayer extends GenericController {
     public void sendMessage(MouseEvent mouseEvent){
         String text = boxMessage.getText();
         if(!text.isBlank()){
-            //saveMessage(choiceChat.getValue().toString(), GUIApplication.clientGUI.getMaster().getUsername(), text);
             GUIApplication.getClientGUI().getCommPars().elaborateInput("@" + choiceChat.getValue() + " " + text);
             System.out.println("INVIO MESSAGGIO: " + choiceChat.getValue() + "Text: " + text );
         }

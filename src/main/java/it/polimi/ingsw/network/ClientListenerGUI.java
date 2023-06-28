@@ -36,7 +36,7 @@ public class ClientListenerGUI extends UnicastRemoteObject implements IClientLis
             view.displayNotification("Registration Successful!");
             setToken(token);
             if (!first){
-                view.displayNotification("Waiting for other players to join...");
+                showWaitingRoomNotification("Waiting for other players to join...");
             }
             view.serverSavedUsername(name, true, token, first);
         }
@@ -78,7 +78,7 @@ public class ClientListenerGUI extends UnicastRemoteObject implements IClientLis
     public void notifyColumnOk(boolean ok) throws RemoteException {
         if(ok){
             view.displayNotification("Choice of column successful!");
-            view.chooseColumn(); //Mi permette di aggiornare la shelf
+            //view.chooseColumn(); //Mi permette di aggiornare la shelf
         }
         else{
             view.printError("Invalid move. Try again.");
@@ -88,7 +88,7 @@ public class ClientListenerGUI extends UnicastRemoteObject implements IClientLis
     @Override
     public void notifyEndTurn() throws RemoteException {
         //view.setMyTurn(0);
-        view.displayNotification("Turn ended.");
+        view.printError("Turn ended.");
     }
 
     @Override
