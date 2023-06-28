@@ -190,11 +190,11 @@ public class Game {
      */
     public void insertTiles(int columnChosen, ArrayList<Tile> tiles){
         this.getCurrentPlayer().getMyShelf().insertTiles(columnChosen, tiles);
+
         if ( endGame == null ) {
             if (this.getCurrentPlayer().getMyShelf().checkShelfFull()) {
-                setEndGame(this.getCurrentPlayer().getNickname());
-                gameController.notifyOnLastTurn(this.getCurrentPlayer().getNickname());
-            }
+                setEndGame(this.getCurrentPlayer().getNickname());}
+                gameController.setLastRound();
         }
     }
 
