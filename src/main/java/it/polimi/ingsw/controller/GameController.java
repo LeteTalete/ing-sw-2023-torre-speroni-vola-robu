@@ -158,6 +158,9 @@ public class GameController {
         nextTurn();
         if ( !(model.getEndGame() != null && model.getPreviousPlayer().getChair()) ){
             notifyPointsCGC();
+            if ( model.getCurrentPlayer().getMyShelf().checkShelfFull() ) {
+                notifyOnLastTurn(model.getCurrentPlayer().getNickname());
+            }
         }
     }
 

@@ -192,9 +192,7 @@ public class Game {
         this.getCurrentPlayer().getMyShelf().insertTiles(columnChosen, tiles);
         if ( endGame == null ) {
             if (this.getCurrentPlayer().getMyShelf().checkShelfFull()) {
-                setEndGame(this.getCurrentPlayer().getNickname());
-                gameController.notifyOnLastTurn(this.getCurrentPlayer().getNickname());
-            }
+                setEndGame(this.getCurrentPlayer().getNickname());}
         }
     }
 

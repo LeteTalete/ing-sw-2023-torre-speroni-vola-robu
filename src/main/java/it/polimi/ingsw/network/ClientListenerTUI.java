@@ -106,8 +106,7 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
     public void notifyLastTurn(String firstDoneUser) throws RemoteException {
         if(firstDoneUser.equals(view.getName())){
             view.displayNotification("You completed your Shelfie! Last round starts now.");
-        }
-        else view.displayNotification(firstDoneUser + "completed their Shelfie. Last round starts now!");
+        } else view.displayNotification(firstDoneUser + " completed their Shelfie. Last round starts now!");
     }
 
     /**method notifyChatMessage used to display a chat message.
@@ -205,8 +204,7 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
     public void notifyOnCGC(String nickname, int id, int points) throws RemoteException {
         if(nickname.equals(view.getName())){
             view.displayNotification("You gained " + points + " points from Common Goal Card " + id + "!");
-        }
-        else view.displayNotification(nickname + " gained " + points + " points from Common Goal Card " + id + "!");
+        } else view.displayNotification(nickname + " gained " + points + " points from Common Goal Card " + id + "!");
     }
 
     /**method notifyAboutDisconnection notifies about the disconnection of a user.
