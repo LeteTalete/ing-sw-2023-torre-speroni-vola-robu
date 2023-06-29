@@ -342,12 +342,11 @@ public class CommandParsing {
         choiceNumber = Integer.parseInt(args.get(0));
     }
 
-    //todo specify args and command params
     /**
      * method parseMultipleInteger parses multiple strings into multiple integers and saves them into
      * multipleChoiceNumber parameter
-     * @param args
-     * @param command
+     * @param args - list of strings containing user's input
+     * @param command - the first word typed by the user
      */
     private void parseMultipleInteger(List<String> args, String command) {
         if(args.size() < 1){
@@ -362,12 +361,15 @@ public class CommandParsing {
         }
     }
 
-    //todo
+    /**setPlaying method is used to set the attribute isPlaying to true when it's the user's turn
+     * @param playing - when this int is >0, the user is either choosing the tiles, the column or re-arranging
+     * their tiles; when it's 0, it is not the user's turn*/
     public void setPlaying(int playing) {
         isPlaying = playing > 0;
     }
 
-    //todo
+    /**setGameIsOn is used to set the attribute gameIsOn when the game has started
+     * @param gameIsOn - boolean signalling whether the game has started or not*/
     public void setGameIsOn(boolean gameIsOn) {
         this.gameIsOn = gameIsOn;
     }
@@ -400,7 +402,9 @@ public class CommandParsing {
         return multipleChoiceNumber.size() >= 1 && multipleChoiceNumber.size() <= 3;
     }
 
-    //todo
+    /**setFirst method signals whether the user is the first one connecting, and therefore has to create a
+     * waiting room
+     * @param b - boolean signalling whether the user needs to create a waiting room or not*/
     public void setFirst(boolean b) {
         this.initializingRoom = b;
     }

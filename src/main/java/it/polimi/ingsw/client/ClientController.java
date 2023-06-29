@@ -43,7 +43,6 @@ public class ClientController {
     /**token assigned by the server to the client*/
     private String userToken;
     /**boolean toClose signalling whether the connection needs to be closed*/
-    //todo do we actually need this?
     private boolean toCLose;
 
     /**constructor ClientController sets a new ClientController and initializes the view, the listener,
