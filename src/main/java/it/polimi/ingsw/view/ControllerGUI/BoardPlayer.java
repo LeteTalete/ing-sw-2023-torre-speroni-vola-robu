@@ -73,6 +73,7 @@ public class BoardPlayer extends GenericController {
                 chatBox.setFillWidth(true);
                 boxChat.getChildren().add(chatBox);
             }
+            if(player.getChair()) chair.setVisible(true);
         }
         choiceChat.setValue("all"); //Per settare il valore predefinito
         choiceChat.setOnAction(event -> {
@@ -85,8 +86,8 @@ public class BoardPlayer extends GenericController {
             }
         });
         setShelfOtherPlayers(namePlayers);
-        if(GUIApplication.getClientGUI().getName().equals(gameView.getPlayersView().get(0).getNickname()) ) chair.setVisible(true);
     }
+
 
     private void setShelfOtherPlayers(ArrayList<String> name){
         for(int i = 0; i < name.size(); i++){

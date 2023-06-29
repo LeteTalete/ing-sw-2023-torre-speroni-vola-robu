@@ -107,25 +107,25 @@ public class ClientController {
      * To initialize the connection, it asks the server IP and then it calls the method setupRMI or setupSocket.
      * */
     public void setupConnection() {
-        currentView.askServerIP();
+        //.askServerIP();
         String SIP = currentView.getServerIP();
-        currentView.askPort();
-
+        //currentView.askPort();
         int port = 0;
-        
         try {
             port = Integer.parseInt(currentView.getPort());
+            if(currentView.getConnectionType().equals("RMI")) {
+                setupRMI(SIP, port);
+            }
+            else if(currentView.getConnectionType().equals("SOCKET")){
+                setupSocket(SIP, port);
+            }
         }
         catch(Exception e) {
-            setupConnection();
+            //setupConnection();
+            currentView.printError("Server not found. Please try again.");
+            currentView.askConnectionServer();
         }
 
-        if(currentView.getConnectionType().equals("RMI")) {
-            setupRMI(SIP, port);
-        }
-        else if(currentView.getConnectionType().equals("SOCKET")){
-            setupSocket(SIP, port);
-        }
     }
 
 
@@ -146,7 +146,8 @@ public class ClientController {
 
         }catch(NullPointerException n){
             currentView.printError("Server not found. Please try again.");
-            setupConnection();
+            //setupConnection();
+            currentView.askConnectionServer();
         }
         catch (Exception e) {
             fileLog.error(e);
@@ -172,10 +173,12 @@ public class ClientController {
 
         }catch(UnknownHostException b){
             currentView.printError("Unknown Host. Please try again.");
-            setupConnection();
+            //setupConnection();
+            currentView.askConnectionServer();
         }catch (RemoteException e){
-            currentView.displayNotification("RemoteException. Please try again.");
-            setupConnection();
+            currentView.printError("RemoteException. Please try again.");
+            //setupConnection();
+            currentView.askConnectionServer();
         }
         catch(Exception e){
             fileLog.error(e);

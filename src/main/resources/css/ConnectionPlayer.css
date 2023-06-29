@@ -4,11 +4,6 @@
     -fx-opacity: 0.8;
 }
 
-.buttonChoose{
-    -fx-background-image: url("../imgs/barra.png");
-    -fx-background-size: stretch;
-}
-
 .labelBackground{
     -fx-background-image: url("../imgs/base.jpg");
     -fx-background-size: stretch;

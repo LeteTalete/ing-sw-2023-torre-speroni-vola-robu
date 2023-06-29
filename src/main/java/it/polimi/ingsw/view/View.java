@@ -42,7 +42,7 @@ public interface View {
     void running();
     void printCommands();
     void changeTurn(String name);
-    void askServerIP();
+    void askConnectionServer();
     String getServerIP();;
     void chooseColumn();
     void chooseOrder();
@@ -52,7 +52,6 @@ public interface View {
     void hideShelves();
     void passTilesToView(ArrayList<Position> tiles);
     void passSyn();
-
-    void askPort();
+    //void askPort();
     String getPort();
 }

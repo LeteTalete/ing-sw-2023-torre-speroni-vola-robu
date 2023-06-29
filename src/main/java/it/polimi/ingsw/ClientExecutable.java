@@ -20,12 +20,11 @@ public class ClientExecutable {
         if(interfaceC.equals("GUI")){
             clientView = new ClientGUI();
             clientController = new ClientController(clientView);
-            //GUIApplication.clientGUI = (ClientGUI) clientView;
             GUIApplication.main(null);
         }else {
             clientView = new ClientTUI();
             clientController = new ClientController(clientView);
-            clientController.setupConnection();
+            clientView.chooseConnection(); // clientController.setupConnection();
         }
     }
 

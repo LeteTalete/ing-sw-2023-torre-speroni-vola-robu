@@ -58,18 +58,14 @@ public class ClientGUI implements View {
         this.gameView = new GameView(modelUpdate);
         //
         if (!this.isStarGame) {
-            //Caricamento partita: settare la board
             this.isStarGame = true;
             GUIApplication.showSceneName(SceneNames.BOARDPLAYER);
-            //GUIApplication.behaviorGUI(0);
-            //GUIApplication.getBoardPlayer().setBoadPlayer(gameView);
         }
-        GUIApplication.updateLivingRoom(); // behaviorGUI(0);
+        GUIApplication.updateLivingRoom();
         GUIApplication.updateShelfPlayer(gameView.getPlayersView());
         GUIApplication.updateShelf(gameView);
         GUIApplication.updateScore(gameView);
         turnPhase();
-        //GUIApplication.getBoardPlayer().setLivingRoom(gameView.getGameBoardView());
     }
 
     public void setBoardPlayer(BoardPlayer boardPlayerController){
@@ -77,7 +73,7 @@ public class ClientGUI implements View {
     }
     @Override
     public void chooseConnection() {
-        System.out.println("Connessione");//lasciare vuoto
+
     }
 
     @Override
@@ -169,7 +165,6 @@ public class ClientGUI implements View {
 
     }
 
-
     @Override
     public IClientListener getListener() {
         return this.listenerClient;
@@ -179,7 +174,6 @@ public class ClientGUI implements View {
     @Override
     public void printError(String message) {
         GUIApplication.error(message);
-        System.out.println("Errore: " + message);
     }
 
     @Override
@@ -189,8 +183,6 @@ public class ClientGUI implements View {
 
     @Override
     public void startRun() {
-
-
     }
 
     @Override
@@ -208,7 +200,6 @@ public class ClientGUI implements View {
 
     @Override
     public void askForTiles() {
-
     }
 
     @Override
@@ -238,7 +229,7 @@ public class ClientGUI implements View {
     }
 
     @Override
-    public void askServerIP() {
+    public void askConnectionServer() {
 
     }
 
@@ -249,20 +240,17 @@ public class ClientGUI implements View {
 
     @Override
     public void turnPhase(){
-        //Devo mostrare sulla GUI di chi è il turno
         switch (master.isMyTurn()) {
             case 0 -> {
                 GUIApplication.messaggeForPlayer("It's " + gameView.getCurrentPlayerNickname() + "'s turn");
                 displayNotification("It's " + gameView.getCurrentPlayerNickname() + "'s turn");
             }
             case 1 -> {
-                GUIApplication.messaggeForPlayer("It's your turn: Choose the tiles"); //GUIApplication.showWhoseIsTurn("It's your turn: Choose the tiles");
+                GUIApplication.messaggeForPlayer("It's your turn: Choose the tiles");
                 displayNotification(StaticStrings.YOUR_TURN);
-
-                askForTiles();
             }
             case 2 -> {
-                GUIApplication.messaggeForPlayer("It's your turn : Re-arrange the tiles or choose the column"); //GUIApplication.showWhoseIsTurn("It's your turn : Re-arrange the tiles or choose the column");
+                GUIApplication.messaggeForPlayer("It's your turn : Re-arrange the tiles or choose the column");
                 displayNotification(StaticStrings.YOUR_TURN);
                 displayNotification("You can now re-arrange the tiles or choose the column.");
                 chooseOrder();
@@ -272,13 +260,12 @@ public class ClientGUI implements View {
 
     @Override
     public void chooseColumn() {
-        //GUIApplication.updateShelf(gameView);// behaviorGUI(3);
 
     }
 
     @Override
     public void chooseOrder() {
-        GUIApplication.setOrderTile(); // behaviorGUI(2);
+        GUIApplication.setOrderTile();
     }
 
     @Override
@@ -315,11 +302,6 @@ public class ClientGUI implements View {
     @Override
     public String getName(){
         return username;
-    }
-
-    @Override
-    public void askPort() {
-
     }
 
     @Override

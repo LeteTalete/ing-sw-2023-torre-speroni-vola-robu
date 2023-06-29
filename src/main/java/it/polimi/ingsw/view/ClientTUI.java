@@ -209,7 +209,7 @@ public class ClientTUI implements View{
         } while (!connection.equals("RMI") && !connection.equals("SOCKET"));
 
         connectionType = connection;
-
+        askConnectionServer();
     }
 
     /**
@@ -268,11 +268,14 @@ public class ClientTUI implements View{
         master.isItMyTurn(name);
     }
 
-    /** Method askServerIP is used to ask the user to insert the server IP. */
+    /** Method askServerIP is used to ask the user to insert the server IP end the server port. */
     @Override
-    public void askServerIP() {
+    public void askConnectionServer() {
         writeText("Insert server IP: ['xxx.xxx.xxx.xxx']");
         ServerIP = fromInput.nextLine();
+        writeText("Insert server port: ['xxxx']");
+        port = fromInput.nextLine();
+        master.setupConnection();
     }
 
     /**
@@ -651,13 +654,6 @@ public class ClientTUI implements View{
     @Override
     public void passSyn() {
         master.onSyn();
-    }
-
-    /** Method askPort is used to ask the player to insert the server port. */
-    @Override
-    public void askPort() {
-        writeText("Insert server port: ['xxxx']");
-        port = fromInput.nextLine();
     }
 
     /**

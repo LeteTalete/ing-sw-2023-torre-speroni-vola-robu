@@ -98,7 +98,7 @@ public class ClientSocket implements IClientConnection {
         }catch (IOException e){
             fileLog.error(e);
             //if the connection is lost
-            currentView.displayNotification("Connection lost. Please try again later.");
+            currentView.printError("Connection lost. Please try again later.");
         }
         return null;
     }
@@ -109,8 +109,9 @@ public class ClientSocket implements IClientConnection {
             openStreams();
         } catch (IOException e) {
             fileLog.error(e);
-            currentView.displayNotification("Connection failed. Try again.");
-            master.setupConnection();
+            currentView.printError("Connection failed. Try again.");
+            //master.setupConnection();
+            currentView.askConnectionServer();
         }
         currentView.displayNotification("Connection successful!");
         master.userLogin();
@@ -143,7 +144,7 @@ public class ClientSocket implements IClientConnection {
             }
             catch (InterruptedException e) {
                 fileLog.error(e.getMessage());
-                currentView.displayNotification("Connection error. Please try again later.");
+                currentView.printError("Connection error. Please try again later.");
             }
         }
     }
@@ -160,7 +161,7 @@ public class ClientSocket implements IClientConnection {
                 this.wait();
             }catch (InterruptedException e){
                 fileLog.error(e.getMessage());
-                currentView.displayNotification("Connection error. Please try again later.");
+                currentView.printError("Connection error. Please try again later.");
             }
         }
     }
@@ -174,7 +175,7 @@ public class ClientSocket implements IClientConnection {
             socketOut.reset();
         }catch (IOException e){
             fileLog.error(e.getMessage());
-            currentView.displayNotification("Connection error. Please try again later.");
+            currentView.printError("Connection error. Please try again later.");
         }
     }
 
@@ -209,7 +210,7 @@ public class ClientSocket implements IClientConnection {
                 this.wait();
             }catch (InterruptedException e){
                 fileLog.error(e.getMessage());
-                currentView.displayNotification("Connection error. Please try again later.");
+                currentView.printError("Connection error. Please try again later.");
             }
         }
     }
@@ -225,7 +226,7 @@ public class ClientSocket implements IClientConnection {
                 this.wait();
             }catch (InterruptedException e){
                 fileLog.error(e.getMessage());
-                currentView.displayNotification("Connection error. Please try again later.");
+                currentView.printError("Connection error. Please try again later.");
             }
         }
     }
@@ -261,7 +262,7 @@ public class ClientSocket implements IClientConnection {
                 this.wait();
             }catch (InterruptedException e){
                 fileLog.error(e.getMessage());
-                currentView.displayNotification("Connection error. Please try again later.");
+                currentView.printError("Connection error. Please try again later.");
             }
         }
     }

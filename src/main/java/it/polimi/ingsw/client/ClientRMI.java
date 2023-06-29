@@ -197,7 +197,7 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
     public void setConnected(boolean connected) {
         isConnected = connected;
         if(!connected){
-            viewClient.displayNotification("You lost connection to the server, please try to reconnect");
+            viewClient.printError("You lost connection to the server, please try to reconnect");
         }
     }
 
