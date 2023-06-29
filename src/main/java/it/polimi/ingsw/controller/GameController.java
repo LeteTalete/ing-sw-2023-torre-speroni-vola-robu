@@ -151,12 +151,15 @@ public class GameController {
         }
     }
 
-    /** Method updateGame updates the game by checking the CGCs, updating the board couples and changing the current player. */
+    /**
+     * Method updateGame updates the game by checking the CGCs, updating the board couples and changing the current player.
+     * If the last round has started it notifies the players. If someone has completed a CGC it notifies the players.
+     */
     public void updateGame(){
         checkCGCs();
         updateBoardCouples();
-
         nextTurn();
+
         if ( lastRound ) {
             lastRound = false;
             notifyOnLastTurn(model.getEndGame());
@@ -278,6 +281,9 @@ public class GameController {
         return cardsClaimed;
     }
 
+    /**
+     * Method setLastRound sets the last round boolean to true.
+     */
     public void setLastRound() {
         this.lastRound = true;
     }

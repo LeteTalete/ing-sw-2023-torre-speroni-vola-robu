@@ -15,33 +15,42 @@ import org.apache.logging.log4j.Logger;
 import java.rmi.RemoteException;
 import java.util.*;
 
+/**class ClientTUI for the textual interface of the game*/
 
 public class ClientTUI implements View{
+    /**logger to keep track of events, such as errors and info about parameters*/
     private static final Logger fileLog = LogManager.getRootLogger();
     private GameView gameView;
     private ClientController master;
     private CommandParsing commandParsing;
-    private final ClientListenerTUI listenerClient;
-    static final String colorRESET = "\033[0m";  // Reset Changes
-    static final String colorTitle = "\033[38;5;11m"; //Yellow
-    private final Integer sizeSlotTile = 3; //Tile size to be colored
-    private String connectionType;
+    /**command String is used to save the textual input from the user*/
     private String command;
+    private final ClientListenerTUI listenerClient;
+    private String connectionType;
+    /**isRunning boolean signals whether the TUI is accepting input from the user*/
     private boolean isRunning;
+    private String port;
     private String ServerIP;
+    /**chatQueue attribute is used to keep track of the chat's messages*/
     private final LinkedList<String> chatQueue = new LinkedList<>();
     private String username;
-    private boolean isStarGame = false;
-
+    private boolean isGameOn = false;
+    /**the following booleans are implemented to keep track of the single user's choices about what to see on the
+     * screen, so that each update shows what the user wants*/
+    /**isChatOpen boolean is used to know whether to show the chat or not in the TUI*/
     public boolean isChatOpen = true;
+    /**showCommonGoalCards boolean is used to know whether to show the CommonGoalCards or not in the TUI*/
     private boolean showCommonGoalCards = true;
+    /**showCommandsList boolean is used to know whether to show the commands or not in the TUI*/
     private boolean showCommandsList;
-
+    /**showOtherShelves boolean is used to know whether to show the other players'
+     * shelves or not in the TUI*/
     private boolean showOtherShelves;
+    /**newChatMessage boolean is used to signal if there is an unread message when the chat is hidden*/
     private boolean newChatMessage;
     private ArrayList<Position> tiles;
+    /**Scanner fromInput to scan the user's textual input*/
     private Scanner fromInput;
-    private String port;
 
 
     public ClientTUI() {
@@ -77,8 +86,8 @@ public class ClientTUI implements View{
     public void displayUpdatedModel(ModelUpdate modelUpdate) {
         this.gameView = new GameView(modelUpdate);
         //
-        if (!this.isStarGame) {
-            this.isStarGame = true;
+        if (!this.isGameOn) {
+            this.isGameOn = true;
             DrawTui.setStringPCG(gameView.getPlayersView().stream()
                     .filter(p -> p.getNickname().equals(master.getUsername())).findFirst().orElse(null).getPersonalGoalCard().getPositionTilePC(), 5);
             this.gameView.getCommonGoalCards().forEach((idCGC) -> DrawTui.setStringCGC(idCGC.getID()));
@@ -240,7 +249,6 @@ public class ClientTUI implements View{
     }
 
     /** Method printCommands is used to print all the commands available to the user. */
-    @Override
     public void printCommands() {
         writeText("Here are all the commands you can use while playing:\n" +
                 "help : shows all the commands\n" +
@@ -437,12 +445,6 @@ public class ClientTUI implements View{
         DrawTui.printlnString(shelfAll);
     }
 
-    //TODO: this method is never called, maybe it is not necessary
-    @Override
-    public void showLivingRoom(LivingRoomView livingRoomView) {
-        DrawTui.printlnString(DrawTui.graphicsLivingRoom(livingRoomView, true, false));
-    }
-
     /**
      * Method showBoardPlayer is used to print the board. It will print the living room, the shelf of the player
      * and his personal goal card adjacent to the living room.
@@ -458,12 +460,6 @@ public class ClientTUI implements View{
         DrawTui.printlnString(DrawTui.mergerString(livingRoomP, pcg, true, false, false));
     }
 
-    //TODO: this method is never called, maybe it is not necessary
-    @Override
-    public void showPersonalGoalCard() {
-
-    }
-
     /**
      * Method showCommonGoalCard is used to print the common goal cards.
      * @param token1 - the points still available for the common goal card 1.
@@ -473,12 +469,6 @@ public class ClientTUI implements View{
         String CGC1 = DrawTui.mergerString(DrawTui.getStringCGC(0), DrawTui.graphicsToken(token1, false), false, true, true);
         String CGC2 = DrawTui.mergerString(DrawTui.getStringCGC(1), DrawTui.graphicsToken(token2, true), true, true, true);
         DrawTui.printlnString(DrawTui.mergerString(CGC1, CGC2, true, false, true));
-    }
-
-    //TODO: this method is never called, maybe it is not necessary
-    @Override
-    public void showBoard(LivingRoomView livingRoomView) {
-        DrawTui.printlnString(DrawTui.graphicsLivingRoom(livingRoomView, true, false));
     }
 
     /**
@@ -508,12 +498,6 @@ public class ClientTUI implements View{
         this.master.setMyTurn(b);
     }
 
-    //TODO: this method is never called, maybe it is not necessary
-    @Override
-    public void startRun() {
-        //playing();
-    }
-
 
     /**
      * Method setMaster is used to set the master of the client and the command parsing.
@@ -527,7 +511,6 @@ public class ClientTUI implements View{
     }
 
     /** Method askForTiles is used to ask the player to choose the tiles. */
-    @Override
     public void askForTiles() {
         DrawTui.askWhat("Choose the tiles: [tiles row,column]. Ex: tiles x,y x,y x,y");
     }
@@ -609,22 +592,7 @@ public class ClientTUI implements View{
 
     }
 
-    /**
-     * Method addToChatQueue is used to add a message to the chat queue.
-     * @param message - the message to add.
-     * @param receiver - the username of the receiver of the message.
-     */
-    @Override
-    public void addToChatQueue(String message, String receiver) {
-        if (chatQueue.size() == 4) {
-            chatQueue.removeFirst();
-        }
-        if (receiver.equals("all")) {
-            chatQueue.add("@you to all:" + message);
-        } else {
-            chatQueue.add("@you to " + receiver + ": " + message);
-        }
-    }
+
 
     /** Method printChatQueue is used to print the chat queue. */
     public void printChatQueue() {
