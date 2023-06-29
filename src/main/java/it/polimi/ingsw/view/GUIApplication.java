@@ -26,7 +26,7 @@ public class GUIApplication extends Application {
         stageWindow = stage;
         Image icon = new Image(Objects.requireNonNull(GUIApplication.class.getResourceAsStream("/imgs/Icon.png")));
         stageWindow.getIcons().add(icon);
-        //stageWindow.setResizable(false);
+        stageWindow.setResizable(false);
         showSceneName(SceneNames.CONNECTION);
         stageWindow.setOnCloseRequest(event -> System.exit(0));
     }
@@ -73,14 +73,16 @@ public class GUIApplication extends Application {
                 stageWindow.setTitle("Waiting Room");
             } else if(sceneNames.equals(SceneNames.BOARDPLAYER)){
                 stageWindow.setHeight(780);
-                stageWindow.setWidth(1430);
+                stageWindow.setWidth(1440);
                 stageWindow.setTitle("MyShelfie");
+                stageWindow.setResizable(true);
                 getBoardPlayer().setBoadPlayer(clientGUI.getGameView());
             } else if(sceneNames.equals(SceneNames.ENDGAME)){
                 stageWindow.setHeight(535);
                 stageWindow.setWidth(610);
                 stageWindow.setTitle("Score End Game");
                 getEndGame().setEndGame();
+                stageWindow.setResizable(false);
             }
             stageWindow.setScene(sceneWindow);
             stageWindow.show();
