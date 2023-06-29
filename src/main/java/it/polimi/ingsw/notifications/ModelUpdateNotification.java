@@ -11,15 +11,28 @@ import java.rmi.RemoteException;
 public class ModelUpdateNotification implements Response {
     private final ModelUpdate update;
 
+    /**
+     * modelUpdateNotification constructor
+     * @param updated - the updated model
+     */
     public ModelUpdateNotification(ModelUpdate updated) {
         this.update = updated;
     }
 
+    /**
+     * Method handleResponse is used to handle a response sent by server socket
+     * @param responseHandler - the response handler
+     * @throws RemoteException
+     */
     @Override
     public void handleResponse(ResponseHandler responseHandler) throws RemoteException {
         responseHandler.handle(this);
     }
 
+    /**
+     * Method getUpdate returns the updated model
+     * @return the updated model
+     */
     public ModelUpdate getUpdate() {
         return update;
     }

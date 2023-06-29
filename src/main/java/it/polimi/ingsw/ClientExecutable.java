@@ -36,8 +36,6 @@ public class ClientExecutable {
         do{
             System.out.println("GUI[G] or TUI[T]?");
             input = in.nextLine();
-            /**it could be that the user writes lowercase g or t, so we have to convert the input into
-            capital letter to make it easier to compare**/
             input = input.toUpperCase();
             if(input.equals("G")){
                 input = "GUI";

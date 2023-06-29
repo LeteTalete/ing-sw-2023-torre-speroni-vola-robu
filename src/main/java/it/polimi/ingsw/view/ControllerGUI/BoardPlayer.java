@@ -9,6 +9,7 @@ import it.polimi.ingsw.structures.LivingRoomView;
 import it.polimi.ingsw.structures.PlayerView;
 import it.polimi.ingsw.structures.ShelfView;
 import it.polimi.ingsw.view.GUIApplication;
+
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -40,23 +41,55 @@ public class BoardPlayer extends GenericController {
      * */
     private static final Logger fileLog = LogManager.getRootLogger();
 
+    /**
+     * VBox chooseTileBox is todo
+     * */
     @FXML private VBox chooseTileBox, all;
+    /**
+     * StackPane boxChat contains the chat of the game
+     * */
     @FXML private StackPane boxChat;
+    /**
+     * HBox todo all these fxml attributes
+     * */
     @FXML private HBox scorePlayer, shelfOtherPlayers, commonCard;
     @FXML private TextArea boxMessage;
     @FXML private Label labelTurn;
     @FXML private ImageView chair, tileEndGame, imageCommonCard1, imageCommonCard2, imagePersonalGoalCard, token1, token2, tile1, tile2, tile3;
     @FXML private ChoiceBox choiceChat;
     @FXML private GridPane myShelf, livingRoom;
+
+    /**
+     * colorTileTaken is the color of the tile when it is taken todo
+     * */
     private Color colorTileTaken = new Color(0.9548, 1.0, 0.21, 1.0);
     private double xOffset = 0, yOffset = 0;
-    private ArrayList<String> tileChoosenP = new ArrayList<>();
+    /**
+     * tileChosenP is an arrayList containing the positions of the tiles chosen by the player
+     * */
+    private ArrayList<String> tileChosenP = new ArrayList<>();
+    /**
+     * tileOrderPosition contains the order of the re-arranged tiles
+     * */
     private ArrayList<Integer> tileOrderPosition = new ArrayList<>();
-    private ArrayList<Image> tileChoosenI = new ArrayList<>();
+    /**
+     * tileChoosen contains the pictures of the tiles chosen by the player
+     * */
+    private ArrayList<Image> tileChosenI = new ArrayList<>();
+    /**
+     * colorChat contains the colors of the chat
+     * */
     private String[] colorChat = {"#f0fff0", "#ffc07e", "#93c47d", "#ffd049"};
+    /**
+     * columnActive is a boolean signalling whether the player is allowed to choose a column
+     * */
     private boolean columnActive = false;
 
-
+    /**
+     * setBoardPlayer method sets the entirety of the game window, i.e. the board, the shelves, the chat, and
+     * the goal cards. todo comment all of this
+     * @param gameView - contains the updated view of the game
+     * */
     //Voglio caricare la board quando mi mostra la finestra in cui mi dice che sta caricando, in questo modo quando apro la finestra della partita è già tutto caricato
     public void setBoardPlayer(GameView gameView){
         int CGC1 = gameView.getCommonGoalCards().get(0).getID();
@@ -168,8 +201,8 @@ public class BoardPlayer extends GenericController {
 
     public void updateBoard(LivingRoomView livingRoomView){
         livingRoom.getChildren().clear();
-        tileChoosenP.clear();
-        tileChoosenI.clear();
+        tileChosenP.clear();
+        tileChosenI.clear();
         tileOrderPosition.clear();
         columnActive = false;
         setLivingRoom(livingRoomView);
@@ -239,7 +272,7 @@ public class BoardPlayer extends GenericController {
 
     public void clickedButtonOK(MouseEvent mouseEvent){
         String posTile = "";
-        for(String tile: tileChoosenP){
+        for(String tile: tileChosenP){
             posTile += " " + tile;
         }
         GUIApplication.getClientGUI().getCommPars().elaborateInput("tiles" + posTile);
@@ -280,8 +313,8 @@ public class BoardPlayer extends GenericController {
             }
             if(positionOther >= 0 && positionImage >= 0){
                 Image tempImage = imageView.getImage();
-                tileChoosenI.set(2 - positionImage, ((ImageView) chooseTileBox.getChildren().get(positionOther)).getImage());
-                tileChoosenI.set(2 - positionOther, tempImage);
+                tileChosenI.set(2 - positionImage, ((ImageView) chooseTileBox.getChildren().get(positionOther)).getImage());
+                tileChosenI.set(2 - positionOther, tempImage);
 
                 int tempPosImage = tileOrderPosition.get(2 - positionImage);
                 tileOrderPosition.set(2 - positionImage, tileOrderPosition.get( 2 - positionOther ));
@@ -313,9 +346,9 @@ public class BoardPlayer extends GenericController {
             int column = GridPane.getColumnIndex(tile);
             String positionTile = row + "," + column;
             if(tile.getEffect() == null) {
-                if (tileChoosenP.size() != 3) {
-                    tileChoosenP.add(positionTile);
-                    tileChoosenI.add(tile.getImage());
+                if (tileChosenP.size() != 3) {
+                    tileChosenP.add(positionTile);
+                    tileChosenI.add(tile.getImage());
                     InnerShadow tileShadow = new InnerShadow();
                     tileShadow.setColor(colorTileTaken);
                     tileShadow.setChoke(0.35);
@@ -329,9 +362,9 @@ public class BoardPlayer extends GenericController {
                 }
             } else {
                     tile.setEffect(null);
-                    int pos = tileChoosenP.indexOf(positionTile);
-                    tileChoosenP.remove(pos);
-                    tileChoosenI.remove(pos);
+                    int pos = tileChosenP.indexOf(positionTile);
+                    tileChosenP.remove(pos);
+                    tileChosenI.remove(pos);
                     if ( columnActive ) {
                         columnActive = false;
                         Platform.runLater(this::clearOrderPosition);
@@ -404,10 +437,10 @@ public class BoardPlayer extends GenericController {
     public void setTileOrderPosition(){
         columnActive = true;
         clearOrderPosition();
-        for(int i = 0; i < tileChoosenI.size(); i++){
+        for(int i = 0; i < tileChosenI.size(); i++){
             tileOrderPosition.add(i);
             ImageView tile = (ImageView) chooseTileBox.getChildren().get(2 - i);
-            tile.setImage(tileChoosenI.get(i));
+            tile.setImage(tileChosenI.get(i));
             setDraggingTile(tile);
         }
     }

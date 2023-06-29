@@ -10,15 +10,28 @@ import java.rmi.RemoteException;
 public class TextNotification implements Response {
     private final String message;
 
+    /**
+     * textNotification constructor
+     * @param message - the message to show
+     */
     public TextNotification(String message) {
         this.message = message;
     }
 
+    /**
+     * Method handleResponse is used to handle a response sent by server socket
+     * @param responseHandler - the response handler
+     * @throws RemoteException
+     */
     @Override
     public void handleResponse(ResponseHandler responseHandler) throws RemoteException {
         responseHandler.handle(this);
     }
 
+    /**
+     * Method getMessage returns the message to show
+     * @return the message to show
+     */
     public String getMessage() {
         return message;
     }

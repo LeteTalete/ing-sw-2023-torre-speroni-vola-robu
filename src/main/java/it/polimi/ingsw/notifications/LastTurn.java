@@ -10,6 +10,9 @@ import java.rmi.RemoteException;
 public class LastTurn implements Response {
     private final String name;
 
+    /**lastTurn constructor.
+     * @param user - nickname of the first user who completes his shelf.
+     */
     public LastTurn(String user) {
         this.name = user;
     }
@@ -24,6 +27,11 @@ public class LastTurn implements Response {
         responseHandler.handle(this);
     }
 
+
+    /**
+     * Method getName returns the nickname of the first user who completes his shelf.
+     * @return the first user who completes his shelf.
+     */
     public String getName() {
         return name;
     }
