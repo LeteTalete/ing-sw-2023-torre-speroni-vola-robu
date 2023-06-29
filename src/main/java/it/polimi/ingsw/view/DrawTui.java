@@ -20,8 +20,6 @@ public class DrawTui {
     static final String colorTileP = "\033[1;30;48;5;13m"; //Magenta
     static final String colorTileF = "\033[1;30;48;5;27m"; //Blue
     static final String colorTileT = "\033[1;30;48;5;14m"; //Cyan
-    // TODO : never used
-    static final String colorTilePicked = "\033[1;97;48;5;124m"; //Red tile, White text
     static final String tileSquare = "\033[1;38;5;88;48;5;244m"; //"\033[1;51m"; Rappresenta la grafica di un rettangolino vuoto
     static final String[] boardSide = {"│","┌","└", "─", "┐", "┘", "┬", "┴", "├", "┼", "┤"};
     static final String equal = "="; //Per le CGC
@@ -30,10 +28,7 @@ public class DrawTui {
     static final String startLine = "  "; //è la parte di inizio di ogni riga di testo
     static final String dividNum = "#"; //dividLine  mi serve per dividere i parametri dell'altezza e lunghezza di una stringa da fondere con un'altra
     static final Integer sizeSlotTile = 3; //Tile size to be colored è meglio che sia dispari
-    //TODO : never used
-    static final String slotTile = stringRepeat(empty, sizeSlotTile);
     private final static PrintStream print = new PrintStream(System.out, true, StandardCharsets.UTF_8);
-    private final static Scanner scanner = new Scanner(System.in);
     private static String stringPGC = "";
     private static final ArrayList<String> stringCGC = new ArrayList<>();
     public static void printlnString(String string){
@@ -41,11 +36,6 @@ public class DrawTui {
     }
     public static void askWhat(String whatString){
         print.println(whatString);
-    }
-
-    //TODO : never used
-    static String getNextLine() {
-        return scanner.nextLine();
     }
 
     /**

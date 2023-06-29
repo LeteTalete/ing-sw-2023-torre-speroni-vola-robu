@@ -67,13 +67,12 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
         return token;
     }
 
-
+    /**method setGameOn is used when the game starts to grant the user permission to make moves*/
     @Override
     public void setGameOn() throws RemoteException {
         view.writeText(StaticStrings.GAME_START);
         view.setGameOn(true);
     }
-
 
     /**showTextNotificationMethod is used to display a generic text notification on the view.
      * @param message - containst the text notification.*/

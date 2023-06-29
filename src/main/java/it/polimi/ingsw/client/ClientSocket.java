@@ -27,6 +27,7 @@ public class ClientSocket implements IClientConnection {
     private String token;
     /**ip of the server*/
     private final String ip;
+    /** port of the server */
     private final int port;
     private Socket socket;
     private ObjectInputStream socketIn;
@@ -89,7 +90,10 @@ public class ClientSocket implements IClientConnection {
 
     }
 
-    /**readResponse method is used to actually read from the socket stream*/
+    /**
+     * readResponse method is used to actually read from the socket stream
+     * @return the response message sent by the server socket
+     */
     private Response readResponse() {
         try{
             return ((Response) socketIn.readObject());
@@ -125,6 +129,10 @@ public class ClientSocket implements IClientConnection {
     }
 
 
+    /**
+     * setViewClient method is used to set the view (TUI or GUI) of the client
+     * @param cView - the view chosen by the user (TUI or GUI)
+     */
     @Override
     public void setViewClient(View cView) {
         this.currentView = cView;
@@ -179,13 +187,18 @@ public class ClientSocket implements IClientConnection {
         }
     }
 
+    /**
+     * method setUserToken is used to set a token to a user
+     * @param tokenA - the user token, it is used to recognize a user uniquely
+     */
     @Override
     public void setUserToken(String tokenA) {
         this.token = tokenA;
     }
 
 
-    /**setReceivedResponse signals whether a response has been received. If so, it stops the waits.*/
+    /**setReceivedResponse signals whether a response has been received. If so, it stops the waits.
+     * @param b - boolean used to know whether the socket has received a response or not*/
     @Override
     public void setReceivedResponse(boolean b) {
         notReceivingResponse = b;
@@ -229,18 +242,29 @@ public class ClientSocket implements IClientConnection {
 
     @Override
     public void close() {
-        //todo
+        try {
+            closeStreams();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
+    /**
+     * setResponseDecoder method is used to set the response decoder for the client socket
+     * @param responseDecoder - the response decoder
+     */
     public void setResponseDecoder(ResponseDecoder responseDecoder) {
         this.responseDecoder = responseDecoder;
     }
 
+    /**isConnected method returns a boolean signalling whether the client is connected or not*/
     @Override
     public boolean isConnected() {
         return amIconnected;
     }
 
+    /**setConnected method is used to keep track of whether the client has lost connection to the server
+     * @param b - boolean signalling whether the client is connected to the server or not*/
     @Override
     public void setConnected(boolean b) {
         amIconnected = b;
@@ -302,7 +326,8 @@ public class ClientSocket implements IClientConnection {
 
     /**method setSynCheckTimer starts a timer waiting for the ping from the server. When a ping is received, the timer
      * is reset. If the timer expires and no ping has been received by the client, it means that the server
-     * is unreachable*/
+     * is unreachable
+     * @param startTimer - boolean signalling whether to start the timer or to reset it*/
     @Override
     public void setSynCheckTimer(boolean startTimer) {
         if(startTimer){

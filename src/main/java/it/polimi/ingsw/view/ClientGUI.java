@@ -10,6 +10,7 @@ import it.polimi.ingsw.server.StaticStrings;
 import it.polimi.ingsw.structures.GameView;
 import it.polimi.ingsw.structures.LivingRoomView;
 import it.polimi.ingsw.structures.PlayerView;
+import javafx.application.Platform;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -44,17 +45,20 @@ public class ClientGUI implements View {
     }
     @Override
     public void displayUpdatedModel(ModelUpdate modelUpdate){
-        this.gameView = new GameView(modelUpdate);
+        Platform.runLater(() -> {
+            this.gameView = new GameView(modelUpdate);
 
-        if (!this.isStarGame) {
-            this.isStarGame = true;
-            GUIApplication.showSceneName(SceneNames.BOARDPLAYER);
-        }
-        GUIApplication.updateLivingRoom();
-        GUIApplication.updateShelfPlayer(gameView.getPlayersView());
-        GUIApplication.updateShelf(gameView);
-        GUIApplication.updateScore(gameView);
-        turnPhase();
+            if (!this.isStarGame) {
+                this.isStarGame = true;
+                GUIApplication.showSceneName(SceneNames.BOARDPLAYER);
+            }
+            GUIApplication.updateLivingRoom();
+            GUIApplication.updateShelfPlayer(gameView.getPlayersView());
+            GUIApplication.updateShelf(gameView);
+            GUIApplication.updateScore(gameView);
+            turnPhase();
+
+        });
     }
 
     @Override
