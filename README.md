@@ -28,17 +28,20 @@ The server can be launched using the executable jar Server.jar and writing the f
 ```bash
 java  -Djava.rmi.server.useCodebaseOnly=false -Djava.rmi.server.hostname=yourServerIP -jar ServerExecutable.jar
 ```
+For ensuring the correct funtioning of the RMI connection, it is advised for the server's machine to disable its firewalls.
+
 
 
 ### Client
 
-The Client can be launched using the executable jar Client.jar:
+The Client can be launched using the executable jar ClientExecutable.jar:
 
 ```bash
-java -jar Client.jar
+java -jar ClientExecutable.jar
 ```
 
-After the client being launched, the user is asked to choose which interface (GUI orTUI) they want to play with and then they have to insert the IP address that the server is currently running on.
+After the client is launched, the user is asked to choose which interface (GUI or TUI) they want to play with. Then, they have to insert the IP address that the server is currently running on.
+
 
 ## Implemented Functionalities
 
@@ -57,11 +60,24 @@ After the client being launched, the user is asked to choose which interface (GU
 Project was tested using JUnit unit tests. Running all written tests with coverage results in 100% coverage for Controller package and 100% coverage for Model package, according to the project requirements. 
 
 ## Rules
+For a complete explanation of the rules, please check the file under /etc directory named MyShelfie_Rulebook_ENG.pdf
 
+## Explanation of the json files
+For a better understanding of the cards and the board's functionalities, please check the file under /deliverables named JsonsReadMe.pdf
 
-## Explanation of the cards
-For a better understanding of the card's funcionalities, please check the file under /deliverables named CardsReadMe.pdf
+## Additional functionalities
+We decided to implement a logger to keep track of the server and client activities. If you want to use the logger, then you need to add the following command when launching a .jar:
 
+```bash
+java -Dlog4j.configurationFile=path\log4j2-client.xml -jar ClientExecutable.jar
+```
 
+or
+
+```bash
+java -Dlog4j.configurationFile=path\log4j2-server.xml -jar ServerExecutable.jar
+```
+
+The configuration files for the logger are inside the /etc folder. Please, be mindful of the path from which you are launching the .jar file.
 
 
