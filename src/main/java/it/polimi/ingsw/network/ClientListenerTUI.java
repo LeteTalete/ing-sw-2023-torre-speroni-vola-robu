@@ -46,7 +46,7 @@ public class ClientListenerTUI extends UnicastRemoteObject implements IClientLis
             view.serverSavedUsername(name, true, token, first);
         }
         else{
-            view.displayNotification("Registration failed: "+name+" already exists. Try again");
+            view.printError("Registration failed: "+name+" already exists. Try again");
             view.serverSavedUsername(name, false, token, first);
         }
     }

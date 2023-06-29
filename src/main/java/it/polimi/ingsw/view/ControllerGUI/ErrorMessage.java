@@ -8,12 +8,13 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
 public class ErrorMessage {
-    private static int toastDelay = 2000; //2 seconds
+    private static int toastDelay = 2500; //2 seconds
     private static int fadeInDelay = 600; // 0.6 seconds
     private static int fadeOutDelay = 600; // 0.6 seconds
     public static void errorMessage(Stage ownerStage, String messageError) {
@@ -23,8 +24,14 @@ public class ErrorMessage {
         toastStage.initStyle(StageStyle.TRANSPARENT);
 
         Text text = new Text(messageError);
+        text.setWrappingWidth(100.0);
         text.setFont(Font.font("Verdana", 30));
         text.setFill(new Color(0.6, 0.1, 0.01, 1) ); //#Color.WHITE 0.45, 0.14, 0.15, 1  : 152, 25, 8
+
+        if(messageError.length() > 50 ){
+            text.setWrappingWidth(1000.0);
+        }
+        text.setTextAlignment(TextAlignment.CENTER);
 
         StackPane root = new StackPane(text);
         root.setStyle("-fx-background-radius: 10; -fx-background-color: #ffffff; -fx-padding: 10px;");//#523520

@@ -107,13 +107,14 @@ public class ClientSocket implements IClientConnection {
     public void startClient() {
         try {
             openStreams();
+            currentView.displayNotification("Connection successful!");
         } catch (IOException e) {
             fileLog.error(e);
             currentView.printError("Connection failed. Try again.");
             //master.setupConnection();
             currentView.askConnectionServer();
         }
-        currentView.displayNotification("Connection successful!");
+        //currentView.displayNotification("Connection successful!");
         master.userLogin();
     }
 
