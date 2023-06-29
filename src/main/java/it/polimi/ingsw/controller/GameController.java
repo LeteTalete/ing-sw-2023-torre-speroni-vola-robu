@@ -196,6 +196,10 @@ public class GameController {
         }
     }
 
+    /**
+     * Method notifyPointsCGC sends a notification if cardsClaimed contains something (it happens when a player claims
+     * a Common Goal Card) and then clears it
+     */
     public void notifyPointsCGC(){
         if ( cardsClaimed.size() > 0 ) {
             for (Integer key : cardsClaimed.keySet()) {
