@@ -110,7 +110,7 @@ public class ClientSocket implements IClientConnection {
             currentView.connectionSuccessful(true);
         } catch (IOException e) {
             fileLog.error(e);
-            currentView.printError("Connection failed. Try again.");
+            currentView.connectionSuccessful(false);
             //master.setupConnection();
             currentView.askConnectionServer();
         }
