@@ -27,8 +27,12 @@ public class ResponseDecoder implements ResponseHandler {
     }
 
 
-    /**handle method to get the login response and notify the client about it. After that, it sets the boolean
-     * of the controller setReceivedResponse to true, and it notifies all the waiting threads to unlock them.*/
+    /**
+     * handle method to get the login response and notify the client about it. After that, it sets the boolean
+     * of the controller setReceivedResponse to true, and it notifies all the waiting threads to unlock them.
+     * @param loginResponse - login response message sent by server socket
+     * @throws RemoteException
+     */
     @Override
     public void handle(LoginResponse loginResponse) throws RemoteException {
         clientListener.notifySuccessfulRegistration(loginResponse.getName(), loginResponse.isB(), loginResponse.getToken(), loginResponse.isFirst());
@@ -38,8 +42,13 @@ public class ResponseDecoder implements ResponseHandler {
         }
     }
 
-    /**method to handle the gameStart notification. After that, it sets the boolean
-     * of the controller setReceivedResponse to true, and it notifies all the waiting threads to unlock them.*/
+
+    /**
+     * method to handle the gameStart notification. After that, it sets the boolean
+     * of the controller setReceivedResponse to true, and it notifies all the waiting threads to unlock them.
+     * @param gameStart - game start notification sent by server socket
+     * @throws RemoteException
+     */
     @Override
     public void handle(GameStart gameStart) throws RemoteException {
         clientListener.setGameOn();
@@ -49,8 +58,13 @@ public class ResponseDecoder implements ResponseHandler {
         }
     }
 
-    /**method to handle the notification of the start of a new turn. After that, it sets the boolean
-     * of the controller setReceivedResponse to true, and it notifies all the waiting threads to unlock them.*/
+
+    /**
+     * method to handle the notification of the start of a new turn. After that, it sets the boolean
+     * of the controller setReceivedResponse to true, and it notifies all the waiting threads to unlock them.
+     * @param notifyOnTurn - new turn notification sent by server socket
+     * @throws RemoteException
+     */
     @Override
     public void handle(NotifyOnTurn notifyOnTurn) throws RemoteException {
         clientListener.notifyStartTurn(notifyOnTurn.getCurrentPlayer());
@@ -60,9 +74,14 @@ public class ResponseDecoder implements ResponseHandler {
         }
     }
 
-    /**method used to handle the disconnection notification from the server (i.e. when a client has
+
+    /**
+     * method used to handle the disconnection notification from the server (i.e. when a client has
      * disconnected and the game needs to be closed). After that, it sets the boolean of the controller
-     * setReceivedResponse to true, and it notifies all the waiting threads to unlock them.*/
+     * setReceivedResponse to true, and it notifies all the waiting threads to unlock them.
+     * @param disconnectionNotif - the disconnection notification sent by the server socket
+     * @throws RemoteException
+     */
     @Override
     public void handle(DisconnectionNotif disconnectionNotif) throws RemoteException {
         clientListener.notifyAboutDisconnection(disconnectionNotif.getName());
@@ -72,8 +91,13 @@ public class ResponseDecoder implements ResponseHandler {
         }
     }
 
-    /**method used to handle the response from the server after choosing the column. After that, it sets the boolean
-     * of the controller setReceivedResponse to true, and it notifies all the waiting threads to unlock them.*/
+
+    /**
+     * method used to handle the response from the server after choosing the column. After that, it sets the boolean
+     * of the controller setReceivedResponse to true, and it notifies all the waiting threads to unlock them.
+     * @param moveOk - choose column move confirm notification sent by server socket
+     * @throws RemoteException
+     */
     @Override
     public void handle(ColumnOk moveOk) throws RemoteException {
         clientListener.notifyColumnOk(moveOk.isMoveOk());
@@ -84,8 +108,12 @@ public class ResponseDecoder implements ResponseHandler {
     }
 
 
-    /**method used to notify the end of the turn. After that, it sets the boolean
-     * of the controller setReceivedResponse to true, and it notifies all the waiting threads to unlock them.*/
+    /**
+     * method used to notify the end of the turn. After that, it sets the boolean
+     * of the controller setReceivedResponse to true, and it notifies all the waiting threads to unlock them.
+     * @param endTurn - end turn notification sent by server socket
+     * @throws RemoteException
+     */
     @Override
     public void handle(EndTurn endTurn) throws RemoteException {
         clientListener.notifyEndTurn();
@@ -95,8 +123,13 @@ public class ResponseDecoder implements ResponseHandler {
         }
     }
 
-    /**method used to handle the notification of a game ending. After that, it sets the boolean
-     * of the controller setReceivedResponse to true, and it notifies all the waiting threads to unlock them.*/
+
+    /**
+     * method used to handle the notification of a game ending. After that, it sets the boolean
+     * of the controller setReceivedResponse to true, and it notifies all the waiting threads to unlock them.
+     * @param gameEnd - end game notification sent by server socket
+     * @throws RemoteException
+     */
     @Override
     public void handle(GameEnd gameEnd) throws RemoteException {
         clientListener.notifyEndGame();
@@ -106,8 +139,13 @@ public class ResponseDecoder implements ResponseHandler {
         }
     }
 
-    /**method used to handle the notification of the start of the last turn. After that, it sets the boolean
-     * of the controller setReceivedResponse to true, and it notifies all the waiting threads to unlock them.*/
+
+    /**
+     * method used to handle the notification of the start of the last turn. After that, it sets the boolean
+     * of the controller setReceivedResponse to true, and it notifies all the waiting threads to unlock them.
+     * @param lastTurn - last turn notification sent by server socket
+     * @throws RemoteException
+     */
     @Override
     public void handle(LastTurn lastTurn) throws RemoteException {
         clientListener.notifyLastTurn(lastTurn.getName());
@@ -117,8 +155,13 @@ public class ResponseDecoder implements ResponseHandler {
         }
     }
 
-    /**method used to handle the notification of a common goal card gained by a player. After that, it sets the boolean
-     * of the controller setReceivedResponse to true, and it notifies all the waiting threads to unlock them.*/
+
+    /**
+     * method used to handle the notification of a common goal card gained by a player. After that, it sets the boolean
+     * of the controller setReceivedResponse to true, and it notifies all the waiting threads to unlock them.
+     * @param commonGoalGained - commong goal card gained notification sent by server socket
+     * @throws RemoteException
+     */
     @Override
     public void handle(CommonGoalGained commonGoalGained) throws RemoteException {
         clientListener.notifyOnCGC(commonGoalGained.getName(), commonGoalGained.getCard(), commonGoalGained.getPoints());
@@ -128,8 +171,13 @@ public class ResponseDecoder implements ResponseHandler {
         }
     }
 
-    /**method used to handle an incoming chat message. After notifying about the message, it sets the boolean
-     * of the controller setReceivedResponse to true, and it notifies all the waiting threads to unlock them.*/
+
+    /**
+     * method used to handle an incoming chat message. After notifying about the message, it sets the boolean
+     * of the controller setReceivedResponse to true, and it notifies all the waiting threads to unlock them.
+     * @param chatMessage - chat message notification sent by server socket
+     * @throws RemoteException
+     */
     @Override
     public void handle(ChatMessage chatMessage) throws RemoteException {
         clientListener.notifyChatMessage(chatMessage.getSender(), chatMessage.getMessage(), chatMessage.getReceiver());
@@ -139,8 +187,13 @@ public class ResponseDecoder implements ResponseHandler {
         }
     }
 
-    /**method used to handle a textNotification from the server. After that, it sets the boolean
-     * of the controller setReceivedResponse to true, and it notifies all the waiting threads to unlock them.*/
+
+    /**
+     * method used to handle a textNotification from the server. After that, it sets the boolean
+     * of the controller setReceivedResponse to true, and it notifies all the waiting threads to unlock them.
+     * @param textNotification - text notification sent by server socket
+     * @throws RemoteException
+     */
     @Override
     public void handle(TextNotification textNotification) throws RemoteException {
         clientListener.showTextNotification(textNotification.getMessage());
@@ -150,8 +203,13 @@ public class ResponseDecoder implements ResponseHandler {
         }
     }
 
-    /**method used to handle a model update. It calls an update of the model. After that, it sets the boolean
-     * of the controller setReceivedResponse to true, and it notifies all the waiting threads to unlock them.*/
+
+    /**
+     * method used to handle a model update. It calls an update of the model. After that, it sets the boolean
+     * of the controller setReceivedResponse to true, and it notifies all the waiting threads to unlock them.
+     * @param modelUpdateNotification - model update notification sent by server socket
+     * @throws RemoteException
+     */
     @Override
     public void handle(ModelUpdateNotification modelUpdateNotification) throws RemoteException {
         clientListener.updateModel(modelUpdateNotification.getUpdate());
@@ -161,8 +219,13 @@ public class ResponseDecoder implements ResponseHandler {
         }
     }
 
-    /**method used to handle a response from the server about a tiles re-arrange. After that, it sets the boolean
-     * of the controller setReceivedResponse to true, and it notifies all the waiting threads to unlock them.*/
+
+    /**
+     * method used to handle a response from the server about a tiles re-arrange. After that, it sets the boolean
+     * of the controller setReceivedResponse to true, and it notifies all the waiting threads to unlock them.
+     * @param rearrangeOk - rearrange move confirm notification sent by server socket
+     * @throws RemoteException
+     */
     @Override
     public void handle(RearrangeOk rearrangeOk) throws RemoteException {
         clientListener.notifyRearrangeOk(rearrangeOk.isMoveOk(), rearrangeOk.getTiles());
@@ -172,8 +235,13 @@ public class ResponseDecoder implements ResponseHandler {
         }
     }
 
-    /**method used to handle a response from the server about the choice of tiles. After that, it sets the boolean
-     * of the controller setReceivedResponse to true, and it notifies all the waiting threads to unlock them.*/
+
+    /**
+     * method used to handle a response from the server about the choice of tiles. After that, it sets the boolean
+     * of the controller setReceivedResponse to true, and it notifies all the waiting threads to unlock them.
+     * @param tilesOk - choose tiles move confirm notification sent by server socket
+     * @throws RemoteException
+     */
     @Override
     public void handle(TilesOk tilesOk) throws RemoteException {
         clientListener.notifyTilesOk(tilesOk.isMoveOk(), tilesOk.getTiles());
@@ -183,6 +251,8 @@ public class ResponseDecoder implements ResponseHandler {
         }
     }
 
+
+    //todo
     @Override
     public void handle(SynPing synPing) throws RemoteException {
         try{
@@ -192,7 +262,8 @@ public class ResponseDecoder implements ResponseHandler {
         }
     }
 
-    /**method is used to display a notification relative to the waiting room*/
+
+    //todo
     @Override
     public void handle(WaitingRoomResponse waitingRoomResponse) throws RemoteException {
         clientListener.showWaitingRoomNotification(waitingRoomResponse.getMessage());
@@ -200,10 +271,5 @@ public class ResponseDecoder implements ResponseHandler {
         synchronized (client) {
             client.notifyAll();
         }
-    }
-
-
-    public void handle(Response response) {
-        //not used
     }
 }
