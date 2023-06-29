@@ -146,7 +146,6 @@ public class CommandParsing {
                     master.errorNoSelection(COLUMN);
                     break;
             }
-                //TODO: writing [ column "letter" ] crashes the client
                 parseInteger(args);
                 executeColumnCommand();
             }
