@@ -93,8 +93,4 @@ public class GameView implements Serializable {
         return currentPlayerNickname;
     }
 
-    //cleanup?
-    /*public ArrayList<Shelf> getShelfPlayers(){
-        //this.playersView
-    }*/
 }

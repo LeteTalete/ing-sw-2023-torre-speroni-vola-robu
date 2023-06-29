@@ -197,8 +197,8 @@ public class ClientSocket implements IClientConnection {
     }
 
 
-    //todo add the param to this javadoc comment
-    /**setReceivedResponse signals whether a response has been received. If so, it stops the waits.*/
+    /**setReceivedResponse signals whether a response has been received. If so, it stops the waits.
+     * @param b - boolean used to know whether the socket has received a response or not*/
     @Override
     public void setReceivedResponse(boolean b) {
         notReceivingResponse = b;
@@ -240,10 +240,13 @@ public class ClientSocket implements IClientConnection {
         }
     }
 
-    //todo remove getToken method
     @Override
     public void close() {
-        //todo do we need it?
+        try {
+            closeStreams();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -254,13 +257,14 @@ public class ClientSocket implements IClientConnection {
         this.responseDecoder = responseDecoder;
     }
 
-    //todo
+    /**isConnected method returns a boolean signalling whether the client is connected or not*/
     @Override
     public boolean isConnected() {
         return amIconnected;
     }
 
-    //todo
+    /**setConnected method is used to keep track of whether the client has lost connection to the server
+     * @param b - boolean signalling whether the client is connected to the server or not*/
     @Override
     public void setConnected(boolean b) {
         amIconnected = b;
@@ -320,10 +324,10 @@ public class ClientSocket implements IClientConnection {
         return syn;
     }
 
-    //todo add the param to this javadoc comment
     /**method setSynCheckTimer starts a timer waiting for the ping from the server. When a ping is received, the timer
      * is reset. If the timer expires and no ping has been received by the client, it means that the server
-     * is unreachable*/
+     * is unreachable
+     * @param startTimer - boolean signalling whether to start the timer or to reset it*/
     @Override
     public void setSynCheckTimer(boolean startTimer) {
         if(startTimer){

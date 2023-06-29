@@ -139,7 +139,8 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
         }
     }
 
-    /**quit method used to quit the game*/
+    /**quit method used to quit the game
+     * @param token - token used to identify the user*/
     @Override
     public void quit(String token) {
         try {
@@ -150,7 +151,8 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
         }
     }
 
-    /**setSyn method is used to set the value syn to true when the client received a ping from the server*/
+    /**setSyn method is used to set the value syn to true when the client received a ping from the server
+     * @param b - boolean signalling whether the client has received a ping or not*/
     @Override
     public void setSyn(boolean b) {
         this.syn = b;
@@ -164,7 +166,8 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
 
     /**method setSynCheckTimer starts a timer waiting for the ping from the server. When a ping is received, the timer
      * is reset. If the timer expires and no ping has been received by the client, it means that the server
-     * is unreachable*/
+     * is unreachable
+     * @param startTimer - boolean signalling whether to start the timer or to reset it*/
     @Override
     public void setSynCheckTimer(boolean startTimer) {
         if (startTimer) {
@@ -210,7 +213,8 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
         }
     }
 
-    //todo
+    /**setConnected method is used to keep track of whether the client has lost connection to the server
+     * @param connected - boolean signalling whether the client is connected to the server or not*/
     @Override
     public void setConnected(boolean connected) {
         isConnected = connected;
@@ -219,7 +223,7 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
         }
     }
 
-    //todo
+    /**isConnected method returns a boolean signalling whether the client is connected or not*/
     @Override
     public boolean isConnected() {
         return isConnected;
