@@ -9,7 +9,6 @@ import it.polimi.ingsw.network.IRemoteController;
 import it.polimi.ingsw.network.ServerSocketClientHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;

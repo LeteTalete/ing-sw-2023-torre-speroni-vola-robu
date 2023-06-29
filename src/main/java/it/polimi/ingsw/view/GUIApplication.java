@@ -56,7 +56,7 @@ public class GUIApplication extends Application {
             sceneWindow = setUpScene(sceneNames);
             stageWindow.hide();
             if(sceneNames.equals(SceneNames.CONNECTION)){
-                stageWindow.setHeight(220);
+                stageWindow.setHeight(210);
                 stageWindow.setWidth(465);
                 stageWindow.setTitle("Choose Connection");
             } else if(sceneNames.equals(SceneNames.USERNAME)){
@@ -72,17 +72,17 @@ public class GUIApplication extends Application {
                 stageWindow.setWidth(636);
                 stageWindow.setTitle("Waiting Room");
             } else if(sceneNames.equals(SceneNames.BOARDPLAYER)){
+                stageWindow.setResizable(true);
                 stageWindow.setHeight(780);
                 stageWindow.setWidth(1440);
                 stageWindow.setTitle("MyShelfie");
-                stageWindow.setResizable(true);
                 getBoardPlayer().setBoardPlayer(clientGUI.getGameView());
             } else if(sceneNames.equals(SceneNames.ENDGAME)){
+                stageWindow.setResizable(false);
                 stageWindow.setHeight(535);
                 stageWindow.setWidth(610);
                 stageWindow.setTitle("Score End Game");
                 getEndGame().setEndGame();
-                stageWindow.setResizable(false);
             }
             stageWindow.setScene(sceneWindow);
             stageWindow.show();

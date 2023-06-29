@@ -250,11 +250,20 @@ public class BoardPlayer extends GenericController {
         imageView.setOnMousePressed(event -> {
             xOffset = event.getSceneX();
             yOffset = event.getSceneY();
+            imageView.getScene().setCursor(Cursor.CLOSED_HAND);
+        });
+
+        imageView.setOnMouseEntered(event -> {
+            imageView.getScene().setCursor(Cursor.OPEN_HAND);
         });
 
         imageView.setOnMouseDragged(event -> {
             imageView.setTranslateX(event.getSceneX() - xOffset);
             imageView.setTranslateY(event.getSceneY() - yOffset);
+        });
+
+        imageView.setOnMouseExited(event -> {
+            imageView.getScene().setCursor(Cursor.DEFAULT);
         });
 
         imageView.setOnMouseReleased(event -> {
@@ -266,7 +275,6 @@ public class BoardPlayer extends GenericController {
                     if (imageView == otherImageView) positionImage = position;
                     else if (imageView.getBoundsInParent().intersects(otherImageView.getBoundsInParent())) {
                         positionOther = position;
-
                     }
                 }
             }
