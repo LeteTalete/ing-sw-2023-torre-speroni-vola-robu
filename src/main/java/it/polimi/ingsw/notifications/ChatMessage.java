@@ -22,19 +22,36 @@ public class ChatMessage implements Response {
         this.receiver = r;
     }
 
+    /**
+     * Method handleResponse is used to handle a response sent by server socket
+     * @param responseHandler - the response handler
+     * @throws RemoteException
+     */
     @Override
     public void handleResponse(ResponseHandler responseHandler) throws RemoteException {
         responseHandler.handle(this);
     }
 
+    /**
+     * Method getSender returns the sender of the chat message
+     * @return the sender of the chat message
+     */
     public String getSender() {
         return sender;
     }
 
+    /**
+     * Method getMessage returns the chat message
+     * @return the chat message
+     */
     public String getMessage() {
         return message;
     }
 
+    /**
+     * Method getReceiver returns the receiver of the chat message
+     * @return the receiver of the chat message
+     */
     public String getReceiver() {
         return receiver;
     }

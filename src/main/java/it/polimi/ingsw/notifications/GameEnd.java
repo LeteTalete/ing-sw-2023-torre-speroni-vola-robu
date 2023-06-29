@@ -9,6 +9,11 @@ import java.rmi.RemoteException;
 
 public class GameEnd implements Response {
 
+    /**
+     * Method handleResponse is used to handle a response sent by server socket
+     * @param responseHandler - the response handler
+     * @throws RemoteException
+     */
     @Override
     public void handleResponse(ResponseHandler responseHandler) throws RemoteException {
         responseHandler.handle(this);
