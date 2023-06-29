@@ -58,9 +58,8 @@ public class CG_Shape extends CommonGoalCard implements Serializable {
                         throw new IllegalArgumentException("The diffType value must be either 0 or 1");
                     } else this.diffType = cardNode.get("diffType").asInt();
 
-                    if ( cardNode.get("surrounded").asInt() != 0 && cardNode.get("surrounded").asInt() != 1
-                            && cardNode.get("surrounded").asInt() != 2) {
-                        throw new IllegalArgumentException("The surrounded value must be either 0, 1 or 2");
+                    if ( cardNode.get("surrounded").asInt() != 0 && cardNode.get("surrounded").asInt() != 1) {
+                        throw new IllegalArgumentException("The surrounded value must be either 0 or 1");
                     } else this.surrounded = cardNode.get("surrounded").asInt();
 
                     if ( cardNode.get("stairs").asInt() != 0 && cardNode.get("stairs").asInt() != 1 ) {
