@@ -94,9 +94,9 @@ public class ClientListenerGUI extends UnicastRemoteObject implements IClientLis
     @Override
     public void notifyLastTurn(String firstDoneUser) throws RemoteException {
         if(firstDoneUser.equals(view.getName())){
-            view.displayNotification("You gained completed your Shelfie! Last round starts now.");
+            view.printError("You gained completed your Shelfie!\nLast round starts now.");
         }
-        view.displayNotification(firstDoneUser + "completed their Shelfie. Last round starts now!");
+        view.displayNotification(firstDoneUser + "completed their Shelfie.\nLast round starts now!");
 
     }
 
@@ -130,15 +130,15 @@ public class ClientListenerGUI extends UnicastRemoteObject implements IClientLis
         }
         else{
             if(ok==1){
-                view.printError("Invalid move: all tiles need to be adjacent! Try again.");
+                view.printError("Invalid move:\nall tiles need to be adjacent!\nTry again.");
             }
             else if(ok == 2){
-                view.printError("Invalid move: all tiles need to be in the same row or column! Try again.");
+                view.printError("Invalid move:\nall tiles need to be in the same row or column!\nTry again.");
             }
             else if(ok == 3){
-                view.printError("Invalid move: all tiles need to have at least one side free! Try again.");
+                view.printError("Invalid move:\nall tiles need to have at least one side free!\nTry again.");
             }
-            else view.printError("Invalid move: not enough space in your Shelfie! Try again.");
+            else view.printError("Invalid move:\nnot enough space in your Shelfie!\nTry again.");
         }
     }
 

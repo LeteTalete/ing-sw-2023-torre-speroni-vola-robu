@@ -107,15 +107,13 @@ public class ClientSocket implements IClientConnection {
     public void startClient() {
         try {
             openStreams();
-            currentView.connectionSuccessful(true);
+            currentView.printError("Connection successful");
+            master.userLogin();
         } catch (IOException e) {
             fileLog.error(e);
-            currentView.connectionSuccessful(false);
-            //master.setupConnection();
+            currentView.printError("Connection failed");
             currentView.askConnectionServer();
         }
-        //currentView.displayNotification("Connection successful!");
-        master.userLogin();
     }
 
     /**closeStreams method is used to close the streams*/

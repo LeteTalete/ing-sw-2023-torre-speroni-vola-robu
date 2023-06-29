@@ -24,11 +24,10 @@ public class ErrorMessage {
         toastStage.initStyle(StageStyle.TRANSPARENT);
 
         Text text = new Text(messageError);
-        text.setWrappingWidth(100.0);
         text.setFont(Font.font("Verdana", 30));
         text.setFill(new Color(0.6, 0.1, 0.01, 1) ); //#Color.WHITE 0.45, 0.14, 0.15, 1  : 152, 25, 8
 
-        if(messageError.length() > 50 ){
+        if(messageError.length() > 70 ){
             text.setWrappingWidth(1000.0);
         }
         text.setTextAlignment(TextAlignment.CENTER);

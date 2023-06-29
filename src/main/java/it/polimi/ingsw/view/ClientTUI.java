@@ -655,16 +655,6 @@ public class ClientTUI implements View{
         return port;
     }
 
-    @Override
-    public void connectionSuccessful(boolean b) {
-        if(b){
-            DrawTui.printlnString("Connection successful");
-        }
-        else{
-            DrawTui.printlnString("Connection failed");
-        }
-    }
-
     /**
      * Method getServerIP is used to get the server IP.
      * @return - the server IP.

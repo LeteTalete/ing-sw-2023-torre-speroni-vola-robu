@@ -55,5 +55,4 @@ public interface View {
     //void askPort();
     String getPort();
 
-    void connectionSuccessful(boolean b);
 }

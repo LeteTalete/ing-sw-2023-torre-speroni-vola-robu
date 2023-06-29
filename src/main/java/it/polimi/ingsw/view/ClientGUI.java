@@ -309,16 +309,6 @@ public class ClientGUI implements View {
         return port;
     }
 
-    @Override
-    public void connectionSuccessful(boolean b) {
-        if(b){
-            GUIApplication.showSceneName(SceneNames.USERNAME);
-        }
-        else {
-            GUIApplication.error("Connection failed");
-        }
-    }
-
     public void setServerIP(String accessibleText) {
         this.ServerIP = accessibleText;
     }

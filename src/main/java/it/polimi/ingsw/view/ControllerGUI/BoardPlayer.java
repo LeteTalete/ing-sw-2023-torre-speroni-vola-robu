@@ -72,8 +72,9 @@ public class BoardPlayer extends GenericController {
                 chatBox.setVisible(false);
                 chatBox.setFillWidth(true);
                 boxChat.getChildren().add(chatBox);
+            } else {
+                if( player.getChair() ) chair.setVisible(true);
             }
-            if(player.getChair()) chair.setVisible(true);
         }
         choiceChat.setValue("all"); //Per settare il valore predefinito
         choiceChat.setOnAction(event -> {
