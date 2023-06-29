@@ -24,10 +24,13 @@ public class Shelf implements Serializable {
         }
     }
 
+
     /**
      * Method insertTiles inserts the chosen tiles into the player's shelf.
      * The first tile to be inserted is at the end of the list, while the last tile to be inserted
      * is the first tile of the list.
+     * @param col - the shelf's column chosen by the player
+     * @param toInsert - the tiles to insert
      */
     public void insertTiles(int col, ArrayList<Tile> toInsert)
     {
@@ -65,11 +68,13 @@ public class Shelf implements Serializable {
         return output;
     }
 
+
     /**
      * Method getMaxFree takes as an argument the number of column in which we want to count the empty spaces.
      * If numberColumn > 4 it means we're about to check all the columns and find the max of empty
      * slots in the entirety of the shelf.
-     * TODO: instead of > 4 we should use a negative value such as -1, in case someone wants to use a shelf with more than 5 columns
+     * @param numberColumns - the number of the column to check or a number > 4 for checking all the columns
+     * @return the number of empty spaces for a certain column or at all
      */
     public int getMaxFree(int numberColumns){
         int maximum = 0;
@@ -120,20 +125,6 @@ public class Shelf implements Serializable {
         this.shelfsMatrix[row][column].setState(State.EMPTY);
     }
 
-    /**
-     * Method setCoordinate sets the couple in the specified position of the shelf. Used only for test purposes.
-     * TODO: if PersonalGoalCardTest were to be reworked this method can be deleted.
-     * @param row - the row of the couple.
-     * @param column - the column of the couple.
-     * @param chosen - the couple to be inserted.
-     */
-    public void setCoordinate(int row, int column, Couple chosen)
-    {
-        Couple insert = new Couple();
-        insert.setTile(chosen.getTile());
-        insert.setState(chosen.getState());
-        this.shelfsMatrix[row][column] = insert;
-    }
 
     /**
      * Method getCoordinate takes as an argument the row and the column of the tile to be returned and returns the

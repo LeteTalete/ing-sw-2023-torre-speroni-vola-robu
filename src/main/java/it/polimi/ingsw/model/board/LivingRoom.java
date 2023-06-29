@@ -304,6 +304,12 @@ public class LivingRoom implements Serializable {
         board[p.getX()][p.getY()].setState(s);
     }
 
+
+    /**
+     * Method getErrorTilesCode returns the error code corresponding to the mistake the player made when choosing the
+     * tiles from the board
+     * @return error code
+     */
     public int getErrorTilesCode() {
         return errorTilesCode;
     }
