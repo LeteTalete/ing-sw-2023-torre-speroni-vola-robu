@@ -7,25 +7,57 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import it.polimi.ingsw.view.GUIApplication;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+/**
+ * ConnectionPlayer class is the controller of the scene of the connection and login of the player
+ * */
 
 public class ConnectionPlayer extends GenericController {
-
-    @FXML private StackPane buttonConnetionOK, buttonRMI, buttonSocket, buttonNumPlayers, buttonUsername;
+    /**
+     * logger to keep track of events, such as errors and info about parameters
+     * */
+    private static final Logger fileLog = LogManager.getRootLogger();
+    /**
+     * TextField attributes are the boxes in which the player can type the IP and port of the server and their username
+     * */
     @FXML private TextField IP, port, textUsername;
+
+    /**
+     * ImageView attributes are the images of the buttons of the connection type (RMI or Socket)
+     * */
     @FXML private ImageView imageSocket, imageRMI;
+    /**
+     * String typeConnection is used to keep track of the chosen connection type (RMI or Socket)
+     * */
     private String typeConnection;
+    /**
+     * boolean activeButtonS is used to keep track of the button of the socket connection. When set to true, it means
+     * the chosen connection type is socket
+     * */
     private boolean activeButtonS = false;
+
+    /**
+     * boolean activeButtonR is used to keep track of the button of the RMI connection. When set to true, it means
+     * the chosen connection type is RMI
+     * */
     private boolean activeButtonR = false;
 
-
-    //Quando passo sopra ai bottoni essi diventano un pò più grandi e quando ci esco ritornano alla dimensione originale
+    /**
+     * enteredButton method is used to enlarge the button when the mouse is over it
+     * @param mouseEvent - the event of the mouse (in this case, entering the field of the button)
+     * */
     public void enteredButton(MouseEvent mouseEvent){
         ImageView imageView = (ImageView) ((StackPane) mouseEvent.getSource()).getChildren().get(0);
         imageView.setScaleX(1.1);
         imageView.setScaleY(1.1);
         imageView.setOpacity(0.8);
     }
-
+    /**
+     * exitedButton method is used shrink the button back to its original size when the mouse exits the button
+     * @param mouseEvent - the event of the mouse (in this case, exiting the field of the button)
+     * */
     public void exitedButton(MouseEvent mouseEvent){
         ImageView imageView = (ImageView) ((StackPane) mouseEvent.getSource()).getChildren().get(0);
         imageView.setScaleX(1);
@@ -33,7 +65,13 @@ public class ConnectionPlayer extends GenericController {
         imageView.setOpacity(1);
     }
 
-
+    //todo davide pls check this i think it sets the connection type if the mouse clicks on the button but i'm not sure
+    /**
+     * exitedButtonConnection is used to check which one of the two buttons of the connection type is active after the
+     * mouse has stopped being over the button. If the button is active (i.e. a certain type of connection has been
+     * chosen), it is enlarged, otherwise it stays in its predefined size).
+     * @param mouseEvent - the event of the mouse (in this case exiting the field of the button)
+     * */
     public void exitedButtonConnection(MouseEvent mouseEvent){
         ImageView imageView = (ImageView) ((StackPane) mouseEvent.getSource()).getChildren().get(0);
         if(imageView.equals(imageRMI)){
@@ -43,27 +81,46 @@ public class ConnectionPlayer extends GenericController {
         }
     }
 
-    //Si attiva quando premo sui bottone ok della finestra di connessione
-    public void clickedButtonConnetion(MouseEvent mouseEvent){
-        //TODO Nel caso ci fossero dei problemi a lato server il codice si fotte!!(Finisce in un ciclo di errori senza uscita)
+    /**
+     * clickedButtonConnection method is used to set one of the two types of connection as the chosen one when the
+     * mouse clicks on the 'OK' button of the connection type window. For example, is the RMI connection has been set
+     * as the active/chosen one, then the choice will be passed to the clientController.
+     * @param mouseEvent - the event of the mouse (in this case, clicking on the button)
+     * */
+    public void clickedButtonConnection(MouseEvent mouseEvent){
         GUIApplication.getClientGUI().setConnectionType(this.typeConnection);
         GUIApplication.getClientGUI().setServerIP(IP.getText());
         GUIApplication.getClientGUI().setPort(port.getText());
         GUIApplication.getClientGUI().getMaster().setupConnection();
     }
 
-    //Si arriva quando il giocatore che ha sta creando la partita ha deciso quale sia il numero dei dei partecipanti
+    /**
+     * clickedButtonNumPlayers method is used to set the number of players of the game when the mouse clicks on the
+     * button depicting the preferred amount of players expected in the game.
+     * @param mouseEvent - the event of the mouse (in this case, clicking on the button)
+     * */
     public void clickedButtonNumPlayers(MouseEvent mouseEvent){
         GUIApplication.getClientGUI().getCommPars().elaborateInput(((Label) (((StackPane) mouseEvent.getSource()).getChildren().get(1))).getText());
 
     }
 
-    //Si arriva quando il giocatore ha deciso il suo username
+    /**
+     * clickedButtonUsername method is invoked whenever the player clicks on the 'OK' button of the username window.
+     * It gets the username typed by the player and passes it to the commandParsing.
+     * @param mouseEvent - the event of the mouse (in this case, clicking on the button)
+     * */
     public void clickedButtonUsername(MouseEvent mouseEvent){
-        System.out.println(textUsername.getText());
+        fileLog.info("username read: " + textUsername.getText());
         GUIApplication.getClientGUI().getCommPars().elaborateInput(textUsername.getText());
     }
 
+    //todo davide pls check this, i'm not sure if it's activated when the mouse clicks on it or not
+    /**
+     * activeWindowSocket method is invoked whenever the player clicks on the button of the socket connection type.
+     * It sets the type of connection to socket and enlarges the windows so that the player can type the port
+     * and IP.
+     * @param mouseEvent - the event of the mouse (in this case, clicking on the button)
+     * */
     public void activeWindowSocket(MouseEvent mouseEvent){
         this.typeConnection = "SOCKET";
         activeButtonR = false;
@@ -73,7 +130,14 @@ public class ConnectionPlayer extends GenericController {
 
         GUIApplication.getStageWindow().setHeight(400);
     }
-    
+
+    //todo davide pls check this, i'm not sure if it's activated when the mouse clicks on it or not
+    /**
+     * activeWindowRMI method is invoked whenever the player clicks on the button of the RMI connection type.
+     * It sets the type of connection to RMI and enlarges the windows so that the player can type the port
+     * and IP.
+     * @param mouseEvent - the event of the mouse (in this case, clicking on the button)
+     * */
     public void activeWindowRMI(MouseEvent mouseEvent){
         this.typeConnection = "RMI";
         activeButtonR = true;
@@ -83,6 +147,10 @@ public class ConnectionPlayer extends GenericController {
         GUIApplication.getStageWindow().setHeight(400);
     }
 
+    /**
+     * activeTypeConnection method is invoked when one of the connection type buttons is clicked. It enlarges the
+     * button of the chosen connection type and makes it less opaque
+     * */
     private void activeTypeConnection(boolean active, ImageView imageView){
         if(active){
             imageView.setScaleX(1.2);

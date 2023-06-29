@@ -13,10 +13,31 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
+/**
+ * ErrorMessage class is used to create a pop-up message to show an error
+ * */
+
 public class ErrorMessage {
-    private static int toastDelay = 2500; //2 seconds
+    /**
+     * toastDelay attribute sets the time in which the message is shown on the screen
+     * */
+    private static int toastDelay = 2500; //2.5 seconds
+    /**
+     * fadeInDelay attributes sets the time taken by the message to appear on the screen
+     * */
     private static int fadeInDelay = 600; // 0.6 seconds
+    /**
+     * fadeInDelay attributes sets the time taken by the message to disappear on the screen
+     * */
     private static int fadeOutDelay = 600; // 0.6 seconds
+
+    /*todo davide if you can add some more info about what the method does and check if the description of
+    the ownerStage parameter is correct*/
+    /**
+     * errorMessage method creates a new stage to show the error message.
+     * @param ownerStage is the stage that calls the method
+     * @param messageError is the message to show on the screen
+     * */
     public static void errorMessage(Stage ownerStage, String messageError) {
         Stage toastStage = new Stage();
         toastStage.initOwner(ownerStage);

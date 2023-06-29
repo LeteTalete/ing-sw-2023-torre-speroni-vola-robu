@@ -23,15 +23,26 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Objects;
 
+/**
+ * BoardPlayer class manages the scene of the game, along with the shelf, the chat, the board, all the goal cards and
+ * the shelves of the other players.
+ * */
 
 public class BoardPlayer extends GenericController {
+    /**
+     * logger to keep track of events, such as errors and info about parameters
+     * */
+    private static final Logger fileLog = LogManager.getRootLogger();
+
     @FXML private VBox chooseTileBox, all;
     @FXML private StackPane boxChat;
-    @FXML private HBox scorePlayer, shelfOtherPlayers, commonCald;
+    @FXML private HBox scorePlayer, shelfOtherPlayers, commonCard;
     @FXML private TextArea boxMessage;
     @FXML private Label labelTurn;
     @FXML private ImageView chair, tileEndGame, imageCommonCard1, imageCommonCard2, imagePersonalGoalCard, token1, token2, tile1, tile2, tile3;
@@ -47,7 +58,7 @@ public class BoardPlayer extends GenericController {
 
 
     //Voglio caricare la board quando mi mostra la finestra in cui mi dice che sta caricando, in questo modo quando apro la finestra della partita è già tutto caricato
-    public void setBoadPlayer(GameView gameView){
+    public void setBoardPlayer(GameView gameView){
         int CGC1 = gameView.getCommonGoalCards().get(0).getID();
         int CGC2 = gameView.getCommonGoalCards().get(1).getID();
         int PGC = Objects.requireNonNull(gameView.getPlayersView().stream()
@@ -144,7 +155,7 @@ public class BoardPlayer extends GenericController {
 
     public void showDescriptionCGC(MouseEvent mouseEvent){
         int i = 0;
-        for(Node node : commonCald.getChildren() ){
+        for(Node node : commonCard.getChildren() ){
             if(mouseEvent.getSource().equals(node)){
                 String description = GUIApplication.getClientGUI().getGameView().getCommonGoalCards().get(i).getDescription();
                 GUIApplication.error(description);
@@ -217,7 +228,7 @@ public class BoardPlayer extends GenericController {
             for(Integer pos: tileOrderPosition ){
                 orderT += " " + (pos + 1);
             }
-            System.out.println("ORDER: " + orderT);
+            fileLog.info("ORDER: " + orderT);
             GUIApplication.getClientGUI().getCommPars().elaborateInput("order" + orderT );
             int columnChoosen =  Integer.parseInt( ( (Label) ((StackPane) mouseEvent.getSource()).getChildren().get(1) ).getText() ) - 1;
             GUIApplication.getClientGUI().getCommPars().elaborateInput("column " + columnChoosen );
@@ -335,7 +346,7 @@ public class BoardPlayer extends GenericController {
         String text = boxMessage.getText();
         if(!text.isBlank()){
             GUIApplication.getClientGUI().getCommPars().elaborateInput("@" + choiceChat.getValue() + " " + text);
-            System.out.println("INVIO MESSAGGIO: " + choiceChat.getValue() + "Text: " + text );
+            fileLog.info("INVIO MESSAGGIO: " + choiceChat.getValue() + "Text: " + text );
         }
         boxMessage.setText(null);
     }
@@ -356,7 +367,7 @@ public class BoardPlayer extends GenericController {
                 break;
             }
         }
-        System.out.println("ARRIVO MESSAGGIO!!: " + fromPerson + " , " + idChat + " , " + message );
+        fileLog.info("ARRIVO MESSAGGIO!!: " + fromPerson + " , " + idChat + " , " + message );
     }
 
 

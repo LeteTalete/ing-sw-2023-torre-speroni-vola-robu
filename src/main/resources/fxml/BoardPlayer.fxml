@@ -40,7 +40,7 @@
             <InnerShadow choke="0.2" height="25.0" radius="12.0" width="25.0" />
          </effect>
       </ImageView>
-      <HBox fx:id="commonCald" alignment="BASELINE_LEFT" layoutX="14.0" layoutY="63.0" prefHeight="114.0" prefWidth="500.0">
+      <HBox fx:id="commonCard" alignment="BASELINE_LEFT" layoutX="14.0" layoutY="63.0" prefHeight="114.0" prefWidth="500.0">
          <children>
             <StackPane onMouseClicked="#showDescriptionCGC" onMouseEntered="#activeButton" onMouseExited="#deactivateButton" prefHeight="114.0" prefWidth="171.0">
                <children>
