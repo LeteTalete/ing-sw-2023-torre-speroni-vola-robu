@@ -338,8 +338,15 @@ public class CommandParsing {
             master.errorFormat();
             return;
         }
-
+        if(!args.get(0).equals("0") && !args.get(0).equals("1") && !args.get(0).equals("2") && !args.get(0).equals("3") && !args.get(0).equals("4")) {
+            choiceNumber = null;
+            args.clear();
+            master.errorFormat();
+            return;
+        }
         choiceNumber = Integer.parseInt(args.get(0));
+
+
     }
 
     /**
