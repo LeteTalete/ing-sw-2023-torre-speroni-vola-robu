@@ -9,6 +9,7 @@ import it.polimi.ingsw.structures.LivingRoomView;
 import it.polimi.ingsw.structures.PlayerView;
 import it.polimi.ingsw.structures.ShelfView;
 import it.polimi.ingsw.view.GUIApplication;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -292,22 +293,31 @@ public class BoardPlayer extends GenericController {
             int row = GridPane.getRowIndex(tile);
             int column = GridPane.getColumnIndex(tile);
             String positionTile = row + "," + column;
-            if(tile.getEffect() == null){
-                tileChoosenP.add(positionTile);
-                tileChoosenI.add(tile.getImage());
-                InnerShadow tileShadow = new InnerShadow();
-                tileShadow.setColor(colorTileTaken);
-                tileShadow.setChoke(0.35);
-                tileShadow.setHeight(20);
-                tileShadow.setWidth(20);
-                tile.setEffect(tileShadow);
-                columnActive = false;
+            if(tile.getEffect() == null) {
+                if (tileChoosenP.size() != 3) {
+                    tileChoosenP.add(positionTile);
+                    tileChoosenI.add(tile.getImage());
+                    InnerShadow tileShadow = new InnerShadow();
+                    tileShadow.setColor(colorTileTaken);
+                    tileShadow.setChoke(0.35);
+                    tileShadow.setHeight(20);
+                    tileShadow.setWidth(20);
+                    tile.setEffect(tileShadow);
+                    if (columnActive) {
+                        columnActive = false;
+                        Platform.runLater(this::clearOrderPosition);
+                    }
+                }
             } else {
-                tile.setEffect(null);
-                int pos = tileChoosenP.indexOf(positionTile);
-                tileChoosenP.remove(pos);
-                tileChoosenI.remove(pos);
-            }
+                    tile.setEffect(null);
+                    int pos = tileChoosenP.indexOf(positionTile);
+                    tileChoosenP.remove(pos);
+                    tileChoosenI.remove(pos);
+                    if ( columnActive ) {
+                        columnActive = false;
+                        Platform.runLater(this::clearOrderPosition);
+                    }
+                }
 
         });
         tile.setOnMouseEntered( event -> {
