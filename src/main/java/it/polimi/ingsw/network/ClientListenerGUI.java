@@ -143,6 +143,7 @@ public class ClientListenerGUI extends UnicastRemoteObject implements IClientLis
     @Override
     public void showWaitingRoomNotification(String message) throws RemoteException {
         GUIApplication.showSceneName(SceneNames.WAITINGROOM);
+        System.out.println("WATINGROOM: " + message);
     }
 
     @Override
