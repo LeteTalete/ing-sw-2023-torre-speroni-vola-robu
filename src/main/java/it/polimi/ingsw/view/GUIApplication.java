@@ -68,7 +68,7 @@ public class GUIApplication extends Application {
                 stageWindow.setWidth(542);
                 stageWindow.setTitle("Choose number players");
             } else if (sceneNames.equals(SceneNames.WAITINGROOM)){
-                stageWindow.setHeight(306);
+                stageWindow.setHeight(320);
                 stageWindow.setWidth(636);
                 stageWindow.setTitle("Waiting Room");
             } else if(sceneNames.equals(SceneNames.BOARDPLAYER)){

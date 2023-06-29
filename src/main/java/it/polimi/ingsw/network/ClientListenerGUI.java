@@ -2,22 +2,14 @@ package it.polimi.ingsw.network;
 
 import it.polimi.ingsw.Updates.ModelUpdate;
 import it.polimi.ingsw.model.board.Position;
-import it.polimi.ingsw.server.StaticStrings;
 import it.polimi.ingsw.view.ClientGUI;
-import it.polimi.ingsw.view.ClientTUI;
 import it.polimi.ingsw.view.GUIApplication;
 import it.polimi.ingsw.view.SceneNames;
-import javafx.application.Platform;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 
 public class ClientListenerGUI extends UnicastRemoteObject implements IClientListener {
-    private static Logger fileLog = LogManager.getRootLogger();
-
     private String connectionType = "RMI";
     private transient final ClientGUI view;
     private String token;
@@ -33,7 +25,7 @@ public class ClientListenerGUI extends UnicastRemoteObject implements IClientLis
     @Override
     public void notifySuccessfulRegistration(String name, boolean b, String token, boolean first) throws RemoteException {
         if(b) {
-            view.displayNotification("Registration Successful!");
+            view.printError("Registration Successful!");
             setToken(token);
             if (!first){
                 showWaitingRoomNotification("Waiting for other players to join...");
@@ -63,8 +55,6 @@ public class ClientListenerGUI extends UnicastRemoteObject implements IClientLis
 
     @Override
     public void setGameOn() throws RemoteException {
-        //view.writeText(StaticStrings.GAME_START);
-        //view.printCommands();
         view.setGameOn(true);
     }
 
@@ -76,18 +66,11 @@ public class ClientListenerGUI extends UnicastRemoteObject implements IClientLis
 
     @Override
     public void notifyColumnOk(boolean ok) throws RemoteException {
-        if(ok){
-            view.displayNotification("Choice of column successful!");
-            //view.chooseColumn(); //Mi permette di aggiornare la shelf
-        }
-        else{
-            view.printError("Invalid move. Try again.");
-        }
+        if(!ok) view.printError("Invalid move. Try again.");
     }
 
     @Override
     public void notifyEndTurn() throws RemoteException {
-        //view.setMyTurn(0);
         view.printError("Turn ended.");
     }
 
@@ -96,8 +79,7 @@ public class ClientListenerGUI extends UnicastRemoteObject implements IClientLis
         if(firstDoneUser.equals(view.getName())){
             view.printError("You gained completed your Shelfie!\nLast round starts now.");
         }
-        view.displayNotification(firstDoneUser + "completed their Shelfie.\nLast round starts now!");
-
+        view.printError(firstDoneUser + "completed their Shelfie.\nLast round starts now!");
     }
 
     @Override
@@ -115,7 +97,6 @@ public class ClientListenerGUI extends UnicastRemoteObject implements IClientLis
         if(ok){
             view.nextAction(3, tiles);
             view.turnPhase();
-            view.displayNotification("Rearrange successful!");
         }
         else{
             view.printError("Invalid move. Try again.");
@@ -162,23 +143,21 @@ public class ClientListenerGUI extends UnicastRemoteObject implements IClientLis
     @Override
     public void showWaitingRoomNotification(String message) throws RemoteException {
         GUIApplication.showSceneName(SceneNames.WAITINGROOM);
-        System.out.println("Wating Room: " +  message);
     }
 
     @Override
     public void notifyOnCGC(String nickname, int id, int points) throws RemoteException {
         if(nickname.equals(view.getName())){
-            view.displayNotification("You gained " + points + " points from Common Goal Card " + id + "!");
+            view.printError("You gained " + points + " points from Common Goal Card " + id + "!");
             GUIApplication.setScorePlayer(points);
         }
         else{
-            view.displayNotification(nickname + " gained " + points + " points from Common Goal Card " + id + "!");
+            view.printError(nickname + " gained " + points + " points from Common Goal Card " + id + "!");
         }
-
     }
 
     @Override
     public void notifyAboutDisconnection(String disconnectedUser) throws RemoteException {
-        view.displayNotification(disconnectedUser + " disconnected. The game is now over.");
+        view.printError(disconnectedUser + " disconnected. The game is now over.");
     }
 }

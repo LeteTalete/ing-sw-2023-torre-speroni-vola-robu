@@ -152,17 +152,14 @@ public class ClientGUI implements View {
 
     @Override
     public void showBoardPlayer(PlayerView playerBoardView, LivingRoomView livingRoomView) {
-
     }
 
     @Override
     public void showPersonalGoalCard() {
-
     }
 
     @Override
     public void showBoard(LivingRoomView livingRoomView) {
-
     }
 
     @Override
@@ -215,12 +212,10 @@ public class ClientGUI implements View {
 
     @Override
     public void running() {
-
     }
 
     @Override
     public void printCommands() {
-
     }
 
     @Override
@@ -230,7 +225,6 @@ public class ClientGUI implements View {
 
     @Override
     public void askConnectionServer() {
-
     }
 
     @Override
@@ -243,16 +237,12 @@ public class ClientGUI implements View {
         switch (master.isMyTurn()) {
             case 0 -> {
                 GUIApplication.messaggeForPlayer("It's " + gameView.getCurrentPlayerNickname() + "'s turn");
-                displayNotification("It's " + gameView.getCurrentPlayerNickname() + "'s turn");
             }
             case 1 -> {
                 GUIApplication.messaggeForPlayer("It's your turn: Choose the tiles");
-                displayNotification(StaticStrings.YOUR_TURN);
             }
             case 2 -> {
                 GUIApplication.messaggeForPlayer("It's your turn : Re-arrange the tiles or choose the column");
-                displayNotification(StaticStrings.YOUR_TURN);
-                displayNotification("You can now re-arrange the tiles or choose the column.");
                 chooseOrder();
             }
         }
@@ -260,7 +250,6 @@ public class ClientGUI implements View {
 
     @Override
     public void chooseColumn() {
-
     }
 
     @Override
@@ -281,12 +270,10 @@ public class ClientGUI implements View {
 
     @Override
     public void addToChatQueue(String message, String receiver) {
-
     }
 
     @Override
     public void hideShelves() {
-
     }
 
     @Override
