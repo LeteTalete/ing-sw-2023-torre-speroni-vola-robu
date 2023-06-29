@@ -51,16 +51,25 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
         }
     }
 
+    /**
+     * method setUserToken is used to set a token to a user
+     * @param token - the user token, it is used to recognize a user uniquely
+     */
     @Override
     public void setUserToken(String token) {
         this.userToken = token;
     }
 
+
+    //todo check why this method is unused
     @Override
     public String getToken() {
         return userToken;
     }
 
+    /**
+     * setReceivedResponse method is not used in RMI, it is used in Socket
+     */
     @Override
     public void setReceivedResponse(boolean b) {
         //unused in rmi
@@ -100,6 +109,9 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
         System.exit(0);
     }
 
+    /**
+     * setResponseDecoder method is not used in RMI, it is used in Socket
+     */
     @Override
     public void setResponseDecoder(ResponseDecoder responseDecoder) {
         //only for socket
@@ -145,16 +157,19 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
         }
     }
 
+    //todo
     @Override
     public void setSyn(boolean b) {
         this.syn = b;
     }
 
+    //todo
     @Override
     public boolean isSyn() {
         return syn;
     }
 
+    //todo
     @Override
     public void setSynCheckTimer(boolean startTimer) {
         if (startTimer) {
@@ -166,6 +181,9 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
         }
     }
 
+    /**
+     * method sendAck is used to send an ack message to the Server
+     */
     @Override
     public void sendAck() {
         try{
@@ -176,6 +194,10 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
         }
     }
 
+    /**
+     * setViewClient method is used to set the view (TUI or GUI) of the client
+     * @param currentView - the view chosen by the user (TUI or GUI)
+     */
     public void setViewClient(View currentView) {
         this.viewClient = currentView;
     }
@@ -193,6 +215,7 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
         }
     }
 
+    //todo
     @Override
     public void setConnected(boolean connected) {
         isConnected = connected;
@@ -201,6 +224,7 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
         }
     }
 
+    //todo
     @Override
     public boolean isConnected() {
         return isConnected;
