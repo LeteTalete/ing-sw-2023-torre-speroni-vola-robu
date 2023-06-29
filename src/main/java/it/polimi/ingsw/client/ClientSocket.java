@@ -184,10 +184,6 @@ public class ClientSocket implements IClientConnection {
         this.token = tokenA;
     }
 
-    @Override
-    public String getToken() {
-        return token;
-    }
 
     /**setReceivedResponse signals whether a response has been received. If so, it stops the waits.*/
     @Override
@@ -292,16 +288,21 @@ public class ClientSocket implements IClientConnection {
         }
     }
 
+    /**setSyn method is used to set the value syn to true when the client received a ping from the server*/
     @Override
     public void setSyn(boolean b) {
         syn = b;
     }
 
+    /**isSyn method is used to check whether the client has received a ping from the server*/
     @Override
     public boolean isSyn() {
         return syn;
     }
 
+    /**method setSynCheckTimer starts a timer waiting for the ping from the server. When a ping is received, the timer
+     * is reset. If the timer expires and no ping has been received by the client, it means that the server
+     * is unreachable*/
     @Override
     public void setSynCheckTimer(boolean startTimer) {
         if(startTimer){
@@ -314,6 +315,7 @@ public class ClientSocket implements IClientConnection {
         }
     }
 
+    /**method sendAck is used to send a response ack message to the server after receiving a ping*/
     @Override
     public void sendAck() {
         request(new AckPing(token));

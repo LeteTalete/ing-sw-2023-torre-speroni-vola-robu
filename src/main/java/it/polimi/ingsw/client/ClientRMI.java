@@ -60,13 +60,6 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
         this.userToken = token;
     }
 
-
-    //todo check why this method is unused
-    @Override
-    public String getToken() {
-        return userToken;
-    }
-
     /**
      * setReceivedResponse method is not used in RMI, it is used in Socket
      */
@@ -157,19 +150,21 @@ public class ClientRMI implements IClientConnection, Remote, Serializable {
         }
     }
 
-    //todo
+    /**setSyn method is used to set the value syn to true when the client received a ping from the server*/
     @Override
     public void setSyn(boolean b) {
         this.syn = b;
     }
 
-    //todo
+    /**isSyn method is used to check whether the client has received a ping from the server*/
     @Override
     public boolean isSyn() {
         return syn;
     }
 
-    //todo
+    /**method setSynCheckTimer starts a timer waiting for the ping from the server. When a ping is received, the timer
+     * is reset. If the timer expires and no ping has been received by the client, it means that the server
+     * is unreachable*/
     @Override
     public void setSynCheckTimer(boolean startTimer) {
         if (startTimer) {

@@ -14,7 +14,6 @@ public interface IClientConnection {
      void login(String name);
 
      void setUserToken(String token);
-     String getToken();
 
      void setReceivedResponse(boolean b);
 
