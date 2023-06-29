@@ -18,6 +18,7 @@ import java.util.Timer;
 /**ClientSocket class used to manage the Socket connection to the server.*/
 
 public class ClientSocket implements IClientConnection {
+    /**logger to keep track of events, such as errors and info about parameters*/
     private static final Logger fileLog = LogManager.getRootLogger();
 
     /**master used to invoke methods of the ClientController*/
@@ -284,6 +285,11 @@ public class ClientSocket implements IClientConnection {
     public void quit(String token) {
         setReceivedResponse(true);
         request(new QuitRequest(token));
+        try {
+            closeStreams();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

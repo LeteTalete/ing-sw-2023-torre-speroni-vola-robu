@@ -3,7 +3,6 @@ package it.polimi.ingsw.view;
 import it.polimi.ingsw.Updates.ModelUpdate;
 import it.polimi.ingsw.client.ClientController;
 import it.polimi.ingsw.client.CommandParsing;
-import it.polimi.ingsw.model.board.Couple;
 import it.polimi.ingsw.model.board.Position;
 import it.polimi.ingsw.network.ClientListenerGUI;
 import it.polimi.ingsw.network.IClientListener;
@@ -11,24 +10,15 @@ import it.polimi.ingsw.server.StaticStrings;
 import it.polimi.ingsw.structures.GameView;
 import it.polimi.ingsw.structures.LivingRoomView;
 import it.polimi.ingsw.structures.PlayerView;
-import it.polimi.ingsw.structures.ShelfView;
-import it.polimi.ingsw.view.ControllerGUI.BoardPlayer;
-import it.polimi.ingsw.view.ControllerGUI.ConnectionPlayer;
-import it.polimi.ingsw.view.ControllerGUI.ErrorMessage;
-import it.polimi.ingsw.view.ControllerGUI.GenericController;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.LinkedList;
 
+/***/
+
 public class ClientGUI implements View {
-    private static final Logger fileLog = LogManager.getRootLogger();
     private ClientController master;
-    private BoardPlayer boardPlayer;
     private GameView gameView;
     private ClientListenerGUI listenerClient;
     private CommandParsing commPars;
@@ -54,9 +44,8 @@ public class ClientGUI implements View {
     }
     @Override
     public void displayUpdatedModel(ModelUpdate modelUpdate){
-        //todo check this
         this.gameView = new GameView(modelUpdate);
-        //
+
         if (!this.isStarGame) {
             this.isStarGame = true;
             GUIApplication.showSceneName(SceneNames.BOARDPLAYER);
@@ -68,12 +57,9 @@ public class ClientGUI implements View {
         turnPhase();
     }
 
-    public void setBoardPlayer(BoardPlayer boardPlayerController){
-        boardPlayer = boardPlayerController;
-    }
     @Override
     public void chooseConnection() {
-
+        //only on TUI
     }
 
     @Override
@@ -107,63 +93,50 @@ public class ClientGUI implements View {
 
     @Override
     public void GameTitle() {
-
+        //only on TUI
     }
 
     @Override
     public void showShelves(){
-
+        //only on TUI
     }
 
     @Override
     public void showChat() {
-
+        //only on TUI
     }
 
     @Override
     public void hideChat() {
-
+        //only on TUI
     }
 
     @Override
     public void showCommands() {
-
+        //only on TUI
     }
 
     @Override
     public void hideCommands() {
-
+        //only on TUI
     }
 
     @Override
     public void showCommonGoalCards() {
-
+        //only on TUI
     }
 
     @Override
     public void hideCommonGoalCards() {
-
+        //only on TUI
     }
 
-    @Override
-    public void showLivingRoom(LivingRoomView livingRoomView) {
-
-    }
 
     @Override
     public void showBoardPlayer(PlayerView playerBoardView, LivingRoomView livingRoomView) {
-
+        //only on TUI
     }
 
-    @Override
-    public void showPersonalGoalCard() {
-
-    }
-
-    @Override
-    public void showBoard(LivingRoomView livingRoomView) {
-
-    }
 
     @Override
     public IClientListener getListener() {
@@ -182,10 +155,6 @@ public class ClientGUI implements View {
     }
 
     @Override
-    public void startRun() {
-    }
-
-    @Override
     public void setMaster(ClientController clientController, CommandParsing commandParsing) {
         this.master = clientController;
         this.commPars = commandParsing;
@@ -196,10 +165,6 @@ public class ClientGUI implements View {
     }
     public CommandParsing getCommPars(){
         return this.commPars;
-    }
-
-    @Override
-    public void askForTiles() {
     }
 
     @Override
@@ -214,23 +179,13 @@ public class ClientGUI implements View {
     }
 
     @Override
-    public void running() {
-
-    }
-
-    @Override
-    public void printCommands() {
-
-    }
-
-    @Override
     public void changeTurn(String name) {
         master.isItMyTurn(name);
     }
 
     @Override
     public void askConnectionServer() {
-
+        //only on TUI
     }
 
     @Override
@@ -260,7 +215,7 @@ public class ClientGUI implements View {
 
     @Override
     public void chooseColumn() {
-
+        //only on TUI
     }
 
     @Override
@@ -280,13 +235,8 @@ public class ClientGUI implements View {
 
 
     @Override
-    public void addToChatQueue(String message, String receiver) {
-
-    }
-
-    @Override
     public void hideShelves() {
-
+        //only on TUI
     }
 
     @Override

@@ -7,7 +7,6 @@ import it.polimi.ingsw.view.View;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.net.PortUnreachableException;
 import java.rmi.RemoteException;
 import java.rmi.UnknownHostException;
 import java.rmi.registry.LocateRegistry;
@@ -56,7 +55,6 @@ public class ClientController {
         this.listenerClient = currentView.getListener();
         this.commPars = new CommandParsing(this);
         currentView.setMaster(this, commPars);
-        //setupConnection();
         this.currentView.chooseConnection();
     }
 

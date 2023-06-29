@@ -28,19 +28,12 @@ public interface View {
     void hideCommonGoalCards();
     String getName();
     void displayUpdatedModel(ModelUpdate modelUpdate);
-    void showLivingRoom(LivingRoomView livingRoomView);
     void showBoardPlayer(PlayerView playerBoardView, LivingRoomView livingRoomView);
-    void showPersonalGoalCard();
-    void showBoard(LivingRoomView livingRoomView);
     IClientListener getListener();
     void printError(String message);
     void setMyTurn(int b);
-    void startRun();
     void setMaster(ClientController clientController, CommandParsing commandParsing);
-    void askForTiles();
     void serverSavedUsername(String name, boolean b, String token, boolean first);
-    void running();
-    void printCommands();
     void changeTurn(String name);
     void askConnectionServer();
     String getServerIP();;
@@ -48,11 +41,9 @@ public interface View {
     void chooseOrder();
     void nextAction(int num, ArrayList<Position> tiles);
     void showEndResult();
-    void addToChatQueue(String message, String receiver);
     void hideShelves();
     void passTilesToView(ArrayList<Position> tiles);
     void passSyn();
-    //void askPort();
     String getPort();
 
 }
