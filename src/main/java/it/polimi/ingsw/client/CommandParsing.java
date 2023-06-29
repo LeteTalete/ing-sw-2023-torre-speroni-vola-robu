@@ -241,6 +241,9 @@ public class CommandParsing {
         master.sendChat(choice, message.toString());
     }
 
+    /**
+     * calls ClientController's invalidNotMyTurn method which calls a method for printing an error on the view
+     */
     private void notMyTurn() {
         master.invalidNotMyTurn();
     }
@@ -279,7 +282,11 @@ public class CommandParsing {
         multipleChoiceNumber.clear();
     }
 
-    /**method checkOrderFormat checks whether the format is correct. If so, it returns true*/
+    /**
+     * method checkOrderFormat checks whether the format is correct. If so, it returns true
+     * @param order - list of strings containing user's input
+     * @return true if the format is correct, otherwise it returns false
+     */
     private boolean checkOrderFormat(List<String> order)
     {
         if ( order.isEmpty() ) return false;
@@ -315,7 +322,10 @@ public class CommandParsing {
         multipleChoiceNumber.clear();
     }
 
-    /**method parseInteger parses the string into integer and saves it into the choiceNumber parameter*/
+    /**
+     * method parseInteger parses the string into integer and saves it into the choiceNumber parameter
+     * @param args - list of strings containing user's input
+     */
     private void parseInteger(List<String> args) {
         if ( args.size() < 1 ) {
             master.errorNoSelection("choose");
@@ -329,11 +339,16 @@ public class CommandParsing {
             return;
         }
 
-        choiceNumber =Integer.parseInt(args.get(0));
+        choiceNumber = Integer.parseInt(args.get(0));
     }
 
-    /**method parseMultipleInteger parses multiple strings into multiple integers and saves them into
-     * multipleChoiceNumber parameter*/
+    //todo specify args and command params
+    /**
+     * method parseMultipleInteger parses multiple strings into multiple integers and saves them into
+     * multipleChoiceNumber parameter
+     * @param args
+     * @param command
+     */
     private void parseMultipleInteger(List<String> args, String command) {
         if(args.size() < 1){
             multipleChoiceNumber.clear();
@@ -347,15 +362,21 @@ public class CommandParsing {
         }
     }
 
+    //todo
     public void setPlaying(int playing) {
         isPlaying = playing > 0;
     }
 
+    //todo
     public void setGameIsOn(boolean gameIsOn) {
         this.gameIsOn = gameIsOn;
     }
 
-    /**method checkTilesFormat checks whether the format is correct. If so, it returns true*/
+    /**
+     * method checkTilesFormat checks whether the format is correct. If so, it returns true
+     * @param s - user's input
+     * @return true if the format is correct, otherwise it returns false
+     */
     public boolean checkTilesFormat(String s)
     {
         //user input should be like this: "0,2" or "3,8 4,5" or "5,4 1,1 6,4"
@@ -379,6 +400,7 @@ public class CommandParsing {
         return multipleChoiceNumber.size() >= 1 && multipleChoiceNumber.size() <= 3;
     }
 
+    //todo
     public void setFirst(boolean b) {
         this.initializingRoom = b;
     }
