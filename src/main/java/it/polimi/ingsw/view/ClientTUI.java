@@ -48,6 +48,7 @@ public class ClientTUI implements View{
     private boolean showOtherShelves;
     /**newChatMessage boolean is used to signal if there is an unread message when the chat is hidden*/
     private boolean newChatMessage;
+    /**tiles attribute is used to keep track of the player's re-arranged choice*/
     private ArrayList<Position> tiles;
     /**Scanner fromInput to scan the user's textual input*/
     private Scanner fromInput;
@@ -152,7 +153,7 @@ public class ClientTUI implements View{
     /**
      * Method turnPhase is used to print the current turn phase.
      * If it's the player's turn, it will guide him through the commands he can use.
-     * If it's not the player's turn, it will display a message saying who's turn it is.
+     * If it's not the player's turn, it will display a message saying whose turn it is.
      */
     @Override
     public void turnPhase() {
@@ -609,6 +610,9 @@ public class ClientTUI implements View{
         this.tiles = tiles;
     }
 
+    /**
+     * method passSyn is used to pass the ping received from the listener to the client controller.
+     * */
     @Override
     public void passSyn() {
         master.onSyn();

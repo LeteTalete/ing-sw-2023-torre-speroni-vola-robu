@@ -11,14 +11,17 @@ import it.polimi.ingsw.structures.GameView;
 import it.polimi.ingsw.structures.LivingRoomView;
 import it.polimi.ingsw.structures.PlayerView;
 import javafx.application.Platform;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
-import java.util.LinkedList;
 
-/***/
+/**class ClientGUI for the graphical interface of the game*/
 
 public class ClientGUI implements View {
+    /**logger to keep track of events, such as errors and info about parameters*/
+    private static final Logger fileLog = LogManager.getRootLogger();
     private ClientController master;
     private GameView gameView;
     private ClientListenerGUI listenerClient;
@@ -27,9 +30,9 @@ public class ClientGUI implements View {
     private boolean isRunning;
     private String ServerIP;
     private String port;
-    private LinkedList<String> chatQueue = new LinkedList<>();
     private String username;
-    private boolean isStarGame = false;
+    private boolean isGameOn = false;
+    /**tiles attribute is used to keep track of the player's re-arranged choice*/
     private ArrayList<Position> tiles;
 
     public ClientGUI(){
@@ -43,13 +46,17 @@ public class ClientGUI implements View {
     public GameView getGameView(){
         return this.gameView;
     }
+    /**
+     * Method displayUpdatedModel sets the updated game view with the new model. It then updates the GUI and the turn.
+     * @param modelUpdate - updated model.
+     */
     @Override
     public void displayUpdatedModel(ModelUpdate modelUpdate){
         Platform.runLater(() -> {
             this.gameView = new GameView(modelUpdate);
 
-            if (!this.isStarGame) {
-                this.isStarGame = true;
+            if (!this.isGameOn) {
+                this.isGameOn = true;
                 GUIApplication.showSceneName(SceneNames.BOARDPLAYER);
             }
             GUIApplication.updateLivingRoom();
@@ -73,6 +80,9 @@ public class ClientGUI implements View {
     public void setConnectionType(String typeConnection){
         this.connectionType = typeConnection;
     }
+    /**
+     * method getUsername used to open the window to ask the player's username
+     * */
     @Override
     public void getUsername() {
         if(!isRunning){
@@ -80,16 +90,23 @@ public class ClientGUI implements View {
             isRunning = true;
         }
     }
-
+    /**
+     * method displayNotification used primarily on the TUI. On GUI, since we pass notification via the listener, it
+     * is not used
+     * @param message - message to be displayed
+     * */
     @Override
     public void displayNotification(String message) {
-        System.out.println("displayNotification: " + message);
+        fileLog.info("displayNotification: " + message);
     }
 
     public void setGameOn(boolean gameOn) {
         master.setGameOn(gameOn);
     }
-
+    /**
+     * method askAmountOfPlayers used to open the window to ask the player's chosen amount of players to be
+     * expected in the game
+     * */
     @Override
     public void askAmountOfPlayers() {
         GUIApplication.showSceneName(SceneNames.NUMPLAYERS);
@@ -147,7 +164,10 @@ public class ClientGUI implements View {
         return this.listenerClient;
     }
 
-
+    /**
+     * method printError used to print an error message on the GUI
+     * @param message - error message to be printed
+     * */
     @Override
     public void printError(String message) {
         GUIApplication.error(message);
@@ -171,6 +191,15 @@ public class ClientGUI implements View {
         return this.commPars;
     }
 
+    /**
+     * method serverSavedUsername used to save the player's username and to pass it to the controller, along with
+     * other useful parameters.
+     * @param name - username chosen by the player
+     * @param b - boolean signalling whether the login has been successful or not (meaning, if the username used was
+     *          valid or not)
+     * @param token - token used to identify the player
+     * @param first - boolean signalling whether the player is the first to connect to the server or not
+     * */
     @Override
     public void serverSavedUsername(String name, boolean b, String token, boolean first) {
         master.serverSavedUsername(name, b, token, first);
@@ -182,6 +211,10 @@ public class ClientGUI implements View {
         }
     }
 
+    /**
+     * Method changeTurn updates the client state of the current turn based on the name of current player.
+     * @param name - the name of the player whose turn it is.
+     */
     @Override
     public void changeTurn(String name) {
         master.isItMyTurn(name);
@@ -197,17 +230,26 @@ public class ClientGUI implements View {
         return ServerIP;
     }
 
+    /**
+     * Method turnPhase is used to print the current turn phase.
+     * If it's the player's turn, it will guide him through the commands he can use.
+     * If it's not the player's turn, it will display a message saying whose turn it is.
+     */
     @Override
     public void turnPhase(){
         switch (master.isMyTurn()) {
             case 0 -> {
                 GUIApplication.messaggeForPlayer("It's " + gameView.getCurrentPlayerNickname() + "'s turn");
+                displayNotification("It's " + gameView.getCurrentPlayerNickname() + "'s turn");
             }
             case 1 -> {
                 GUIApplication.messaggeForPlayer("It's your turn: Choose the tiles");
+                displayNotification(StaticStrings.YOUR_TURN);
             }
             case 2 -> {
                 GUIApplication.messaggeForPlayer("It's your turn : Re-arrange the tiles or choose the column");
+                displayNotification(StaticStrings.YOUR_TURN);
+                displayNotification("You can now re-arrange the tiles or choose the column.");
                 chooseOrder();
             }
         }
@@ -218,16 +260,25 @@ public class ClientGUI implements View {
         //only on TUI
     }
 
+    /**method chooseOrder is used to view the chosen order of the tiles*/
     @Override
     public void chooseOrder() {
         GUIApplication.setOrderTile();
     }
 
+    /**
+     * Method nextAction changes the current turn phase and passes the tiles chosen by the player to the client controller.
+     * @param num - the number of the turn phase.
+     * @param tiles - the tiles chosen by the player.
+     */
     @Override
     public void nextAction(int num, ArrayList<Position> tiles) {
         master.nextAction(num, tiles);
     }
 
+    /**
+     * method showEndResult is used to show the end result of the game
+     * */
     @Override
     public void showEndResult() {
         GUIApplication.showSceneName(SceneNames.ENDGAME);
@@ -239,11 +290,18 @@ public class ClientGUI implements View {
         //only on TUI
     }
 
+    /**
+     * Method passTilesToView is used to pass the tiles chosen by the player to clientTUI.
+     * @param tiles - the tiles chosen by the player.
+     */
     @Override
     public void passTilesToView(ArrayList<Position> tiles) {
         this.tiles = tiles;
     }
 
+    /**
+     * method passSyn is used to pass the ping received from the listener to the client controller.
+     * */
     @Override
     public void passSyn() {
         master.onSyn();
@@ -259,6 +317,11 @@ public class ClientGUI implements View {
         return port;
     }
 
+    /**
+     * method setServerIP is used to get the text from the text field relative to the Ip address
+     * in the connection scene and to save it
+     * @param accessibleText - is the text from the text field (i.e. server ip address)
+     * */
     public void setServerIP(String accessibleText) {
         this.ServerIP = accessibleText;
     }

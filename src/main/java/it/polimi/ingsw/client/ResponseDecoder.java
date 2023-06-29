@@ -251,8 +251,11 @@ public class ResponseDecoder implements ResponseHandler {
         }
     }
 
-
-    //todo
+    /**
+     * method used to handle a ping from the server.
+     * @param synPing - contains the ping message
+     * @throws RemoteException
+     */
     @Override
     public void handle(SynPing synPing) throws RemoteException {
         try{
@@ -263,7 +266,13 @@ public class ResponseDecoder implements ResponseHandler {
     }
 
 
-    //todo
+    /**
+     * method used to handle a response from the server about the creation of a waiting room.
+     * After that, it sets the boolean of the controller setReceivedResponse to true, and it notifies all the
+     * waiting threads to unlock them.
+     * @param waitingRoomResponse - choose tiles move confirm notification sent by server socket
+     * @throws RemoteException
+     */
     @Override
     public void handle(WaitingRoomResponse waitingRoomResponse) throws RemoteException {
         clientListener.showWaitingRoomNotification(waitingRoomResponse.getMessage());

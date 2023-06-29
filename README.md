@@ -3,7 +3,7 @@
 
 ## The Project
 
-This project brings My Shelfie, a board game by Cranio Creations, to life as a Java multiplayer videogame. 
+This project brings My Shelfie, a board game by Cranio Creations, to life as a Java multiplayer video game. 
 
 It was developed by a group of students for the Software Engineering 2022-2023 at Politecnico di Milano for our third year Computer Science Engineering project. 
 The member of the group are: 
@@ -12,13 +12,15 @@ The member of the group are:
 - Letizia Maria Chiara Torre
 - Davide Vola
 
+The game runs correctly on Windows and MacOS.
+
 ## Overview 
 
 My Shelfie is based on a client-server architecture, where multiple clients can connect to the same server. 
 
 The server is able to handle client disconnecting throughout the game, but it does not allow reconnections. If a player disconnects, the server notifies the other players and ends the match, therefore you need to start another match to play again. 
 
-After running the jars, the user can choose to play the game thorugh a command line interface or through a graphic user interface, implemented with JavaFX. The user can also choose which connection protocol is desired between RMI and Socket and they will need to type the IP and the port of the Server.
+After running the jars, the user can choose to play the game through a command line interface or through a graphic user interface, implemented with JavaFX. The user can also choose which connection protocol is desired between RMI and Socket, and they will need to type the IP and the port of the Server.
 
 ## How to play
 ### Server
@@ -28,13 +30,13 @@ The server can be launched using the executable jar Server.jar and writing the f
 ```bash
 java  -Djava.rmi.server.useCodebaseOnly=false -Djava.rmi.server.hostname=yourServerIP -jar ServerExecutable.jar
 ```
-For ensuring the correct funtioning of the RMI connection, it is advised for the server's machine to disable its firewalls.
+For ensuring the correct functioning of the RMI connection, it is advised for the server's machine to disable its firewalls.
 
 
 
 ### Client
 
-The Client can be launched using the executable jar ClientExecutable.jar:
+The client can be launched using the executable jar ClientExecutable.jar:
 
 ```bash
 java -jar ClientExecutable.jar
@@ -81,4 +83,10 @@ java -Dlog4j.configurationFile=path\log4j2-server.xml -jar ServerExecutable.jar
 
 The configuration files for the logger are inside the /etc folder. Please, be mindful of the path from which you are launching the .jar file.
 
-
+## Final notes
+It could be possible that Windows terminals are not able to display correctly the colors of the title screen. 
+We suggest to write this in the command line beforehand:
+```bash
+reg add hkcu\console /f /v VirtualTerminalLevel /t REG_DWORD /d 1
+```
+and to start a new terminal after that. This should grant the best experience with the TUI.
