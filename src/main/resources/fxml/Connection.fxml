@@ -114,7 +114,7 @@
                   </TextField>
                </children>
             </HBox>
-            <StackPane fx:id="buttonActiveConnection" layoutX="360.0" layoutY="296.0" onMouseClicked="#clickedButtonConnetion" onMouseEntered="#enteredButton" onMouseExited="#exitedButton" prefHeight="46.0" prefWidth="60.0">
+            <StackPane fx:id="buttonActiveConnection" layoutX="360.0" layoutY="296.0" onMouseClicked="#clickedButtonConnection" onMouseEntered="#enteredButton" onMouseExited="#exitedButton" prefHeight="46.0" prefWidth="60.0">
                <children>
                   <ImageView fitHeight="56.0" fitWidth="60.0" pickOnBounds="true">
                      <image>

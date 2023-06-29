@@ -76,7 +76,7 @@ public class GUIApplication extends Application {
                 stageWindow.setWidth(1440);
                 stageWindow.setTitle("MyShelfie");
                 stageWindow.setResizable(true);
-                getBoardPlayer().setBoadPlayer(clientGUI.getGameView());
+                getBoardPlayer().setBoardPlayer(clientGUI.getGameView());
             } else if(sceneNames.equals(SceneNames.ENDGAME)){
                 stageWindow.setHeight(535);
                 stageWindow.setWidth(610);
