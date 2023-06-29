@@ -291,11 +291,9 @@ public class GameControllerTest {
 
 
         gameController = new GameController(players,gameId, master);
-
-        LivingRoom board = new LivingRoom(2);
+        gameController.getModel().startGame();
 
         Game gameModel = gameController.getModel();
-        gameModel.setBoard(board);
         gameModel.getGameBoard().printBoard();
         gameModel.setCurrentPlayer(player1);
 
@@ -545,11 +543,9 @@ public class GameControllerTest {
 
 
         gameController = new GameController(players,gameId, master);
-
-        LivingRoom board = new LivingRoom(2);
+        gameController.getModel().startGame();
 
         Game gameModel = gameController.getModel();
-        gameModel.setBoard(board);
         gameModel.getGameBoard().printBoard();
         gameModel.setCurrentPlayer(player1);
 

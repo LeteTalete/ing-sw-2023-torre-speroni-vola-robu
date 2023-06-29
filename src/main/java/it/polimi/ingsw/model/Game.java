@@ -87,7 +87,11 @@ public class Game {
 
     }
 
-    /** Method scoreBoard ranks in descending order the players by their scores and then prints them. */
+
+    /**
+     * Method scoreBoard ranks in descending order the players by their scores and then prints them.
+     * @param ps - the list of players
+     */
     public void scoreBoard(ArrayList<Player> ps){
         this.scoreBoard = ps.stream().sorted(Comparator.comparing(Player::getScore).reversed()).collect(Collectors.toList());
     }
@@ -119,11 +123,13 @@ public class Game {
         }
     }
 
+
     /**
      * Method generateCGC generates and returns an ArrayList containing CommonGoalCard objects.
      * First it generates 2 different random numbers from 0 to cardNodes (the number of card nodes in the JSON file).
      * Then it iterates for how many cards are needed, adds the cards to commonGoalCards and adds the points to the cards
      * depending on the number of players.
+     * @param numOfPlayers - the number of players in the current game
      */
     public void generateCGC(int numOfPlayers){
         commonGoalCards = new ArrayList<>();
@@ -250,17 +256,14 @@ public class Game {
      * @param num - The number of players.
      */
     public void setNumOfPlayers(int num){
-        //todo: this method needs to be used in a test
         this.numOfPlayers = num;
     }
-    // it is kinda weird because setters usually get covered by other tests
-    // but those two are not used anywhere, send help
+
     /**
      * Method setPlayers sets the list of players.
      * @param players - The list of players.
      */
     public void setPlayers(ArrayList<Player> players){
-        //todo: this method needs to be used in a test
         this.players = players;
     }
 
@@ -294,15 +297,6 @@ public class Game {
      */
     public List<Player> getScoreBoard() {
         return scoreBoard;
-    }
-
-    /**
-     * Method setBoard sets the gameBoard. Used for testing purposes.
-     * @param board - The gameBoard.
-     */
-    //TODO: why just why. When you create a game the board is already created, why would you want to change it?
-    public void setBoard(LivingRoom board) {
-        this.gameBoard = board;
     }
 
 }
