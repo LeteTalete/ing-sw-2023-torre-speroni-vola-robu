@@ -64,6 +64,7 @@ For a complete explanation of the rules, please check the file under /etc direct
 
 ## Explanation of the json files
 For a better understanding of the cards and the board's functionalities, please check the file under /deliverables named JsonsReadMe.pdf
+Common Goal Card are customizable. However, in order to add a new card, it is mandatory to add its graphic to the code.
 
 ## Additional functionalities
 We decided to implement a logger to keep track of the server and client activities. If you want to use the logger, then you need to add the following command when launching a .jar:

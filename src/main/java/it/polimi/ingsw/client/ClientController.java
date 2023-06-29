@@ -107,9 +107,7 @@ public class ClientController {
      * To initialize the connection, it asks the server IP and then it calls the method setupRMI or setupSocket.
      * */
     public void setupConnection() {
-        //.askServerIP();
         String SIP = currentView.getServerIP();
-        //currentView.askPort();
         int port = 0;
         try {
             port = Integer.parseInt(currentView.getPort());
@@ -121,7 +119,6 @@ public class ClientController {
             }
         }
         catch(Exception e) {
-            //setupConnection();
             currentView.printError("Server not found. Please try again.");
             currentView.askConnectionServer();
         }

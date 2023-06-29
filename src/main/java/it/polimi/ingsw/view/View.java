@@ -54,4 +54,6 @@ public interface View {
     void passSyn();
     //void askPort();
     String getPort();
+
+    void connectionSuccessful(boolean b);
 }

@@ -8,7 +8,7 @@ import java.util.List;
 
 /**request from the client to re-arrange the tiles chosen*/
 
-public class RearrangeTilesRequest extends Request{
+public class RearrangeTilesRequest implements Request{
     private final String token;
     private final List<String> tilesOrder;
 

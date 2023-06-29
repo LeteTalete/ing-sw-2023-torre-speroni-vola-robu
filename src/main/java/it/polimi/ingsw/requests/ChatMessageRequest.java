@@ -7,7 +7,7 @@ import java.rmi.RemoteException;
 
 /**chat message sent from the client*/
 
-public class ChatMessageRequest extends Request {
+public class ChatMessageRequest implements Request {
     private final String sender;
     private final String message;
     private final String receiver;

@@ -8,7 +8,7 @@ import java.util.List;
 
 /**request from the client to choose tiles from the board.*/
 
-public class ChooseTilesRequest extends Request {
+public class ChooseTilesRequest implements Request {
     private final String token;
     private final List<String> tiles;
     /**ChooseTilesRequest constructor.

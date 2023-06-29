@@ -7,7 +7,7 @@ import java.rmi.RemoteException;
 
 /**request from a client to choose a column to place the tiles in.*/
 
-public class ColumnRequest extends Request{
+public class ColumnRequest implements Request{
     private final String token;
     private final int column;
 

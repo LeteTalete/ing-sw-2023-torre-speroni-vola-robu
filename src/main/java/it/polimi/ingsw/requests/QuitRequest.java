@@ -5,7 +5,7 @@ import it.polimi.ingsw.network.ServerSocketClientHandler;
 
 /**request from the client to quit the game*/
 
-public class QuitRequest extends Request {
+public class QuitRequest implements Request {
     private final String token;
 
     public QuitRequest(String userToken) {
