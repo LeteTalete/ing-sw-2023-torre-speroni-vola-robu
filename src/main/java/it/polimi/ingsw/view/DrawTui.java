@@ -202,7 +202,7 @@ public class DrawTui {
             case 8 -> tileCGColumn(CGC, tileEmpty, 6, 1, lenMaxString, dividNum, false, 3, 3);
             case 9 -> tileCGColumn(CGC, tileEmpty, 1, 5, lenMaxString, dividNum, false, 4, 3);
             case 10 -> tileCGColumn(CGC, tileDiff, 6, 1, lenMaxString, dividNum, false, 2, 0);
-            case 11 -> tileCGColumn(CGC, tileDiff, 1, 5, lenMaxString, dividNum, false, 3, 0);
+            case 11 -> tileCGColumn(CGC, tileDiff, 1, 5, lenMaxString, dividNum, false, 2, 0);
         }
         if( idCG == 0 || idCG == 1 || idCG == 3 || idCG == 4 || idCG == 7) CGC.insert(0,lenMaxString + dividNum + heightString + dividNum );
         return CGC.toString();
