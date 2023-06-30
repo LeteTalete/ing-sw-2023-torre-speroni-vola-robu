@@ -162,9 +162,7 @@ public class GameController {
 
         if ( lastRound ) {
             lastRound = false;
-            if ( !(model.getEndGame() != null && model.getPreviousPlayer().getChair()) ) {
-                notifyOnLastTurn(model.getEndGame());
-            }
+            notifyOnLastTurn(model.getEndGame());
         }
         if ( !(model.getEndGame() != null && model.getPreviousPlayer().getChair()) ){
             notifyPointsCGC();

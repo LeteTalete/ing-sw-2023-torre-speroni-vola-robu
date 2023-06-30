@@ -94,7 +94,6 @@ public class ClientListenerGUI extends UnicastRemoteObject implements IClientLis
     @Override
     public void notifyEndTurn() throws RemoteException {
         fileLog.info("Turn ended.");
-        //view.printError("Turn ended.");
     }
 
     /**method notifyLastTurn used to notify the players about the start of the last turn.
@@ -102,9 +101,9 @@ public class ClientListenerGUI extends UnicastRemoteObject implements IClientLis
     @Override
     public void notifyLastTurn(String firstDoneUser) throws RemoteException {
         if(firstDoneUser.equals(view.getName())){
-            view.printError("You gained completed your Shelfie!\nLast round starts now.");
+            view.printError("You completed your Shelfie!\nLast round starts now.");
         } else {
-            view.printError(firstDoneUser + "completed their Shelfie.\nLast round starts now!");
+            view.printError(firstDoneUser + " completed their Shelfie.\nLast round starts now!");
         }
     }
 
