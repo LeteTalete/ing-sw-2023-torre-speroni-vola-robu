@@ -12,7 +12,7 @@ The member of the group are:
 - Letizia Maria Chiara Torre
 - Davide Vola
 
-The game runs correctly on Windows and MacOS.
+The game runs correctly on Windows, Linux and MacOS.
 
 ## Overview 
 
