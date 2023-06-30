@@ -239,10 +239,10 @@ public class DrawTui {
      * @param maxLen - length of line for each CGC.
      * @param endLine - string to be printed at the end of each line.
      * @param dashedEdge - if you want the graphic to have a dashed border around it.
-     * @param repet - number of columns to repeat.
+     * @param repeat - number of columns to repeat.
      * @param maxDif - represents the maximum number of different Tiles per row that CGC wants to show.
      */
-    private static void tileCGColumn(StringBuilder cgc, String tile, int numTileForColumn, int numTileForRow, int maxLen, String endLine, boolean dashedEdge, int repet, int maxDif){
+    private static void tileCGColumn(StringBuilder cgc, String tile, int numTileForColumn, int numTileForRow, int maxLen, String endLine, boolean dashedEdge, int repeat, int maxDif){
         String board = stringRepeat( empty + boardSide[3], numTileForRow*2);
         int heightString = numTileForColumn + 1;
         int maxDifRow = 0;
@@ -253,7 +253,7 @@ public class DrawTui {
         }
         for(int i = numTileForColumn; i > 0; i--){
             if(i == 2 && maxDif > 0) maxDifRow = maxDif;
-            if(i == 1) ripetRow = repet;
+            if(i == 1) ripetRow = repeat;
             addEmptySpaceToString(cgc, tileCGRow(tile, numTileForRow, dashedEdge, ripetRow, maxDifRow), endLine, maxLen);
             maxDifRow = 0;
         }
@@ -285,15 +285,15 @@ public class DrawTui {
      * of the first string on the left while that of the second string on the right of the new string.
      * @param stringLeft - String of which you want its lines to be to the left on the final String.
      * @param stringRight - String of which you want its lines to be to the right on the final String.
-     * @param activEndN - true you want to have at the end of each line the character "\n".
-     * @param activMerge - activates the merge parameter on the final string, so that you can merge the resulting String with another.
+     * @param activeEndN - true you want to have at the end of each line the character "\n".
+     * @param activeMerge - activates the merge parameter on the final string, so that you can merge the resulting String with another.
      * @param topAlign - aligns the merging of two Strings up or down.
      * @return - the joining of lines between two Strings.
      */
 
-    public static String mergerString(String stringLeft, String stringRight, boolean activEndN, boolean activMerge, boolean topAlign){
+    public static String mergerString(String stringLeft, String stringRight, boolean activeEndN, boolean activeMerge, boolean topAlign){
         StringBuilder merge = new StringBuilder();
-        String endLine = activeEndLine(activEndN);
+        String endLine = activeEndLine(activeEndN);
 
         int posL = stringLeft.indexOf(dividNum);
         int posR = stringRight.indexOf(dividNum);
@@ -332,7 +332,7 @@ public class DrawTui {
                 --heightStrR;
             }
         }
-        if(activMerge) return (lenLineL + lenLineR + 1) + dividNum + height + dividNum +  merge;
+        if(activeMerge) return (lenLineL + lenLineR + 1) + dividNum + height + dividNum +  merge;
         else return merge.toString();
     }
 
@@ -396,7 +396,7 @@ public class DrawTui {
         String endLine = startLine + "\n";
         StringBuilder pcg = new StringBuilder();
         String tileS;
-        String tileEmty = empty.repeat(sizeSlotTile) + boardSide[0];
+        String tileEmpty = empty.repeat(sizeSlotTile) + boardSide[0];
         String board = stringRepeat(boardSide[3], (sizeSlotTile + 1)*lenMaxColumn + 3);
         int lengthLine = (startLine + boardSide[1] + board + boardSide[4] + endLine).length();
         addEmptySpaceToString(pcg,  startLine + "PersonalGoalCard:", endLine, lengthLine);
@@ -416,7 +416,7 @@ public class DrawTui {
 
                 for (int index = 0; index < tilesInRow.length; index += 2) {
                     positionTile = Integer.parseInt(tilesInRow[index]);
-                    pcg.append(stringRepeat(tileEmty, positionTile - oldPosT));
+                    pcg.append(stringRepeat(tileEmpty, positionTile - oldPosT));
                     if (Objects.equals(tilesInRow[index + 1], "G")) {
                         pcg.append(colorTileG + " G " + colorRESET);
                     } else if (Objects.equals(tilesInRow[index + 1], "P")) {
@@ -435,7 +435,7 @@ public class DrawTui {
                     pcg.append(boardSide[0]);
                 }
             }
-            pcg.append(stringRepeat(tileEmty, lenMaxColumn - oldPosT)).append(empty).append(boardSide[0]).append(endLine);
+            pcg.append(stringRepeat(tileEmpty, lenMaxColumn - oldPosT)).append(empty).append(boardSide[0]).append(endLine);
         }
         pcg.append(startLine).append(boardSide[0]).append(empty).append(boardSide[2]).append(stringRepeat(boardSide[3].repeat(sizeSlotTile) + boardSide[7], lenMaxColumn - 1)).append(boardSide[3].repeat(sizeSlotTile)).append(boardSide[5]).append(empty).append(boardSide[0]).append(endLine);
         pcg.append(startLine).append(boardSide[8]).append(board).append(boardSide[10]).append(endLine);
