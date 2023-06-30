@@ -44,6 +44,16 @@ java -jar ClientExecutable.jar
 
 After the client is launched, the user is asked to choose which interface (GUI or TUI) they want to play with. Then, they have to insert the IP address that the server is currently running on.
 
+### Using the GUI
+Here are a few tips on how to use the graphical interface:
+- To pick a tile, simply click on it. To deselect it, click on it again;
+- When you're satisfied with your choice, click on the 'OK' button on the upper right corner of the Living Room board;
+- To re-arrange your choice, drag the tiles in the desired position on the column between the Living Room and your Shelfie;
+- When satisfied with the re-arrange, click on the column to place the tiles on your Shelfie. Note: in order to choose the column or re-arrange the tiles, you need to confirm your choice by clicking on the 'OK' button;
+- To see the description of the Common Goal Cards, click on their icons on the upper left side of the screen;
+- To chat with your opponents, you may use the box on the right side of the screen. You can choose to send a message to a specific user or to all the users by clicking on the name of the receiver at the top of the chat box.
+
+
 
 ## Implemented Functionalities
 
