@@ -32,6 +32,7 @@ public class CommonGoalCard extends GoalCard implements Serializable {
      * Method cardType is used to sort the cards into their respective types.
      * The method uses the card ID to find its respective CardType from the json file.
      * Then it initializes the card and returns it.
+     * @return CommonGoalCard - the card of the respective type.
      */
     public CommonGoalCard cardType(){
 
@@ -65,7 +66,10 @@ public class CommonGoalCard extends GoalCard implements Serializable {
 
         return dummy;
     }
-
+    /**
+     * Method getID returns the card ID.
+     * @return int - the card ID.
+     * */
     public int getID() {
         return 0;
     }
@@ -74,6 +78,9 @@ public class CommonGoalCard extends GoalCard implements Serializable {
         return 0;
     }
 
+    /**
+     * overridden method getStairs returns whether the card is a stairs card or not.
+     * */
     public int getStairs() {
         return 0;
     }
@@ -81,21 +88,49 @@ public class CommonGoalCard extends GoalCard implements Serializable {
     public String getType() {
         return null;
     }
+
+    /**
+     * overridden getPositions method returns the list of the list of the positions
+     * @return List List Position  - the list of the list of the positions
+     * */
     public List<List<Position>> getPositions() { return null; }
 
     public int checkConditions(Shelf shelf){ return 0; }
-
+    /**
+     * overridden method getNumOfOccurrences returns the number of occurrences of shapes/groups of the card.
+     * @return int - the number of occurrences of shapes/groups of the card.
+     * */
     public int getNumOfOccurrences() {
         return 0;
     }
+    /**
+     * overridden method getPoints returns the points of the card.
+     * @return Stack - the points of the card.
+     * */
     public Stack<Integer> getPoints(){
         return null;
     }
-
+    /**
+     * overridden method getDiffUpTo returns the max number of different tile types.
+     * @return int - e.g.The maximum number of different tile types that a column/row can have so that it counts
+     * towards the card requirements.
+     */
     public int getDiffUpTo() { return 0;}
+    /**
+     * overridden method getHorizontal.
+     * @return int- 1 if the card requires rows to satisfy the card requirements, 0 otherwise.
+     */
     public int getHorizontal() { return 0;}
+    /**
+     * overridden method getVertical.
+     * @return int- 1 if the card requires columns to satisfy the card requirements, 0 otherwise.
+     * */
     public int getVertical() { return 0;}
 
+    /**
+     * overridden method getDescription() returns the description of the card.
+     * @return String - the description of the card.
+     * */
     public String getDescription() {
         return null;
     }

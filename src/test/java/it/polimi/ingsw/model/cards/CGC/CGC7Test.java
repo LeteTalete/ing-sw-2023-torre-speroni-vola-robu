@@ -13,6 +13,9 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
+/**
+ * test to check the correct behaviour of CGC7 with all the possible scenarios
+ * */
 
 public class CGC7Test {
 
@@ -229,6 +232,10 @@ public class CGC7Test {
     }
 
 
+    /**
+     * getTestShelf method returns the shelf used for the tests.
+     * @return the shelf used for the tests.
+     * */
     public Shelf getTestShelf() {
         return testShelf;
     }

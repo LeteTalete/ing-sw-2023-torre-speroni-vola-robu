@@ -25,7 +25,7 @@ public class ChatMessage implements Response {
     /**
      * Method handleResponse is used to handle a response sent by server socket
      * @param responseHandler - the response handler
-     * @throws RemoteException
+     * @throws RemoteException - throws exception if the remote method call fails
      */
     @Override
     public void handleResponse(ResponseHandler responseHandler) throws RemoteException {

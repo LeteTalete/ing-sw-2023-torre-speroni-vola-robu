@@ -14,6 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
+/**
+ * CG_RowCol is a class that extends CommonGoalCard and represents the card of type rows or column.
+ * */
 
 public class CG_RowCol extends CommonGoalCard implements Serializable {
     private int ID;

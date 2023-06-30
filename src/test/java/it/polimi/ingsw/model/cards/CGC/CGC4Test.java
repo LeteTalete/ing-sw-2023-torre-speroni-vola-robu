@@ -13,6 +13,9 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
+/**
+ * test to check the correct behaviour of CGC4 with all the possible scenarios
+ * */
 
 public class CGC4Test {
 
@@ -254,7 +257,7 @@ public class CGC4Test {
 
     /**
      * Test failTest3 checks that checkConditions returns 0 when the stairs don't follow the pattern described
-     * on the rulebook 5<-4<-3<-2<-1 where each number represents the number of tiles required inside the columns.
+     * on the rulebook 5-4-3-2-1 where each number represents the number of tiles required inside the columns.
      */
     @Test
     public void failTest3(){
@@ -397,6 +400,10 @@ public class CGC4Test {
         assertFalse(shelf.getCardsAlreadyClaimed().contains(CGC4.getID()));
     }
 
+    /**
+     * getTestShelf method returns the shelf used for the tests.
+     * @return the shelf used for the tests.
+     * */
     public Shelf getTestShelf() {
         return testShelf;
     }

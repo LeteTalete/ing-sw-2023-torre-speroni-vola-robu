@@ -13,6 +13,9 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
+/**
+ * test to check the correct behaviour of CGC0 with all the possible scenarios
+ * */
 
 public class CGC0Test {
 
@@ -567,6 +570,10 @@ public class CGC0Test {
         assertFalse(shelf.getCardsAlreadyClaimed().contains(CGC0.getID()));
     }
 
+    /**
+     * getTestShelf method returns the shelf used for the tests.
+     * @return the shelf used for the tests.
+     * */
     public Shelf getTestShelf() {
         return testShelf;
     }

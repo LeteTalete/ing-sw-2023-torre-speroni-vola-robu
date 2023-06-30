@@ -9,6 +9,9 @@ import java.rmi.RemoteException;
 
 public class AckPing implements Request{
     private final String token;
+
+    /**AckPing constructor.
+     * @param tToken - token of the client.*/
     public AckPing(String tToken){
         token = tToken;
     }

@@ -66,7 +66,8 @@ public class ClientController {
         this.userToken = userToken;
     }
 
-    /**this boolean signals whether the connection needs to be closed or not*/
+    /**this boolean signals whether the connection needs to be closed or not
+     * @return boolean - signals if the connection needs to be closed*/
     public boolean isToClose() {
         return toCLose;
     }
@@ -74,7 +75,8 @@ public class ClientController {
         this.toCLose = toCLose;
     }
 
-    /**this boolean is used on the client's side to know if a game has started or not*/
+    /**this boolean is used on the client's side to know if a game has started or not
+     * @return boolean to know if the game has started*/
     public boolean isGameOn() {
         return gameOn;
     }
@@ -88,9 +90,9 @@ public class ClientController {
     }
 
 
-    /**this int is used on the client's side to know at which stage of the turn they are playing (0 when it's not
-     * the client's turn, 1 when they are choosing tiles, 2 if they are either choosing a column or
-     * re-arranging the tiles*/
+    /**this int is used on the client's side to know at which stage of the turn they are playing
+     * @return 0 when it's not the client's turn, 1 when they are choosing tiles, 2 if they are either
+     * choosing a column or re-arranging the tiles*/
     public int isMyTurn() {
         return myTurn;
     }
@@ -126,6 +128,7 @@ public class ClientController {
     /**method setupSocket sets up the socket connection of the client. It creates a new instance of ClientSocket
      * and it sets the view of the client and the response decoder.
      * @param serverIP - the IP of the server caught from the view.
+     * @param port - the port of the server caught from the view.
      * */
     public void setupSocket(String serverIP, int port) {
         try {
@@ -253,7 +256,7 @@ public class ClientController {
     }
 
     /**method rearrangeTiles passes the tiles re-arranged to the server.
-     * @param - list of re-arranged tiles passed by the view*/
+     * @param multipleChoiceNumber - list of re-arranged tiles passed by the view*/
     public void rearrangeTiles(List<String> multipleChoiceNumber) {
         currentConnection.rearrangeTiles(userToken, multipleChoiceNumber);
     }
@@ -277,10 +280,17 @@ public class ClientController {
         currentView.printError("It's not your turn, yet!");
     }
 
+    /**
+     * method errorFormat used to print an error message when the format of the input is wrong.
+     * */
     public void errorFormat() {
         currentView.printError("Wrong format, please try again or type 'help' for a list of commands");
     }
 
+    /**
+     * method errorNoSelection used to print an error message when the user has not typed anything after the command.
+     * @param s - string which signals which error message to print (about selection of tiles, column or re-arranging).
+     * */
     public void errorNoSelection(String s) {
         if (s.equals("selection")) {
             currentView.printError("Please select one to three tiles");
@@ -300,6 +310,10 @@ public class ClientController {
         currentView.printError("Number of players not valid; please try again.");
     }
 
+    /**
+     * method gameNotStarted used to notify the client that the game has not started yet and therefore
+     * they cannot type commands
+     * */
     public void gameNotStarted() {
         currentView.displayNotification("The game has not started yet, please wait for the other players to join");
     }

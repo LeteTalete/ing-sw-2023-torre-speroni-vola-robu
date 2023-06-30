@@ -21,6 +21,11 @@ public class ChatMessageRequest implements Request {
         this.message = m;
         this.receiver = r;
     }
+
+    /**
+     * Method getMessage returns the text of the message.
+     * @return the text of the message.
+     * */
     public String getMessage() {
         return message;
     }

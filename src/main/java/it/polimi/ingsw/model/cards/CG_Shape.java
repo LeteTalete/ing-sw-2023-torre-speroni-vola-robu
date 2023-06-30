@@ -337,8 +337,8 @@ public class CG_Shape extends CommonGoalCard implements Serializable {
     }
 
     /**
-     * Method getDiffColor overrides getDiffColor in class CommonGoalCard.
-     * @return - 1 if the card is the 12th CGC on the rulebook, 0 otherwise.
+     * Method getStairs overrides getStairs in class CommonGoalCard.
+     * @return int - 1 if the card allows shapes of different stairs, 0 otherwise.
      */
     public int getStairs() {
         return this.stairs;

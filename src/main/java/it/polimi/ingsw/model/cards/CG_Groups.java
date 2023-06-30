@@ -13,6 +13,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Stack;
 
+/**
+ * CG_Groups is a class that extends CommonGoalCard and represents the card of type Groups.
+ * */
+
 public class CG_Groups extends CommonGoalCard implements Serializable {
     private int ID;
     private Stack<Integer> points;
