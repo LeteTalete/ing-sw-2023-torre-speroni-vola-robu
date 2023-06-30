@@ -11,23 +11,24 @@ import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+
 public class DrawTui {
-    static final String colorERROR = "\033[1;97;48;5;124m"; //colore di un messaggio di errore
-    static final String colorRESET = "\033[0m";  // Reset Changes
+    static final String colorERROR = "\033[1;97;48;5;124m"; //color of an error message
+    static final String colorRESET = "\033[0m";  //Reset Changes
     static final String colorTileG = "\033[1;30;48;5;214m"; //Orange
     static final String colorTileC = "\033[1;30;48;5;10m"; //Green
     static final String colorTileB = "\033[1;30;48;5;230m"; //White
     static final String colorTileP = "\033[1;30;48;5;13m"; //Magenta
     static final String colorTileF = "\033[1;30;48;5;27m"; //Blue
     static final String colorTileT = "\033[1;30;48;5;14m"; //Cyan
-    static final String tileSquare = "\033[1;38;5;88;48;5;244m"; //"\033[1;51m"; Rappresenta la grafica di un rettangolino vuoto
+    static final String tileSquare = "\033[1;38;5;88;48;5;244m"; //It represents the graphic of an empty rectangle
     static final String[] boardSide = {"│","┌","└", "─", "┐", "┘", "┬", "┴", "├", "┼", "┤"};
-    static final String equal = "="; //Per le CGC
-    static final String diff = "≠";  //Per le CGC
-    static final String empty = " "; //Spazio separatore
-    static final String startLine = "  "; //è la parte di inizio di ogni riga di testo
-    static final String dividNum = "#"; //dividLine  mi serve per dividere i parametri dell'altezza e lunghezza di una stringa da fondere con un'altra
-    static final Integer sizeSlotTile = 3; //Tile size to be colored è meglio che sia dispari
+    static final String equal = "=";
+    static final String diff = "≠";
+    static final String empty = " ";
+    static final String startLine = "  "; //beginning part of each line of text
+    static final String dividNum = "#"; //Used to split the height and length parameters of one string to be merged with another
+    static final Integer sizeSlotTile = 3; //Tile size to be colored, it had better be odd
     private final static PrintStream print = new PrintStream(System.out, true, StandardCharsets.UTF_8);
     private static String stringPGC = "";
     private static final ArrayList<String> stringCGC = new ArrayList<>();
@@ -39,9 +40,9 @@ public class DrawTui {
     }
 
     /**
-     * Method graphicsOrderTiles is an auxiliary method that allows to graphically represent the tiles chosen by the player
+     * Method graphicsOrderTiles is an auxiliary method that allows to graphically represent the tiles chosen by the player.
      * and help him rearrange them in the order he prefers.
-     * @param tiles - list of tiles chosen by the player
+     * @param tiles - list of tiles chosen by the player.
      */
     public static void graphicsOrderTiles(ArrayList<Couple> tiles){
         String board = boardSide[3].repeat(sizeSlotTile + 2);
@@ -59,9 +60,9 @@ public class DrawTui {
      * Method graphicsShelf is an auxiliary method that helps to graphically represent the shelf of the player on the TUI.
      * @param myShelfView - shelf of the player.
      * @param name - name of the player.
-     * @param activEnd //TODO : i don't know
-     * @param activMerge //TODO : i don't know
-     * @return //TODO : i don't know
+     * @param activEnd - true you want to have at the end of each line the character "\n".
+     * @param activMerge - true if you want to merge the String with another one.
+     * @return - string of the player's Shelf graphic, so that if you want you can merge it with other strings.
      */
     public static String graphicsShelf(ShelfView myShelfView, String name, boolean activEnd, boolean activMerge){
         Couple[][] shelfView = myShelfView.getShelfsMatrixView();
@@ -208,13 +209,13 @@ public class DrawTui {
     }
 
     /**
-     * Method tileCGRow is an auxiliary method of graphicsCGC //TODO: I don't know
+     * Method tileCGRow is an auxiliary method of graphicsCGC, manages the graphics of the CGC columns.
      * @param tile - tile to be printed.
-     * @param numTileForRow - //TODO: I don't know
-     * @param dashedEdge //TODO: I don't know
-     * @param repeat //TODO: I don't know
-     * @param maxDif //TODO: I don't know
-     * @return //TODO: I don't know
+     * @param numTileForRow - number of Tile per row.
+     * @param dashedEdge - if you want the graphic to have a dashed border around it.
+     * @param repeat - represents the number of repetitions of the CGC that you want to show.
+     * @param maxDif - represents the maximum number of different Tiles per row that CGC wants to show.
+     * @return - String graphics of CGC by line.
      */
     private static String tileCGRow(String tile, int numTileForRow, boolean dashedEdge, int repeat, int maxDif){
         StringBuilder stringRow = new StringBuilder(startLine);
@@ -229,30 +230,34 @@ public class DrawTui {
         return stringRow.toString();
     }
 
-    //TODO: I don't know
-    //maxLen: Lunghezza della riga per ogni carta
-    //end: è la stringa che si dovrà stampare alla fine di ogni riga
+    /**
+     * tileCGColumn method is an auxiliary method of graphicsCGC, for CGC graphics.
+     * @param cgc - parent string into which column graphics will be merged.
+     * @param tile - tile to be joined.
+     * @param numTileForColumn - number of Tiles per column.
+     * @param numTileForRow - number of Tile per row.
+     * @param maxLen - length of line for each CGC.
+     * @param endLine - string to be printed at the end of each line.
+     * @param dashedEdge - if you want the graphic to have a dashed border around it.
+     * @param repet - number of columns to repeat.
+     * @param maxDif - represents the maximum number of different Tiles per row that CGC wants to show.
+     */
     private static void tileCGColumn(StringBuilder cgc, String tile, int numTileForColumn, int numTileForRow, int maxLen, String endLine, boolean dashedEdge, int repet, int maxDif){
         String board = stringRepeat( empty + boardSide[3], numTileForRow*2);
-        //aggiungo ad heightString un, in quanto considero anche la parte del tersto che mi dice quale commonGoalCArd sia
-        //in caso lo tolgo devo ricordarmi di togliere 1 anche qua!
         int heightString = numTileForColumn + 1;
         int maxDifRow = 0;
         int ripetRow = 0;
-        if(dashedEdge){//mette il contorno(Alto) tratteggiato alla carta
+        if(dashedEdge){
             addEmptySpaceToString(cgc,startLine + boardSide[1] + board + empty + boardSide[4], endLine, maxLen);
             heightString += 2;
         }
-        //Mi permette di restituire una riga intera
-        //maxDifRow: mi permette di salvare sulla stringa la parte del MAX
-        //ripetRow: indica che sull'ultima riga della carta bisogna salvarsi il numero di volte che la si vuole salvare
         for(int i = numTileForColumn; i > 0; i--){
             if(i == 2 && maxDif > 0) maxDifRow = maxDif;
             if(i == 1) ripetRow = repet;
             addEmptySpaceToString(cgc, tileCGRow(tile, numTileForRow, dashedEdge, ripetRow, maxDifRow), endLine, maxLen);
             maxDifRow = 0;
         }
-        if(dashedEdge){//mette il contorno(Basso) tratteggiato alla carta
+        if(dashedEdge){
             addEmptySpaceToString(cgc, startLine + boardSide[2] + board + empty + boardSide[5], endLine, maxLen);
         }
         if(maxDif > 0 && numTileForColumn < 2){
@@ -263,23 +268,28 @@ public class DrawTui {
     }
 
     /**
-     * Method addEmptySpaceToString adds empty spaces to keep the string length constant.
+     * addEmptySpaceToString method adds the new line to the parent string, in case the string to be added does not reach
+     * the maximum length of each parent line whitespace is added so that it gets there.
      * @param stringOld - string to be modified.
-     * @param add - //TODO: I don't know
-     * @param end - //TODO: I don't know
-     * @param mod - //TODO: I don't know
+     * @param add - new string to be added to the old one.
+     * @param end - string that you want added to the end.
+     * @param mod - number of the length of the parent string that you want not to be exceeded.
      */
     private static void addEmptySpaceToString(StringBuilder stringOld, String add, String end, int mod){
         stringOld.append(add);
         stringOld.append(stringRepeat(empty, mod - ( add.replaceAll("\033\\[[;\\d]*m", "").length() % mod) - end.length() ) ).append(end);
     }
 
-
-    //TODO: I don't know
-    //Mi serve per rimuovere la grafica di una stringa per sapere la sua vera lunghezza
-    //Bisogna ricordarsi che la prima stringa deve avere il parametro divisore dividNum, mentre l'altra può anche non averlo settando activEndN
-    //Mentre la entrambe devono avere la parte iniziale con i dati relativi alla lunghezza della linea e alla sua altezza
-    //topAlign: per allineare in alto se è vero, se no allinea in basso le due stringhe
+    /**
+     * mergerString method returns merging two strings so that it returns a single block of strings, with the string content
+     * of the first string on the left while that of the second string on the right of the new string.
+     * @param stringLeft - String of which you want its lines to be to the left on the final String.
+     * @param stringRight - String of which you want its lines to be to the right on the final String.
+     * @param activEndN - true you want to have at the end of each line the character "\n".
+     * @param activMerge - activates the merge parameter on the final string, so that you can merge the resulting String with another.
+     * @param topAlign - aligns the merging of two Strings up or down.
+     * @return - the joining of lines between two Strings.
+     */
 
     public static String mergerString(String stringLeft, String stringRight, boolean activEndN, boolean activMerge, boolean topAlign){
         StringBuilder merge = new StringBuilder();
@@ -288,18 +298,18 @@ public class DrawTui {
         int posL = stringLeft.indexOf(dividNum);
         int posR = stringRight.indexOf(dividNum);
 
-        int lenLineL = Integer.parseInt(stringLeft.substring(0, posL)) - 1; //Il primo numero dappresenta la lunghezza della Linea, la decremento in quanto toglierò il parametro di divisione di questa stringa
+        int lenLineL = Integer.parseInt(stringLeft.substring(0, posL)) - 1;
         int lenLineR = Integer.parseInt(stringRight.substring(0, posR)) - 1;
 
         int startL = stringLeft.indexOf(dividNum, ++posL);
         int startR = stringRight.indexOf(dividNum, ++posR);
 
-        int heightStrL = Integer.parseInt(stringLeft.substring(posL, startL++)); //Il secondo è quante linee ci sono
+        int heightStrL = Integer.parseInt(stringLeft.substring(posL, startL++));
         int heightStrR = Integer.parseInt(stringRight.substring(posR, startR++));
 
         posL = stringLeft.indexOf(dividNum, startL);
         posR = stringRight.indexOf(endLine, startR);
-        int height = Integer.max(heightStrL, heightStrR); //Altezza della nuova stringa che sarà uguale all'altezza massima delle due stringhe
+        int height = Integer.max(heightStrL, heightStrR);
         while(heightStrL != 0 || heightStrR != 0){
             if (topAlign || heightStrL == heightStrR ){
                 merge.append(stringLeft, startL, posL++).append(stringRight, startR, ++posR);
@@ -329,18 +339,18 @@ public class DrawTui {
     /**
      * Method graphicsLivingRoom graphically builds the living room on the TUI.
      * @param livingRoomView - the living room.
-     * @param activeEnd //TODO: I don't know
-     * @param activeMerge //TODO: I don't know
-     * @return //TODO: I don't know
+     * @param activeEnd - true you want to have at the end of each line the character "\n".
+     * @param activeMerge - true if you want to merge the String with another one.
+     * @return - the LivingRoom graphic so that you may or may not merge the lines with those of another String.
      */
     public static String graphicsLivingRoom(LivingRoomView livingRoomView, boolean activeEnd, boolean activeMerge){
         Couple[][] livingRoom = livingRoomView.getBoard();
         int numColum = 0;
-        int numTileLine = livingRoom[0].length; //è il numero di quante tile ci sono per riga
-        String endLine = startLine.repeat(2) + activeEndLine(activeEnd); //parte finale della linea
+        int numTileLine = livingRoom[0].length;
+        String endLine = startLine.repeat(2) + activeEndLine(activeEnd);
         String boardHoriz = stringRepeat(boardSide[3], sizeSlotTile + 2);
-        String sideLR = startLine + empty + startLine + boardSide[8] + stringRepeat(boardHoriz + boardSide[9], numTileLine - 1 ) + boardHoriz + boardSide[10] + endLine;   //Parte divisoria della livingRoom
-        StringBuilder livingRoomString = new StringBuilder(startLine + empty + startLine + boardSide[1] + stringRepeat(boardHoriz + boardSide[6], numTileLine - 1) + boardHoriz + boardSide[4] + endLine); //Testa della livingRoom
+        String sideLR = startLine + empty + startLine + boardSide[8] + stringRepeat(boardHoriz + boardSide[9], numTileLine - 1 ) + boardHoriz + boardSide[10] + endLine;
+        StringBuilder livingRoomString = new StringBuilder(startLine + empty + startLine + boardSide[1] + stringRepeat(boardHoriz + boardSide[6], numTileLine - 1) + boardHoriz + boardSide[4] + endLine);
         int lengthLine = livingRoomString.length();
         int heightLR = 1;
         for(int row = 0; row < numTileLine; row++){
@@ -354,15 +364,19 @@ public class DrawTui {
             heightLR += 2;
             ++numColum;
         }
-        //Ultima righa che raffigura i numeri della colonna
         addEmptySpaceToString(livingRoomString,startLine + empty + startLine + stringRepeat(empty, sizeSlotTile) + sequenceNumbers(0, numTileLine,3 + (sizeSlotTile/2)*2), endLine,lengthLine);
         ++heightLR;
         if(activeMerge) return lengthLine + dividNum + heightLR + dividNum + livingRoomString;
         else return livingRoomString.toString();
     }
 
-    //TODO: I don't know
-    //mi restituisce una sequenza dei numeri da start fino a end (non compreso), separati tutti dallo spazio vuoto, ripetuto un certo numero
+    /**
+     * sequenceNumbers method returns a string of a sequence of increasing numbers with desired distance space
+     * @param start - start number of the sequence to be returned.
+     * @param end - end number of the sequence to be returned.
+     * @param spaceDivisor - distance space between numbers.
+     * @return - String of numbers from start to end with space between each number of spaceDivisor
+     */
     private static String sequenceNumbers(int start, int end, int spaceDivisor){
         StringBuilder string = new StringBuilder();
         String space = stringRepeat(empty, spaceDivisor );
@@ -389,7 +403,7 @@ public class DrawTui {
         pcg.append(startLine).append(boardSide[1]).append(board).append(boardSide[4]).append(endLine);
         pcg.append(startLine).append(boardSide[0]).append(empty).append(boardSide[1]).append(stringRepeat(boardSide[3].repeat(sizeSlotTile) + boardSide[6], lenMaxColumn - 1)).append(boardSide[3].repeat(sizeSlotTile)).append(boardSide[4]).append(empty).append(boardSide[0]).append(endLine);
         int heightPCG = 8;
-        int lenStringTile; //Se la lunghezza della stringa non è maggiore di 1 significa che non contiene tile in quella posizione
+        int lenStringTile;
 
         for (String s : positionTilePCG) {
             pcg.append(startLine).append(boardSide[0]).append(empty).append(boardSide[0]);
@@ -397,8 +411,8 @@ public class DrawTui {
             lenStringTile = tileS.length();
             int oldPosT = 0;
             if (lenStringTile > 1) {
-                String[] tilesInRow = tileS.split(":"); //contiene le informazioni sulla posizione di ogni tile presenti nella riga di riferimento
-                int positionTile; //Posizione delle di una tile contenuta in una riga
+                String[] tilesInRow = tileS.split(":");
+                int positionTile;
 
                 for (int index = 0; index < tilesInRow.length; index += 2) {
                     positionTile = Integer.parseInt(tilesInRow[index]);
@@ -433,7 +447,7 @@ public class DrawTui {
     }
 
     /**
-     * Method getStringPCG returns the string of the personal goal card.
+     * getStringPCG method returns the string of the personal goal card.
      * @return - the string of the personal goal card.
      */
     public static String getStringPCG(){
@@ -441,16 +455,20 @@ public class DrawTui {
     }
 
     /**
-     * Method activeEndLine returns "\n" if activeEnd is true, otherwise it returns dividNum.
-     * @param activeEnd - //TODO : I don't know
+     * activeEndLine method returns "\n" if activeEnd is true, otherwise it returns dividNum.
+     * @param activeEnd - activate "\n" or not
      * @return - "\n" if activeEnd is true, otherwise it returns dividNum.
      */
     private static String activeEndLine(boolean activeEnd){
         return activeEnd ? "\n" : dividNum;
     }
 
-    //TODO: I don't know
-    //ritorna la stringa ripetuta un certo numero di volte
+    /**
+     * stringRepeat method returns a String of repeated text depending on the number of repeatNum.
+     * @param text - String of characters that you want to have repeated.
+     * @param repeatNum - number of times you want to have the string repeated
+     * @return - String text repeated repeatNum times.
+     */
     private static String stringRepeat(String text, int repeatNum){
         return text.repeat(repeatNum);
     }
@@ -526,16 +544,12 @@ public class DrawTui {
 
     }
 
-    //TODO : I don't know
-
     /**
-     *
-     * @param numToken - number of token CGC
-     * @param activeEndN
-     * @return
+     * graphicsToken method returns the CGC Token graphics string so that the resulting String can be merged with other Strings.
+     * @param numToken - number of token CGC.
+     * @param activeEndN - put to true if you do not want to merge the lines of the String with those of another string, otherwise false.
+     * @return - the token graphic of the CommonGoalCard with the associated score.
      */
-    //il parametro activeDelimit permette di inserire alla fine un carattere separatore in modo che il punteggio di questa carta sia separata dall'altra carta
-    //il parametro activeEndN attiva il paramentro di separazione
     public static String graphicsToken(int numToken, boolean activeEndN){
         String endLine = activeEndN ? "\n": startLine.repeat(10) + dividNum;
         String roof = startLine + boardSide[1] + boardSide[3].repeat(5) +  boardSide[4] + endLine;

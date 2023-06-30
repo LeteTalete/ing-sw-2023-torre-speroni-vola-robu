@@ -31,10 +31,8 @@ public class ErrorMessage {
      * */
     private static int fadeOutDelay = 600; // 0.6 seconds
 
-    /*todo davide if you can add some more info about what the method does and check if the description of
-    the ownerStage parameter is correct*/
     /**
-     * errorMessage method creates a new stage to show the error message.
+     * errorMessage method creates a new stage to show a message to players that disappears by itself after a certain time interval.
      * @param ownerStage is the stage that calls the method
      * @param messageError is the message to show on the screen
      * */

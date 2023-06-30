@@ -65,11 +65,9 @@ public class ConnectionPlayer extends GenericController {
         imageView.setOpacity(1);
     }
 
-    //todo davide pls check this i think it sets the connection type if the mouse clicks on the button but i'm not sure
     /**
-     * exitedButtonConnection is used to check which one of the two buttons of the connection type is active after the
-     * mouse has stopped being over the button. If the button is active (i.e. a certain type of connection has been
-     * chosen), it is enlarged, otherwise it stays in its predefined size).
+     * exitedButtonConnection is the type of connection the player has chosen, between socket and RMI.
+     * The choice is made by pressing on either pulused to store.
      * @param mouseEvent - the event of the mouse (in this case exiting the field of the button)
      * */
     public void exitedButtonConnection(MouseEvent mouseEvent){
@@ -82,9 +80,8 @@ public class ConnectionPlayer extends GenericController {
     }
 
     /**
-     * clickedButtonConnection method is used to set one of the two types of connection as the chosen one when the
-     * mouse clicks on the 'OK' button of the connection type window. For example, is the RMI connection has been set
-     * as the active/chosen one, then the choice will be passed to the clientController.
+     * clickedButtonConnection method is used to send the type of connection that was chosen by the player,
+     * with all the ip and port information written in the appropriate spaces
      * @param mouseEvent - the event of the mouse (in this case, clicking on the button)
      * */
     public void clickedButtonConnection(MouseEvent mouseEvent){
@@ -114,7 +111,6 @@ public class ConnectionPlayer extends GenericController {
         GUIApplication.getClientGUI().getCommPars().elaborateInput(textUsername.getText());
     }
 
-    //todo davide pls check this, i'm not sure if it's activated when the mouse clicks on it or not
     /**
      * activeWindowSocket method is invoked whenever the player clicks on the button of the socket connection type.
      * It sets the type of connection to socket and enlarges the windows so that the player can type the port
@@ -131,7 +127,6 @@ public class ConnectionPlayer extends GenericController {
         GUIApplication.getStageWindow().setHeight(400);
     }
 
-    //todo davide pls check this, i'm not sure if it's activated when the mouse clicks on it or not
     /**
      * activeWindowRMI method is invoked whenever the player clicks on the button of the RMI connection type.
      * It sets the type of connection to RMI and enlarges the windows so that the player can type the port

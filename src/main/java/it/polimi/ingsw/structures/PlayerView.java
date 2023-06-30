@@ -58,6 +58,10 @@ public class PlayerView implements Serializable {
         return this.personalGoalCard;
     }
 
+    /**
+     * Method getChair returns the chair of the player.
+     * @return - the chair of the player.
+     */
     public boolean getChair(){
         return chair;
     }

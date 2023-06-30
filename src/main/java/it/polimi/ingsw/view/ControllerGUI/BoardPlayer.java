@@ -42,25 +42,23 @@ public class BoardPlayer extends GenericController {
     private static final Logger fileLog = LogManager.getRootLogger();
 
     /**
-     * VBox chooseTileBox is todo
+     * VBox chooseTileBox is the box in which the tiles chosen in the LivingRoom by the player will be shown,
+     * so that he can choose the order of them before placing them in his Shelf.
      * */
     @FXML private VBox chooseTileBox, all;
     /**
      * StackPane boxChat contains the chat of the game
      * */
     @FXML private StackPane boxChat;
-    /**
-     * HBox todo all these fxml attributes
-     * */
     @FXML private HBox scorePlayer, shelfOtherPlayers, commonCard;
     @FXML private TextArea boxMessage;
     @FXML private Label labelTurn;
-    @FXML private ImageView chair, tileEndGame, imageCommonCard1, imageCommonCard2, imagePersonalGoalCard, token1, token2, tile1, tile2, tile3;
+    @FXML private ImageView chair, tileEndGame, imageCommonCard1, imageCommonCard2, imagePersonalGoalCard, token1, token2;
     @FXML private ChoiceBox choiceChat;
     @FXML private GridPane myShelf, livingRoom;
 
     /**
-     * colorTileTaken is the color of the tile when it is taken todo
+     * colorTileTaken is the color of the tile when it is taken
      * */
     private Color colorTileTaken = new Color(0.9548, 1.0, 0.21, 1.0);
     private double xOffset = 0, yOffset = 0;
@@ -87,10 +85,9 @@ public class BoardPlayer extends GenericController {
 
     /**
      * setBoardPlayer method sets the entirety of the game window, i.e. the board, the shelves, the chat, and
-     * the goal cards. todo comment all of this
-     * @param gameView - contains the updated view of the game
+     * the goal cards.
+     * @param gameView - contains the updated view of the game.
      * */
-    //Voglio caricare la board quando mi mostra la finestra in cui mi dice che sta caricando, in questo modo quando apro la finestra della partita è già tutto caricato
     public void setBoardPlayer(GameView gameView){
         int CGC1 = gameView.getCommonGoalCards().get(0).getID();
         int CGC2 = gameView.getCommonGoalCards().get(1).getID();
@@ -121,7 +118,7 @@ public class BoardPlayer extends GenericController {
                 if( player.getChair() ) chair.setVisible(true);
             }
         }
-        choiceChat.setValue("all"); //Per settare il valore predefinito
+        choiceChat.setValue("all");
         choiceChat.setOnAction(event -> {
             for(Node chat: boxChat.getChildren()) {
                 if(chat.getId().equals(choiceChat.getValue())){
@@ -134,7 +131,10 @@ public class BoardPlayer extends GenericController {
         setShelfOtherPlayers(namePlayers);
     }
 
-
+    /**
+     * setShelfOtherPlayers method set the Shelfs of all players in the list, so that they show in the GUI.
+     * @param name - list of all players except the player himself.
+     */
     private void setShelfOtherPlayers(ArrayList<String> name){
         for(int i = 0; i < name.size(); i++){
             StackPane shelf = (StackPane) shelfOtherPlayers.getChildren().get(i);
@@ -144,6 +144,10 @@ public class BoardPlayer extends GenericController {
         }
     }
 
+    /**
+     * updateShelfOthers method updates the Shelf of all players.
+     * @param shelfViews - list of all players except the player himself.
+     */
     public void updateShelfOthers(ArrayList<ShelfView> shelfViews){
         for(int i = 0; i < shelfViews.size(); i++){
             GridPane shelf = (GridPane) ( (StackPane) shelfOtherPlayers.getChildren().get(i)).getChildren().get(0);
@@ -151,6 +155,11 @@ public class BoardPlayer extends GenericController {
         }
     }
 
+    /**
+     * setToken method sets the tokens that are shown in the GUI to the player, so that if they are taken,
+     * it shows the scaling of the score.
+     * @param gameView - contains the updated view of the game.
+     */
     public void setToken(GameView gameView){
         int score1 =  gameView.getCGC1Points();
         if(score1 > 0) token1.setImage(new Image( Objects.requireNonNull( getClass().getResourceAsStream("/imgs/ScoreTiles/scoring_" + score1 + ".jpg") ) ) );
@@ -160,6 +169,10 @@ public class BoardPlayer extends GenericController {
         else token2.setImage(null);
     }
 
+    /**
+     * setScoreCGC method ets the scores of the player (Client) itself in case it gets Tokens so that they are shown in the GUI.
+     * @param token - token number.
+     */
     public void setScoreCGC(int token){
         Image score;
         if(token == 1){
@@ -182,10 +195,18 @@ public class BoardPlayer extends GenericController {
         }
     }
 
+    /**
+     * setEmptyTileEndGame method is called in case a player gets the End of Game Token and then it is removed from the GUI,
+     * so that it is no longer shown.
+     */
     public void setEmptyTileEndGame(){
         tileEndGame.setVisible(false);
     }
 
+    /**
+     * showDescriptionCGC method show the description of the CGC being pressed.
+     * @param mouseEvent - if the player presses on the CGC image, it calls the event.
+     */
     public void showDescriptionCGC(MouseEvent mouseEvent){
         int i = 0;
         for(Node node : commonCard.getChildren() ){
@@ -198,7 +219,10 @@ public class BoardPlayer extends GenericController {
         }
     }
 
-
+    /**
+     * updateBoard method that updates the GUI Board.
+     * @param livingRoomView - contains the updated view of the livingroom.
+     */
     public void updateBoard(LivingRoomView livingRoomView){
         livingRoom.getChildren().clear();
         tileChosenP.clear();
@@ -208,6 +232,10 @@ public class BoardPlayer extends GenericController {
         setLivingRoom(livingRoomView);
     }
 
+    /**
+     * livingRoomView method that sets the livingRoom to show.
+     * @param livingRoomView - contains the updated view of the livingroom.
+     */
     public void setLivingRoom(LivingRoomView livingRoomView){
         Couple[][] board = livingRoomView.getBoard();
         for(int row = 0; row < board[0].length; row++){
@@ -224,11 +252,20 @@ public class BoardPlayer extends GenericController {
         }
     }
 
+    /**
+     * updateShelfClient method that updates the player's shelf.
+     * @param shelfView - contains the updated view of the shelf.
+     */
     public void updateShelfClient(ShelfView shelfView){
         clearOrderPosition();
         setShelf(myShelf, shelfView);
     }
 
+    /**
+     * setShelf method used to set the GridPane of the player's shelf, so that its updated Shelf is shown in the GUI.
+     * @param shelfGUI - GridPane of the Shelf to be updated in the GUI.
+     * @param shelfView - contains the updated view of the shelf.
+     */
     private void setShelf(GridPane shelfGUI, ShelfView shelfView){
         Couple[][] shelf = shelfView.getShelfsMatrixView();
         for(Node node : shelfGUI.getChildren()){
@@ -243,6 +280,11 @@ public class BoardPlayer extends GenericController {
         }
     }
 
+    /**
+     * showTile method returns the Image of the type of tile you want to show depending on the Tile entered.
+     * @param tile - the type of Tile you want to show.
+     * @return - the Image of the type of Tile you want to show.
+     */
     private Image showTile(Tile tile){
         T_Type typeTile = tile.getTileType();
         String tileString;
@@ -255,6 +297,11 @@ public class BoardPlayer extends GenericController {
         return new Image(Objects.requireNonNull(GUIApplication.class.getResourceAsStream("/imgs/Tiles/" + tileString + tile.getFigure() + ".png" )));
     }
 
+    /**
+     * chooseColumn method called when the player presses the button of the column number in which
+     * he wants to place the Tiles in his shelf
+     * @param mouseEvent - event of the player pressing on the button.
+     */
     public void chooseColumn(MouseEvent mouseEvent){
         if(columnActive){
             String orderT = "";
@@ -270,6 +317,11 @@ public class BoardPlayer extends GenericController {
         }
     }
 
+    /**
+     * clickedButtonOK method once the player chooses the Tiles from the livingRoom he presses the OK button,
+     * so that the change of the choice can be sent to the CommandParsing.
+     * @param mouseEvent - event of the button pressed by the player.
+     */
     public void clickedButtonOK(MouseEvent mouseEvent){
         String posTile = "";
         for(String tile: tileChosenP){
@@ -278,7 +330,10 @@ public class BoardPlayer extends GenericController {
         GUIApplication.getClientGUI().getCommPars().elaborateInput("tiles" + posTile);
     }
 
-    //Questa funzione mi permette di gestire il trascinamento delle tile 2/3 tile per cui dovrò decidere l'ordine:
+    /**
+     * setDraggingTile method allows to manage tile dragging, 2/3 tiles for which the player will have to decide the order.
+     * @param imageView - ImageView on which the drag and drop effect is activated.
+     */
     private void setDraggingTile(ImageView imageView){
         imageView.setOnMousePressed(event -> {
             xOffset = event.getSceneX();
@@ -328,18 +383,30 @@ public class BoardPlayer extends GenericController {
         });
     }
 
-    //Con queste due funzioni mi permettono di mettere in rilievo i bottoni quando ci passo sopra divenetando opachi
+    /**
+     * activeButton method allows buttons to be raised when you pass over them, becoming opaque.
+     * @param event - event of the button pressed by the player.
+     */
     public void activeButton(MouseEvent event){
         StackPane stackPane = (StackPane) event.getSource();
         stackPane.getChildren().get(0).setOpacity(0.7);
     }
 
+    /**
+     * deactivateButton method turns off the matte effect on the button.
+     * @param event - event of the button pressed by the player
+     */
     public void deactivateButton(MouseEvent event){
         StackPane stackPane = (StackPane) event.getSource();
         stackPane.getChildren().get(0).setOpacity(1);
     }
 
 
+    /**
+     * setInnerShadowTile method adds the effect (Yellow outline) to the ImageView of the Tile, which indicates that it
+     * has been selected by the player in the LivingRoom. if instead you just hover over it, it becomes opaque.
+     * @param tile - ImageView of the tile selected by the player in the LivingRoom.
+     */
     public void setInnerShadowTile(ImageView tile){
         tile.setOnMouseClicked( event -> {
             int row = GridPane.getRowIndex(tile);
@@ -382,16 +449,25 @@ public class BoardPlayer extends GenericController {
         });
     }
 
-
+    /**
+     * sendMessage method sends the CommandParsing the message the player wants to send once it presses on the specific button.
+     * @param mouseEvent - event of the button pressed by the player.
+     */
     public void sendMessage(MouseEvent mouseEvent){
         String text = boxMessage.getText();
         if(!text.isBlank()){
             GUIApplication.getClientGUI().getCommPars().elaborateInput("@" + choiceChat.getValue() + " " + text);
-            fileLog.info("INVIO MESSAGGIO: " + choiceChat.getValue() + "Text: " + text );
+            fileLog.info("SENDING MESSAGE: " + choiceChat.getValue() + " Text: " + text );
         }
         boxMessage.setText(null);
     }
 
+    /**
+     * setMessageEntry method shows the message sent by the player or those arrived by other players in the GUI.
+     * @param fromPerson - string of the name from whom the message arrives.
+     * @param message - string of the sent or incoming message.
+     * @param idChat - name from whom the message is directed.
+     */
     public void setMessageEntry(String fromPerson, String message, String idChat){
         for(Node chat: boxChat.getChildren()) {
             if (idChat.equals(chat.getId()) || fromPerson.equals(chat.getId()) ) {
@@ -408,10 +484,14 @@ public class BoardPlayer extends GenericController {
                 break;
             }
         }
-        fileLog.info("ARRIVO MESSAGGIO!!: " + fromPerson + " , " + idChat + " , " + message );
+        fileLog.info("ARRIVAL MESSAGE: " + fromPerson + " , " + idChat + " , " + message );
     }
 
-
+    /**
+     * colorBackgroundChat method allows messages with specific colors for each player to be set in the gui.
+     * @param player - string of the name of the player who sent the message.
+     * @return - the specific color of the player entered.
+     */
     private String colorBackgroundChat(String player){
         if(Objects.equals(player, "you")) player = GUIApplication.getClientGUI().getMaster().getUsername();
         for(int i= 0; i < GUIApplication.getClientGUI().getGameView().getPlayersView().size(); i++){
@@ -423,10 +503,17 @@ public class BoardPlayer extends GenericController {
     }
 
 
+    /**
+     * setLabelTurn method sets in the gui the messages to be shown to the player.
+     * @param turnOf - string of the message to be shown.
+     */
     public void setLabelTurn(String turnOf){
         labelTurn.setText(turnOf);
     }
 
+    /**
+     * clearOrderPosition method cleans up the Tile Sorting box so that images are removed.
+     */
     public void clearOrderPosition(){
         tileOrderPosition.clear();
         for(Node node: chooseTileBox.getChildren()){
@@ -434,6 +521,9 @@ public class BoardPlayer extends GenericController {
         }
     }
 
+    /**
+     * setTileOrderPosition method sets the sorting box in order to show the player the chosen tiles and be able to make them hate them.
+     */
     public void setTileOrderPosition(){
         columnActive = true;
         clearOrderPosition();
