@@ -94,7 +94,6 @@ public class ClientListenerGUI extends UnicastRemoteObject implements IClientLis
     @Override
     public void notifyEndTurn() throws RemoteException {
         fileLog.info("Turn ended.");
-        //view.printError("Turn ended.");
     }
 
     /**method notifyLastTurn used to notify the players about the start of the last turn.
