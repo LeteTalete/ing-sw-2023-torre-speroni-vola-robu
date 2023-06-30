@@ -10,13 +10,13 @@ import java.util.List;
 public class GameView implements Serializable {
 
     private ArrayList<PlayerView> playersView = new ArrayList<>();
-
     private LivingRoomView livingRoomView;
     private List<CommonGoalCard> commonGoalCards;
     private String endGame;
     private int CGC1Points;
     private int CGC2Points;
     private String currentPlayerNickname;
+    private ArrayList<PlayerView> scoreBoard;
 
     /**
      * Constructor GameView creates a new GameView instance. GameView is the view of the game, and it contains all the
@@ -35,6 +35,10 @@ public class GameView implements Serializable {
             this.CGC2Points = 0;
         } else this.CGC2Points = game.getCommonGoalCards().get(1).getPoints().pop();
         this.currentPlayerNickname = game.getCurrentPlayerNickname();
+        if ( game.getScoreboard() != null ) {
+            this.scoreBoard = new ArrayList<>();
+            game.getScoreboard().forEach( player -> this.scoreBoard.add( new PlayerView(player) ) );
+        }
     }
 
     /**
@@ -93,4 +97,11 @@ public class GameView implements Serializable {
         return currentPlayerNickname;
     }
 
+    /**
+     * Method getScoreboard returns the scoreboard.
+     * @return - the scoreboard.
+     */
+    public ArrayList<PlayerView> getScoreboard() {
+        return scoreBoard;
+    }
 }

@@ -70,4 +70,12 @@ public class ModelUpdate implements Serializable{
     public String getCurrentPlayerNickname() {
         return currentPlayerNickname;
     }
+
+    /**
+     * Method getScoreboard returns the scoreboard.
+     * @return - the scoreboard.
+     */
+    public List<Player> getScoreboard() {
+        return scoreboard;
+    }
 }

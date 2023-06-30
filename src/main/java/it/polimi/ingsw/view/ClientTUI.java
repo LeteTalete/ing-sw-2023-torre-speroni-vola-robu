@@ -579,18 +579,8 @@ public class ClientTUI implements View{
     public void showEndResult() {
         clearConsole();
         clearConsole();
-        ArrayList<PlayerView> playersSorted = new ArrayList<>();
-        playersSorted.addAll(gameView.getPlayersView());
-        Collections.sort(playersSorted, new Comparator<PlayerView>() {
-            @Override
-            public int compare(PlayerView player1, PlayerView player2) {
-                return Integer.compare(player2.getScore(), player1.getScore());
-            }
-        });
-        DrawTui.printlnString(DrawTui.endGameScore(master.getUsername(), playersSorted));
-
+        DrawTui.printlnString(DrawTui.endGameScore(master.getUsername(), gameView.getScoreboard()));
         writeText("The game is over. Write 'quit' or close the window to disconnect.");
-
     }
 
 

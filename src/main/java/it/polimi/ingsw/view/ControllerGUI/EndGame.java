@@ -32,25 +32,16 @@ public class EndGame extends GenericController {
      * */
     public void setEndGame(){
 
-        ArrayList<PlayerView> playersSorted = new ArrayList<>();
-        playersSorted.addAll(GUIApplication.getClientGUI().getGameView().getPlayersView());
-        Collections.sort(playersSorted, new Comparator<PlayerView>() {
-            @Override
-            public int compare(PlayerView player1, PlayerView player2) {
-                return Integer.compare(player2.getScore(), player1.getScore());
-            }
-        });
-
-        if(playersSorted.get(0).getNickname().equals(GUIApplication.getClientGUI().getName())){
+        if(GUIApplication.getClientGUI().getGameView().getScoreboard().get(0).getNickname().equals(GUIApplication.getClientGUI().getName())){
             labelStateGame.setText("WINNER");
         } else {
             labelStateGame.setText("LOSER");
         }
-        for(int i = 0; i < playersSorted.size(); i++ ){
+        for(int i = 0; i < GUIApplication.getClientGUI().getGameView().getScoreboard().size(); i++ ){
             HBox scorePlayers = (HBox) score.getChildren().get(i+1);
             ((Label) scorePlayers.getChildren().get(0)).setText(Integer.toString(i+1) + ".");
-            ((Label) scorePlayers.getChildren().get(1)).setText(playersSorted.get(i).getNickname());
-            ((Label) scorePlayers.getChildren().get(2)).setText(Integer.toString(playersSorted.get(i).getScore()));
+            ((Label) scorePlayers.getChildren().get(1)).setText(GUIApplication.getClientGUI().getGameView().getScoreboard().get(i).getNickname());
+            ((Label) scorePlayers.getChildren().get(2)).setText(Integer.toString(GUIApplication.getClientGUI().getGameView().getScoreboard().get(i).getScore()));
         }
     }
 
