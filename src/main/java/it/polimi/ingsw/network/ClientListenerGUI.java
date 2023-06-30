@@ -83,13 +83,18 @@ public class ClientListenerGUI extends UnicastRemoteObject implements IClientLis
      * @param ok - boolean signalling the success or failure of the move.*/
     @Override
     public void notifyColumnOk(boolean ok) throws RemoteException {
-        if(!ok) view.printError("Invalid move. Try again.");
+        if(ok){
+            fileLog.info("Choice of column successful!");
+        } else {
+            view.printError("Invalid move. Try again.");
+        }
     }
 
     /**method notifyEndTurn used to notify the player about the end of their turn*/
     @Override
     public void notifyEndTurn() throws RemoteException {
-        view.printError("Turn ended.");
+        fileLog.info("Turn ended.");
+        //view.printError("Turn ended.");
     }
 
     /**method notifyLastTurn used to notify the players about the start of the last turn.
@@ -98,8 +103,9 @@ public class ClientListenerGUI extends UnicastRemoteObject implements IClientLis
     public void notifyLastTurn(String firstDoneUser) throws RemoteException {
         if(firstDoneUser.equals(view.getName())){
             view.printError("You gained completed your Shelfie!\nLast round starts now.");
+        } else {
+            view.printError(firstDoneUser + "completed their Shelfie.\nLast round starts now!");
         }
-        view.printError(firstDoneUser + "completed their Shelfie.\nLast round starts now!");
     }
 
     /**method notifyChatMessage used to display a chat message.
@@ -124,6 +130,7 @@ public class ClientListenerGUI extends UnicastRemoteObject implements IClientLis
     @Override
     public void notifyRearrangeOk(boolean ok, ArrayList<Position> tiles) throws RemoteException {
         if(ok){
+            fileLog.info("Rearrange successful!");
             view.nextAction(3, tiles);
             view.turnPhase();
         }

@@ -59,12 +59,13 @@ public class ClientGUI implements View {
                 this.isGameOn = true;
                 GUIApplication.showSceneName(SceneNames.BOARDPLAYER);
             }
-            GUIApplication.updateLivingRoom();
-            GUIApplication.updateShelfPlayer(gameView.getPlayersView());
-            GUIApplication.updateShelf(gameView);
-            GUIApplication.updateScore(gameView);
-            turnPhase();
-
+            if(master.isGameOn()) {
+                GUIApplication.updateLivingRoom();
+                GUIApplication.updateShelfPlayer(gameView.getPlayersView());
+                GUIApplication.updateShelf(gameView);
+                GUIApplication.updateScore(gameView);
+                turnPhase();
+            }
         });
     }
 

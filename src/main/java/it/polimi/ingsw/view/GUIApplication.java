@@ -185,9 +185,8 @@ public class GUIApplication extends Application {
             if( name != null){
                 if(name.equals(GUIApplication.clientGUI.getName())){
                     getBoardPlayer().setScoreCGC(1);
-                } else {
-                    getBoardPlayer().setEmptyTileEndGame();
                 }
+                getBoardPlayer().setEmptyTileEndGame();
             }
             getBoardPlayer().setToken(gameView);
         });
