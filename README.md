@@ -6,7 +6,7 @@
 This project brings My Shelfie, a board game by Cranio Creations, to life as a Java multiplayer video game. 
 
 It was developed by a group of students for the Software Engineering 2022-2023 course at Politecnico di Milano for our third year Computer Science Engineering project. 
-The member of the group are: 
+The members of the group are: 
 - Vlad Alexandru Robu
 - Riccardo Speroni
 - Letizia Maria Chiara Torre
